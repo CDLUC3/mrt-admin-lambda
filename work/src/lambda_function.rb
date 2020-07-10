@@ -9,8 +9,8 @@ def format(obj, key)
 end
 
 def getSsmPath(arn)
-  #lambda = Aws::Lambda::Client.new
-  #lambda.list_tags({resource: arn})
+  lambda = Aws::Lambda::Client.new
+  lambda.list_tags({resource: arn})
   '/uc3/mrt/stg/'
 end
 
