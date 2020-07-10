@@ -12,7 +12,8 @@ def lambda_handler(event:, context:)
       statusCode: 200,
       body: {
         path: format(event, 'path'),
-        params: format(event, 'queryStringParameters')
+        params: format(event, 'queryStringParameters'),
+        arn: context.invoked_function_arn
       }.to_json
     }
     #JSON.generate('Hello from Lambda!')
