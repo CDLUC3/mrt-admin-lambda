@@ -21,8 +21,9 @@ end
 
 def lambda_handler(event:, context:)
     arn = context.invoked_function_arn
-    ssm = Aws::SSM::Client.new
     ssmpath = getSsmPath(arn)
+    #ssm = Aws::SSM::Client.new
+    ssm = nil
 
     # TODO implement
     {
