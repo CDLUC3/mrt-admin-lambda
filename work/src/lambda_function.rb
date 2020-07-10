@@ -19,7 +19,7 @@ def lambda_handler(event:, context:)
         path: format(event, 'path'),
         params: format(event, 'queryStringParameters'),
         arn: context.invoked_function_arn,
-        tags: lambda.list_tags
+        tags: getSsmPath
       }.to_json
     }
     #JSON.generate('Hello from Lambda!')
