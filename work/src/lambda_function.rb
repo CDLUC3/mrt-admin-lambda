@@ -3,7 +3,7 @@ require 'json'
 def format(obj, key)
   return "" unless obj
   return "" unless obj[key]
-  obj[key].to_json
+  obj[key]
 end
 
 def lambda_handler(event:, context:)
@@ -11,7 +11,8 @@ def lambda_handler(event:, context:)
     {
       statusCode: 200,
       body: {
-        path: event['path']
+        path: format(event, 'path'),
+        params: format(event, 'queryStringParameters')
       }.to_json
     }
     #JSON.generate('Hello from Lambda!')
