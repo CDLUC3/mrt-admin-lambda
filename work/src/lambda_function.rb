@@ -15,15 +15,13 @@ def getSsmPath(arn)
 end
 
 def getSsmVal(ssm, root, path)
-  #ssm.get_parameter(name: "#{root}#{path}")
-  "#{root}#{path}"
+  ssm.get_parameter(name: "#{root}#{path}")
 end
 
 def lambda_handler(event:, context:)
     arn = context.invoked_function_arn
     ssmpath = getSsmPath(arn)
-    #ssm = Aws::SSM::Client.new
-    ssm = nil
+    ssm = Aws::SSM::Client.new
 
     # TODO implement
     {
