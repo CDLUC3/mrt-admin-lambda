@@ -15,8 +15,7 @@ def getSsmPath(arn)
 end
 
 def getSsmVal(ssm, root, path)
-  "#{root}#{path}"
-  #ssm.get_parameter(name: "#{root}#{path}")
+  ssm.get_parameter(name: "#{root}#{path}")
 end
 
 def lambda_handler(event:, context:)
@@ -32,7 +31,7 @@ def lambda_handler(event:, context:)
         params: format(event, 'queryStringParameters'),
         arn: arn,
         tags: ssmpath,
-        db_user: getSsmVal(ssm, ssmpath, 'billing/readonly/db_user')
+        db_user: getSsmVal(ssm, ssmpath, 'billing/readonly/db-user')
       }.to_json
     }
     #JSON.generate('Hello from Lambda!')
