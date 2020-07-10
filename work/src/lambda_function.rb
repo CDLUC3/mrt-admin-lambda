@@ -15,7 +15,7 @@ def getSsmPath(arn)
 end
 
 def getSsmVal(ssm, root, path)
-  ssm.get_parameter(name: "#{root}#{path}")
+  ssm.get_parameter(name: "#{root}#{path}")[:parameter][:value]
 end
 
 def lambda_handler(event:, context:)
