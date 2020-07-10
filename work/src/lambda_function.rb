@@ -11,7 +11,7 @@ def lambda_handler(event:, context:)
     {
       statusCode: 200,
       body: {
-        path: format(event, 'path')
+        path: event['path']
       }
     }
     #JSON.generate('Hello from Lambda!')
