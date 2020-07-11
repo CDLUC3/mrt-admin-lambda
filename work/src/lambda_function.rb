@@ -35,7 +35,7 @@ def lambda_handler(event:, context:)
       :password=> db_password,
       :port => 3306)
     results = client.query("SELECT id, name FROM inv_collections;").to_a
-    #results = [1, 2]
+    results = [1, 2]
 
     # TODO implement
     {
