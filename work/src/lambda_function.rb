@@ -35,7 +35,7 @@ def lambda_handler(event:, context:)
       :password=> db_password,
       :port => 3306)
     sql = "SELECT id, name FROM inv.inv_collections;"
-    param = []
+    params = []
     results = client.connection
       .raw_connection
       .prepare(sql)
