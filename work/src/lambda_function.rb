@@ -34,19 +34,14 @@ def lambda_handler(event:, context:)
       :database=> db_name,
       :password=> db_password,
       :port => 3306)
-    results = client.query("SELECT id, name FROM inv.inv_collections;").to_a
-    arr = []
-    results.each do |r|
-      rarr = []
-      arr.push(rarr)
-      r.each do |k,v|
-        rarr.push(v)
-      done
-    done
+    results = client.query("SELECT id, name FROM inv.inv_collections;")
+    data = []
+    if results.present?
+      results.each do |row|
+        data.push(row)
+      end
+    end
 
-    #results = [1, 2]
-
-    # TODO implement
     {
       statusCode: 200,
       body: {
@@ -54,7 +49,7 @@ def lambda_handler(event:, context:)
         params: format(event, 'queryStringParameters'),
         arn: arn,
         tags: ssmpath,
-        db_res: arr
+        db_res: data
       }.to_json
     }
     #JSON.generate('Hello from Lambda!')
