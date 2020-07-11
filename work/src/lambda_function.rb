@@ -34,10 +34,12 @@ def lambda_handler(event:, context:)
       :database=> db_name,
       :password=> db_password,
       :port => 3306)
-    sql = "SELECT id, name FROM inv.inv_collections;"
+    sql = "SELECT id, name FROM inv.inv_collections"
     params = []
     results = client.query(sql)
-    data = [1]
+    results.each do |row|
+      data.push(1)
+    end
 
     {
       statusCode: 200,
