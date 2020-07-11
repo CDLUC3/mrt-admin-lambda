@@ -37,12 +37,7 @@ def lambda_handler(event:, context:)
     sql = "SELECT id, name FROM inv.inv_collections;"
     params = []
     results = client.query(sql)
-    data = []
-    if results.present?
-      results.each do |row|
-        data.push(1)
-      end
-    end
+    data = [1]
 
     {
       statusCode: 200,
