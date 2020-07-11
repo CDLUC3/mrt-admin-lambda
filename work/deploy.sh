@@ -1,5 +1,5 @@
 #!/bin/bash
-
+cp dependencies.zip deploy.zip
 cd src
 zip -r ../deploy.zip *
 cd ..
