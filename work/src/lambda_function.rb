@@ -1,6 +1,7 @@
 require 'json'
 require 'aws-sdk-ssm'
 require 'aws-sdk-lambda'
+require 'mysql2'
 
 def format(obj, key)
   return "" unless obj
@@ -22,10 +23,10 @@ def lambda_handler(event:, context:)
     arn = context.invoked_function_arn
     ssmpath = getSsmPath(arn)
     ssm = Aws::SSM::Client.new
-    db_user = getSsmVal(ssm, '/uc3/mrt/stg/', 'billing/readonly/db-user')
-    db_password = getSsmVal(ssm, '/uc3/mrt/stg/', 'billing/readonly/db-password')
-    db_name = getSsmVal(ssm, '/uc3/mrt/stg/', 'billing/db-name')
-    db_host = getSsmVal(ssm, '/uc3/mrt/stg/', 'billing/db-host')
+    db_user = getSsmVal(ssm, ssmpath, 'billing/readonly/db-user')
+    db_password = getSsmVal(ssm, ssmpath, 'billing/readonly/db-password')
+    db_name = getSsmVal(ssm, ssmpath, 'billing/db-name')
+    db_host = getSsmVal(ssm, ssmpath, 'billing/db-host')
 
     client = Mysql2::Client.new(
       :host => db_host,
