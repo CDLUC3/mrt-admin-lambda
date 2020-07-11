@@ -36,8 +36,7 @@ def lambda_handler(event:, context:)
       :port => 3306)
     sql = "SELECT id, name FROM inv.inv_collections;"
     params = []
-    results = client.prepare(sql)
-      .execute(*params)
+    results = client.query(sql)
     data = []
     if results.present?
       results.each do |row|
