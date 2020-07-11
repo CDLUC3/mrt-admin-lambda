@@ -38,7 +38,7 @@ def lambda_handler(event:, context:)
     data = []
     if results.present?
       results.each do |row|
-        data.push(row)
+        data.push(1)
       end
     end
 
