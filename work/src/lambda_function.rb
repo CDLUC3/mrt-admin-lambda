@@ -9,9 +9,8 @@ def format(obj, key)
 end
 
 def getSsmPath(arn)
-  #lambda = Aws::Lambda::Client.new
-  #lambda.list_tags({resource: arn})
-  '/uc3/mrt/stg/'
+  lambda = Aws::Lambda::Client.new
+  lambda.list_tags({resource: arn}).to_json
 end
 
 def getSsmVal(ssm, root, path)
@@ -31,7 +30,7 @@ def lambda_handler(event:, context:)
         params: format(event, 'queryStringParameters'),
         arn: arn,
         tags: ssmpath,
-        db_user: getSsmVal(ssm, ssmpath, 'billing/readonly/db-user')
+        db_user: getSsmVal(ssm, '/uc3/mrt/stg/', 'billing/readonly/db-user')
       }.to_json
     }
     #JSON.generate('Hello from Lambda!')
