@@ -10,7 +10,8 @@ end
 
 def getSsmPath(arn)
   lambda = Aws::Lambda::Client.new
-  lambda.list_tags({resource: arn}).to_json
+  lambda.list_tags({resource: arn})
+  '/uc3/mrt/stg/'
 end
 
 def getSsmVal(ssm, root, path)
