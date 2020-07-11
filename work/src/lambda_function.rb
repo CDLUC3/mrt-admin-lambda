@@ -40,8 +40,8 @@ def lambda_handler(event:, context:)
     data = []
     results.each do |r|
       rdata = []
-      rdata.push(r[:id])
-      rdata.push(r[:name])
+      rdata.push(r['id'])
+      rdata.push(r['name'])
       data.push(rdata)
     end
 
