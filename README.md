@@ -5,6 +5,13 @@
 - MySQL Client
 - ?? Web server
 
+### Prep Vendor Directory
+```
+bundle config --local build.mysql2 --with-mysql2-config=/usr/lib64/mysql/mysql_config
+bundle config --local silence_root_warning true
+bundle install --path vendor/bundle --clean
+```
+
 ## Directories
 
 ### Code to be packaged and deployed to Lambda
