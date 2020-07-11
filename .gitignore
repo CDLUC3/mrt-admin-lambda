@@ -1,3 +1,5 @@
 
 work/deploy.zip
 work/setup.sh
+.DS_Store
+web/index-gw.html

@@ -10,7 +10,7 @@ end
 
 def getSsmPath(arn)
   lambda = Aws::Lambda::Client.new
-  lambda.list_tags
+  #lambda.list_tags({resource: arn})
   '/uc3/mrt/stg/'
 end
 
@@ -22,6 +22,18 @@ def lambda_handler(event:, context:)
     arn = context.invoked_function_arn
     ssmpath = getSsmPath(arn)
     ssm = Aws::SSM::Client.new
+    db_user = getSsmVal(ssm, '/uc3/mrt/stg/', 'billing/readonly/db-user')
+    db_password = getSsmVal(ssm, '/uc3/mrt/stg/', 'billing/readonly/db-password')
+    db_name = getSsmVal(ssm, '/uc3/mrt/stg/', 'billing/db-name')
+    db_host = getSsmVal(ssm, '/uc3/mrt/stg/', 'billing/db-host')
+
+    client = Mysql2::Client.new(
+      :host => db_host,
+      :username => db_user,
+      :database=> db_name,
+      :password=> db_password,
+      :port => 3306)
+    results = client.query("SELECT id, name FROM inv_collections;").to_a
 
     # TODO implement
     {
@@ -31,7 +43,7 @@ def lambda_handler(event:, context:)
         params: format(event, 'queryStringParameters'),
         arn: arn,
         tags: ssmpath,
-        db_user: getSsmVal(ssm, '/uc3/mrt/stg/', 'billing/readonly/db-user')
+        db_user: results
       }.to_json
     }
     #JSON.generate('Hello from Lambda!')
