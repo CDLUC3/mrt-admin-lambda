@@ -34,7 +34,12 @@ def lambda_handler(event:, context:)
       :database=> db_name,
       :password=> db_password,
       :port => 3306)
-    results = client.query("SELECT id, name FROM inv.inv_collections;")
+    sql = "SELECT id, name FROM inv.inv_collections;"
+    param = []
+    results = client.connection
+      .raw_connection
+      .prepare(sql)
+      .execute(*params)
     data = []
     if results.present?
       results.each do |row|
