@@ -36,7 +36,7 @@ def lambda_handler(event:, context:)
       :port => 3306)
     sql = "SELECT id, name FROM inv.inv_collections"
 
-    if event['path'] == 'owners'
+    if event['path'] == '/owners'
       sql = "SELECT id, name FROM inv.inv_owners"
     end
     params = []
