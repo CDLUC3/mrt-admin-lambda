@@ -20,6 +20,13 @@ def getSsmVal(ssm, root, path)
 end
 
 def lambda_handler(event:, context:)
+  statusCode: 200,
+  body: {
+    path: 1ß
+  }.to_json
+end
+
+def lambda_handler2(event:, context:)
     arn = context.invoked_function_arn
     ssmpath = getSsmPath(arn)
     ssm = Aws::SSM::Client.new
