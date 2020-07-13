@@ -22,7 +22,7 @@ end
 def lambda_handler(event:, context:)
   statusCode: 200,
   body: {
-    path: 1ß
+    path: 1
   }.to_json
 end
 
