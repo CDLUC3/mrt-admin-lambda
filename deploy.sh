@@ -1,6 +1,6 @@
 #!/bin/bash
 rm -rf build
-mkdir build build/lib
+mkdir -p build build/lib build/vendor/bundle
 cp lib-include/* build/lib
 cp src/* build
 bundle install --path=build/vendor/bundle
