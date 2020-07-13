@@ -20,10 +20,12 @@ def getSsmVal(ssm, root, path)
 end
 
 def lambda_handler(event:, context:)
-  statusCode: 200,
-  body: {
-    path: 1
-  }.to_json
+  {
+    statusCode: 200,
+    body: {
+      path: 1
+    }.to_json
+  }
 end
 
 def lambda_handler2(event:, context:)
