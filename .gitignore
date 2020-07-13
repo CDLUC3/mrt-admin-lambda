@@ -1,9 +1,7 @@
-
-work/deploy.zip
-work/setup.sh
+build/
 .DS_Store
 web/index-gw.html
-work/dependencies.zip
 lib-include/libmysqlclient.so.18
 lib-include/libmysqlclient.so.18.0.0
 setup.sh
+deploy.zip
