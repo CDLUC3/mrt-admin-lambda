@@ -1,4 +1,5 @@
 build/
+deploy/
 .DS_Store
 web/index-gw.html
 lib-include/libmysqlclient.so.18

@@ -5,6 +5,12 @@
 - MySQL Client
 - ?? Web server
 
+### Copy to lib-include
+
+- libmysqlclient.so.18
+- libmysqlclient.so.18.0.0
+
+
 ### Prep Vendor Directory
 ```
 bundle config --local build.mysql2 --with-mysql2-config=/usr/lib64/mysql/mysql_config
