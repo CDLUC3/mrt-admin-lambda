@@ -1,7 +1,7 @@
 require 'json'
 #equire 'aws-sdk-ssm'
 #require 'aws-sdk-lambda'
-#require 'mysql2'
+require 'mysql2'
 
 def format(obj, key)
   return "" unless obj
