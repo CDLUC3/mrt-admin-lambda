@@ -1,5 +1,5 @@
 #!/bin/bash
-rm -rf build
+rm -rf build/*.rb deploy.zip
 mkdir -p build build/lib build/vendor/bundle
 cp lib-include/* build/lib
 cp src/* build
