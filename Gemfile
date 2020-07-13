@@ -1,5 +1,6 @@
 source "https://rubygems.org"
 gem 'rspec'
-gem 'mysql2', '= 0.4.10'
+gem 'mysql2'
+gem 'httpclient'
 gem 'aws-sdk-ssm'
 gem 'aws-sdk-lambda'

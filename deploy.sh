@@ -1,6 +1,10 @@
 #!/bin/bash
-cp dependencies.zip deploy.zip
-cd src
+rm -rf build
+mkdir build build/lib
+cp lib-include/* build/lib
+cp src/* build
+bundle install --path=build/vendor/bundle
+cd build
 zip -r ../deploy.zip *
 cd ..
 unzip -l deploy.zip
