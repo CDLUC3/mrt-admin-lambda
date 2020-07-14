@@ -6,3 +6,4 @@ lib-include/libmysqlclient.so.18
 lib-include/libmysqlclient.so.18.0.0
 setup.sh
 deploy.zip
+dependencies.zip
