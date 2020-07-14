@@ -8,3 +8,5 @@ lib-include/libmysqlclient.so.18.0.0
 setup.sh
 deploy.zip
 dependencies.zip
+test/database.yml
+test/config/database.yml

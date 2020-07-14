@@ -1,0 +1,9 @@
+stage: &stage
+  adapter: mysql2
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  encoding: utf8
+  host:
+  database:
+  port: 3306
+  username:
+  password: 

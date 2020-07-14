@@ -1,17 +1,21 @@
 require 'json'
 #equire 'aws-sdk-ssm'
 #require 'aws-sdk-lambda'
+require 'yaml'
 require 'mysql2'
 
-def format(obj, key)
+def mformat(obj, key)
   return "" unless obj
-  return "" unless obj[key]
-  obj[key]
+  return obj[key] if obj[key]
+  return obj[key.to_sym] if obj[key.to_sym]
+  ""
 end
 
 def getSsmPath(arn)
   lambda = Aws::Lambda::Client.new
   #lambda.list_tags({resource: arn})
+  '/uc3/mrt/stg/'
+rescue
   '/uc3/mrt/stg/'
 end
 
@@ -19,33 +23,41 @@ def getSsmVal(ssm, root, path)
   ssm.get_parameter(name: "#{root}#{path}")[:parameter][:value]
 end
 
-def lambda_handler(event:, context:)
-  {
-    statusCode: 200,
-    body: {
-      path: 1
-    }.to_json
-  }
+def get_mysql(arn)
+  ssmpath = getSsmPath(arn)
+  ssm = Aws::SSM::Client.new
+  db_user = getSsmVal(ssm, ssmpath, 'billing/readonly/db-user')
+  db_password = getSsmVal(ssm, ssmpath, 'billing/readonly/db-password')
+  db_name = getSsmVal(ssm, ssmpath, 'billing/db-name')
+  db_host = getSsmVal(ssm, ssmpath, 'billing/db-host')
+
+  Mysql2::Client.new(
+    :host => db_host,
+    :username => db_user,
+    :database=> db_name,
+    :password=> db_password,
+    :port => 3306)
+rescue
+  config = load_config('database.yml')['stage']
+  db_user = config['username']
+  db_password = config['password']
+  db_host = config['host']
+  db_name = config['database']
+
+  Mysql2::Client.new(
+    :host => db_host,
+    :username => db_user,
+    :database=> db_name,
+    :password=> db_password,
+    :port => 3306)
 end
 
-def lambda_handler2(event:, context:)
-    arn = context.invoked_function_arn
-    ssmpath = getSsmPath(arn)
-    ssm = Aws::SSM::Client.new
-    db_user = getSsmVal(ssm, ssmpath, 'billing/readonly/db-user')
-    db_password = getSsmVal(ssm, ssmpath, 'billing/readonly/db-password')
-    db_name = getSsmVal(ssm, ssmpath, 'billing/db-name')
-    db_host = getSsmVal(ssm, ssmpath, 'billing/db-host')
-
-    client = Mysql2::Client.new(
-      :host => db_host,
-      :username => db_user,
-      :database=> db_name,
-      :password=> db_password,
-      :port => 3306)
+def lambda_handler(event:, context:)
+    arn = context['invoked_function_arn']
+    client = get_mysql(arn)
     sql = "SELECT id, name FROM inv.inv_collections"
 
-    if event['path'] == '/owners'
+    if mformat(event, 'path') == 'owners'
       sql = "SELECT id, name FROM inv.inv_owners"
     end
     params = []
@@ -61,12 +73,19 @@ def lambda_handler2(event:, context:)
     {
       statusCode: 200,
       body: {
-        path: format(event, 'path'),
-        params: format(event, 'queryStringParameters'),
+        path: mformat(event, 'path'),
+        params: mformat(event, 'queryStringParameters'),
         arn: arn,
-        tags: ssmpath,
         db_res: data
       }.to_json
     }
     #JSON.generate('Hello from Lambda!')
+end
+
+def load_config(name)
+  path = File.join('config', name)
+  raise Exception, "Config file #{name} not found!" unless File.exist?(path)
+  raise Exception, "Config file #{name} is empty!" if File.size(path) == 0
+
+  conf     = YAML.load_file(path)
 end
