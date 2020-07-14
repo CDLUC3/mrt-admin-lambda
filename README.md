@@ -1,26 +1,34 @@
 ## Admin Lambda
 
-### Dependencies
-- AWS SSM Client (assume deployed on EC2)
-- MySQL Client
-- ?? Web server
+This code contains a generalized query tool for the Merritt team.
 
-### Copy to lib-include
+This code will be deployed as an AWS Lambda that is accessible to staff from a static website deployed to S3.
 
-- libmysqlclient.so.18
-- libmysqlclient.so.18.0.0
+The Lambda deployment will pull database credentials from AWS SSM.  SSM Parameters will be explicitly granted to the Lambda.
 
+For testing purposes, a local copy of the code will be accessible using Sinatra.  Database credentials will be pulled from a config file.
 
-### Prep Vendor Directory
-```
-bundle config --local build.mysql2 --with-mysql2-config=/usr/lib64/mysql/mysql_config
-bundle config --local silence_root_warning true
-bundle install --path vendor/bundle --clean
-```
+The Lambda code is deployed to the Ruby 2.7 environment.  A build process is required to prepare a deployment zip file for Lambda.
 
-## Directories
+### Directories
+- src: Lambda source code
+- test: Sinatra driver for desktop testing
+- web: static website code to be deployed to S3
 
-### Code to be packaged and deployed to Lambda
+### Build Process
+
+- A Ruby `bundle install` must be run to build all of the dependencies needed for the lambda deployment
+- The mysql dependency creates OS/architecture specific components that must be built for the target environment
+  - A docker container using the Lambda base image can be used to produce the appropriate mysql assets
+- Build decision tree
+  - Did the Gemfile change?
+    - Run `makeDependencies.sh` to generate **dependencies.zip**
+  - Did the code or Gemfile change?
+    - `source setup.sh` to set environment variables
+    - Run `deploy.sh` to package code and dependencies into **deploy.zip**
+    - Publish to lambda
+
+### Endpoints to support
 
 - /admin-tool
   - entrypoint.rb
@@ -44,11 +52,6 @@ bundle install --path vendor/bundle --clean
   - /query/files_non_ascii
   - /query/coll_details/:coll
   - /query/group_details/:ogroup
-
-### Dev Testing
-
-Run web server.  Look at path.  Call appropriate code in admin-tool library.
-- /local-web
 
 ### Web Assets - to be packaged and deployed to S3
 
