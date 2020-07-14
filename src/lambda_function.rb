@@ -3,6 +3,8 @@ require 'json'
 #require 'aws-sdk-lambda'
 require 'yaml'
 require 'mysql2'
+require_relative 'queries/query'
+require_relative 'queries/query_factory'
 
 def mformat(obj, key)
   return "" unless obj
@@ -55,29 +57,17 @@ end
 def lambda_handler(event:, context:)
     arn = context['invoked_function_arn']
     client = get_mysql(arn)
-    sql = "SELECT id, name FROM inv.inv_collections"
+    path = mformat(event, 'path')
+    #mformat(event, 'queryStringParameters')
 
-    if mformat(event, 'path') == 'owners'
-      sql = "SELECT id, name FROM inv.inv_owners"
-    end
+    query_factory = QueryFactory.new(client)
+    query = query_factory.get_query_for_path(path)
     params = []
-    results = client.query(sql)
-    data = []
-    results.each do |r|
-      rdata = []
-      rdata.push(r['id'])
-      rdata.push(r['name'])
-      data.push(rdata)
-    end
+    json = query.run_sql.to_json
 
     {
       statusCode: 200,
-      body: {
-        path: mformat(event, 'path'),
-        params: mformat(event, 'queryStringParameters'),
-        arn: arn,
-        db_res: data
-      }.to_json
+      body: json
     }
     #JSON.generate('Hello from Lambda!')
 end

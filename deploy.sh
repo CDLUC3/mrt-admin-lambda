@@ -1,10 +1,6 @@
 #!/bin/bash
-rm -rf build/*.rb deploy.zip
-mkdir -p build build/lib build/vendor/bundle
-cp lib-include/* build/lib
-cp src/* Gemfile* build
-bundle install --path=build/vendor/bundle
-cd build
+cp dependencies.zip deploy.zip
+cd src
 zip -r ../deploy.zip *
 cd ..
 unzip -l deploy.zip
