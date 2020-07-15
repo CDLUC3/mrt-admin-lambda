@@ -1,6 +1,6 @@
 require 'json'
-#equire 'aws-sdk-ssm'
-#require 'aws-sdk-lambda'
+require 'aws-sdk-ssm'
+require 'aws-sdk-lambda'
 require 'yaml'
 require 'mysql2'
 require_relative 'queries/query'
@@ -57,7 +57,7 @@ end
 def lambda_handler(event:, context:)
     arn = context.class.to_s == 'LambdaContext' ? context.invoked_function_arn : ''
     client = get_mysql(arn)
-    path = mformat(event, 'path')
+    path = mformat(event, 'path').gsub(/^\//, '')
     #mformat(event, 'queryStringParameters')
 
     query_factory = QueryFactory.new(client)
