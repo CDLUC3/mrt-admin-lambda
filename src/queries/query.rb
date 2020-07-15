@@ -1,6 +1,8 @@
 class AdminQuery
-  def initialize(client)
+  def initialize(client, path, params)
     @client = client
+    @path = path
+    @params = params
   end
 
   def get_title
@@ -11,7 +13,7 @@ class AdminQuery
     nil
   end
 
-  def get_params(path)
+  def get_params
     []
   end
 
@@ -19,9 +21,9 @@ class AdminQuery
     "SELECT 'hello' as greeting, user() as user;"
   end
 
-  def run_sql(path)
+  def run_sql
     stmt = @client.prepare(get_sql)
-    params = get_params(path)
+    params = get_params
     results = stmt.execute(*params)
     get_result_json(results)
   end

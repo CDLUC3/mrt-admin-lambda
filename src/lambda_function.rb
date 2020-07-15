@@ -6,11 +6,11 @@ require 'mysql2'
 require_relative 'queries/query'
 require_relative 'queries/query_factory'
 
-def mformat(obj, key)
+def get_key_val(obj, key, defval='')
   return "" unless obj
   return obj[key] if obj[key]
   return obj[key.to_sym] if obj[key.to_sym]
-  ""
+  defval
 end
 
 def getSsmPath(arn)
@@ -55,14 +55,15 @@ rescue
 end
 
 def lambda_handler(event:, context:)
+
     arn = context.class.to_s == 'LambdaContext' ? context.invoked_function_arn : ''
     client = get_mysql(arn)
-    path = mformat(event, 'path').gsub(/^\//, '')
-    #mformat(event, 'queryStringParameters')
+    path = get_key_val(event, 'path').gsub(/^\//, '')
+    params = get_key_val(event, 'queryStringParameters', {})
 
     query_factory = QueryFactory.new(client)
-    query = query_factory.get_query_for_path(path)
-    json = query.run_sql(path).to_json
+    query = query_factory.get_query_for_path(path, params)
+    json = query.run_sql.to_json
 
     {
       headers: { 'Access-Control-Allow-Origin': '*'},

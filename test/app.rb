@@ -15,7 +15,7 @@ get '/web/:filename' do |filename|
 end
 
 get '/*' do |path|
-  event = {path: path}
+  event = {path: path, queryStringParameters: params}
   resp = lambda_handler(event: event, context: {})
   resp[:body]
 end

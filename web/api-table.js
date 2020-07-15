@@ -1,16 +1,22 @@
+var lambda_base = "http://localhost:4567"
+
 $(document).ready(function(){
   $("#exportTable").on('click', function(){
     exportTable($('table tbody tr:visible'));
   });
-  var queries = getParams();
-  var file = ('json' in queries) ? queries['json'] : '';
-  var url = ('url' in queries) ? queries['url'] : '';
-  var url = ('encurl' in queries) ? decodeURIComponent(queries['encurl']) : url;
+  var params = getParams();
+  var path = ('path' in params) ? params['path'] : '';
+  //var file = ('json' in params) ? params['json'] : '';
+  //var url = ('url' in params) ? params['url'] : '';
+  //var url = ('encurl' in params) ? decodeURIComponent(params['encurl']) : url;
+  var url = path == '' ? '' : lambda_base + "/" + path;
 
-  if (file != '') {
-    showData(file);
-    $("#menu").hide();
-  } else if (url != '') {
+  //if (file != '') {
+  //  showData(file);
+  //  $("#menu").hide();
+  //  return;
+  //}
+  if (url != '') {
     showUrl(url);
     $("#menu").hide();
   } else {
