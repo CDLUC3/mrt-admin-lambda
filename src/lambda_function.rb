@@ -66,6 +66,7 @@ def lambda_handler(event:, context:)
     json = query.run_sql.to_json
 
     {
+      headers: { 'Access-Control-Allow-Origin': '*'},
       statusCode: 200,
       body: json
     }
