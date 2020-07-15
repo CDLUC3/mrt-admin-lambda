@@ -55,7 +55,7 @@ rescue
 end
 
 def lambda_handler(event:, context:)
-    arn = context['invoked_function_arn']
+    arn = context.class.to_s == 'LambdaContext' ? context.invoked_function_arn : ''
     client = get_mysql(arn)
     path = mformat(event, 'path')
     #mformat(event, 'queryStringParameters')
