@@ -62,8 +62,7 @@ def lambda_handler(event:, context:)
 
     query_factory = QueryFactory.new(client)
     query = query_factory.get_query_for_path(path)
-    params = []
-    json = query.run_sql.to_json
+    json = query.run_sql(path).to_json
 
     {
       headers: { 'Access-Control-Allow-Origin': '*'},

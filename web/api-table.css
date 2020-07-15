@@ -1,11 +1,70 @@
-table {border-collapse: collapse;border-right:solid thin black;}
-table td, table th {border: thin solid black; padding: 4px;}
-thead tr {background-color: #EEEEEE;}
-tr:nth-child(1n):hover td, tr:nth-child(1n):hover th {background-color: #DDDDDD;}
-tbody tr:nth-child(2n) td {border-bottom: thin dotted black;}
-tbody tr td {border-top: thin dotted black;}
-tbody tr:nth-child(2n) td {background-color: #EEFFEE;}
-thead tr td {background-color: #EEEEFF;}
-td.num {text-align: right;}
-td.link {text-decoration: underline; color: blue;}
-td, th {width: 100px;}
+body {
+  width: 100%;
+}
+
+div.results {
+  margin: 0 0 auto;
+}
+
+table.results {
+  border-collapse: collapse;
+  width: 80%;
+}
+
+table.results th,
+table.results td {
+  border: thin solid black;
+  padding: 4px;
+}
+
+table.results th.money,
+table.results td.money,
+table.results th.data,
+table.results td.data,
+table.results th.dataint,
+table.results td.dataint {
+  text-align: right;
+}
+
+table.results th.cell,
+table.results td.cell {
+  width: 100px;
+}
+
+table.results th.mime,
+table.results td.mime,
+table.results th.name,
+table.results td.name {
+  width: 300px !important;
+}
+
+table.results th.mnemonic,
+table.results td.mnemonic {
+  width: 150px !important;
+  max-width: 150px !important;
+}
+
+table.results tr.row:nth-child(even) th.cell,
+table.results tr.row:nth-child(even) td.cell {
+  background-color: #EEE;
+}
+
+table.results tr.total th.cell,
+table.results tr.total td.cell {
+  background-color: #F68D2E;
+}
+
+table.results tr.grandtotal th.cell,
+table.results tr.grandtotal td.cell {
+  background-color: #77913B;
+}
+
+table.results tr.specialtotal th.cell,
+table.results tr.specialtotal td.cell {
+  background-color: #D0D0D0;
+}
+
+table.results tr.header th,
+table.results tr.header td {
+  background-color: yellow;
+}

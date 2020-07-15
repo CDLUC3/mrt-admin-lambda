@@ -2,11 +2,20 @@ require 'sinatra'
 require 'sinatra/base'
 require '../src/lambda_function'
 
+get '/web' do
+  send_file "../web/index.html"
+end
+
+get '/web/' do
+  send_file "../web/index.html"
+end
+
+get '/web/:filename' do |filename|
+  send_file "../web/#{filename}"
+end
 
 get '/*' do |path|
-  puts "*** #{path}"
   event = {path: path}
   resp = lambda_handler(event: event, context: {})
-  puts "*** #{resp[:body]}"
   resp[:body]
 end

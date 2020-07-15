@@ -3,7 +3,15 @@ class AdminQuery
     @client = client
   end
 
-  def get_params
+  def get_title
+    "Merritt Admin Query"
+  end
+
+  def get_filter_col
+    nil
+  end
+
+  def get_params(path)
     []
   end
 
@@ -11,9 +19,10 @@ class AdminQuery
     "SELECT 'hello' as greeting, user() as user;"
   end
 
-  def run_sql
+  def run_sql(path)
     stmt = @client.prepare(get_sql)
-    results = stmt.execute(*get_params)
+    params = get_params(path)
+    results = stmt.execute(*params)
     get_result_json(results)
   end
 
@@ -28,19 +37,28 @@ class AdminQuery
     end
   end
 
-  def get_result_data(results)
+  def get_result_data(results, types)
     data = []
     results.each do |r|
-      data.push(r.values)
+      rdata = []
+      r.values.each_with_index do |v, c|
+        type = types[c];
+        rdata.push(v ? v : "")
+      end
+      data.push(rdata)
     end
     data
   end
 
   def get_result_json(results)
+    types = get_types(results)
     {
+      title: get_title,
       headers: get_headers(results),
-      types: get_types(results),
-      data: get_result_data(results)
+      types: types,
+      data: get_result_data(results, types),
+      filter_col: get_filter_col
     }
   end
+
 end

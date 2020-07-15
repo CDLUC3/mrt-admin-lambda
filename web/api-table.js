@@ -1,4 +1,7 @@
 $(document).ready(function(){
+  $("#exportTable").on('click', function(){
+    exportTable($('table tbody tr:visible'));
+  });
   var queries = getParams();
   var file = ('json' in queries) ? queries['json'] : '';
   var url = ('url' in queries) ? queries['url'] : '';
@@ -37,10 +40,12 @@ function showUrl(url) {
     dataType: "json",
     url: url,
     success: function(data) {
+      $("h1").text(data.title);
       createTable(
         data.headers,
         data.types,
-        data.data
+        data.data,
+        data.filter_col
       )
     },
     complete: function(xhr, status) {
@@ -49,7 +54,7 @@ function showUrl(url) {
   });
 }
 
-function createTable(headers, types, data) {
+function createTable(headers, types, data, filter_col) {
   $("#data-table")
     .empty()
     .append($("<thead/>"))
@@ -59,7 +64,20 @@ function createTable(headers, types, data) {
     tr.append(createCell(headers[c], types[c], true));
   }
   for(var r=0; r<data.length; r++) {
-    tr = $("<tr/>").appendTo("#data-table tbody");
+    tr = $("<tr/>").appendTo("#data-table tbody")
+
+    rclass = "row";
+    if (filter_col) {
+      if (data[r][filter_col] == '-- Total --') {
+        rclass = "total"
+      } else if (data[r][filter_col] == '-- Grand Total --') {
+        rclass = "grandtotal"
+      } else if (data[r][filter_col] == '-- Special Total --') {
+        rclass = "specialtotal"
+      }
+    }
+    tr.addClass(rclass);
+
     for(var c=0; c<data[r].length; c++) {
       tr.append(createCell(data[r][c], types[c], false));
     }
@@ -69,7 +87,7 @@ function createTable(headers, types, data) {
 
 function createCell(v, type, isHeader) {
   var cell = isHeader ? $("<th/>") : $("<td/>");
-  cell.addClass(type);
+  cell.addClass("cell").addClass(type);
   format(cell, v, isHeader ? '' : type);
   return cell;
 }
@@ -77,7 +95,63 @@ function createCell(v, type, isHeader) {
 function format(cell, v, type) {
   if (type == 'foo') {
     $("<a href='?json=foo'/>").text(v).appendTo(cell);
+  } else if (type == 'money'){
+    cell.text(Number(v).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits:2}));
+  } else if (type == 'dataint'){
+    cell.text(Number(v).toLocaleString());
+  } else if (type == 'data'){
+    cell.text(Number(v).toLocaleString());
   } else {
     cell.text(v);
   }
+}
+
+
+var Report = function() {
+    var self = this;
+    this.makeCsv = function(rows) {
+        var itemdata = "";
+        rows.each(function(rownum, row){
+            itemdata += (rownum == 0) ? "" : "\r\n";
+            $(row).find("td,th").each(function(colnum, col){
+                itemdata += self.exportCol(colnum, col);
+            });
+        });
+        return itemdata;
+    }
+
+    this.export = function(rows) {
+    var itemdata = "data:text/csv;charset=utf-8," + this.makeCsv(rows);
+        var encodedUri = encodeURI(itemdata);
+        window.open(encodedUri);
+    }
+
+    //this is meant to be overridden for each report
+    this.exportCol = function(colnum, col) {
+        var data = "";
+        data += (colnum == 0) ? "" : ",";
+        data += self.exportCell(col);
+        return data;
+    }
+
+    this.exportCell = function(col) {
+        data = "\"";
+        $(col).contents().each(function(i, node){
+            if ($(node).is("hr")) {
+                data += "||";
+            } else {
+                data += $(node).text().replace(/\n/g," ").replace(/"/g,"\"\"").replace(/\s/g," ");
+                if ($(node).is("div:not(:last-child)")) {
+                    data += "||";
+                }
+            }
+        });
+        data += "\"";
+        return data;
+    }
+}
+
+function exportTable(rows) {
+  var ReportObj = new Report();
+  ReportObj.export(rows);
 }
