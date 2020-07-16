@@ -9,15 +9,15 @@ class QueryFactory
     @client = client
   end
 
-  def get_query_for_path(path, params)
+  def get_query_for_path(path, myparams)
     if path == 'owners'
-      OwnerQuery.new(@client, path, params)
+      OwnerQuery.new(@client, path, myparams)
     elsif path == 'collections'
-      CollectionQuery.new(@client, path, params)
+      CollectionQuery.new(@client, path, myparams)
     elsif path == 'objects_by_ark'
-      ObjectsByArkQuery.new(@client, path, params)
+      ObjectsByArkQuery.new(@client, path, myparams)
     else
-      AdminQuery.new(@client, path, params)
+      AdminQuery.new(@client, path, myparams)
     end
   end
 end

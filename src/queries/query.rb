@@ -1,8 +1,8 @@
 class AdminQuery
-  def initialize(client, path, params)
+  def initialize(client, path, myparams)
     @client = client
     @path = path
-    @params = params
+    @myparams = myparams
   end
 
   def get_title
@@ -23,8 +23,8 @@ class AdminQuery
 
   def run_sql
     stmt = @client.prepare(get_sql)
-    params = get_params
-    results = stmt.execute(*params)
+    query_params = get_params
+    results = stmt.execute(*query_params)
     get_result_json(results)
   end
 
@@ -45,7 +45,7 @@ class AdminQuery
       rdata = []
       r.values.each_with_index do |v, c|
         type = types[c];
-        rdata.push(v ? v : "")
+        rdata.push(v)
       end
       data.push(rdata)
     end

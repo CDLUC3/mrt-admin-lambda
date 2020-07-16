@@ -1,7 +1,7 @@
 class ObjectsByArkQuery < ObjectsQuery
-  def initialize(client, path, params)
-    super(client, path, params)
-    @ark = params.key?('ark') ? params['ark'] : ''
+  def initialize(client, path, myparams)
+    super(client, path, myparams)
+    @ark = myparams.key?('ark') ? myparams['ark'] : ''
   end
 
   def get_title

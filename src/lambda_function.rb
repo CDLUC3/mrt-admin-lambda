@@ -59,10 +59,10 @@ def lambda_handler(event:, context:)
     arn = context.class.to_s == 'LambdaContext' ? context.invoked_function_arn : ''
     client = get_mysql(arn)
     path = get_key_val(event, 'path').gsub(/^\//, '')
-    params = get_key_val(event, 'queryStringParameters', {})
+    myparams = get_key_val(event, 'queryStringParameters', {})
 
     query_factory = QueryFactory.new(client)
-    query = query_factory.get_query_for_path(path, params)
+    query = query_factory.get_query_for_path(path, myparams)
     json = query.run_sql.to_json
 
     {

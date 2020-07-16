@@ -14,7 +14,7 @@ class ObjectsQuery < AdminQuery
         o.ark,
         o.erc_what,
         o.version_number,
-        c.id,
+        c.id as collection_id,
         c.mnemonic,
         (
           select
@@ -23,7 +23,7 @@ class ObjectsQuery < AdminQuery
             inv.inv_files f
           where
             f.inv_object_id=o.id
-        ),
+        ) as obj_count,
         (
           select
             sum(f.billable_size)
@@ -31,7 +31,7 @@ class ObjectsQuery < AdminQuery
             inv.inv_files f
           where
             f.inv_object_id=o.id
-        )
+        ) as billable_size
       from
         inv.inv_objects o
       inner join inv.inv_collections_inv_objects icio
@@ -51,7 +51,7 @@ class ObjectsQuery < AdminQuery
   end
 
   def get_types(results)
-    ['', 'ark', '', '', 'coll', 'mnemonic', 'dataint', 'dataint']
+    ['', 'ark', 'name', '', 'coll', 'mnemonic', 'dataint', 'dataint']
   end
 
 end

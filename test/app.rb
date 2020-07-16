@@ -14,7 +14,8 @@ get '/web/:filename' do |filename|
   send_file "../web/#{filename}"
 end
 
-get '/*' do |path|
+get '/*' do
+  path = params['splat'][0]
   event = {path: path, queryStringParameters: params}
   resp = lambda_handler(event: event, context: {})
   resp[:body]

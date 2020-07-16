@@ -6,16 +6,8 @@ $(document).ready(function(){
   });
   var params = getParams();
   var path = ('path' in params) ? params['path'] : '';
-  //var file = ('json' in params) ? params['json'] : '';
-  //var url = ('url' in params) ? params['url'] : '';
-  //var url = ('encurl' in params) ? decodeURIComponent(params['encurl']) : url;
-  var url = path == '' ? '' : lambda_base + "/" + path;
+  var url = path == '' ? '' : lambda_base + "/" + path + document.location.search;
 
-  //if (file != '') {
-  //  showData(file);
-  //  $("#menu").hide();
-  //  return;
-  //}
   if (url != '') {
     showUrl(url);
     $("#menu").hide();
@@ -66,6 +58,7 @@ function createTable(headers, types, data, filter_col) {
     .append($("<thead/>"))
     .append($("<tbody/>"));
   var tr = $("<tr/>").appendTo("#data-table thead");
+  tr.addClass("header");
   for(var c=0; c<headers.length; c++) {
     tr.append(createCell(headers[c], types[c], true));
   }
@@ -99,7 +92,8 @@ function createCell(v, type, isHeader) {
 }
 
 function format(cell, v, type) {
-  if (type == 'foo') {
+  if (v == null) {
+  } else if (type == 'foo') {
     $("<a href='?json=foo'/>").text(v).appendTo(cell);
   } else if (type == 'money'){
     cell.text(Number(v).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits:2}));
