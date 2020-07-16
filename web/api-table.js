@@ -80,7 +80,9 @@ function createTable(headers, types, data, filter_col) {
     tr.addClass(rclass);
 
     for(var c=0; c<data[r].length; c++) {
-      tr.append(createCell(data[r][c], types[c], false));
+      if (types[c] != 'na') {
+        tr.append(createCell(data[r][c], types[c], false));
+      }
     }
   }
   sorttable.makeSortable($("#data-table")[0]);
@@ -95,7 +97,6 @@ function createCell(v, type, isHeader) {
 
 function format(cell, v, type) {
   if (v == null) {
-  } else if (type == 'na') {
   } else if (type == 'foo') {
     $("<a href='?json=foo'/>").text(v).appendTo(cell);
   } else if (type == 'money'){
