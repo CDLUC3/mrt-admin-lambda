@@ -60,7 +60,9 @@ function createTable(headers, types, data, filter_col) {
   var tr = $("<tr/>").appendTo("#data-table thead");
   tr.addClass("header");
   for(var c=0; c<headers.length; c++) {
-    tr.append(createCell(headers[c], types[c], true));
+    if (types[c] != 'na') {
+      tr.append(createCell(headers[c], types[c], true));
+    }
   }
   for(var r=0; r<data.length; r++) {
     tr = $("<tr/>").appendTo("#data-table tbody")
@@ -93,6 +95,7 @@ function createCell(v, type, isHeader) {
 
 function format(cell, v, type) {
   if (v == null) {
+  } else if (type == 'na') {
   } else if (type == 'foo') {
     $("<a href='?json=foo'/>").text(v).appendTo(cell);
   } else if (type == 'money'){
