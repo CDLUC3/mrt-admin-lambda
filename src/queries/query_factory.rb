@@ -42,6 +42,10 @@ class QueryFactory
       CollectionsByMimeQuery.new(@client, path, myparams, 'mime_type')
     elsif path == 'collections_by_mime_group'
       CollectionsByMimeQuery.new(@client, path, myparams, 'mime_group')
+    elsif path == 'collections_by_time_count'
+      CollectionsByTimeQuery.new(@client, path, myparams, 'count_files')
+    elsif path == 'collections_by_time_size'
+      CollectionsByTimeQuery.new(@client, path, myparams, 'billable_size')
     elsif path == 'collection_details'
       CollectionDetailsQuery.new(@client, path, myparams, 'inv_collection_id')
     elsif path == 'collection_group_details'
