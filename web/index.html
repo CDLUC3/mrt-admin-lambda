@@ -64,6 +64,7 @@
           <form action=".">
             Object(s) by Filename:
             <input name="file" type="text" value="" size=60 />
+            <br/>
             Collection (required for a performant query):
             <input name="coll" type="text" value="cdl_uc3" size=40 />
             <input name="path" type="hidden" value="files_by_name_coll"/>
@@ -81,7 +82,13 @@
       <h3>Slow Queries</h3>
       <ul>
         <li><a href="/web/?path=nodes">Storage Nodes</a></li>
-        <li><a href="/web/?path=obj_counts">Object Counts by Owner and Collection</a></li>
+        <li><a href="/web/?path=count_objects">Object Counts by Owner and Collection</a></li>
+      </ul>
+
+      <h3>Todo</h3>
+      <ul>
+        <li><a href="/web/?path=tbd">Content Added by Date</a></li>
+        <li><a href="/web/?path=tbd">Download reqeusts by date (Splunk?)</a></li>
       </ul>
     </div>
     <div id="data">

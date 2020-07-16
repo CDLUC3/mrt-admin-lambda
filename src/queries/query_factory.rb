@@ -11,6 +11,7 @@ require_relative 'objects_large_query'
 require_relative 'objects_many_files_query'
 require_relative 'files_query'
 require_relative 'files_by_name_coll_query'
+require_relative 'count_objects_query'
 require_relative 'invoices_query'
 
 class QueryFactory
@@ -39,6 +40,8 @@ class QueryFactory
       ObjectsManyFilesQuery.new(@client, path, myparams)
     elsif path == 'files_by_name_coll'
       FilesByNameCollQuery.new(@client, path, myparams)
+    elsif path == 'count_objects'
+      CountObjectsQuery.new(@client, path, myparams)
     elsif path == 'invoices'
       InvoicesQuery.new(@client, path, myparams)
     else
