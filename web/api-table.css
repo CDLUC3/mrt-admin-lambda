@@ -2,6 +2,10 @@ body {
   width: 100%;
 }
 
+#in-progress {
+  display: none;
+}
+
 div.results {
   margin: 0 0 auto;
 }

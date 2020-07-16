@@ -34,6 +34,11 @@ function showData(file) {
 }
 
 function showUrl(url) {
+  $("#in-progress").dialog({
+    title: "Please wait",
+    modal: true,
+    width: 350
+  });
   $.ajax({
     dataType: "json",
     url: url,
@@ -47,7 +52,7 @@ function showUrl(url) {
       )
     },
     complete: function(xhr, status) {
-      //alert(status);
+      $("#in-progress").dialog("close");
     }
   });
 }
