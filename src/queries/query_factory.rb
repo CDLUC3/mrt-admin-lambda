@@ -1,18 +1,10 @@
+# Explicitly include all parent classes
 require_relative 'query'
-require_relative 'collection_query'
-require_relative 'owner_query'
-require_relative 'mime_query'
-require_relative 'nodes_query'
 require_relative 'objects_query'
-require_relative 'objects_by_ark_query'
-require_relative 'objects_by_title_query'
-require_relative 'objects_by_author_query'
-require_relative 'objects_large_query'
-require_relative 'objects_many_files_query'
 require_relative 'files_query'
-require_relative 'files_by_name_coll_query'
-require_relative 'count_objects_query'
-require_relative 'invoices_query'
+
+# Include all Query classes
+Dir[File.dirname(__FILE__) + '/*query.rb'].each {|file| require file }
 
 class QueryFactory
   def initialize(client)
