@@ -105,6 +105,46 @@ function format(cell, v, type) {
     cell.text(Number(v).toLocaleString());
   } else if (type == 'data'){
     cell.text(Number(v).toLocaleString());
+  } else if (type == 'node' && Number(v) > 0){
+    link = $("<a/>")
+      .text(v)
+      .attr("href", ".?path=collections_by_node&node="+v)
+      .appendTo(cell);
+  } else if (type == 'own' && Number(v) > 0){
+    link = $("<a/>")
+      .text(v)
+      .attr("href", ".?path=collections_by_owner&own="+v)
+      .appendTo(cell);
+  } else if (type == 'mime' && !v.startsWith('--')){
+    link = $("<a/>")
+      .text(v)
+      .attr("href", ".?path=collections_by_mime_type&mime="+v)
+      .appendTo(cell);
+  } else if (type == 'gmime' && v != '' && !v.startsWith('ZZ')){
+    link = $("<a/>")
+      .text(v)
+      .attr("href", ".?path=collections_by_mime_group&mime="+v)
+      .appendTo(cell);
+  } else if (type == 'coll' && Number(v) > 0){
+    link = $("<a/>")
+      .text(v)
+      .attr("href", ".?path=collection_details&coll="+v)
+      .appendTo(cell);
+  } else if (type == 'ogroup' && !v.startsWith('ZZ')){
+    link = $("<a/>")
+      .text(v)
+      .attr("href", ".?path=collection_group_details&coll="+v)
+      .appendTo(cell);
+  } else if (type == 'mnemonic'){
+    link = $("<a/>")
+      .text(v)
+      .attr("href", "http://merritt-stage.cdlib.org/m/"+v)
+      .appendTo(cell);
+  } else if (type == 'ark'){
+    link = $("<a/>")
+      .text(v)
+      .attr("href", "http://merritt-stage.cdlib.org/m/"+encodeURIComponent(v))
+      .appendTo(cell);
   } else {
     cell.text(v);
   }

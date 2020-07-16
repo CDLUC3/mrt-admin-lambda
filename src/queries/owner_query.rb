@@ -1,51 +1,58 @@
 class OwnerQuery < AdminQuery
   def get_title
-    "Object Counts by Owner"
+    "File Counts by Owner"
   end
 
   def get_filter_col
-    1
+    2
   end
 
   def get_sql
     %{
       select
         ogroup,
-        collection_name,
-        sum(count_objects) as count_objects
+        inv_owner_id as owner_id,
+        own_name,
+        sum(count_files) files,
+        sum(billable_size) size
       from
-        owner_collections_objects
+        owner_coll_mime_use_details
       group by
         ogroup,
-        collection_name
+        owner_id,
+        own_name
       union
       select
         ogroup,
-        max('-- Total --') as collection_name,
-        sum(count_objects) as count_objects
+        max(0) as owner_id,
+        max('-- Total --') as own_name,
+        sum(count_files) files,
+        sum(billable_size) size
       from
-        owner_collections_objects
+        owner_coll_mime_use_details
       group by
         ogroup
-      union
+        union
       select
         max('ZZZ') as ogroup,
-        max('-- Grand Total --') as collection_name,
-        sum(count_objects) as count_objects
+        max(0) as owner_id,
+        max('-- Grand Total --') as own_name,
+        sum(count_files) files,
+        sum(billable_size) size
       from
-        owner_collections_objects
+        owner_coll_mime_use_details
       order by
         ogroup,
-        collection_name
+        own_name
     }
   end
 
   def get_headers(results)
-    ['Group', 'Collection', 'Object Count']
+    ['Group', 'Owner Id','Owner', 'File Count', 'Billable Size']
   end
 
   def get_types(results)
-    ['ogroup', 'name', 'dataint']
+    ['ogroup', 'own', 'name', 'dataint', 'dataint']
   end
 
 end

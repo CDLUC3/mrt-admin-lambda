@@ -34,6 +34,18 @@ class QueryFactory
       FilesByNameCollQuery.new(@client, path, myparams)
     elsif path == 'count_objects'
       CountObjectsQuery.new(@client, path, myparams)
+    elsif path == 'collections_by_node'
+      CollectionsByNodeQuery.new(@client, path, myparams)
+    elsif path == 'collections_by_owner'
+      CollectionsByOwnerQuery.new(@client, path, myparams)
+    elsif path == 'collections_by_mime_type'
+      CollectionsByMimeQuery.new(@client, path, myparams, 'mime_type')
+    elsif path == 'collections_by_mime_group'
+      CollectionsByMimeQuery.new(@client, path, myparams, 'mime_group')
+    elsif path == 'collection_details'
+      CollectionDetailsQuery.new(@client, path, myparams, 'inv_collection_id')
+    elsif path == 'collection_group_details'
+      CollectionDetailsQuery.new(@client, path, myparams, 'ogroup')
     elsif path == 'invoices'
       InvoicesQuery.new(@client, path, myparams)
     else
