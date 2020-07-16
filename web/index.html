@@ -57,6 +57,32 @@
           </form>
         </li>
       </ul>
+
+      <h3>Metadata Queries: Files</h3>
+      <ul>
+        <li>
+          <form action=".">
+            Object(s) by Filename:
+            <input name="file" type="text" value="" size=60 />
+            Collection (required for a performant query):
+            <input name="coll" type="text" value="cdl_uc3" size=40 />
+            <input name="path" type="hidden" value="tbd"/>
+            <input type="submit" value="Go!"/>
+          </form>
+        </li>
+      </ul>
+
+      <h3>Interesting Use Cases Content</h3>
+      <ul>
+        <li><a href="/web/?path=objects_large">Large Objects</a></li>
+        <li><a href="/web/?path=objects_many_files">Objects with Many Files</a></li>
+      </ul>
+
+      <h3>Slow Queries</h3>
+      <ul>
+        <li><a href="/web/?path=nodes">Storage Nodes</a></li>
+        <li><a href="/web/?path=obj_counts">Object Counts by Owner and Collection</a></li>
+      </ul>
     </div>
     <div id="data">
       <table id="data-table" class="sortable results"/>

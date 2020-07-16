@@ -1,0 +1,36 @@
+class ObjectsManyFilesQuery < ObjectsQuery
+  def initialize(client, path, myparams)
+    super(client, path, myparams)
+    subsql = %{
+      select
+        f.inv_object_id
+      from
+        inv.inv_files f
+      group by
+        f.inv_object_id
+      having
+        count(f.id) > 1000
+      limit 50;
+    }
+    stmt = @client.prepare(subsql)
+    results = stmt.execute()
+    @ids = []
+    @qs = []
+    results.each do |r|
+      @ids.push(r.values[0])
+      @qs.push('?')
+    end
+  end
+
+  def get_title
+    "Objects with Many Files (need to paginate)"
+  end
+
+  def get_params
+    @ids
+  end
+
+  def get_where
+    "o.id in (#{@qs.join(',')})"
+  end
+end
