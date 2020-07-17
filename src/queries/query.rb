@@ -44,7 +44,7 @@ class AdminQuery
     results.each do |r|
       rdata = []
       r.values.each_with_index do |v, c|
-        type = types[c];
+        # type = types[c];
         rdata.push(v)
       end
       data.push(rdata)

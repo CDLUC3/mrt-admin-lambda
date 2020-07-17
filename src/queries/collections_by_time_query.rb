@@ -15,108 +15,92 @@ class CollectionsByTimeQuery < AdminQuery
   end
 
   def get_sql
-    sql = %{
+    %{
       select distinct
-        ogroup,
-        inv_collection_id,
-        collection_name,
-    }
-    for yr in @start..@end do
-      sql += %{
-        (
-          select
-            sum(#{@col})
-          from
-            owner_coll_mime_use_details ocmud2
-          where
-            ocmud2.inv_collection_id = ocmud.inv_collection_id
-          and
-            ocmud2.ogroup = ocmud.ogroup
-          and
-            date_added >= '#{yr}-01-01'
-          and
-            date_added <= '#{yr}-12-31'
-        ) as yr#{yr},
-      }
-    end
-    sql += %{
-        (
-          select
-            sum(#{@col})
-          from
-            owner_coll_mime_use_details ocmud2
-          where
-            ocmud2.inv_collection_id = ocmud.inv_collection_id
-          and
-            ocmud2.ogroup = ocmud.ogroup
-        ) as total
+        oc.ogroup,
+        oc.inv_collection_id,
+        oc.collection_name,
+        sum(#{@col})
       from
-        owner_coll_mime_use_details ocmud
+        owner_collections oc
+      left join owner_coll_mime_use_details ocmud
+        on
+          oc.ogroup = ocmud.ogroup
+        and
+          oc.inv_collection_id = ocmud.inv_collection_id
+        and
+          date_added >= ?
+        and
+          date_added <= ?
+      group by
+        ogroup,
+        inv_collection_id
       union
       select distinct
-        ogroup,
+        oc.ogroup,
         0 as inv_collection_id,
         '-- Total --' as collection_name,
-    }
-    for yr in @start..@end do
-      sql += %{
-        (
-          select
-            sum(#{@col})
-          from
-            owner_coll_mime_use_details ocmud2
-          where
-            ocmud2.ogroup = ocmud.ogroup
-          and
-            date_added >= '#{yr}-01-01'
-          and
-            date_added <= '#{yr}-12-31'
-        ) as yr#{yr},
-      }
-    end
-    sql += %{
-        (
-          select
-            sum(#{@col})
-          from
-            owner_coll_mime_use_details ocmud2
-          where
-            ocmud2.ogroup = ocmud.ogroup
-        ) as total
+        sum(#{@col})
       from
-        owner_coll_mime_use_details ocmud
+        owner_collections oc
+      left join owner_coll_mime_use_details ocmud
+        on
+          oc.ogroup = ocmud.ogroup
+        and
+          date_added >= ?
+        and
+          date_added <= ?
+      group by
+        ogroup,
+        inv_collection_id
       union
       select distinct
         'ZZ' as ogroup,
         0 as inv_collection_id,
-        '-- Grand Total --' as collection_name,
-    }
-    for yr in @start..@end do
-      sql += %{
-        (
-          select
-            sum(#{@col})
-          from
-            owner_coll_mime_use_details ocmud2
-          where
-            date_added >= '#{yr}-01-01'
-          and
-            date_added <= '#{yr}-12-31'
-        ) as yr#{yr},
-      }
-    end
-    sql += %{
-        (
-          select
-            sum(#{@col})
-          from
-            owner_coll_mime_use_details ocmud2
-        ) as total
+        '-- Grand Total --' collection_name,
+        sum(#{@col})
       from
-        owner_coll_mime_use_details ocmud
-      order by ogroup, inv_collection_id, collection_name
+        owner_coll_mime_use_details
+      where
+        date_added >= ?
+      and
+        date_added <= ?
+      order by
+        ogroup,
+        inv_collection_id
     }
-    sql
+  end
+
+  def run_sql
+    stmt = @client.prepare(get_sql)
+    params = [
+      "#{@start}-01-01", "#{@end}-12-31",
+      "#{@start}-01-01", "#{@end}-12-31",
+      "#{@start}-01-01", "#{@end}-12-31"
+    ]
+    results = stmt.execute(*params)
+    types = get_types(results)
+    combined_data = get_result_data(results, types)
+
+    for yr in @start..@end do
+      params = [
+        "#{yr}-01-01", "#{yr}-12-31",
+        "#{yr}-01-01", "#{yr}-12-31",
+        "#{yr}-01-01", "#{yr}-12-31"
+      ]
+      results = stmt.execute(*params)
+      data = get_result_data(results, types)
+      data.each_with_index do |r, i|
+        combined_data[i].insert(-2, r[3])
+      end
+    end
+    {
+      title: get_title,
+      headers: get_headers(results),
+      types: types,
+      data: combined_data,
+      filter_col: get_filter_col
+    }
   end
 
   def get_headers(results)
