@@ -40,7 +40,7 @@ def get_mysql(arn)
     :password=> db_password,
     :port => 3306)
 rescue
-  config = load_config('database.yml')['stage']
+  config = load_config('database.yml')['development']
   db_user = config['username']
   db_password = config['password']
   db_host = config['host']

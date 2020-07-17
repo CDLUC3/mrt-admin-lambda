@@ -61,47 +61,49 @@ class CollectionsByTimeQuery < AdminQuery
   def get_sql
     %{
       select distinct
-        oc.ogroup,
-        oc.inv_collection_id,
-        oc.collection_name,
-        sum(#{@col})
+        oc.ogroup as og,
+        oc.inv_collection_id as ocid,
+        oc.collection_name as ocname,
+        (
+          select
+            sum(#{@col})
+          from
+            owner_coll_mime_use_details ocmud
+          where
+            oc.ogroup = ocmud.ogroup
+          and
+            oc.inv_collection_id = ocmud.inv_collection_id
+          and
+            date_added >= ?
+          and
+            date_added <= ?
+        ) as sumval
       from
         owner_collections oc
-      left join owner_coll_mime_use_details ocmud
-        on
-          oc.ogroup = ocmud.ogroup
-        and
-          oc.inv_collection_id = ocmud.inv_collection_id
-        and
-          date_added >= ?
-        and
-          date_added <= ?
-      group by
-        ogroup,
-        inv_collection_id
       union
       select distinct
-        oc.ogroup,
-        0 as inv_collection_id,
-        '-- Total --' as collection_name,
-        sum(#{@col})
+        oc.ogroup as og,
+        0 as ocid,
+        '-- Total --' as ocname,
+        (
+          select
+            sum(#{@col})
+          from
+            owner_coll_mime_use_details ocmud
+          where
+            oc.ogroup = ocmud.ogroup
+          and
+            date_added >= ?
+          and
+            date_added <= ?
+        ) as sumval
       from
         owner_collections oc
-      left join owner_coll_mime_use_details ocmud
-        on
-          oc.ogroup = ocmud.ogroup
-        and
-          date_added >= ?
-        and
-          date_added <= ?
-      group by
-        ogroup,
-        inv_collection_id
       union
       select distinct
-        'ZZ' as ogroup,
-        0 as inv_collection_id,
-        '-- Grand Total --' collection_name,
+        'ZZ' as og,
+        0 as ocid,
+        '-- Grand Total --' as ocname,
         sum(#{@col})
       from
         owner_coll_mime_use_details
@@ -110,8 +112,8 @@ class CollectionsByTimeQuery < AdminQuery
       and
         date_added <= ?
       order by
-        ogroup,
-        inv_collection_id
+        og,
+        ocid
     }
   end
 

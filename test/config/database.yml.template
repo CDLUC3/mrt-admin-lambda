@@ -6,4 +6,7 @@ stage: &stage
   database:
   port: 3306
   username:
-  password: 
+  password:
+
+  development:
+    <<: *stage
