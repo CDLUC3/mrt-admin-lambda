@@ -1,9 +1,53 @@
+require 'date'
 class CollectionsByTimeQuery < AdminQuery
   def initialize(client, path, myparams, col)
     super(client, path, myparams)
     @col = (col == 'count_files' || col == 'billable_size') ? col : 'count_files'
-    @start=2013
-    @end=Time.now.year
+    @interval = myparams.key?('interval') ? myparams['interval'].strip : ''
+    @interval = (@interval == 'years' || @interval == 'days' || @interval == 'weeks') ? @interval : 'years'
+    @ranges = []
+
+    if (@interval == 'days')
+      @end = Date.today + 1
+      @start=@end - 7
+      rstart = @start
+      while rstart < @end do
+        @ranges.push([rstart, rstart+1])
+        rstart = rstart + 1
+      end
+    elsif (@interval == 'weeks')
+      @end = Date.today - Date.today.cwday + 7
+      @start=@end - 28
+      rstart = @start
+      while rstart < @end do
+        @ranges.push([rstart, rstart+7])
+        rstart = rstart + 7
+      end
+    else
+      @end = Date.today.next_year.prev_month(Date.today.month - 1) - Date.today.mday + 1
+      @start=Date.new(2013,01,01)
+      rstart = @start
+      while rstart < @end do
+        @ranges.push([rstart, rstart.next_year])
+        rstart = rstart.next_year
+      end
+    end
+    @headers = ['Group', 'Collection Id', 'Collection Name']
+    @types = ['ogroup', 'coll', 'name']
+    @ranges.each do |range|
+      @headers.push(range[0])
+      @types.push('dataint')
+    end
+    @headers.push('Total')
+    @types.push('dataint')
+  end
+
+  def get_headers(results)
+    @headers
+  end
+
+  def get_types(results)
+    @types
   end
 
   def get_filter_col
@@ -11,7 +55,7 @@ class CollectionsByTimeQuery < AdminQuery
   end
 
   def get_title
-    "Collection #{@col} Over Time"
+    "Collection #{@col} Over Time (#{@start} - #{@end})"
   end
 
   def get_sql
@@ -74,19 +118,19 @@ class CollectionsByTimeQuery < AdminQuery
   def run_sql
     stmt = @client.prepare(get_sql)
     params = [
-      "#{@start}-01-01", "#{@end}-12-31",
-      "#{@start}-01-01", "#{@end}-12-31",
-      "#{@start}-01-01", "#{@end}-12-31"
+      @start, @end,
+      @start, @end,
+      @start, @end
     ]
     results = stmt.execute(*params)
     types = get_types(results)
     combined_data = get_result_data(results, types)
 
-    for yr in @start..@end do
+    @ranges.each do |range|
       params = [
-        "#{yr}-01-01", "#{yr}-12-31",
-        "#{yr}-01-01", "#{yr}-12-31",
-        "#{yr}-01-01", "#{yr}-12-31"
+        range[0], range[1],
+        range[0], range[1],
+        range[0], range[1]
       ]
       results = stmt.execute(*params)
       data = get_result_data(results, types)
@@ -103,21 +147,5 @@ class CollectionsByTimeQuery < AdminQuery
     }
   end
 
-  def get_headers(results)
-    heads = ['Group', 'Collection Id', 'Collection Name']
-    for yr in @start..@end do
-      heads.push(yr)
-    end
-    heads.push('Total')
-    heads
-  end
-
-  def get_types(results)
-    types = ['ogroup', 'coll', 'name']
-    for yr in @start..@end+1 do
-      types.push('dataint')
-    end
-    types
-  end
 
 end
