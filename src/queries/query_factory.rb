@@ -30,6 +30,8 @@ class QueryFactory
       ObjectsLargeQuery.new(@client, path, myparams)
     elsif path == 'objects_many_files'
       ObjectsManyFilesQuery.new(@client, path, myparams)
+    elsif path == 'objects_recent'
+      ObjectsRecentQuery.new(@client, path, myparams)
     elsif path == 'files_by_name_coll'
       FilesByNameCollQuery.new(@client, path, myparams)
     elsif path == 'count_objects'

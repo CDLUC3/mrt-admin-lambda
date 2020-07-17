@@ -13,6 +13,6 @@ class ObjectsByTitleQuery < ObjectsQuery
   end
 
   def get_where
-    'o.erc_what like ?'
+    'where o.erc_what like ?'
   end
 end

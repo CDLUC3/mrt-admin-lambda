@@ -1,4 +1,13 @@
 class ObjectsQuery < AdminQuery
+  def initialize(client, path, myparams, sort='id')
+    super(client, path, myparams)
+    if sort == 'created'
+      @sort = 'o.created desc'
+    else
+      @sort = 'o.id asc'
+    end
+  end
+
   def get_title
     "Object Query"
   end
@@ -31,27 +40,27 @@ class ObjectsQuery < AdminQuery
             inv.inv_files f
           where
             f.inv_object_id=o.id
-        ) as billable_size
+        ) as billable_size,
+        date(o.created) as created
       from
         inv.inv_objects o
       inner join inv.inv_collections_inv_objects icio
         on o.id = icio.inv_object_id
       inner join inv.inv_collections c
         on icio.inv_collection_id = c.id
-      where
     } + get_where +
     %{
-      order by o.id asc
-      limit 20;
+      order by #{@sort}
+      limit 50;
     }
   end
 
   def get_headers(results)
-    ['Object Id','Ark', 'Title', 'Version', 'Coll Id', 'Collection', 'File Count', 'Billable Size']
+    ['Object Id','Ark', 'Title', 'Version', 'Coll Id', 'Collection', 'File Count', 'Billable Size', 'Created']
   end
 
   def get_types(results)
-    ['', 'ark', 'name', '', 'coll', 'mnemonic', 'dataint', 'dataint']
+    ['', 'ark', 'name', '', 'coll', 'mnemonic', 'dataint', 'dataint', '']
   end
 
 end

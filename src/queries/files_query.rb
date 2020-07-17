@@ -40,7 +40,6 @@ class FilesQuery < AdminQuery
         on icio.inv_collection_id = c.id
       inner join inv.inv_files f
         on f.inv_object_id = o.id
-      where
     } + get_where +
     %{
       order by o.id asc

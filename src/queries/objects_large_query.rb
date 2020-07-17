@@ -23,7 +23,7 @@ class ObjectsLargeQuery < ObjectsQuery
   end
 
   def get_title
-    "50 Large Objects (need to paginate)"
+    "Large Objects (need to paginate)"
   end
 
   def get_params
@@ -31,6 +31,6 @@ class ObjectsLargeQuery < ObjectsQuery
   end
 
   def get_where
-    "o.id in (#{@qs.join(',')})"
+    "where o.id in (#{@qs.join(',')})"
   end
 end

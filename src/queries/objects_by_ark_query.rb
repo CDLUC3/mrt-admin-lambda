@@ -13,6 +13,6 @@ class ObjectsByArkQuery < ObjectsQuery
   end
 
   def get_where
-    'o.ark like ?'
+    'where o.ark like ?'
   end
 end

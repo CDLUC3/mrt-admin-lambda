@@ -31,6 +31,6 @@ class ObjectsManyFilesQuery < ObjectsQuery
   end
 
   def get_where
-    "o.id in (#{@qs.join(',')})"
+    "where o.id in (#{@qs.join(',')})"
   end
 end

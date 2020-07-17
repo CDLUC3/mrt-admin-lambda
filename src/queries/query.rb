@@ -26,6 +26,9 @@ class AdminQuery
     query_params = get_params
     results = stmt.execute(*query_params)
     get_result_json(results)
+  rescue => e
+    puts(e)
+    puts(get_sql)
   end
 
   def get_headers(results)

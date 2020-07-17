@@ -13,6 +13,6 @@ class ObjectsByAuthorQuery < ObjectsQuery
   end
 
   def get_where
-    'o.erc_who like ?'
+    'where o.erc_who like ?'
   end
 end
