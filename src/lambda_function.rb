@@ -64,7 +64,7 @@ def lambda_handler(event:, context:)
     query_factory = QueryFactory.new(client)
     query = query_factory.get_query_for_path(path, myparams)
     json = query.run_sql.to_json
-
+ 
     {
       headers: { 'Access-Control-Allow-Origin': '*'},
       statusCode: 200,
@@ -74,7 +74,7 @@ def lambda_handler(event:, context:)
     {
       headers: { 'Access-Control-Allow-Origin': '*'},
       statusCode: 500,
-      body: { error: e.to_s }.to_json
+      body: { error: e.message, trace: e.backtrace }.to_json
     }
     #JSON.generate('Hello from Lambda!')
 end
