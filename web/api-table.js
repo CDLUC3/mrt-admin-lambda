@@ -51,6 +51,10 @@ function showUrl(url) {
         data.filter_col
       )
     },
+    error: function( event, jqxhr, settings, thrownError ) {
+      alert(event);
+      alert(thrownError)
+    },
     complete: function(xhr, status) {
       $("#in-progress").dialog("close");
     }
