@@ -98,12 +98,22 @@
 
       <h3>Operational Information</h3>
       <ul>
-        <li><a href="index.html?path=tbd">TBD: Audits processed over time</a></li>
-        <li><a href="index.html?path=tbd">TBD: Overdue audits</a></li>
-        <li><a href="index.html?path=tbd">TBD: Replication needed</a></li>
+        <li><a href="index.html?path=audit_status">Audit - Irregular Status</a></li>
+        <li><a href="index.html?path=audit_oldest">Audit - Oldest Unprocessed Item</a></li>
+        <li><a href="index.html?path=audit_processed">Audits processed over time</a></li>
+        <li><a href="index.html?path=replication_needed">Replication needed</a></li>
         <li><a href="index.html?path=tbd">TBD: Download reqeusts by date (Storage Logs -> Splunk? -> Database)</a></li>
         <li><a href="index.html?path=tbd">TBD: Ingests in progress (Lambda -> Ingest -> ZQ)</a></li>
       </ul>
+
+      <h3>Source Code</h3>
+      <ul>
+        <li><a href="https://github.com/CDLUC3/mrt-admin-lambda/tree/main/web">Web Interface</a></li>
+        <li><a href="https://github.com/CDLUC3/mrt-admin-lambda/tree/main/src">Lambda Handler</a></li>
+        <li><a href="https://github.com/CDLUC3/mrt-admin-lambda/tree/main/src/queries">Queries</a></li>
+        <li><a href="https://github.com/CDLUC3/mrt-admin-lambda/blob/main/test/app.rb">Test Driver - Sinatra</a></li>
+      </ul>
+
     </div>
     <div id="data">
       <table id="data-table" class="sortable results"/>

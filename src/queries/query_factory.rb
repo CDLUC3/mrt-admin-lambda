@@ -54,6 +54,14 @@ class QueryFactory
       CollectionDetailsQuery.new(@client, path, myparams, 'ogroup')
     elsif path == 'invoices'
       InvoicesQuery.new(@client, path, myparams)
+    elsif path == 'audit_status'
+      AuditStatusQuery.new(@client, path, myparams)
+    elsif path == 'audit_oldest'
+      AuditOldestQuery.new(@client, path, myparams)
+    elsif path == 'audit_processed'
+      AuditProcessedQuery.new(@client, path, myparams)
+    elsif path == 'replication_needed'
+      ReplicationNeededQuery.new(@client, path, myparams)
     else
       AdminQuery.new(@client, path, myparams)
     end
