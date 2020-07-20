@@ -51,6 +51,9 @@ function showUrl(url) {
         data.filter_col
       )
     },
+    error: function( event, jqxhr, settings, thrownError ) {
+      alert("An error has occurred.  Possibly a timeout.")
+    },
     complete: function(xhr, status) {
       $("#in-progress").dialog("close");
     }
