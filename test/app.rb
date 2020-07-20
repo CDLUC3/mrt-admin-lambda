@@ -18,5 +18,6 @@ get '/*' do
   path = params['splat'][0]
   event = {path: path, queryStringParameters: params}
   resp = lambda_handler(event: event, context: {})
+  status resp[:StatusCode]
   resp[:body]
 end

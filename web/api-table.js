@@ -52,7 +52,7 @@ function showUrl(url) {
       )
     },
     error: function( event, jqxhr, settings, thrownError ) {
-      alert("An error has occurred.  Possibly a timeout.")
+      alert("An error has occurred.  Possibly a timeout.\n" + event.error)
     },
     complete: function(xhr, status) {
       $("#in-progress").dialog("close");
