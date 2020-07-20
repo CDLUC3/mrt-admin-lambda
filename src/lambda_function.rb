@@ -67,13 +67,13 @@ def lambda_handler(event:, context:)
 
     {
       headers: { 'Access-Control-Allow-Origin': '*'},
-      status: 200,
+      statusCode: 200,
       body: json
     }
   rescue => e
     {
       headers: { 'Access-Control-Allow-Origin': '*'},
-      status: 500,
+      statusCode: 500,
       body: { error: e.to_s }.to_json
     }
     #JSON.generate('Hello from Lambda!')
