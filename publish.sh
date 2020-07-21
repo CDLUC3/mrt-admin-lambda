@@ -1,6 +1,6 @@
 #!/bin/bash
 # Depends on https://github.com/CDLUC3/uc3-aws-cli scripts
-# If you have modified the Gemfile, you must run `makeDependencies.sh`
+source ~/.profile.d/uc3-aws-util.sh
 
 # Check that the SSM_ROOT_PATH has been initialized
 check_ssm_root
@@ -21,5 +21,5 @@ do
 done
 
 # echo site url
-echo "Website Updated:" 
+echo "Website Updated:"
 echo ${SITE_URL}
