@@ -1,4 +1,4 @@
-## Admin Lambda
+# Admin Lambda
 
 This code contains a generalized query tool for the Merritt team.
 
@@ -10,12 +10,12 @@ For testing purposes, a local copy of the code will be accessible using Sinatra.
 
 The Lambda code is deployed to the Ruby 2.7 environment.  A build process is required to prepare a deployment zip file for Lambda.
 
-### Directories
+## Directories
 - src: Lambda source code
 - test: Sinatra driver for desktop testing
 - web: static website code to be deployed to S3
 
-### Build Process
+## Lambda Build Process
 
 - A Ruby `bundle install` must be run to build all of the dependencies needed for the lambda deployment
 - The mysql dependency creates OS/architecture specific components that must be built for the target environment
@@ -26,34 +26,26 @@ The Lambda code is deployed to the Ruby 2.7 environment.  A build process is req
   - Did the code or Gemfile change?
     - `source setup.sh` to set environment variables
     - Run `deploy.sh` to package code and dependencies into **deploy.zip**
+    - The build script will embed the API Gateway URL into the javaScript code
     - Publish to lambda
+- Database credentials are made available to the Lambda via the SSM parameter store.
 
-### Endpoints to support
+## Static Website Publishing
+- A static website provides the user interface for these queries.
+- On page load, URL parameters are read to determine the query to run
+- A query request is made via ajax
+- Query results are reformatted into an html table and displayed to the user  
+- A publishing script `publish.js` will copy assets into an S3 bucket
+- AWS Cloud Front has been configured to provide a URL for the static website
+  - Cloud Front is also used to restrict access to the website
 
-- /admin-tool
-  - entrypoint.rb
-  - /query/objects
-  - /query/objects_by_title
-  - /query/objects_by_author
-  - /query/objects_by_file
-  - /query/objects_by_file_coll
-  - /query/large_object
-  - /query/many_files
-  - /query/nodes
-  - /query/coll_nodes/:node
-  - /query/mime_groups
-  - /query/coll_mime_types/:mime
-  - /query/coll_mime_groups/:gmime
-  - /query/owners
-  - /query/owners_obj
-  - /query/collections
-  - /query/coll_invoices/:fy
-  - /query/owners_coll/:own
-  - /query/files_non_ascii
-  - /query/coll_details/:coll
-  - /query/group_details/:ogroup
+## Local Testing
+- A Sinatra web server can be started in lieu of Cloud Front / API Gateway / Lambda.
+- This web server is designed to mimic the pass through of request parameters to a Lambda function.  Request parameters are packaged into an event object.
+- Since the desktop environment may not have a local copy of SSM parameters, the code is configured to pull database credentials from a configuration file `config/database.yml`
 
-### Web Assets - to be packaged and deployed to S3
-
-- /web
-See https://github.com/terrywbrady/api-table
+## TODO's
+- Create a gem file for resolving database credentials from SSM, ENV or YAML.
+- Add rspec tests as a test driver
+- Create a Dockerfile to package up the local ruby test environment.
+  - Consider the creation of a mock database dump to be packaged for Docker.
