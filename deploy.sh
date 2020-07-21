@@ -27,4 +27,4 @@ unzip -l deploy.zip
 aws lambda update-function-code --function-name ${LAMBDA_ARN} --zip-file fileb://deploy.zip --region us-west-2
 
 # Set environment and set timeout
-aws lambda update-function-configuration --function-name ${LAMBDA_ARN} --region us-west-2 --timeout 60 --environment=SSM_ROOT_PATH=${SSM_ROOT_PATH}
+aws lambda update-function-configuration --function-name ${LAMBDA_ARN} --region us-west-2 --timeout 60 --environment Variables={SSM_ROOT_PATH=${SSM_ROOT_PATH}}
