@@ -1,7 +1,25 @@
 #!/bin/bash
+# Depends on https://github.com/CDLUC3/uc3-aws-cli scripts
+# If you have modified the Gemfile, you must run `makeDependencies.sh`
+
+# Check that the SSM_ROOT_PATH has been initialized
+check_ssm_root
+
 cd web
+APIGW_URL=`get_ssm_value_by_name admintool/api-path`
+S3WEB_BUCKET=`get_ssm_value_by_name admintool/s3-bucket`
+S3WEB_PATH=`get_ssm_value_by_name admintool/s3-path`
+SITE_URL=`get_ssm_value_by_name admintool/site-url`
+
+# Embed the api path into the javascript for ajax requests
 sed -i -e "s|http://localhost:4567|${APIGW_URL}|" api-table.js
+
+# Copy static website assets to S3
 for file in *.*
 do
-  aws s3 cp $file s3://${S3WEB_BUCKET}/mrt/admintool/
+  aws s3 cp $file s3://${S3WEB_BUCKET}${S3WEB_PATH}
 done
+
+# echo site url
+echo "Website Updated:" 
+echo ${SITE_URL}

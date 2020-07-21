@@ -16,8 +16,13 @@ The Lambda code is deployed to the Ruby 2.7 environment.  A build process is req
 - web: static website code to be deployed to S3
 
 ## Deployment Preparation
-- Copy `setup.sh.template` to `setup.sh`
-- Assign AWS ARN and bucket names to the environment variables in the file.
+- This code relies on a set of SSM parameters to control the application.
+- https://github.com/CDLUC3/uc3-aws-cli contains the code for reading Merritt SSM parameters.
+  - ../admintool/lambda-arn - arn for the function
+  - ../admintool/api-path - api gateway path (or cloudfront path)
+  - ../admintool/s3-bucket - Website S3 bucket
+  - ../admintool/s3-path - Website path in S3
+  - ../admintool/site-url - CloudFront website
 
 ## Lambda Build Process
 
@@ -28,7 +33,6 @@ The Lambda code is deployed to the Ruby 2.7 environment.  A build process is req
   - Did the Gemfile change?
     - Run `makeDependencies.sh` to generate **dependencies.zip**
   - Did the code or Gemfile change?
-    - `source setup.sh` to set environment variables
     - Run `deploy.sh` to package code and dependencies into **deploy.zip**
     - The build script will embed the API Gateway URL into the javaScript code
     - Publish to lambda
@@ -39,8 +43,7 @@ The Lambda code is deployed to the Ruby 2.7 environment.  A build process is req
 - On page load, URL parameters are read to determine the query to run
 - A query request is made via ajax
 - Query results are reformatted into an html table and displayed to the user  
-- A publishing script `publish.js` will copy assets into an S3 bucket
-  - Run `source setup.sh` to define the S3 bucket where web assets will be hosted.
+- A publishing script `publish.sh` will copy assets into an S3 bucket
 - AWS Cloud Front has been configured to provide a URL for the static website
   - Cloud Front is also used to restrict access to the website
 
