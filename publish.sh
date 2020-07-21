@@ -1,5 +1,6 @@
 #!/bin/bash
 # Depends on https://github.com/CDLUC3/uc3-aws-cli scripts
+EXIT_ON_DIE=true
 source ~/.profile.d/uc3-aws-util.sh
 
 # Check that the SSM_ROOT_PATH has been initialized
