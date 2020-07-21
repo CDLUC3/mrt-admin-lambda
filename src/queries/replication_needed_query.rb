@@ -18,7 +18,7 @@ class ReplicationNeededQuery < AdminQuery
   end
 
   def get_headers(results)
-    ['File Count']
+    ['Object Count']
   end
 
   def get_types(results)
