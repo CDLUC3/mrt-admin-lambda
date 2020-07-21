@@ -14,11 +14,11 @@ def get_key_val(obj, key, defval='')
 end
 
 def getSsmPath(arn)
-  lambda = Aws::Lambda::Client.new
+  #lambda = Aws::Lambda::Client.new
   #lambda.list_tags({resource: arn})
-  '/uc3/mrt/stg/'
+  ENV['SSM_ROOT_PATH']
 rescue
-  '/uc3/mrt/stg/'
+  "na"
 end
 
 def getSsmVal(ssm, root, path)
@@ -64,7 +64,7 @@ def lambda_handler(event:, context:)
     query_factory = QueryFactory.new(client)
     query = query_factory.get_query_for_path(path, myparams)
     json = query.run_sql.to_json
- 
+
     {
       headers: { 'Access-Control-Allow-Origin': '*'},
       statusCode: 200,

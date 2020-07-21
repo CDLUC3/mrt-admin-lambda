@@ -15,6 +15,10 @@ The Lambda code is deployed to the Ruby 2.7 environment.  A build process is req
 - test: Sinatra driver for desktop testing
 - web: static website code to be deployed to S3
 
+## Deployment Preparation
+- Copy `setup.sh.template` to `setup.sh`
+- Assign AWS ARN and bucket names to the environment variables in the file.
+
 ## Lambda Build Process
 
 - A Ruby `bundle install` must be run to build all of the dependencies needed for the lambda deployment
@@ -36,6 +40,7 @@ The Lambda code is deployed to the Ruby 2.7 environment.  A build process is req
 - A query request is made via ajax
 - Query results are reformatted into an html table and displayed to the user  
 - A publishing script `publish.js` will copy assets into an S3 bucket
+  - Run `source setup.sh` to define the S3 bucket where web assets will be hosted.
 - AWS Cloud Front has been configured to provide a URL for the static website
   - Cloud Front is also used to restrict access to the website
 
@@ -49,3 +54,5 @@ The Lambda code is deployed to the Ruby 2.7 environment.  A build process is req
 - Add rspec tests as a test driver
 - Create a Dockerfile to package up the local ruby test environment.
   - Consider the creation of a mock database dump to be packaged for Docker.
+- Consider a Lambda layer for the MySQL dependencies
+- Consider deploying the Lambda code and the website assets to the same S3 bucket.
