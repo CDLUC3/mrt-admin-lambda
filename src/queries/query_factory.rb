@@ -24,6 +24,8 @@ class QueryFactory
       ObjectsByArkQuery.new(@client, path, myparams)
     elsif path == 'objects_by_title'
       ObjectsByTitleQuery.new(@client, path, myparams)
+    elsif path == 'objects_by_local_id'
+      ObjectsByLocalIdQuery.new(@client, path, myparams)
     elsif path == 'objects_by_author'
       ObjectsByAuthorQuery.new(@client, path, myparams)
     elsif path == 'objects_large'
