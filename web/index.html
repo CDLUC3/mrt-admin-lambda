@@ -35,7 +35,7 @@
         <li>
           <form action="index.html">
             Object(s) by Ark:
-            <input name="ark" type="text" value="ark:/" size=40 />
+            <input name="ark" type="text" value="ark:/" size=40 title="Use a % as a wildcard search string"/>
             <input name="path" type="hidden" value="objects_by_ark"/>
             <input type="submit" value="Go!"/>
           </form>
@@ -43,7 +43,7 @@
         <li>
           <form action="index.html">
             Object(s) by Title:
-            <input name="title" type="text" value="" size=40 />
+            <input name="title" type="text" value="" size=40 title="Use a % as a wildcard search string"/>
             <input name="path" type="hidden" value="objects_by_title"/>
             <input type="submit" value="Go!"/>
           </form>
@@ -51,7 +51,7 @@
         <li>
           <form action="index.html">
             Object(s) by Author:
-            <input name="author" type="text" value="" size=40 />
+            <input name="author" type="text" value="" size=40 title="Use a % as a wildcard search string"/>
             <input name="path" type="hidden" value="objects_by_author"/>
             <input type="submit" value="Go!"/>
           </form>
@@ -59,7 +59,7 @@
         <li>
           <form action="index.html">
             Object(s) by Local ID:
-            <input name="localid" type="text" value="" size=40 />
+            <input name="localid" type="text" value="" size=40 title="Use a % as a wildcard search string"/>
             <input name="path" type="hidden" value="objects_by_local_id"/>
             <input type="submit" value="Go!"/>
           </form>
@@ -69,9 +69,9 @@
       <h3>Metadata Queries: Files</h3>
       <ul>
         <li>
-          <form action=".">
+          <form action="index.html">
             Object(s) by Filename:
-            <input name="file" type="text" value="" size=60 />
+            <input name="file" type="text" value="" size=60 title="Use a % as a wildcard search string"/>
             <br/>
             Collection (required for a performant query):
             <input name="coll" type="text" value="cdl_uc3" size=40 />
