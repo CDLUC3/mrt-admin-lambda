@@ -13,6 +13,7 @@ S3WEB_PATH=`get_ssm_value_by_name admintool/s3-path`
 SITE_URL=`get_ssm_value_by_name admintool/site-url`
 
 # Embed the api path into the javascript for ajax requests
+git checkout -- api-table.js
 sed -i -e "s|http://localhost:4567|${APIGW_URL}|" api-table.js
 
 # Copy static website assets to S3
