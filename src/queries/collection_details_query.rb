@@ -1,6 +1,6 @@
 class CollectionDetailsQuery < AdminQuery
-  def initialize(client, path, myparams, col)
-    super(client, path, myparams)
+  def initialize(query_factory, path, myparams, col)
+    super(query_factory, path, myparams)
     @coll = myparams.key?('coll') ? myparams['coll'].strip : ''
     @col = (col == 'inv_collection_id' || col == 'ogroup') ? col : 'inv_collection_id'
   end

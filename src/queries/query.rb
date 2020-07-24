@@ -1,6 +1,7 @@
 class AdminQuery
-  def initialize(client, path, myparams)
-    @client = client
+  def initialize(query_factory, path, myparams)
+    @client = query_factory.client
+    @merritt_path = query_factory.merritt_path
     @path = path
     @myparams = myparams
   end
@@ -62,7 +63,8 @@ class AdminQuery
       headers: get_headers(results),
       types: types,
       data: get_result_data(results, types),
-      filter_col: get_filter_col
+      filter_col: get_filter_col,
+      merritt_path: @merritt_path
     }
   end
 

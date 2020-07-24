@@ -22,6 +22,11 @@ rescue
   "na"
 end
 
+def getMerrittPath
+  ENV.key?('MERRITT_PATH') ? ENV['MERRITT_PATH'] : "https://merritt.cdlib.org"
+end
+
+
 def getSsmVal(ssm, root, path)
   ssm.get_parameter(name: "#{root}#{path}")[:parameter][:value]
 end
@@ -62,7 +67,7 @@ def lambda_handler(event:, context:)
     path = get_key_val(event, 'path').gsub(/^\//, '')
     myparams = get_key_val(event, 'queryStringParameters', {})
 
-    query_factory = QueryFactory.new(client)
+    query_factory = QueryFactory.new(client, getMerrittPath)
     query = query_factory.get_query_for_path(path, myparams)
     json = query.run_sql.to_json
 

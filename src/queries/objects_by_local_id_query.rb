@@ -1,6 +1,6 @@
 class ObjectsByLocalIdQuery < ObjectsQuery
-  def initialize(client, path, myparams)
-    super(client, path, myparams)
+  def initialize(query_factory, path, myparams)
+    super(query_factory, path, myparams)
     @localid = myparams.key?('localid') ? myparams['localid'].strip : ''
   end
 

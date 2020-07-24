@@ -1,6 +1,6 @@
 class ObjectsByAuthorQuery < ObjectsQuery
-  def initialize(client, path, myparams)
-    super(client, path, myparams)
+  def initialize(query_factory, path, myparams)
+    super(query_factory, path, myparams)
     @author = myparams.key?('author') ? myparams['author'].strip : ''
   end
 

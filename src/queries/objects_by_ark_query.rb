@@ -1,6 +1,6 @@
 class ObjectsByArkQuery < ObjectsQuery
-  def initialize(client, path, myparams)
-    super(client, path, myparams)
+  def initialize(query_factory, path, myparams)
+    super(query_factory, path, myparams)
     @ark = myparams.key?('ark') ? myparams['ark'].strip : ''
   end
 

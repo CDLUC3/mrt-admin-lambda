@@ -7,65 +7,74 @@ require_relative 'files_query'
 Dir[File.dirname(__FILE__) + '/*query.rb'].each {|file| require file }
 
 class QueryFactory
-  def initialize(client)
+  def initialize(client, merritt_path)
     @client = client
+    @merritt_path = merritt_path
+  end
+
+  def client
+    @client
+  end
+
+  def merritt_path
+    @merritt_path
   end
 
   def get_query_for_path(path, myparams)
     if path == 'owners'
-      OwnerQuery.new(@client, path, myparams)
+      OwnerQuery.new(self, path, myparams)
     elsif path == 'collections'
-      CollectionQuery.new(@client, path, myparams)
+      CollectionQuery.new(self, path, myparams)
     elsif path == 'mimes'
-      MimeQuery.new(@client, path, myparams)
+      MimeQuery.new(self, path, myparams)
     elsif path == 'nodes'
-      NodesQuery.new(@client, path, myparams)
+      NodesQuery.new(self, path, myparams)
     elsif path == 'objects_by_ark'
-      ObjectsByArkQuery.new(@client, path, myparams)
+      ObjectsByArkQuery.new(self, path, myparams)
     elsif path == 'objects_by_title'
-      ObjectsByTitleQuery.new(@client, path, myparams)
+      ObjectsByTitleQuery.new(self, path, myparams)
     elsif path == 'objects_by_local_id'
-      ObjectsByLocalIdQuery.new(@client, path, myparams)
+      ObjectsByLocalIdQuery.new(self, path, myparams)
     elsif path == 'objects_by_author'
-      ObjectsByAuthorQuery.new(@client, path, myparams)
+      ObjectsByAuthorQuery.new(self, path, myparams)
     elsif path == 'objects_large'
-      ObjectsLargeQuery.new(@client, path, myparams)
+      ObjectsLargeQuery.new(self, path, myparams)
     elsif path == 'objects_many_files'
-      ObjectsManyFilesQuery.new(@client, path, myparams)
+      ObjectsManyFilesQuery.new(self, path, myparams)
     elsif path == 'objects_recent'
-      ObjectsRecentQuery.new(@client, path, myparams)
+      ObjectsRecentQuery.new(self, path, myparams)
     elsif path == 'files_by_name_coll'
-      FilesByNameCollQuery.new(@client, path, myparams)
+      FilesByNameCollQuery.new(self, path, myparams)
     elsif path == 'count_objects'
-      CountObjectsQuery.new(@client, path, myparams)
+      CountObjectsQuery.new(self, path, myparams)
     elsif path == 'collections_by_node'
-      CollectionsByNodeQuery.new(@client, path, myparams)
+      CollectionsByNodeQuery.new(self, path, myparams)
     elsif path == 'collections_by_owner'
-      CollectionsByOwnerQuery.new(@client, path, myparams)
+      CollectionsByOwnerQuery.new(self, path, myparams)
     elsif path == 'collections_by_mime_type'
-      CollectionsByMimeQuery.new(@client, path, myparams, 'mime_type')
+      CollectionsByMimeQuery.new(self, path, myparams, 'mime_type')
     elsif path == 'collections_by_mime_group'
-      CollectionsByMimeQuery.new(@client, path, myparams, 'mime_group')
+      CollectionsByMimeQuery.new(self, path, myparams, 'mime_group')
     elsif path == 'collections_by_time_count'
-      CollectionsByTimeQuery.new(@client, path, myparams, 'count_files')
+      CollectionsByTimeQuery.new(self, path, myparams, 'count_files')
     elsif path == 'collections_by_time_size'
-      CollectionsByTimeQuery.new(@client, path, myparams, 'billable_size')
+      CollectionsByTimeQuery.new(self, path, myparams, 'billable_size')
     elsif path == 'collection_details'
-      CollectionDetailsQuery.new(@client, path, myparams, 'inv_collection_id')
+      CollectionDetailsQuery.new(self, path, myparams, 'inv_collection_id')
     elsif path == 'collection_group_details'
-      CollectionDetailsQuery.new(@client, path, myparams, 'ogroup')
+      CollectionDetailsQuery.new(self, path, myparams, 'ogroup')
     elsif path == 'invoices'
-      InvoicesQuery.new(@client, path, myparams)
+      InvoicesQuery.new(self, path, myparams)
     elsif path == 'audit_status'
-      AuditStatusQuery.new(@client, path, myparams)
+      AuditStatusQuery.new(self, path, myparams)
     elsif path == 'audit_oldest'
-      AuditOldestQuery.new(@client, path, myparams)
+      AuditOldestQuery.new(self, path, myparams)
     elsif path == 'audit_processed'
-      AuditProcessedQuery.new(@client, path, myparams)
+      AuditProcessedQuery.new(self, path, myparams)
     elsif path == 'replication_needed'
-      ReplicationNeededQuery.new(@client, path, myparams)
+      ReplicationNeededQuery.new(self, path, myparams)
     else
-      AdminQuery.new(@client, path, myparams)
+      AdminQuery.new(self, path, myparams)
     end
   end
 end

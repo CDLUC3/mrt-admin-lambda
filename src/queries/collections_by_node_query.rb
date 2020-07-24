@@ -1,6 +1,6 @@
 class CollectionsByNodeQuery < AdminQuery
-  def initialize(client, path, myparams)
-    super(client, path, myparams)
+  def initialize(query_factory, path, myparams)
+    super(query_factory, path, myparams)
     @node = myparams.key?('node') ? myparams['node'].strip : ''
   end
 

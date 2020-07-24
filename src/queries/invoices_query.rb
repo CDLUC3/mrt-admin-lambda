@@ -1,6 +1,6 @@
 class InvoicesQuery < AdminQuery
-  def initialize(client, path, myparams)
-    super(client, path, myparams)
+  def initialize(query_factory, path, myparams)
+    super(query_factory, path, myparams)
     # Fiscal year to report on.  Starting with FY2019, there are significant changes to the rate and adjustments for charge backs.
     @fy = myparams.key?('fy') ? myparams['fy'].strip.to_i : 2020
 

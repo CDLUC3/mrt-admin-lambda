@@ -48,7 +48,8 @@ function showUrl(url) {
         data.headers,
         data.types,
         data.data,
-        data.filter_col
+        data.filter_col,
+        data.merritt_path
       )
     },
     error: function( xhr, status ) {
@@ -60,7 +61,7 @@ function showUrl(url) {
   });
 }
 
-function createTable(headers, types, data, filter_col) {
+function createTable(headers, types, data, filter_col, merritt_path) {
   $("#data-table")
     .empty()
     .append($("<thead/>"))
@@ -69,7 +70,7 @@ function createTable(headers, types, data, filter_col) {
   tr.addClass("header");
   for(var c=0; c<headers.length; c++) {
     if (types[c] != 'na') {
-      tr.append(createCell(headers[c], types[c], true));
+      tr.append(createCell(headers[c], types[c], true, merritt_path));
     }
   }
   for(var r=0; r<data.length; r++) {
@@ -89,21 +90,21 @@ function createTable(headers, types, data, filter_col) {
 
     for(var c=0; c<data[r].length; c++) {
       if (types[c] != 'na') {
-        tr.append(createCell(data[r][c], types[c], false));
+        tr.append(createCell(data[r][c], types[c], false, merritt_path));
       }
     }
   }
   sorttable.makeSortable($("#data-table")[0]);
 }
 
-function createCell(v, type, isHeader) {
+function createCell(v, type, isHeader, merritt_path) {
   var cell = isHeader ? $("<th/>") : $("<td/>");
   cell.addClass("cell").addClass(type);
-  format(cell, v, isHeader ? '' : type);
+  format(cell, v, isHeader ? '' : type, merritt_path);
   return cell;
 }
 
-function format(cell, v, type) {
+function format(cell, v, type, merritt_path) {
   if (v == null) {
   } else if (type == 'foo') {
     $("<a href='?json=foo'/>").text(v).appendTo(cell);
@@ -146,12 +147,12 @@ function format(cell, v, type) {
   } else if (type == 'mnemonic'){
     link = $("<a/>")
       .text(v)
-      .attr("href", "http://merritt-stage.cdlib.org/m/"+v)
+      .attr("href", merritt_path + "/m/" + v)
       .appendTo(cell);
   } else if (type == 'ark'){
     link = $("<a/>")
       .text(v)
-      .attr("href", "http://merritt-stage.cdlib.org/m/"+encodeURIComponent(v))
+      .attr("href", merritt_path + "/m/" + encodeURIComponent(v))
       .appendTo(cell);
   } else {
     cell.text(v);

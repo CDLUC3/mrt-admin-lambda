@@ -1,6 +1,6 @@
 class ObjectsQuery < AdminQuery
-  def initialize(client, path, myparams, sort='id')
-    super(client, path, myparams)
+  def initialize(query_factory, path, myparams, sort='id')
+    super(query_factory, path, myparams)
     if sort == 'created'
       @sort = 'o.created desc'
     else

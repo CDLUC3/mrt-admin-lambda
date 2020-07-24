@@ -1,6 +1,6 @@
 class ObjectsByTitleQuery < ObjectsQuery
-  def initialize(client, path, myparams)
-    super(client, path, myparams)
+  def initialize(query_factory, path, myparams)
+    super(query_factory , path, myparams)
     @title = myparams.key?('title') ? myparams['title'].strip : ''
   end
 

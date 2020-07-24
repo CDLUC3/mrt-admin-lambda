@@ -1,6 +1,6 @@
 class ObjectsRecentQuery < ObjectsQuery
-  def initialize(client, path, myparams)
-    super(client, path, myparams, 'created')
+  def initialize(query_factory, path, myparams)
+    super(query_factory, path, myparams, 'created')
   end
 
   def get_title

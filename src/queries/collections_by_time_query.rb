@@ -1,7 +1,7 @@
 require 'date'
 class CollectionsByTimeQuery < AdminQuery
-  def initialize(client, path, myparams, col)
-    super(client, path, myparams)
+  def initialize(query_factory, path, myparams, col)
+    super(query_factory, path, myparams)
     @col = (col == 'count_files' || col == 'billable_size') ? col : 'count_files'
     @interval = myparams.key?('interval') ? myparams['interval'].strip : ''
     @interval = (@interval == 'years' || @interval == 'days' || @interval == 'weeks') ? @interval : 'years'

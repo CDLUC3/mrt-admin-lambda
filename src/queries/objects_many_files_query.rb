@@ -1,6 +1,6 @@
 class ObjectsManyFilesQuery < ObjectsQuery
-  def initialize(client, path, myparams)
-    super(client, path, myparams)
+  def initialize(query_factory, path, myparams)
+    super(query_factory, path, myparams)
     subsql = %{
       select
         f.inv_object_id
