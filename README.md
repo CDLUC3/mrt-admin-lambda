@@ -32,6 +32,7 @@ The Lambda code is deployed to the Ruby 2.7 environment.  A build process is req
 - Build decision tree
   - Did the Gemfile change?
     - Run `makeDependencies.sh` to generate **dependencies.zip**
+    - Considering GitHub actions
   - Did the code or Gemfile change?
     - Run `deploy.sh` to package code and dependencies into **deploy.zip**
     - The build script will embed the API Gateway URL into the javaScript code
