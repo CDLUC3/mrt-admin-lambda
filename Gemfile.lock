@@ -1,28 +1,21 @@
+GIT
+  remote: https://github.com/CDLUC3/uc3-ssm-gem
+  revision: a486621558012c89edb8fc1745e90ab692481c0d
+  branch: main
+  specs:
+    uc3_ssm (0.1.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
-    diff-lcs (1.4.4)
     mysql2 (0.5.3)
-    rspec (3.9.0)
-      rspec-core (~> 3.9.0)
-      rspec-expectations (~> 3.9.0)
-      rspec-mocks (~> 3.9.0)
-    rspec-core (3.9.2)
-      rspec-support (~> 3.9.3)
-    rspec-expectations (3.9.2)
-      diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.9.0)
-    rspec-mocks (3.9.1)
-      diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.9.0)
-    rspec-support (3.9.3)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   mysql2
-  rspec
+  uc3_ssm!
 
 BUNDLED WITH
    2.1.4

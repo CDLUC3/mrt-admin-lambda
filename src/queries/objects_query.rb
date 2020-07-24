@@ -22,6 +22,8 @@ class ObjectsQuery < AdminQuery
         o.id,
         o.ark,
         o.erc_what,
+        o.erc_who,
+        o.erc_where,
         o.version_number,
         c.id as collection_id,
         c.mnemonic,
@@ -56,11 +58,11 @@ class ObjectsQuery < AdminQuery
   end
 
   def get_headers(results)
-    ['Object Id','Ark', 'Title', 'Version', 'Coll Id', 'Collection', 'File Count', 'Billable Size', 'Created']
+    ['Object Id','Ark', 'Title', 'Author', 'Local Id', 'Version', 'Coll Id', 'Collection', 'File Count', 'Billable Size', 'Created']
   end
 
   def get_types(results)
-    ['', 'ark', 'name', '', 'coll', 'mnemonic', 'dataint', 'dataint', '']
+    ['', 'ark', 'name', '', '', '', 'coll', 'mnemonic', 'dataint', 'dataint', '']
   end
 
 end
