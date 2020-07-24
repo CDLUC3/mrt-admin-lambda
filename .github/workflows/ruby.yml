@@ -28,6 +28,12 @@ jobs:
       with:
         ruby-version: 2.7
     - name: Install dependencies
-      run: bundle install
+      run: |
+        yum -y install mysql-devel
+        bundle config --local build.mysql2 --with-mysql2-config=/usr/lib64/mysql/mysql_config
+        bundle install --path vendor/bundle --clean
+        mkdir -p /var/task/lib
+        cp -a /usr/lib64/mysql/*.so.* /var/task/lib/
+        zip -r dependencies.zip .
     - name: Run tests
-      run: ls
+      run: unzip -l dependencies.zip
