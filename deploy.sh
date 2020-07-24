@@ -13,7 +13,7 @@ check_ssm_root
 LAMBDA_ARN=`get_ssm_value_by_name admintool/lambda-arn`
 
 # Get the URL for links to Merritt
-MERRITT_PATH=`get_ssm_value_by_name admintool/merritt_path`
+MERRITT_PATH=`get_ssm_value_by_name admintool/merritt-path`
 
 # Start with the bundle dependencies.  Code will be inserted into `deploy.zip`
 cp dependencies.zip deploy.zip
