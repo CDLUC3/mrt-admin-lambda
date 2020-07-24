@@ -29,6 +29,7 @@ jobs:
         ruby-version: 2.7
     - name: Install dependencies
       run: |
+        sudo apt-get update && sudo apt-get dist-upgrade
         sudo apt-get install mysql-devel
         bundle config --local build.mysql2 --with-mysql2-config=/usr/lib64/mysql/mysql_config
         bundle install --path vendor/bundle --clean
