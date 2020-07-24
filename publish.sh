@@ -22,6 +22,8 @@ do
   aws s3 cp $file s3://${S3WEB_BUCKET}${S3WEB_PATH}
 done
 
+git checkout -- api-table.js
+
 # echo site url
 echo "Website Updated:"
 echo ${SITE_URL}
