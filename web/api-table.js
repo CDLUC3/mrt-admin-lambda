@@ -1,12 +1,16 @@
 var lambda_base = "http://localhost:4567"
+var iterativeParams = [];
+var urlbase = "";
+var pageparams = {};
 
 $(document).ready(function(){
   $("#exportTable").on('click', function(){
     exportTable($('table tbody tr:visible'));
   });
-  var params = getParams();
-  var path = ('path' in params) ? params['path'] : '';
-  var url = path == '' ? '' : lambda_base + "/" + path + document.location.search;
+  pageparams = getParams();
+  var path = ('path' in pageparams) ? pageparams['path'] : '';
+  urlbase = path == '' ? '' : lambda_base + "/" + path;
+  var url = path == '' ? '' : urlbase; // + document.location.search;
 
   if (url != '') {
     showUrl(url);
@@ -15,6 +19,13 @@ $(document).ready(function(){
     $("#menu").show();
   }
 });
+
+function iterateParams(parr) {
+  params = pageparams;
+  delete params['iterate'];
+  params['itparam'] = parr;
+  return params;
+}
 
 function getParams(){
   var queries = {};
@@ -42,6 +53,7 @@ function showUrl(url) {
   $.ajax({
     dataType: "json",
     url: url,
+    data: pageparams,
     success: function(data) {
       $("h1").text(data.title);
       createTable(
@@ -49,30 +61,68 @@ function showUrl(url) {
         data.types,
         data.data,
         data.filter_col,
-        data.merritt_path
+        data.merritt_path,
+        data.iterate
       )
     },
     error: function( xhr, status ) {
       alert("An error has occurred.  Possibly a timeout.\n"+xhr.responseText)
-    },
-    complete: function(xhr, status) {
       $("#in-progress").dialog("close");
     }
   });
 }
 
-function createTable(headers, types, data, filter_col, merritt_path) {
+function query_iterate(){
+  if (iterativeParams.length == 0) {
+    sorttable.makeSortable($("#data-table")[0]);
+    $("#in-progress").dialog("close");
+  } else {
+    var parr = iterativeParams.shift();
+    $.ajax({
+      dataType: "json",
+      url: urlbase,
+      data: iterateParams(parr),
+      success: function(data) {
+        appendTable(
+          data.headers,
+          data.types,
+          data.data,
+          data.filter_col,
+          data.merritt_path
+        )
+      },
+      error: function( xhr, status ) {
+        alert("An error has occurred.  Possibly a timeout.\n"+xhr.responseText)
+        $("#in-progress").dialog("close");
+      }
+    });
+  }
+}
+
+function createTable(headers, types, data, filter_col, merritt_path, iterate) {
   $("#data-table")
     .empty()
     .append($("<thead/>"))
     .append($("<tbody/>"));
-  var tr = $("<tr/>").appendTo("#data-table thead");
-  tr.addClass("header");
-  for(var c=0; c<headers.length; c++) {
-    if (types[c] != 'na') {
-      tr.append(createCell(headers[c], types[c], true, merritt_path));
+  if (iterate) {
+    iterativeParams = data;
+    query_iterate();
+  } else {
+    appendTable(headers, types, data, filter_col, merritt_path);
+  }
+}
+
+function appendTable(headers, types, data, filter_col, merritt_path) {
+  if ($("tbody tr").length == 0) {
+    var tr = $("<tr/>").appendTo("#data-table thead");
+    tr.addClass("header");
+    for(var c=0; c<headers.length; c++) {
+      if (types[c] != 'na') {
+        tr.append(createCell(headers[c], types[c], true, merritt_path));
+      }
     }
   }
+
   for(var r=0; r<data.length; r++) {
     tr = $("<tr/>").appendTo("#data-table tbody")
 
@@ -94,7 +144,7 @@ function createTable(headers, types, data, filter_col, merritt_path) {
       }
     }
   }
-  sorttable.makeSortable($("#data-table")[0]);
+  query_iterate();
 }
 
 function createCell(v, type, isHeader, merritt_path) {

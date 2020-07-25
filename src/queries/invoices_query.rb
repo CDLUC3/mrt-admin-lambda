@@ -52,15 +52,34 @@ class InvoicesQuery < AdminQuery
     3
   end
 
-  def get_params
-    [
-      @dstart, @dend, @dytd, @rate,
-      @dstart, @dend, @dytd, @rate,
-      @dstart, @dend, @dytd, @rate
-    ]
+  def is_total
+    @itparam[0] == 'ZZ'
   end
 
   def get_sql
+    if is_total
+      get_total_sql
+    else
+      get_group_sql
+    end
+  end
+
+  def get_query_params(pstart, pend, pytd, prate, pitparam)
+    if is_total
+      [pstart, pend, pytd, prate]
+    else
+      [
+        pstart, pend, pytd, prate, pitparam,
+        pstart, pend, pytd, prate, pitparam
+      ]
+    end
+  end
+
+  def resolve_params
+    get_query_params(@dstart, @dend, @dytd, @rate, @itparam.length > 0 ? @itparam[0] : '')
+  end
+
+  def get_sql_frag(is_group)
     sqlfrag = %{
       /*
         The following query fragment will be used 3 times to create 3 levels of groupings.
@@ -179,7 +198,14 @@ class InvoicesQuery < AdminQuery
       from
         owner_collections c
     }
+    if is_group
+      sqlfrag += "where ogroup = ?"
+    end
+    sqlfrag
+  end
 
+  def get_group_sql
+    sqlfrag = get_sql_frag(true)
     sql = %{
       /*
         Select campus/owner/collection level.
@@ -257,8 +283,16 @@ class InvoicesQuery < AdminQuery
       ) collq
       group by
         ogroup
+      order by
+        ogroup,
+        own_name,
+        collection_name
+    }
+  end
 
-      union
+  def get_total_sql
+    sqlfragtot = get_sql_frag(false)
+    sql = %{
 
       /*
         Aggregated usage at the Merritt owner object level.
@@ -271,14 +305,14 @@ class InvoicesQuery < AdminQuery
       */
 
       select
-        max(dstart) as dstart,
-        ogroup,
-        own_name,
-        max('-- Special Total --') as collection_name,
+        dstart,
+        'ZZ' as ogroup,
+        '' as own_name,
+        '-- Grand Total --' as collection_name,
         sum(start_size) as start_size,
         sum(ytd_size) as ytd_size,
         sum(end_size) as end_size,
-        sum(diff_size) as end_size,
+        sum(diff_size) as diff_size,
         null as days_available,
         max(days_projected) as days_projected,
         null as average_available,
@@ -318,16 +352,8 @@ class InvoicesQuery < AdminQuery
         ) as cost_adj
       from
       (
-        #{sqlfrag}
+        #{sqlfragtot}
       ) collq
-      group by
-        ogroup,
-        own_name
-
-      order by
-        ogroup,
-        own_name,
-        collection_name
     }
   end
 
