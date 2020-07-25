@@ -80,6 +80,8 @@ class CollectionsByTimeQuery < AdminQuery
         ) as sumval
       from
         owner_collections oc
+      where
+        ogroup = ?
       union
       select distinct
         oc.ogroup as og,
@@ -99,40 +101,26 @@ class CollectionsByTimeQuery < AdminQuery
         ) as sumval
       from
         owner_collections oc
-      union
-      select distinct
-        'ZZ' as og,
-        0 as ocid,
-        '-- Grand Total --' as ocname,
-        sum(#{@col})
-      from
-        owner_coll_mime_use_details
       where
-        date_added >= ?
-      and
-        date_added <= ?
-      order by
-        og,
-        ocid
+        ogroup = ?
     }
   end
 
-  def run_sql
+  def run_query_sql
     stmt = @client.prepare(get_sql)
     params = [
-      @start, @end,
-      @start, @end,
-      @start, @end
+      @start, @end, @itparam[0],
+      @start, @end, @itparam[0]
     ]
+
     results = stmt.execute(*params)
     types = get_types(results)
     combined_data = get_result_data(results, types)
 
     @ranges.each do |range|
       params = [
-        range[0], range[1],
-        range[0], range[1],
-        range[0], range[1]
+        range[0], range[1], @itparam[0],
+        range[0], range[1], @itparam[0]
       ]
       results = stmt.execute(*params)
       data = get_result_data(results, types)
