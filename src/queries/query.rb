@@ -42,9 +42,16 @@ class AdminQuery
         distinct ogroup
       from
         owner_collections
+      union
+      select
+        'ZZ' as ogroup
       order by
         ogroup
     }
+  end
+
+  def is_total
+    @itparam[0] == 'ZZ'
   end
 
   def run_sql
@@ -58,7 +65,7 @@ class AdminQuery
   def run_iterative_sql
     sql = get_iterative_sql
     stmt = @client.prepare(sql)
-    query_params = resolve_params
+    query_params = []
     results = stmt.execute(*query_params)
     get_result_json(results)
   rescue => e

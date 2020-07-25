@@ -143,8 +143,8 @@ function appendTable(headers, types, data, filter_col, merritt_path) {
         tr.append(createCell(data[r][c], types[c], false, merritt_path));
       }
     }
-    query_iterate();
   }
+  query_iterate();
 }
 
 function createCell(v, type, isHeader, merritt_path) {

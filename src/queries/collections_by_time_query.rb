@@ -59,6 +59,30 @@ class CollectionsByTimeQuery < AdminQuery
   end
 
   def get_sql
+    if is_total
+      get_total_sql
+    else
+      get_group_sql
+    end
+  end
+
+  def get_total_sql
+    %{
+      select distinct
+        'ZZ' as og,
+        0 as ocid,
+        '-- Grand Total --' as ocname,
+        sum(#{@col})
+      from
+        owner_coll_mime_use_details
+      where
+        date_added >= ?
+      and
+        date_added <= ?
+    }
+  end
+
+  def get_group_sql
     %{
       select distinct
         oc.ogroup as og,
@@ -103,25 +127,33 @@ class CollectionsByTimeQuery < AdminQuery
         owner_collections oc
       where
         ogroup = ?
+      order by
+        og,
+        ocname
     }
+  end
+
+  def get_query_params(pstart, pend, pitparam)
+    if is_total
+      [pstart, pend]
+    else
+      [
+        pstart, pend, pitparam,
+        pstart, pend, pitparam
+      ]
+    end
   end
 
   def run_query_sql
     stmt = @client.prepare(get_sql)
-    params = [
-      @start, @end, @itparam[0],
-      @start, @end, @itparam[0]
-    ]
+    params = get_query_params(@start, @end, @itparam[0])
 
     results = stmt.execute(*params)
     types = get_types(results)
     combined_data = get_result_data(results, types)
 
     @ranges.each do |range|
-      params = [
-        range[0], range[1], @itparam[0],
-        range[0], range[1], @itparam[0]
-      ]
+      params = get_query_params(range[0], range[1], @itparam[0])
       results = stmt.execute(*params)
       data = get_result_data(results, types)
       data.each_with_index do |r, i|

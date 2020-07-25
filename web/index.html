@@ -21,13 +21,13 @@
         <li><a href="index.html?path=mimes">Mime Groups</a></li>
       </ul>
 
-      <h3>Campus Invoices <span title="We are investigating a timeout/resource limit issue for these queries">&#x1F551;</span></h3>
+      <h3>Campus Invoices <span title="These queries will load incrementally">&#x1F551;</span></h3>
       <ul>
-        <li><a href="index.html?path=invoices&fy=2020">FY2020 Invoices</a></li>
-        <li><a href="index.html?path=invoices&fy=2019">FY2019 Invoices</a></li>
-        <li><a href="index.html?path=invoices&fy=2019&as_of=2020-01-01">FY2019 Invoices- Proj from Jan 1</a></li>
-        <li><a href="index.html?path=invoices&fy=2018">FY2018 Invoices</a></li>
-        <li><a href="index.html?path=invoices&fy=2017">FY2017 Invoices</a></li>
+        <li><a href="index.html?path=invoices&fy=2020&iterate=1">FY2020 Invoices</a></li>
+        <li><a href="index.html?path=invoices&fy=2019&iterate=1">FY2019 Invoices</a></li>
+        <li><a href="index.html?path=invoices&fy=2019&iterate=1&as_of=2020-01-01">FY2019 Invoices- Proj from Jan 1</a></li>
+        <li><a href="index.html?path=invoices&fy=2018&iterate=1">FY2018 Invoices</a></li>
+        <li><a href="index.html?path=invoices&fy=2017&iterate=1">FY2017 Invoices</a></li>
       </ul>
 
       <h3>Metadata Queries: Objects</h3>
@@ -90,13 +90,13 @@
       <h3>Intersting But Slow Queries</h3>
       <ul>
         <li><a href="index.html?path=nodes">Storage Nodes</a></li>
-        <li><a href="index.html?path=count_objects">Object Counts by Owner and Collection</a> <span title="We are investigating a timeout/resource limit issue for this query">&#x1F551;</span></li>
+        <li><a href="index.html?path=count_objects">Object Counts by Owner and Collection</a> <span title="This query will load incrementally">&#x1F551;</span></li>
       </ul>
 
       <h3>Queries by ingest date</h3>
       <ul>
-        <li><a href="index.html?path=collections_by_time_count&iterate=1">Files Added by Date (All time)</a> <span title="We are investigating a timeout/resource limit issue for this query">&#x1F551;</span></li>
-        <li><a href="index.html?path=collections_by_time_size&iterate=1">File Size Added by Date (All time)</a> <span title="We are investigating a timeout/resource limit issue for this query">&#x1F551;</span></li>
+        <li><a href="index.html?path=collections_by_time_count&iterate=1">Files Added by Date (All time)</a> <span title="This query will load incrementally">&#x1F551;</span></li>
+        <li><a href="index.html?path=collections_by_time_size&iterate=1">File Size Added by Date (All time)</a> <span title="This query will load incrementally">&#x1F551;</span></li>
         <li><a href="index.html?path=collections_by_time_count&interval=days&iterate=1">Files Added by Date (Last week)</a></li>
         <li><a href="index.html?path=collections_by_time_size&interval=days&iterate=1">File Size Added by Date (Last week)</a></li>
         <li><a href="index.html?path=collections_by_time_count&interval=weeks&iterate=1">Files Added by Date (Last 4 weeks)</a></li>
