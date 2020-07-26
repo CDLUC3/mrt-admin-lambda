@@ -23,7 +23,8 @@ $(document).ready(function(){
 function iterateParams(parr) {
   params = pageparams;
   delete params['iterate'];
-  params['itparam'] = parr;
+  params['itparam1'] = parr.length > 0 ? parr[0] : '';
+  params['itparam2'] = parr.length > 1 ? parr[1] : '';
   return params;
 }
 
@@ -81,7 +82,7 @@ function query_iterate(){
     $.ajax({
       dataType: "json",
       url: urlbase,
-      data: iterateParams(itparam.length == 0 ? '' : itparam[0]),
+      data: iterateParams(itparam),
       success: function(data) {
         appendTable(
           data.headers,

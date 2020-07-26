@@ -72,7 +72,7 @@ class InvoicesQuery < AdminQuery
   end
 
   def resolve_params
-    get_query_params(@dstart, @dend, @dytd, @rate, @itparam != '' ? @itparam : '')
+    get_query_params(@dstart, @dend, @dytd, @rate, @itparam1)
   end
 
   def get_sql_frag(is_group)
