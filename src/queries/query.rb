@@ -5,7 +5,7 @@ class AdminQuery
     @path = path
     @myparams = myparams
     @iterate = myparams.key?('iterate')
-    @itparam = myparams.key?('itparam') ? myparams['itparam'][0] : ''
+    @itparam = myparams.key?('itparam') ? myparams['itparam'] : ''
   end
 
   def get_title
