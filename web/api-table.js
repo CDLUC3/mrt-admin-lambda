@@ -77,11 +77,11 @@ function query_iterate(){
     sorttable.makeSortable($("#data-table")[0]);
     $("#in-progress").dialog("close");
   } else {
-    var parr = iterativeParams.shift();
+    var itparam = iterativeParams.shift();
     $.ajax({
       dataType: "json",
       url: urlbase,
-      data: iterateParams(parr),
+      data: iterateParams(itparam.length == 0 ? '' : itparam[0]),
       success: function(data) {
         appendTable(
           data.headers,
