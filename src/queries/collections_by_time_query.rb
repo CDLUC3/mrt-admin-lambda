@@ -62,22 +62,22 @@ class CollectionsByTimeQuery < AdminQuery
     %{
       select
         distinct ogroup,
-        inv_collection_id as ocid
+        1 as seq
       from
         owner_collections
       union
       select
         distinct ogroup,
-        0 as ocid
+        2 as seq
       from
         owner_collections
       union
       select
         'ZZ' as ogroup,
-        0 as ocid
+        1 as seq
       order by
         ogroup,
-        ocid
+        seq
     }
   end
 
@@ -106,7 +106,7 @@ class CollectionsByTimeQuery < AdminQuery
   end
 
   def get_group_sql
-    if @itparam2 != 0 and @itparam2 != '0'
+    if @itparam2.to_i == 1
       %{
         select distinct
           oc.ogroup as og,
@@ -130,8 +130,10 @@ class CollectionsByTimeQuery < AdminQuery
           owner_collections oc
         where
           ogroup = ?
-        and
-          oc.inv_collection_id = ?
+        group by
+          ogroup,
+          ocid,
+          ocname
       }
     else
       %{
@@ -139,11 +141,26 @@ class CollectionsByTimeQuery < AdminQuery
           oc.ogroup as og,
           0 as ocid,
           '-- Total --' as ocname,
-          null as sumval
+          (
+            select
+              sum(#{@col})
+            from
+              owner_coll_mime_use_details ocmud
+            where
+              oc.ogroup = ocmud.ogroup
+            and
+              date_added >= ?
+            and
+              date_added <= ?
+          ) as sumval
         from
           owner_collections oc
         where
           ogroup = ?
+        group by
+          ogroup,
+          ocid,
+          ocname
       }
     end
   end
@@ -151,11 +168,10 @@ class CollectionsByTimeQuery < AdminQuery
   def get_query_params(pstart, pend, pitparam1, pitparam2)
     if is_total
       [ pstart, pend ]
-    elsif pitparam2 == 0 or pitparam2 == '0'
-      #[ pstart, pend, pitparam1 ]
-      [ pitparam1 ]
+    elsif pitparam2.to_i == 1
+      [ pstart, pend, pitparam1 ]
     else
-      [ pstart, pend, pitparam1, pitparam2 ]
+      [ pstart, pend, pitparam1 ]
     end
   end
 
