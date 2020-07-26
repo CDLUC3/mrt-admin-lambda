@@ -139,18 +139,7 @@ class CollectionsByTimeQuery < AdminQuery
           oc.ogroup as og,
           0 as ocid,
           '-- Total --' as ocname,
-          (
-            select
-              sum(#{@col})
-            from
-              owner_coll_mime_use_details ocmud
-            where
-              oc.ogroup = ocmud.ogroup
-            and
-              date_added >= ?
-            and
-              date_added <= ?
-          ) as sumval
+          null as sumval
         from
           owner_collections oc
         where
@@ -163,7 +152,8 @@ class CollectionsByTimeQuery < AdminQuery
     if is_total
       [ pstart, pend ]
     elsif pitparam2 == 0 or pitparam2 == '0'
-      [ pstart, pend, pitparam1 ]
+      #[ pstart, pend, pitparam1 ]
+      [ pitparam1 ]
     else
       [ pstart, pend, pitparam1, pitparam2 ]
     end
