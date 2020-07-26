@@ -146,14 +146,14 @@ class CollectionsByTimeQuery < AdminQuery
 
   def run_query_sql
     stmt = @client.prepare(get_sql)
-    params = get_query_params(@start, @end, @itparam[0])
+    params = get_query_params(@start, @end, @itparam)
 
     results = stmt.execute(*params)
     types = get_types(results)
     combined_data = get_result_data(results, types)
 
     @ranges.each do |range|
-      params = get_query_params(range[0], range[1], @itparam[0])
+      params = get_query_params(range[0], range[1], @itparam)
       results = stmt.execute(*params)
       data = get_result_data(results, types)
       data.each_with_index do |r, i|

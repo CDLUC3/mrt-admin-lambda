@@ -5,7 +5,7 @@ class AdminQuery
     @path = path
     @myparams = myparams
     @iterate = myparams.key?('iterate')
-    @itparam = myparams.key?('itparam') ? myparams['itparam'] : []
+    @itparam = myparams.key?('itparam') ? myparams['itparam'][0] : ''
   end
 
   def get_title
@@ -22,14 +22,14 @@ class AdminQuery
 
   def resolve_params
     query_params = get_params
-    @itparam.each do |p|
-      query_params.append(p)
+    if @itparam != ''
+      query_params.append(@itparam)
     end
     query_params
   end
 
   def get_sql
-    if @itparam.length > 0
+    if @itparam != ''
       "SELECT 'hello' as greeting, user() as user, ? as param;"
     else
       "SELECT 'hello' as greeting, user() as user;"
@@ -51,7 +51,7 @@ class AdminQuery
   end
 
   def is_total
-    @itparam[0] == 'ZZ'
+    @itparam == 'ZZ'
   end
 
   def run_sql

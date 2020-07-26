@@ -52,10 +52,6 @@ class InvoicesQuery < AdminQuery
     3
   end
 
-  def is_total
-    @itparam[0] == 'ZZ'
-  end
-
   def get_sql
     if is_total
       get_total_sql
@@ -76,7 +72,7 @@ class InvoicesQuery < AdminQuery
   end
 
   def resolve_params
-    get_query_params(@dstart, @dend, @dytd, @rate, @itparam.length > 0 ? @itparam[0] : '')
+    get_query_params(@dstart, @dend, @dytd, @rate, @itparam != '' ? @itparam : '')
   end
 
   def get_sql_frag(is_group)
