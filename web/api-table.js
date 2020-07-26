@@ -113,7 +113,7 @@ function createTable(headers, types, data, filter_col, merritt_path, iterate) {
 }
 
 function appendTable(headers, types, data, filter_col, merritt_path) {
-  if ($("tbody tr").length == 0) {
+  if ($("#data-table tr.header").length == 0) {
     var tr = $("<tr/>").appendTo("#data-table thead");
     tr.addClass("header");
     for(var c=0; c<headers.length; c++) {
