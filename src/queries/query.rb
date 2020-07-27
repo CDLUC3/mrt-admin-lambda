@@ -7,6 +7,7 @@ class AdminQuery
     @iterate = myparams.key?('iterate')
     @itparam1 = myparams.key?('itparam1') ? myparams['itparam1'] : ''
     @itparam2 = myparams.key?('itparam2') ? myparams['itparam2'] : ''
+    @itparam3 = myparams.key?('itparam3') ? myparams['itparam3'] : ''
   end
 
   def get_title
@@ -28,6 +29,9 @@ class AdminQuery
     end
     if @itparam2 != ''
       query_params.append(@itparam2)
+    end
+    if @itparam3 != ''
+      query_params.append(@itparam3)
     end
     query_params
   end

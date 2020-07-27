@@ -25,6 +25,7 @@ function iterateParams(parr) {
   delete params['iterate'];
   params['itparam1'] = parr.length > 0 ? parr[0] : '';
   params['itparam2'] = parr.length > 1 ? parr[1] : '';
+  params['itparam3'] = parr.length > 2 ? parr[2] : '';
   return params;
 }
 
