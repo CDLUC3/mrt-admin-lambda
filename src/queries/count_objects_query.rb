@@ -15,47 +15,57 @@ class CountObjectsQuery < AdminQuery
     end
   end
 
+  def get_iterative_sql
+    get_campus_and_total_query
+  end
+
   def resolve_params
-    [ @itparam1, @itparam1 ]
+    if is_total
+      []
+    else
+      [ @itparam1 ]
+    end
   end
 
   def get_total_sql
     %{
       select
-        max('ZZZ') as ogroup,
-        max('-- Grand Total --') as collection_name,
+        'ZZZ' as ogroup,
+        '-- Grand Total --' as collection_name,
         sum(count_objects) as count_objects
       from
         owner_collections_objects
     }
   end
 
+
   def get_group_sql
-    %{
-      select
-        ogroup,
-        collection_name,
-        sum(count_objects) as count_objects
-      from
-        owner_collections_objects
-      where
-        ogroup = ?
-      group by
-        ogroup,
-        collection_name
-      union
-      select
-        ogroup,
-        max('-- Total --') as collection_name,
-        sum(count_objects) as count_objects
-      from
-        owner_collections_objects
-      where
-        ogroup = ?
-      order by
-        ogroup,
-        collection_name
-    }
+    if @itparam2.to_i == 1
+      %{
+        select
+          ogroup,
+          collection_name,
+          sum(count_objects) as count_objects
+        from
+          owner_collections_objects
+        where
+          ogroup = ?
+        group by
+          ogroup,
+          collection_name
+      }
+    else
+      %{
+        select
+          ogroup,
+          '-- Total --' as collection_name,
+          sum(count_objects) as count_objects
+        from
+          owner_collections_objects
+        where
+          ogroup = ?
+      }
+    end
   end
 
   def get_headers(results)

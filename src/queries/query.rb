@@ -42,7 +42,7 @@ class AdminQuery
     end
   end
 
-  def get_iterative_sql
+  def get_campus_query
     %{
       select
         distinct ogroup
@@ -54,6 +54,33 @@ class AdminQuery
       order by
         ogroup
     }
+  end
+
+  def get_campus_and_total_query
+    %{
+      select
+        distinct ogroup,
+        1 as seq
+      from
+        owner_collections
+      union
+      select
+        distinct ogroup,
+        2 as seq
+      from
+        owner_collections
+      union
+      select
+        'ZZ' as ogroup,
+        1 as seq
+      order by
+        ogroup,
+        seq
+    }
+  end
+
+  def get_iterative_sql
+    get_campus_query
   end
 
   def is_total

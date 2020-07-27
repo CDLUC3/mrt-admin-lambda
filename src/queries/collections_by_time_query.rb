@@ -59,26 +59,7 @@ class CollectionsByTimeQuery < AdminQuery
   end
 
   def get_iterative_sql
-    %{
-      select
-        distinct ogroup,
-        1 as seq
-      from
-        owner_collections
-      union
-      select
-        distinct ogroup,
-        2 as seq
-      from
-        owner_collections
-      union
-      select
-        'ZZ' as ogroup,
-        1 as seq
-      order by
-        ogroup,
-        seq
-    }
+    get_campus_and_total_query
   end
 
   def get_sql
