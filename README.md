@@ -60,3 +60,36 @@ The Lambda code is deployed to the Ruby 2.7 environment.  A build process is req
   - Consider the creation of a mock database dump to be packaged for Docker.
 - Consider a Lambda layer for the MySQL dependencies
 - Consider deploying the Lambda code and the website assets to the same S3 bucket.
+
+## Query Migration
+
+| Query | Timeout? | Update Frequency? | Note |
+| ----- | -------- | ------------------ | ---- |
+| OwnerQuery | no | Daily ||
+| CollectionQuery | no | Daily ||
+| MimeQuery | no | Daily ||
+| NodesQuery | possible | Daily ||
+| ObjectsByArkQuery | no | immediate ||
+| ObjectsByTitleQuery | no | immediate ||
+| ObjectsByLocalIdQuery | no | immediate ||
+| ObjectsByAuthorQuery | no | immediate ||
+| ObjectsLargeQuery | no | Daily ||
+| ObjectsManyFilesQuery | no | Daily ||
+| ObjectsRecentQuery | no | immediate ||
+| FilesByNameCollQuery | no | immediate ||
+| CountObjectsQuery | yes | immediate ||
+| CollectionsByNodeQuery | no | immediate ||
+| CollectionsByOwnerQuery | no | immediate ||
+| CollectionsByMimeQuery | no | immediate ||
+| CollectionsByMimeQuery_count_alltime | incremental load | Daily ||
+| CollectionsByMimeQuery_size_alltime | incremental load | Daily ||
+| CollectionsByMimeQuery_count_daily | incremental load | Daily ||
+| CollectionsByMimeQuery_size_daily | incremental load | Daily ||
+| CollectionsByMimeQuery_count_weekly | incremental load | Daily ||
+| CollectionsByMimeQuery_size_weekly | incremental load | Daily ||
+| CollectionDetailsQuery | no | immediate ||
+| InvoicesQuery_fy | incremental load | Daily ||
+| AuditStatusQuery | yes | Hourly ||
+| AuditProcessedQuery | yes | Hourly ||
+| AuditOldestQuery | no | Hourly ||
+| ReplicationNeededQuery | no | Hourly ||
