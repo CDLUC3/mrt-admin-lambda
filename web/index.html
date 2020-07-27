@@ -90,7 +90,7 @@
       <h3>Intersting But Slow Queries</h3>
       <ul>
         <li><a href="index.html?path=nodes">Storage Nodes</a></li>
-        <li><a href="index.html?path=count_objects">Object Counts by Owner and Collection</a> <span title="This query will load incrementally">&#x1F551;</span></li>
+        <li><a href="index.html?path=count_objects&iterate=1">Object Counts by Owner and Collection</a> <span title="This query will load incrementally">&#x1F551;</span></li>
       </ul>
 
       <h3>Queries by ingest date</h3>
@@ -126,8 +126,11 @@
     <div id="data">
       <table id="data-table" class="sortable results"/>
     </div>
-    <div id="in-progress">
-      <h2>Query in Progress</h2>
+    <div id="in-progress-container">
+      <div id="in-progress">
+        <h2>Query in Progress</h2>
+        <div id="iprogress">--</div>
+      </div>
     </div>
     <script src="sorttable.js" type="text/javascript"></script>
   </body>

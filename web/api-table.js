@@ -49,7 +49,13 @@ function showUrl(url) {
   $("#in-progress").dialog({
     title: "Please wait",
     modal: true,
-    width: 350
+    width: 350,
+    position: {
+      my: "center",
+      at: "center",
+      of: window,
+      collision: "none"
+    }
   });
   $.ajax({
     dataType: "json",
@@ -77,8 +83,10 @@ function query_iterate(){
   if (iterativeParams.length == 0) {
     sorttable.makeSortable($("#data-table")[0]);
     $("#in-progress").dialog("close");
+    $("#iprogress").text("");
   } else {
     var itparam = iterativeParams.shift();
+    $("#iprogress").text("Queries Remaining: "+iterativeParams.length);
     $.ajax({
       dataType: "json",
       url: urlbase,
@@ -145,6 +153,14 @@ function appendTable(headers, types, data, filter_col, merritt_path) {
       }
     }
   }
+  $("#in-progress").dialog({
+    position: {
+      my: "center",
+      at: "center",
+      of: window,
+      collision: "none"
+    }
+  });
   query_iterate();
 }
 
