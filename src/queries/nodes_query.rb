@@ -6,6 +6,17 @@ class NodesQuery < AdminQuery
   def get_sql
     %{
       select
+        0,
+        '-- Total --',
+        count(inio.id) as total,
+        sum(case when role ='primary' then 1 else 0 end),
+        sum(case when role ='secondary' then 1 else 0 end)
+      from
+        inv.inv_nodes n
+      inner join inv.inv_nodes_inv_objects inio
+        on n.id = inio.inv_node_id
+      union
+      select
         number,
         description,
         count(inio.id) as total,
@@ -27,6 +38,10 @@ class NodesQuery < AdminQuery
 
   def get_types(results)
     ['node', '', 'dataint', 'dataint', 'dataint']
+  end
+
+  def get_filter_col
+    1
   end
 
 end

@@ -72,13 +72,19 @@ def lambda_handler(event:, context:)
     json = query.run_sql.to_json
 
     {
-      headers: { 'Access-Control-Allow-Origin': '*'},
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'content-type':'application/json; charset=utf-8'
+      },
       statusCode: 200,
       body: json
     }
   rescue => e
     {
-      headers: { 'Access-Control-Allow-Origin': '*'},
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'content-type':'application/json; charset=utf-8'
+      },
       statusCode: 500,
       body: { error: e.message, trace: e.backtrace }.to_json
     }
