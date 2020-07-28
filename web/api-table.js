@@ -153,6 +153,9 @@ function appendTable(headers, types, data, filter_col, merritt_path) {
         tr.append(createCell(data[r][c], types[c], false, merritt_path));
       }
     }
+    if (tr.find("td.hasdata,th.hasdata").length == 0) {
+      tr.addClass("nodata");
+    }
   }
   $("#in-progress").dialog({
     position: {
@@ -178,10 +181,13 @@ function format(cell, v, type, merritt_path) {
     $("<a href='?json=foo'/>").text(v).appendTo(cell);
   } else if (type == 'money'){
     cell.text(Number(v).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits:2}));
+    cell.addClass("hasdata");
   } else if (type == 'dataint'){
     cell.text(Number(v).toLocaleString());
+    cell.addClass("hasdata");
   } else if (type == 'data'){
     cell.text(Number(v).toLocaleString());
+    cell.addClass("hasdata");
   } else if (type == 'node' && Number(v) > 0){
     link = $("<a/>")
       .text(v)
@@ -222,6 +228,7 @@ function format(cell, v, type, merritt_path) {
       .text(v)
       .attr("href", merritt_path + "/m/" + encodeURIComponent(v))
       .appendTo(cell);
+    cell.addClass("hasdata");
   } else {
     cell.text(v);
   }
