@@ -18,7 +18,7 @@ git checkout -- api-table.js
 git checkout -- index.html
 sed -i -e "s|http://localhost:4567|${APIGW_URL}|" api-table.js
 sed -i -e "s|api-table.js|api-table.js?${DATESTR}|" index.html
-sed -i -e "s|api-table.js|api-table.css?${DATESTR}|" index.html
+sed -i -e "s|api-table.css|api-table.css?${DATESTR}|" index.html
 
 # Copy static website assets to S3
 for file in *.*
