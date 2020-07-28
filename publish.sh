@@ -11,10 +11,14 @@ APIGW_URL=`get_ssm_value_by_name admintool/api-path`
 S3WEB_BUCKET=`get_ssm_value_by_name admintool/s3-bucket`
 S3WEB_PATH=`get_ssm_value_by_name admintool/s3-path`
 SITE_URL=`get_ssm_value_by_name admintool/site-url`
+DATESTR=`date +%Y%m%d_%H%M%S`
 
 # Embed the api path into the javascript for ajax requests
 git checkout -- api-table.js
+git checkout -- index.html
 sed -i -e "s|http://localhost:4567|${APIGW_URL}|" api-table.js
+sed -i -e "s|api-table.js|api-table.js?${DATESTR}|" api-table.js
+sed -i -e "s|api-table.js|api-table.css?${DATESTR}|" api-table.css
 
 # Copy static website assets to S3
 for file in *.*
