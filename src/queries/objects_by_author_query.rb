@@ -1,7 +1,7 @@
 class ObjectsByAuthorQuery < ObjectsQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
-    @author = myparams.key?('author') ? myparams['author'].strip : ''
+    @author = get_param('author', '')
   end
 
   def get_title

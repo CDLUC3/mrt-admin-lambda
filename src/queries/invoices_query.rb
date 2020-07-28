@@ -2,7 +2,7 @@ class InvoicesQuery < AdminQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
     # Fiscal year to report on.  Starting with FY2019, there are significant changes to the rate and adjustments for charge backs.
-    @fy = myparams.key?('fy') ? myparams['fy'].strip.to_i : 2020
+    @fy = get_param('fy', 2020).to_i
 
     # FY Start Date
     @dstart = "#{@fy}-07-01"
@@ -11,7 +11,7 @@ class InvoicesQuery < AdminQuery
     @dend = "#{@fy+1}-07-01"
 
     # As of allows you to test the pro-rating logic by using only a portion of data for a FY
-    @as_of = myparams.key?('as_of') ? myparams['as_of'].strip : @dend
+    @as_of = get_param('as_of', @dend)
 
     # Compute the last day in a FY (at or before the as_of date) for which records exist
     sql = %{

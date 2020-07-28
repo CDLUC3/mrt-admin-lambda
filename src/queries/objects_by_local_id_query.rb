@@ -1,7 +1,7 @@
 class ObjectsByLocalIdQuery < ObjectsQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
-    @localid = myparams.key?('localid') ? myparams['localid'].strip : ''
+    @localid = get_param('localid', '')
   end
 
   def get_title

@@ -24,7 +24,7 @@
         <li><a href="index.html?path=mimes">Mime Groups</a></li>
       </ul>
 
-      <h3>Campus Invoices <span title="These queries will load incrementally">&#x1F551;</span></h3>
+      <h3>Campus Invoices</h3>
       <ul>
         <li><a href="index.html?path=invoices&fy=2020&iterate=1">FY2020 Invoices</a></li>
         <li><a href="index.html?path=invoices&fy=2019&iterate=1">FY2019 Invoices</a></li>
@@ -93,15 +93,18 @@
       <h3>Intersting But Slow Queries</h3>
       <ul>
         <li><a href="index.html?path=nodes">Storage Nodes</a></li>
-        <li><a href="index.html?path=count_objects&iterate=1">Object Counts by Owner and Collection</a> <span title="This query will load incrementally">&#x1F551;</span></li>
+        <li><a href="index.html?path=count_objects&iterate=1">Object Counts by Owner and Collection</a></li>
       </ul>
 
       <h3>Queries by ingest date</h3>
       <ul>
-        <li><a href="index.html?path=collections_by_time_count&iterate=1">Files Added by Date (All time)</a> <span title="This query will load incrementally">&#x1F551;</span></li>
-        <li><a href="index.html?path=collections_by_time_size&iterate=1">File Size Added by Date (All time)</a> <span title="This query will load incrementally">&#x1F551;</span></li>
+        <li><a href="index.html?path=collections_by_time_count_producer&iterate=1">Producer Files Added by Date (All time)</a></li>
+        <li><a href="index.html?path=collections_by_time_count&iterate=1">Files Added by Date (All time)</a></li>
+        <li><a href="index.html?path=collections_by_time_size&iterate=1">File Size Added by Date (All time)</a></li>
+        <li><a href="index.html?path=collections_by_time_count_producer&interval=days&iterate=1">Producer Files Added by Date (Last week)</a></li>
         <li><a href="index.html?path=collections_by_time_count&interval=days&iterate=1">Files Added by Date (Last week)</a></li>
         <li><a href="index.html?path=collections_by_time_size&interval=days&iterate=1">File Size Added by Date (Last week)</a></li>
+        <li><a href="index.html?path=collections_by_time_count_producer&interval=weeks&iterate=1">Producer Files Added by Date (Last 4 weeks)</a></li>
         <li><a href="index.html?path=collections_by_time_count&interval=weeks&iterate=1">Files Added by Date (Last 4 weeks)</a></li>
         <li><a href="index.html?path=collections_by_time_size&interval=weeks&iterate=1">File Size Added by Date (Last 4 weeks)</a></li>
         <li><a href="index.html?path=objects_recent">Recent object updates by collection (object details)</a></li>

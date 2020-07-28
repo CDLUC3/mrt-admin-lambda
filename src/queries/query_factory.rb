@@ -55,10 +55,12 @@ class QueryFactory
       CollectionsByMimeQuery.new(self, path, myparams, 'mime_type')
     elsif path == 'collections_by_mime_group'
       CollectionsByMimeQuery.new(self, path, myparams, 'mime_group')
+    elsif path == 'collections_by_time_count_producer'
+      CollectionsByTimeQuery.new(self, path, myparams, 'count_files', 'producer')
     elsif path == 'collections_by_time_count'
-      CollectionsByTimeQuery.new(self, path, myparams, 'count_files')
+      CollectionsByTimeQuery.new(self, path, myparams, 'count_files', '')
     elsif path == 'collections_by_time_size'
-      CollectionsByTimeQuery.new(self, path, myparams, 'billable_size')
+      CollectionsByTimeQuery.new(self, path, myparams, 'billable_size', '')
     elsif path == 'collection_details'
       CollectionDetailsQuery.new(self, path, myparams, 'inv_collection_id')
     elsif path == 'collection_group_details'

@@ -1,9 +1,10 @@
 require 'date'
 class CollectionsByTimeQuery < AdminQuery
-  def initialize(query_factory, path, myparams, col)
+  def initialize(query_factory, path, myparams, col, source)
     super(query_factory, path, myparams)
     @col = (col == 'count_files' || col == 'billable_size') ? col : 'count_files'
-    @interval = myparams.key?('interval') ? myparams['interval'].strip : ''
+    @source_clause = (source == 'producer') ? " and source='producer'" : ""
+    @interval = get_param('interval', '')
     @interval = (@interval == 'years' || @interval == 'days' || @interval == 'weeks') ? @interval : 'years'
     @ranges = []
 
@@ -83,6 +84,7 @@ class CollectionsByTimeQuery < AdminQuery
         date_added >= ?
       and
         date_added <= ?
+      #{@source_clause}
     }
   end
 
@@ -106,6 +108,7 @@ class CollectionsByTimeQuery < AdminQuery
               date_added >= ?
             and
               date_added <= ?
+            #{@source_clause}
           ) as sumval
         from
           owner_collections oc
@@ -133,6 +136,7 @@ class CollectionsByTimeQuery < AdminQuery
               date_added >= ?
             and
               date_added <= ?
+            #{@source_clause}
           ) as sumval
         from
           owner_collections oc

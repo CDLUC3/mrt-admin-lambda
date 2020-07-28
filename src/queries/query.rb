@@ -1,3 +1,4 @@
+require 'cgi'
 class AdminQuery
   def initialize(query_factory, path, myparams)
     @client = query_factory.client
@@ -5,9 +6,13 @@ class AdminQuery
     @path = path
     @myparams = myparams
     @iterate = myparams.key?('iterate')
-    @itparam1 = myparams.key?('itparam1') ? myparams['itparam1'] : ''
-    @itparam2 = myparams.key?('itparam2') ? myparams['itparam2'] : ''
-    @itparam3 = myparams.key?('itparam3') ? myparams['itparam3'] : ''
+    @itparam1 = get_param('itparam1', '')
+    @itparam2 = get_param('itparam2', '')
+    @itparam3 = get_param('itparam3', '')
+  end
+
+  def get_param(key, defval)
+    @myparams.key?(key) ? CGI.unescape(@myparams[key].strip) : ''
   end
 
   def get_title

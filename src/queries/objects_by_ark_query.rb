@@ -1,7 +1,7 @@
 class ObjectsByArkQuery < ObjectsQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
-    @ark = myparams.key?('ark') ? myparams['ark'].strip : ''
+    @ark = get_param('ark', '')
   end
 
   def get_title

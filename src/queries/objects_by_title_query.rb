@@ -1,7 +1,7 @@
 class ObjectsByTitleQuery < ObjectsQuery
   def initialize(query_factory, path, myparams)
     super(query_factory , path, myparams)
-    @title = myparams.key?('title') ? myparams['title'].strip : ''
+    @title = get_param('title', '')
   end
 
   def get_title

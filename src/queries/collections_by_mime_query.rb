@@ -1,7 +1,7 @@
 class CollectionsByMimeQuery < AdminQuery
   def initialize(query_factory, path, myparams, col)
     super(query_factory, path, myparams)
-    @mime = myparams.key?('mime') ? myparams['mime'].strip : ''
+    @mime = get_param('mime', '')
     @col = (col == 'mime_type' || col == 'mime_group') ? col : 'mime_type'
   end
 

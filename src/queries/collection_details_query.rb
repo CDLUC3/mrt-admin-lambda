@@ -1,7 +1,7 @@
 class CollectionDetailsQuery < AdminQuery
   def initialize(query_factory, path, myparams, col)
     super(query_factory, path, myparams)
-    @coll = myparams.key?('coll') ? myparams['coll'].strip : ''
+    @coll = get_param('coll', '')
     @col = (col == 'inv_collection_id' || col == 'ogroup') ? col : 'inv_collection_id'
   end
 

@@ -1,7 +1,7 @@
 class CollectionsByNodeQuery < AdminQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
-    @node = myparams.key?('node') ? myparams['node'].strip : ''
+    @node = get_param('node', '')
   end
 
   def get_params

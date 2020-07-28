@@ -1,7 +1,7 @@
 class CollectionsByOwnerQuery < AdminQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
-    @own = myparams.key?('own') ? myparams['own'].strip : ''
+    @own = get_param('own', '')
   end
 
   def get_params

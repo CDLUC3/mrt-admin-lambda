@@ -1,8 +1,9 @@
 class FilesByNameCollQuery < FilesQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
-    @file = myparams.key?('file') ? "producer/#{myparams['file'].strip}" : ''
-    @coll = myparams.key?('coll') ? myparams['coll'].strip : ''
+    @file = get_param('file', '')
+    @file = (@file == '') ? '' : "producer/#{@file}"
+    @coll = get_param('coll', '')
   end
 
   def get_title
