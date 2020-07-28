@@ -27,6 +27,7 @@ do
 done
 
 git checkout -- api-table.js
+git checkout -- index.html
 
 # echo site url
 echo "Website Updated:"
