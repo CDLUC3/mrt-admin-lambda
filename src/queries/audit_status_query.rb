@@ -1,19 +1,75 @@
 class AuditStatusQuery < AdminQuery
   def get_title
-    "Audit Status"
+    "Audit Status (excluding verified)"
   end
 
   def get_sql
     %{
       select
-        status,
-        count(*)
-      from
-        inv.inv_audits
-      where
-        status != 'verified'
-      group by
-        status
+        'unverified' as status,
+        (
+          select
+            count(*)
+          from
+            inv.inv_audits
+          where
+            status = 'unverified'
+        )
+      union
+      select
+        'size-mismatch' as status,
+        (
+          select
+            count(*)
+          from
+            inv.inv_audits
+          where
+            status = 'size-mismatch'
+        )
+      union
+      select
+        'digest-mismatch' as status,
+        (
+          select
+            count(*)
+          from
+            inv.inv_audits
+          where
+            status = 'digest-mismatch'
+        )
+      union
+      select
+        'system-unavailable' as status,
+        (
+          select
+            count(*)
+          from
+            inv.inv_audits
+          where
+            status = 'system-unavailable'
+        )
+      union
+      select
+        'processing' as status,
+        (
+          select
+            count(*)
+          from
+            inv.inv_audits
+          where
+            status = 'processing'
+        )
+      union
+      select
+        'unknown' as status,
+        (
+          select
+            count(*)
+          from
+            inv.inv_audits
+          where
+            status = 'unknown'
+        )
       ;
     }
   end
