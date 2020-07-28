@@ -17,8 +17,8 @@ DATESTR=`date +%Y%m%d_%H%M%S`
 git checkout -- api-table.js
 git checkout -- index.html
 sed -i -e "s|http://localhost:4567|${APIGW_URL}|" api-table.js
-sed -i -e "s|api-table.js|api-table.js?${DATESTR}|" api-table.js
-sed -i -e "s|api-table.js|api-table.css?${DATESTR}|" api-table.css
+sed -i -e "s|api-table.js|api-table.js?${DATESTR}|" index.html
+sed -i -e "s|api-table.js|api-table.css?${DATESTR}|" index.html
 
 # Copy static website assets to S3
 for file in *.*
