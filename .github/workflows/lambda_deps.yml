@@ -25,3 +25,5 @@ jobs:
         docker build -t depbuild .
         docker run --rm --name depbuild -d depbuild
         docker cp depbuild:/var/task/dependencies.zip .
+        ls -l dependencies.zip
+        echo "****** hi *****"

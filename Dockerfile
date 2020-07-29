@@ -12,4 +12,4 @@ RUN bundle config --local build.mysql2 --with-mysql2-config=/usr/lib64/mysql/mys
     cp -a /usr/lib64/mysql/*.so.* /var/task/lib/ && \
     zip -r dependencies.zip .
 
-CMD sleep 30
+CMD sleep 10
