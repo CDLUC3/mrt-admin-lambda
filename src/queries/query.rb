@@ -51,6 +51,18 @@ class AdminQuery
     end
   end
 
+  def get_collection_query
+    %{
+      select
+        0 as coll
+      union
+      select
+        id as coll
+      from
+        inv.inv_collections
+    }
+  end
+
   def get_campus_query
     %{
       select

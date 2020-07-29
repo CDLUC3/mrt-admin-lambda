@@ -137,7 +137,7 @@ function appendTable(headers, types, data, filter_col, merritt_path) {
     tr = $("<tr/>").appendTo("#data-table tbody")
 
     rclass = "row";
-    if (filter_col) {
+    if (filter_col != null) {
       if (data[r][filter_col] == '-- Total --') {
         rclass = "total"
       } else if (data[r][filter_col] == '-- Grand Total --') {
