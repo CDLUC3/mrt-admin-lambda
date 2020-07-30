@@ -9,9 +9,9 @@ name: Lambda_deps
 
 on:
   push:
-    branches: [ main ]
+    branches: [ mainx ]
   pull_request:
-    branches: [ main ]
+    branches: [ mainx ]
 
 jobs:
   test:
@@ -25,5 +25,5 @@ jobs:
         docker build -t depbuild .
         docker run --rm --name depbuild -d depbuild
         docker cp depbuild:/var/task/dependencies.zip .
-        ls -l dependencies.zip
-        echo "****** hi *****"
+        # Ticket filed to see if a zip file could be published as a package 
+        #https://support.github.com/ticket/personal/0/788471
