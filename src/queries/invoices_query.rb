@@ -60,8 +60,8 @@ class InvoicesQuery < AdminQuery
     ]
   end
 
-  def get_sql_frag
-    %{
+  def get_sql
+    sqlfrag = %{
       /*
         The following query fragment will be used 3 times to create 3 levels of groupings.
         Compute usage at the campus/owner/collection level.
@@ -177,11 +177,8 @@ class InvoicesQuery < AdminQuery
       from
         owner_collections c
     }
-  end
 
-  def get_sql
-    sqlfrag = get_sql_frag
-    %{
+    sql = %{
       /*
         Select campus/owner/collection level.
       */
@@ -206,9 +203,7 @@ class InvoicesQuery < AdminQuery
       (
         #{sqlfrag}
       ) collq
-
       union
-
       /*
         Aggregated usage at the CAMPUS level.
         - Before FY19: invoices were produced at the "owner" level, but only a fraction (14 of 37) were sent.
@@ -246,7 +241,6 @@ class InvoicesQuery < AdminQuery
             case
               /* Before FY19, exemptions apply */
               when dstart < '2019-07-01' then null
-
               /* Starting in FY19, each campus receives 10TB of free storage */
               when sum(daily_average_projected) < 10000000000000 then 0
               else sum(daily_average_projected) - 10000000000000
@@ -258,9 +252,7 @@ class InvoicesQuery < AdminQuery
       ) collq
       group by
         ogroup
-
       union
-
       /*
         Aggregated usage at the Merritt owner object level.
         - Before FY19: invoices were produced at the "owner" level, but only a fraction (14 of 37) were sent.
@@ -270,16 +262,15 @@ class InvoicesQuery < AdminQuery
         - FY19 and beyond: invoices will be produced at a "campus" level.
           - Each campus will receive 10TB of free storage -- this replaces the notion of "exempt" content.
       */
-
       select
-        dstart,
-        'ZZ' as ogroup,
-        '' as own_name,
-        '-- Grand Total --' as collection_name,
+        max(dstart) as dstart,
+        ogroup,
+        own_name,
+        max('-- Special Total --') as collection_name,
         sum(start_size) as start_size,
         sum(ytd_size) as ytd_size,
         sum(end_size) as end_size,
-        sum(diff_size) as diff_size,
+        sum(diff_size) as end_size,
         null as days_available,
         max(days_projected) as days_projected,
         null as average_available,
@@ -324,7 +315,6 @@ class InvoicesQuery < AdminQuery
       group by
         ogroup,
         own_name
-
       order by
         ogroup,
         own_name,
