@@ -204,6 +204,124 @@ class InvoicesQuery < AdminQuery
         #{sqlfrag}
       ) collq
 
+    }
+  end
+
+  def test
+    sqlfrag = ""
+    %{
+      union
+      /*
+        Aggregated usage at the CAMPUS level.
+        - Before FY19: invoices were produced at the "owner" level, but only a fraction (14 of 37) were sent.
+          - Grandfathered content has been designated as "exempt".
+          - Exemption totals are pulled from a separate table.
+          - A $50 minimum is applied to each invoice.
+        - FY19 and beyond: invoices will be produced at a "campus" level.
+          - Each campus will receive 10TB of free storage -- this replaces the notion of "exempt" content.
+      */
+      select
+        max(dstart) as dstart,
+        ogroup,
+        max('-- Total --') as own_name,
+        max('-- Total --') as collection_name,
+        sum(start_size) as start_size,
+        sum(ytd_size) as ytd_size,
+        sum(end_size) as end_size,
+        sum(diff_size) as diff_size,
+        null as days_available,
+        max(days_projected) as days_projected,
+        null as average_available,
+        sum(daily_average_projected) as daily_average_projected,
+        null as owner_exempt_bytes,
+        null as unexempt_average_projected,
+        (
+          select
+            case
+              /* Before FY19, exemptions apply */
+              when dstart < '2019-07-01' then null
+              else sum(daily_average_projected)
+            end * rate * 365
+        ) as cost,
+        (
+          select
+            case
+              /* Before FY19, exemptions apply */
+              when dstart < '2019-07-01' then null
+              /* Starting in FY19, each campus receives 10TB of free storage */
+              when sum(daily_average_projected) < 10000000000000 then 0
+              else sum(daily_average_projected) - 10000000000000
+            end * rate * 365
+        ) as cost_adj
+      from
+      (
+        #{sqlfrag}
+      ) collq
+      group by
+        ogroup
+      union
+      /*
+        Aggregated usage at the Merritt owner object level.
+        - Before FY19: invoices were produced at the "owner" level, but only a fraction (14 of 37) were sent.
+          - Grandfathered content has been designated as "exempt".
+          - Exemption totals are pulled from a separate table.
+          - A $50 minimum is applied to each invoice.
+        - FY19 and beyond: invoices will be produced at a "campus" level.
+          - Each campus will receive 10TB of free storage -- this replaces the notion of "exempt" content.
+      */
+      select
+        max(dstart) as dstart,
+        ogroup,
+        own_name,
+        max('-- Special Total --') as collection_name,
+        sum(start_size) as start_size,
+        sum(ytd_size) as ytd_size,
+        sum(end_size) as end_size,
+        sum(diff_size) as diff_size,
+        null as days_available,
+        max(days_projected) as days_projected,
+        null as average_available,
+        sum(daily_average_projected) as daily_average_projected,
+        max(owner_exempt_bytes) as owner_exempt_bytes,
+        (
+          select
+            case
+              /* Before FY19, $50 minimum per Merritt Owner */
+              when dstart >= '2019-07-01' then null
+              when (sum(daily_average_projected) - max(owner_exempt_bytes)) > 0
+                then (sum(daily_average_projected) - max(owner_exempt_bytes))
+              else 0
+            end
+        ) as unexempt_average_projected,
+        (
+          select
+            case
+              /* Before FY19, $50 minimum per Merritt Owner */
+              when dstart >= '2019-07-01' then null
+              when (sum(daily_average_projected) - max(owner_exempt_bytes)) * rate * 365 > 0
+                then (sum(daily_average_projected) - max(owner_exempt_bytes)) * rate * 365
+              else 0
+            end
+        ) as cost,
+        (
+          select
+            case
+              /* Before FY19, $50 minimum per Merritt Owner */
+              when dstart >= '2019-07-01' then null
+              when (sum(daily_average_projected) - max(owner_exempt_bytes)) * rate * 365 > 50
+                then (sum(daily_average_projected) - max(owner_exempt_bytes)) * rate * 365
+              when (sum(daily_average_projected) - max(owner_exempt_bytes)) * rate * 365 < 0
+                then 0
+              else 50
+            end
+        ) as cost_adj
+      from
+      (
+        #{sqlfrag}
+      ) collq
+      group by
+        ogroup,
+        own_name
       order by
         ogroup,
         own_name,
