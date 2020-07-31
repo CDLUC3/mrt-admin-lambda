@@ -178,10 +178,6 @@ class InvoicesQuery < AdminQuery
         ) as owner_exempt_bytes                  /* If before FY19, compute storage exemption per owner */
       from
         owner_collections c
-      group by
-        ogroup,
-        own_name,
-        collection_name
     }
   end
 
