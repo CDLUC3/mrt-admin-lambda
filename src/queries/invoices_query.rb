@@ -208,6 +208,10 @@ class InvoicesQuery < AdminQuery
       (
         #{sqlfrag}
       ) collq
+      group by
+        ogroup,
+        own_name,
+        collection_name
 
       union
 
@@ -260,10 +264,6 @@ class InvoicesQuery < AdminQuery
       ) collq
       group by
         ogroup
-      order by
-        ogroup,
-        own_name,
-        collection_name
 
       union
 
@@ -327,6 +327,11 @@ class InvoicesQuery < AdminQuery
       (
         #{sqlfrag}
       ) collq
+
+      order by
+        ogroup,
+        own_name,
+        collection_name
     }
   end
 
