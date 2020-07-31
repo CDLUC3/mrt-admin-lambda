@@ -59,19 +59,7 @@ class CollectionsByTimeQuery < AdminQuery
     "Collection #{@col} Over Time (#{@start} - #{@end})"
   end
 
-  def get_iterative_sql
-    get_campus_and_total_query
-  end
-
   def get_sql
-    if is_total
-      get_total_sql
-    else
-      get_group_sql
-    end
-  end
-
-  def get_total_sql
     %{
       select distinct
         'ZZ' as og,
@@ -85,91 +73,86 @@ class CollectionsByTimeQuery < AdminQuery
       and
         date_added <= ?
       #{@source_clause}
+
+      union
+
+      select distinct
+        oc.ogroup as og,
+        oc.inv_collection_id as ocid,
+        oc.collection_name as ocname,
+        (
+          select
+            sum(#{@col})
+          from
+            owner_coll_mime_use_details ocmud
+          where
+            oc.ogroup = ocmud.ogroup
+          and
+            oc.inv_collection_id = ocmud.inv_collection_id
+          and
+            date_added >= ?
+          and
+            date_added <= ?
+          #{@source_clause}
+        ) as sumval
+      from
+        owner_collections oc
+      group by
+        ogroup,
+        ocid,
+        ocname
+
+      union
+
+      select distinct
+        oc.ogroup as og,
+        0 as ocid,
+        '-- Total --' as ocname,
+        (
+          select
+            sum(#{@col})
+          from
+            owner_coll_mime_use_details ocmud
+          where
+            oc.ogroup = ocmud.ogroup
+          and
+            date_added >= ?
+          and
+            date_added <= ?
+          #{@source_clause}
+        ) as sumval
+      from
+        owner_collections oc
+      group by
+        ogroup,
+        ocid,
+        ocname
+
+      order by
+        ogroup,
+        ocid,
+        ocname
     }
   end
 
-  def get_group_sql
-    if @itparam2.to_i == 1
-      %{
-        select distinct
-          oc.ogroup as og,
-          oc.inv_collection_id as ocid,
-          oc.collection_name as ocname,
-          (
-            select
-              sum(#{@col})
-            from
-              owner_coll_mime_use_details ocmud
-            where
-              oc.ogroup = ocmud.ogroup
-            and
-              oc.inv_collection_id = ocmud.inv_collection_id
-            and
-              date_added >= ?
-            and
-              date_added <= ?
-            #{@source_clause}
-          ) as sumval
-        from
-          owner_collections oc
-        where
-          ogroup = ?
-        group by
-          ogroup,
-          ocid,
-          ocname
-      }
-    else
-      %{
-        select distinct
-          oc.ogroup as og,
-          0 as ocid,
-          '-- Total --' as ocname,
-          (
-            select
-              sum(#{@col})
-            from
-              owner_coll_mime_use_details ocmud
-            where
-              oc.ogroup = ocmud.ogroup
-            and
-              date_added >= ?
-            and
-              date_added <= ?
-            #{@source_clause}
-          ) as sumval
-        from
-          owner_collections oc
-        where
-          ogroup = ?
-        group by
-          ogroup,
-          ocid,
-          ocname
-      }
-    end
-  end
-
-  def get_query_params(pstart, pend, pitparam1, pitparam2)
-    if is_total
-      [ pstart, pend ]
-    elsif pitparam2.to_i == 1
-      [ pstart, pend, pitparam1 ]
-    else
-      [ pstart, pend, pitparam1 ]
-    end
+  def get_query_params(pstart, pend)
+    [
+      pstart, pend,
+      pstart, pend,
+      pstart, pend
+    ]
   end
 
   def run_query_sql
     stmt = @client.prepare(get_sql)
-    params = get_query_params(@start, @end, @itparam1, @itparam2)
+    params = get_query_params(@start, @end)
 
     results = stmt.execute(*params)
     types = get_types(results)
     combined_data = get_result_data(results, types)
 
     @ranges.each do |range|
-      params = get_query_params(range[0], range[1], @itparam1, @itparam2)
+      params = get_query_params(range[0], range[1])
       results = stmt.execute(*params)
       data = get_result_data(results, types)
       data.each_with_index do |r, i|
