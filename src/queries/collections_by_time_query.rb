@@ -62,7 +62,7 @@ class CollectionsByTimeQuery < AdminQuery
   def get_sql
     %{
       select distinct
-        'ZZ' as og,
+        'ZZ' as ogroup,
         0 as ocid,
         '-- Grand Total --' as ocname,
         sum(#{@col})
@@ -77,7 +77,7 @@ class CollectionsByTimeQuery < AdminQuery
       union
 
       select distinct
-        oc.ogroup as og,
+        oc.ogroup as ogroup,
         oc.inv_collection_id as ocid,
         oc.collection_name as ocname,
         (
@@ -105,7 +105,7 @@ class CollectionsByTimeQuery < AdminQuery
       union
 
       select distinct
-        oc.ogroup as og,
+        oc.ogroup as ogroup,
         0 as ocid,
         '-- Total --' as ocname,
         (
