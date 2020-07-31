@@ -64,7 +64,6 @@ class InvoicesQuery < AdminQuery
     %{
       /*
         The following query fragment will be used 3 times to create 3 levels of groupings.
-
         Compute usage at the campus/owner/collection level.
         - All Merritt objects have a collection and an owner object.
         - Generally, all objects in a collection have the same owner.
@@ -78,7 +77,6 @@ class InvoicesQuery < AdminQuery
         ? as dend,
         ? as dytd,
         ? as rate,
-
         ogroup                          /* campus */,
         own_name                        /* Merritt ownership object.*/,
         inv_owner_id,
@@ -323,6 +321,9 @@ class InvoicesQuery < AdminQuery
       (
         #{sqlfrag}
       ) collq
+      group by
+        ogroup,
+        own_name
 
       order by
         ogroup,
