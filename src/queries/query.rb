@@ -12,7 +12,7 @@ class AdminQuery
   end
 
   def get_param(key, defval)
-    @myparams.key?(key) ? CGI.unescape(@myparams[key].strip) : ''
+    @myparams.key?(key) ? CGI.unescape(@myparams[key].strip) : defval
   end
 
   def get_title

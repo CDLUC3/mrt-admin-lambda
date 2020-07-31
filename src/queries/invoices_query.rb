@@ -203,13 +203,9 @@ class InvoicesQuery < AdminQuery
       (
         #{sqlfrag}
       ) collq
-    }
-  end
 
-  def test
-    sqlfrag = ""
-    %{
       union
+
       /*
         Aggregated usage at the CAMPUS level.
         - Before FY19: invoices were produced at the "owner" level, but only a fraction (14 of 37) were sent.
@@ -258,7 +254,9 @@ class InvoicesQuery < AdminQuery
       ) collq
       group by
         ogroup
+
       union
+
       /*
         Aggregated usage at the Merritt owner object level.
         - Before FY19: invoices were produced at the "owner" level, but only a fraction (14 of 37) were sent.
