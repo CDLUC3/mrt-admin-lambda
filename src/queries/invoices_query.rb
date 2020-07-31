@@ -52,31 +52,16 @@ class InvoicesQuery < AdminQuery
     3
   end
 
-  def get_sql
-    if is_total
-      get_total_sql
-    else
-      get_group_sql
-    end
+  def get_params
+    [
+      @dstart, @dend, @dytd, @rate,
+      @dstart, @dend, @dytd, @rate,
+      @dstart, @dend, @dytd, @rate
+    ]
   end
 
-  def get_query_params(pstart, pend, pytd, prate, pitparam)
-    if is_total
-      [pstart, pend, pytd, prate]
-    else
-      [
-        pstart, pend, pytd, prate, pitparam,
-        pstart, pend, pytd, prate, pitparam
-      ]
-    end
-  end
-
-  def resolve_params
-    get_query_params(@dstart, @dend, @dytd, @rate, @itparam1)
-  end
-
-  def get_sql_frag(is_group)
-    sqlfrag = %{
+  def get_sql_frag
+    %{
       /*
         The following query fragment will be used 3 times to create 3 levels of groupings.
 
@@ -194,15 +179,11 @@ class InvoicesQuery < AdminQuery
       from
         owner_collections c
     }
-    if is_group
-      sqlfrag += "where ogroup = ?"
-    end
-    sqlfrag
   end
 
-  def get_group_sql
-    sqlfrag = get_sql_frag(true)
-    sql = %{
+  def get_sql
+    sqlfrag = get_sql_frag
+    %{
       /*
         Select campus/owner/collection level.
       */
@@ -283,12 +264,8 @@ class InvoicesQuery < AdminQuery
         ogroup,
         own_name,
         collection_name
-    }
-  end
 
-  def get_total_sql
-    sqlfragtot = get_sql_frag(false)
-    sql = %{
+      union
 
       /*
         Aggregated usage at the Merritt owner object level.
@@ -348,7 +325,7 @@ class InvoicesQuery < AdminQuery
         ) as cost_adj
       from
       (
-        #{sqlfragtot}
+        #{sqlfrag}
       ) collq
     }
   end
