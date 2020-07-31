@@ -178,7 +178,7 @@ class InvoicesQuery < AdminQuery
         owner_collections c
     }
 
-    sql = %{
+    %{
       /*
         Select campus/owner/collection level.
       */
@@ -203,7 +203,6 @@ class InvoicesQuery < AdminQuery
       (
         #{sqlfrag}
       ) collq
-
     }
   end
 
