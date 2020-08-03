@@ -65,7 +65,7 @@ def lambda_handler(event:, context:)
         'content-type':'application/json; charset=utf-8'
       },
       statusCode: 500,
-      body: { error: e.message, trace: e.backtrace }.to_json
+      body: { error: e.message }.to_json
     }
   end
 end
