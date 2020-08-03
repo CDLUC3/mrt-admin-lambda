@@ -11,4 +11,5 @@ dependencies.zip
 test/database.yml
 test/config/database.yml
 test/config/database2.yml
+src/config/database.localcred.yml
 test/config/database.localcred.yml
