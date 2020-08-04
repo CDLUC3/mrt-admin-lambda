@@ -13,3 +13,4 @@ test/config/database.yml
 test/config/database2.yml
 src/config/database.localcred.yml
 test/config/database.localcred.yml
+mysql-deps/mysql-dependencies.zip

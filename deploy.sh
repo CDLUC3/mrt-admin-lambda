@@ -16,11 +16,17 @@ LAMBDA_ARN=`get_ssm_value_by_name admintool/lambda-arn`
 MERRITT_PATH=`get_ssm_value_by_name admintool/merritt-path`
 
 # Start with the bundle dependencies.  Code will be inserted into `deploy.zip`
-cp dependencies.zip deploy.zip
+cp mysql-deps/dependencies.zip deploy.zip
+
+# Bundle addtional dependencies
+bundle install
+
 
 # Copy ruby code into zip
 cd src
 zip -r ../deploy.zip *
+cd ../build
+zip -r ../deploy.zip vendor/bundle/ruby/2.7.0/gems vendor/bundle/2.7.0/specifications
 cd ..
 
 # Display zip contents to the user
