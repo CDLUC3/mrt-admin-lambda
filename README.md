@@ -28,7 +28,7 @@ The Lambda code is deployed to the Ruby 2.7 environment.  A build process is req
 ## Lambda Build Process
 
 ### Build MySql dependencies for Lambda OS
-Requires docker to be installed.
+[mysql-deps/makeDependencies.sh](mysql-deps/makeDependencies.sh) requires docker to be installed ([mysql-deps/Dockerfile](mysql-deps/Dockerfile)).
 ```
 cd mysql-deps
 ./makeDependencies.sh
@@ -44,7 +44,7 @@ https://github.com/CDLUC3/uc3-ssm/packages
 
 
 ### Build Lambda Code
-Requires Ruby and Bundler to be installed.
+[package-deploy.sh](package-deploy.sh) requires Ruby and Bundler to be installed.
 ```
 ./package-deploy.sh
 ```
@@ -54,7 +54,7 @@ Output: **deploy.zip**
 ### Copy deploy.zip to deployment box
 
 ### Deploy to Lambda
-Requires SSM parameters to be configured.  Requires lambda update function permissions.
+[lambda-deploy.sh](lambda-deploy.sh) requires SSM parameters to be configured.  Requires lambda update function permissions.
 
 ```
 ./lambda-deploy.sh
