@@ -6,7 +6,7 @@ RUN yum -y install mysql-devel
 RUN gem update bundler
 
 # Start with a Gemfile containing only MySQL
-COPY Gemfile.mysql-dep ./Gemfile
+COPY Gemfile ./
 
 RUN bundle config --local build.mysql2 --with-mysql2-config=/usr/lib64/mysql/mysql_config && \
     bundle config --local silence_root_warning true && \
