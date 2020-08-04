@@ -24,10 +24,12 @@ jobs:
 
     - name: Build Dependencies in Docker
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        XGITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: test
+        USERNAME: ${{ github.actor }}
       run: |
         cp Gemfile mysql-deps
-        echo ${GITHUB_TOKEN} | docker login -u ${GITHUB_ACTOR} --password-stdin docker.pkg.github.com
+
         docker build -t depbuild mysql-deps
         docker run --rm --name depbuild -d depbuild
         docker cp depbuild:/var/task/mysql-dependencies.zip .
