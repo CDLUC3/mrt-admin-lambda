@@ -25,6 +25,7 @@ jobs:
     # Runs a set of commands using the runners shell
     - name: Build Dependencies
       run: |
+        cp Gemfile mysql-deps
         docker build -t depbuild mysql-deps
         docker run --rm --name depbuild -d depbuild
         docker cp depbuild:/var/task/mysql-dependencies.zip .
