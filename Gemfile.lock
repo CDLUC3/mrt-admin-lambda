@@ -1,21 +1,16 @@
-GIT
-  remote: https://github.com/CDLUC3/uc3-ssm
-  revision: cba3fe792f1c0a02f6533931a1dbcd6c221857a8
-  branch: main
-  specs:
-    uc3-ssm (0.1.0)
-
 GEM
   remote: https://rubygems.org/
+  remote: https://rubygems.pkg.github.com/cdluc3/
   specs:
     mysql2 (0.5.3)
+    uc3-ssm (0.1.1)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   mysql2
-  uc3-ssm!
+  uc3-ssm (= 0.1.1)!
 
 BUNDLED WITH
    2.1.4
