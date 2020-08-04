@@ -8,7 +8,7 @@ RUN gem update bundler
 # Start with a Gemfile containing only MySQL
 COPY Gemfile ./
 
-RUN bundle config https://rubygems.pkg.github.com/CDLUC3 ${USERNAME}:${GITHUB_TOKEN}
+RUN bundle config https://rubygems.pkg.github.com/CDLUC3 ${USERNAME}:${GITHUB_TOKEN} && \
     bundle config --local build.mysql2 --with-mysql2-config=/usr/lib64/mysql/mysql_config && \
     bundle config --local silence_root_warning true && \
     bundle config set path 'vendor/bundle' && \
