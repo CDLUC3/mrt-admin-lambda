@@ -72,12 +72,4 @@ Requires SSM parameters to be configured.  Requires lambda update function permi
 ## Local Testing
 - A Sinatra web server can be started in lieu of Cloud Front / API Gateway / Lambda.
 - This web server is designed to mimic the pass through of request parameters to a Lambda function.  Request parameters are packaged into an event object.
-- Since the desktop environment may not have a local copy of SSM parameters, the code is configured to pull database credentials from a configuration file `config/database.yml`
-
-## TODO's
-- Create a gem file for resolving database credentials from SSM, ENV or YAML.
-- Add rspec tests as a test driver
-- Create a Dockerfile to package up the local ruby test environment.
-  - Consider the creation of a mock database dump to be packaged for Docker.
-- Consider a Lambda layer for the MySQL dependencies
-- Consider deploying the Lambda code and the website assets to the same S3 bucket.
+- Since the desktop environment may not have a local copy of SSM parameters, the code is configured to pull database credentials from an untracked configuration file `test/config/database.localcred.yml`
