@@ -10,7 +10,7 @@ bundle install
 cd src
 zip -r ../deploy.zip *
 cd ../build
-zip -r ../deploy.zip vendor/bundle/ruby/2.7.0/gems vendor/bundle/2.7.0/specifications
+zip -r ../deploy.zip vendor/bundle/ruby/2.7.0/gems vendor/bundle/ruby/2.7.0/specifications
 cd ..
 
 # Display zip contents to the user

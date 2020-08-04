@@ -15,6 +15,11 @@ LAMBDA_ARN=`get_ssm_value_by_name admintool/lambda-arn`
 # Get the URL for links to Merritt
 MERRITT_PATH=`get_ssm_value_by_name admintool/merritt-path`
 
+# Embed Admin Tool code into the deployment zip file (will not update dependencies)
+cd src
+zip -r ../deploy.zip *
+cd ..
+
 # Display zip contents to the user
 unzip -l deploy.zip
 
