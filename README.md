@@ -38,13 +38,17 @@ cd ..
 Output: **mysql-dependencies.zip**
 
 ### UC3-SSM Gem
-The uc3-ssm gem is built by GitHub Actions.
+The uc3-ssm gem is built by GitHub Actions.  
+
+The gem requires a GitHub token to pull the packaged gem.
 
 https://github.com/CDLUC3/uc3-ssm/packages
 
 
 ### Build Lambda Code
-[package-deploy.sh](package-deploy.sh) requires Ruby and Bundler to be installed.
+[package-deploy.sh](package-deploy.sh) requires Ruby and Bundler to be installed.  
+
+Ideally, I would like to run this in Docker, but I do not want to copy my GitHub token to Docker.
 ```
 ./package-deploy.sh
 ```
