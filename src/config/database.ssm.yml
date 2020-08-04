@@ -1,0 +1,10 @@
+default:
+  dbconf:
+    adapter: mysql2
+    encoding: utf8
+    host: "{!SSM: billing/db-host}"
+    database: "{!SSM: billing/db-name}"
+    port: 3306
+    username: "{!SSM: billing/readonly/db-user}"
+    password: "{!SSM: billing/readonly/db-password}"
+  merritt_path: "{!ENV: MERRITT_PATH !DEF: https://merritt.cdlib.org}"

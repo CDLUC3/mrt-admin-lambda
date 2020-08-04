@@ -1,7 +1,10 @@
 source "https://rubygems.org"
-#gem 'rspec'
+
 gem 'mysql2'
-#gem 'uc3_ssm', git: 'https://github.com/CDLUC3/uc3-ssm-gem', branch: 'main'
-#gem 'httpclient'
-#gem 'aws-sdk-ssm'
-#gem 'aws-sdk-lambda'
+
+# When referencing a git gem, a deployable gem does not get created in the bundle directory
+#gem 'uc3-ssm', git: 'https://github.com/CDLUC3/uc3-ssm', branch: 'main'
+
+source "https://rubygems.pkg.github.com/cdluc3" do
+  gem "uc3-ssm", "0.1.1"
+end

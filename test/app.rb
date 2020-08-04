@@ -17,6 +17,7 @@ end
 get '/*' do
   path = params['splat'][0]
   event = {path: path, queryStringParameters: params}
+  ENV['MERRITT_ADMIN_CONFIG'] = 'config/database.localcred.yml'
   resp = lambda_handler(event: event, context: {})
   status resp[:statusCode]
   resp[:body]

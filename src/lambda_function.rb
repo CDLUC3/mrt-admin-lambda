@@ -2,7 +2,7 @@ require 'json'
 require 'aws-sdk-ssm'
 require 'aws-sdk-lambda'
 require 'yaml'
-#require 'uc3_ssm'
+require 'uc3-ssm'
 require 'mysql2'
 require_relative 'queries/query'
 require_relative 'queries/query_factory'
@@ -14,60 +14,39 @@ def get_key_val(obj, key, defval='')
   defval
 end
 
-def getSsmPath(arn)
-  #lambda = Aws::Lambda::Client.new
-  #lambda.list_tags({resource: arn})
-  ENV['SSM_ROOT_PATH']
-rescue
-  "na"
-end
 
-def getMerrittPath
-  ENV.key?('MERRITT_PATH') ? ENV['MERRITT_PATH'] : "https://merritt.cdlib.org"
-end
-
-
-def getSsmVal(ssm, root, path)
-  ssm.get_parameter(name: "#{root}#{path}")[:parameter][:value]
-end
-
-def get_mysql(arn)
-  ssmpath = getSsmPath(arn)
-  ssm = Aws::SSM::Client.new
-  db_user = getSsmVal(ssm, ssmpath, 'billing/readonly/db-user')
-  db_password = getSsmVal(ssm, ssmpath, 'billing/readonly/db-password')
-  db_name = getSsmVal(ssm, ssmpath, 'billing/db-name')
-  db_host = getSsmVal(ssm, ssmpath, 'billing/db-host')
+def get_mysql
+  raise Exception.new "The configuration yaml must contain config['default']['dbconf']" unless @config['default']['dbconf']
+  dbconf = @config['default']['dbconf']
+  raise Exception.new "Configuration username not found" unless dbconf['username']
+  db_user = dbconf['username']
+  raise Exception.new "Configuration password not found" unless dbconf['password']
+  db_password = dbconf['password']
+  raise Exception.new "Configuration database not found" unless dbconf['database']
+  db_name = dbconf['database']
+  raise Exception.new "Configuration host not found" unless dbconf['host']
+  db_host = dbconf['host']
+  raise Exception.new "Configuration port not found" unless dbconf['port']
+  db_port = dbconf['port']
 
   Mysql2::Client.new(
     :host => db_host,
     :username => db_user,
     :database=> db_name,
     :password=> db_password,
-    :port => 3306)
-rescue
-  config = load_config('database.yml')['development']
-  db_user = config['username']
-  db_password = config['password']
-  db_host = config['host']
-  db_name = config['database']
-
-  Mysql2::Client.new(
-    :host => db_host,
-    :username => db_user,
-    :database=> db_name,
-    :password=> db_password,
-    :port => 3306)
+    :port => db_port)
 end
 
 def lambda_handler(event:, context:)
+  begin
+    config_path = ENV.key?('MERRITT_ADMIN_CONFIG') ? ENV['MERRITT_ADMIN_CONFIG'] : 'config/database.ssm.yml'
+    @config = Uc3Ssm::ConfigResolver.new.resolve_file_values(config_path)
 
-    arn = context.class.to_s == 'LambdaContext' ? context.invoked_function_arn : ''
-    client = get_mysql(arn)
+    client = get_mysql
     path = get_key_val(event, 'path').gsub(/^\//, '')
     myparams = get_key_val(event, 'queryStringParameters', {})
 
-    query_factory = QueryFactory.new(client, getMerrittPath)
+    query_factory = QueryFactory.new(client, @config['default']['merritt_path'])
     query = query_factory.get_query_for_path(path, myparams)
     json = query.run_sql.to_json
 
@@ -86,15 +65,7 @@ def lambda_handler(event:, context:)
         'content-type':'application/json; charset=utf-8'
       },
       statusCode: 500,
-      body: { error: e.message, trace: e.backtrace }.to_json
+      body: { error: e.message }.to_json
     }
-    #JSON.generate('Hello from Lambda!')
-end
-
-def load_config(name)
-  path = File.join('config', name)
-  raise Exception, "Config file #{name} not found!" unless File.exist?(path)
-  raise Exception, "Config file #{name} is empty!" if File.size(path) == 0
-
-  conf     = YAML.load_file(path)
+  end
 end

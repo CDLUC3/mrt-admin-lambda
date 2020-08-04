@@ -12,6 +12,7 @@ The Lambda code is deployed to the Ruby 2.7 environment.  A build process is req
 
 ## Directories
 - src: Lambda source code
+- mysql-deps: build OS-specific mysql binaries used by mysql gems
 - test: Sinatra driver for desktop testing
 - web: static website code to be deployed to S3
 
@@ -26,18 +27,38 @@ The Lambda code is deployed to the Ruby 2.7 environment.  A build process is req
 
 ## Lambda Build Process
 
-- A Ruby `bundle install` must be run to build all of the dependencies needed for the lambda deployment
-- The mysql dependency creates OS/architecture specific components that must be built for the target environment
-  - A docker container using the Lambda base image can be used to produce the appropriate mysql assets
-- Build decision tree
-  - Did the Gemfile change?
-    - Run `makeDependencies.sh` to generate **dependencies.zip**
-    - Considering GitHub actions
-  - Did the code or Gemfile change?
-    - Run `deploy.sh` to package code and dependencies into **deploy.zip**
-    - The build script will embed the API Gateway URL into the javaScript code
-    - Publish to lambda
-- Database credentials are made available to the Lambda via the SSM parameter store.
+### Build MySql dependencies for Lambda OS
+Requires docker to be installed.
+```
+cd mysql-deps
+./makeDependencies.sh
+cd ..
+```
+
+Output: **mysql-dependencies.zip**
+
+### UC3-SSM Gem
+The uc3-ssm gem is built by GitHub Actions.
+
+https://github.com/CDLUC3/uc3-ssm/packages
+
+
+### Build Lambda Code
+Requires Ruby and Bundler to be installed.
+```
+./package-deploy.sh
+```
+
+Output: **deploy.zip**
+
+### Copy deploy.zip to deployment box
+
+### Deploy to Lambda
+Requires SSM parameters to be configured.  Requires lambda update function permissions.
+
+```
+./lambda-deploy.sh
+```
 
 ## Static Website Publishing
 - A static website provides the user interface for these queries.
@@ -51,45 +72,4 @@ The Lambda code is deployed to the Ruby 2.7 environment.  A build process is req
 ## Local Testing
 - A Sinatra web server can be started in lieu of Cloud Front / API Gateway / Lambda.
 - This web server is designed to mimic the pass through of request parameters to a Lambda function.  Request parameters are packaged into an event object.
-- Since the desktop environment may not have a local copy of SSM parameters, the code is configured to pull database credentials from a configuration file `config/database.yml`
-
-## TODO's
-- Create a gem file for resolving database credentials from SSM, ENV or YAML.
-- Add rspec tests as a test driver
-- Create a Dockerfile to package up the local ruby test environment.
-  - Consider the creation of a mock database dump to be packaged for Docker.
-- Consider a Lambda layer for the MySQL dependencies
-- Consider deploying the Lambda code and the website assets to the same S3 bucket.
-
-## Query Migration
-
-| Query | Timeout? | Update Frequency? | Note |
-| ----- | -------- | ------------------ | ---- |
-| OwnerQuery | no | Daily ||
-| CollectionQuery | no | Daily ||
-| MimeQuery | no | Daily ||
-| NodesQuery | possible | Daily ||
-| ObjectsByArkQuery | no | immediate ||
-| ObjectsByTitleQuery | no | immediate ||
-| ObjectsByLocalIdQuery | no | immediate ||
-| ObjectsByAuthorQuery | no | immediate ||
-| ObjectsLargeQuery | no | Daily ||
-| ObjectsManyFilesQuery | no | Daily ||
-| ObjectsRecentQuery | no | immediate ||
-| FilesByNameCollQuery | no | immediate ||
-| CountObjectsQuery | yes | immediate ||
-| CollectionsByNodeQuery | no | immediate ||
-| CollectionsByOwnerQuery | no | immediate ||
-| CollectionsByMimeQuery | no | immediate ||
-| CollectionsByMimeQuery_count_alltime | incremental load | Daily ||
-| CollectionsByMimeQuery_size_alltime | incremental load | Daily ||
-| CollectionsByMimeQuery_count_daily | incremental load | Daily ||
-| CollectionsByMimeQuery_size_daily | incremental load | Daily ||
-| CollectionsByMimeQuery_count_weekly | incremental load | Daily ||
-| CollectionsByMimeQuery_size_weekly | incremental load | Daily ||
-| CollectionDetailsQuery | no | immediate ||
-| InvoicesQuery_fy | incremental load | Daily ||
-| AuditStatusQuery | yes | Hourly ||
-| AuditProcessedQuery | yes | Hourly ||
-| AuditOldestQuery | no | Hourly ||
-| ReplicationNeededQuery | no | Hourly ||
+- Since the desktop environment may not have a local copy of SSM parameters, the code is configured to pull database credentials from an untracked configuration file `test/config/database.localcred.yml`
