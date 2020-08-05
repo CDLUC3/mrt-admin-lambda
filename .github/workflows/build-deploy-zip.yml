@@ -36,7 +36,6 @@ jobs:
         cd src
         zip -r ../deploy.zip *
         cd ..
-        zip -r deploy.zip vendor/bundle/ruby/2.7.0/gems vendor/bundle/2.7.0/specifications
         
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2
