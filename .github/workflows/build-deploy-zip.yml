@@ -24,8 +24,7 @@ jobs:
 
     - name: Build Dependencies in Docker
       env:
-        XGITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        GITHUB_TOKEN: test
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         USERNAME: ${{ github.actor }}
       run: |
         cp Gemfile mysql-deps
