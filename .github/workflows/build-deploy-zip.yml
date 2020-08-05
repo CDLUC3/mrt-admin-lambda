@@ -31,7 +31,7 @@ jobs:
         cp Gemfile mysql-deps
 
         docker build -t depbuild mysql-deps
-        docker run --rm --name depbuild -d depbuild
+        docker run --rm --name depbuild -d -e "USERNAME=${USERNAME}" -e "GITHUB_TOKEN=${GITHUB_TOKEN}" depbuild
         docker cp depbuild:/var/task/mysql-dependencies.zip .
 
     # Runs a single command using the runners shell
