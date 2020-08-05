@@ -1,6 +1,9 @@
 # This image is based on an architecture that matches the Lambda Ruby runtime
 FROM lambci/lambda:build-ruby2.7
 
+ENV USERNAME
+ENV GITHUB_TOKEN
+
 # Install an os-specific MySQL installation.  The ruby code is insufficient to run
 RUN yum -y install mysql-devel
 RUN gem update bundler
