@@ -24,6 +24,18 @@ LAMBDA_ARN=`get_ssm_value_by_name admintool/lambda-arn`
 # Get the URL for links to Merritt
 MERRITT_PATH=`get_ssm_value_by_name admintool/merritt-path`
 
+CREATED_AT=`curl -s "https://api.github.com/repos/CDLUC3/mrt-admin-lambda/actions/artifacts" | jq -r ".artifacts[0]" | jq -r ".created_at"`
+ZIPSIZE=`curl -s "https://api.github.com/repos/CDLUC3/mrt-admin-lambda/actions/artifacts" | jq -r ".artifacts[0]" | jq -r ".size_in_bytes"`
+
+echo " ********************* "
+echo " ===> ${SSM_ROOT_PATH}"
+echo " Created:  ${CREATED_AT}"
+echo " Zip Size: ${ZIPSIZE}"
+echo " ********************* "
+echo "Press Enter to continue or Cntl-C to cancel"
+
+read
+
 LATEST_DEPLOY=`curl -s "https://api.github.com/repos/CDLUC3/mrt-admin-lambda/actions/artifacts" | jq -r ".artifacts[0]" | jq -r ".archive_download_url"`
 
 curl -u ${GH_TOKEN} -L -s ${LATEST_DEPLOY} -o artifact.zip
