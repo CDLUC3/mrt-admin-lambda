@@ -6,9 +6,9 @@ name: CI
 # events but only for the main branch
 on:
   push:
-    branches: [ post-artifact ]
+    branches: [ post-artifact main ]
   pull_request:
-    branches: [ post-artifact ]
+    branches: [ post-artifact main ]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -32,11 +32,11 @@ jobs:
         docker build -t depbuild --build-arg "USERNAME=${USERNAME}" --build-arg "GITHUB_TOKEN=${GITHUB_TOKEN}" mysql-deps
         docker run --rm --name depbuild -d depbuild
         docker cp depbuild:/var/task/mysql-dependencies.zip deploy.zip
-        
+
         cd src
         zip -r ../deploy.zip *
         cd ..
-        
+
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2
       with:
