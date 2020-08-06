@@ -1,0 +1,52 @@
+@@ -0,0 +1,51 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Build Lambda Dependencies
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the main branch
+on:
+  push:
+    branches:
+    - post-artifact
+    - main
+  pull_request:
+    branches:
+    - post-artifact
+    - main
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  prepare-lambda-zip:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+
+    - name: Build Dependencies in Docker
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        USERNAME: ${{ github.actor }}
+      run: |
+        # Copy GemFile to pull all project dependencies
+        cp Gemfile mysql-deps
+
+        # A GitHub token is needed to pull in a packaged Gem from GitHub
+        docker build -t depbuild --build-arg "USERNAME=${USERNAME}" --build-arg "GITHUB_TOKEN=${GITHUB_TOKEN}" mysql-deps
+        docker run --rm --name depbuild -d depbuild
+        docker cp depbuild:/var/task/mysql-dependencies.zip deploy.zip
+
+        # Pakage additional code
+        cd src
+        zip -r ../deploy.zip *
+        cd ..
+
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: deploy
+        path: deploy.zip
