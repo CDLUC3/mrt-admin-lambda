@@ -27,15 +27,19 @@ The Lambda code is deployed to the Ruby 2.7 environment.  A build process is req
 
 ## Lambda Build Process
 
-### Build MySql dependencies for Lambda OS
-[mysql-deps/makeDependencies.sh](mysql-deps/makeDependencies.sh) requires docker to be installed ([mysql-deps/Dockerfile](mysql-deps/Dockerfile)).
-```
-cd mysql-deps
-./makeDependencies.sh
-cd ..
-```
+### Configure Your GitHub Token
 
-Output: **mysql-dependencies.zip**
+In order to pull this artifact, you must create a GitHub access token
+with the following privileges. (Click settings on your GH user account.)
+- repo:status
+- public_repo
+- read:packages
+
+Save your token to a variable GH_TOKEN in your account
+
+```
+export GH_TOKEN=username:token
+```
 
 ### UC3-SSM Gem
 The uc3-ssm gem is built by GitHub Actions.  
@@ -44,25 +48,27 @@ The gem requires a GitHub token to pull the packaged gem.
 
 https://github.com/CDLUC3/uc3-ssm/packages
 
+### Build MySql dependencies for Lambda OS
 
-### Build Lambda Code
-[package-deploy.sh](package-deploy.sh) requires Ruby and Bundler to be installed.  
+The following GitHub Action will build a zip file containing all Gem dependencies needed to run the application.
 
-Ideally, I would like to run this in Docker, but I do not want to copy my GitHub token to Docker.
-```
-./package-deploy.sh
-```
+- [GitHub Action Build](.github/workflows/build-deploy-zip.yml)
+
+This action generates a GitHub artifact named **deploy.zip**
+
+This GitHub action utilizes a Dockerfile that pre-builds dependencies for a Ruby Lambda with MySql.  See the [cdluc3/mysql-ruby-lambda Dockerfile](mysql-ruby-lambda/Dockerfile)
+
+### Deploy the Lambda Code
+
+The following script should be run from a host that is authorized to deploy to Lambda.
+
+- [lambda-deploy.sh](lambda-deploy.sh)
+
+This will download the artifact dependencies from GitHub and re-embed source files into the zip file.
+
+This script requires SSM parameters to be configured.  Requires lambda update function permissions.
 
 Output: **deploy.zip**
-
-### Copy deploy.zip to deployment box
-
-### Deploy to Lambda
-[lambda-deploy.sh](lambda-deploy.sh) requires SSM parameters to be configured.  Requires lambda update function permissions.
-
-```
-./lambda-deploy.sh
-```
 
 ## Static Website Publishing
 - A static website provides the user interface for these queries.

@@ -1,6 +1,15 @@
 #!/bin/bash
 
-# If you have modified the Gemfile, you must run `makeDependencies.sh`
+# A zip file of dependencies will be constructed with GitHub actions.
+# The results are saved to a GitHub actions artifact.
+
+# In order to pull this artifact, you must create a GitHub access token
+# with the following privileges. (Click settings on your GH user account.)
+# - repo:status
+# - public_repo
+# - read:packages
+# Save your token to a variable GH_TOKEN in your account
+# export GH_TOKEN=username:token
 
 # Depends on https://github.com/CDLUC3/uc3-aws-cli scripts
 EXIT_ON_DIE=true
@@ -15,7 +24,11 @@ LAMBDA_ARN=`get_ssm_value_by_name admintool/lambda-arn`
 # Get the URL for links to Merritt
 MERRITT_PATH=`get_ssm_value_by_name admintool/merritt-path`
 
-# Embed Admin Tool code into the deployment zip file (will not update dependencies)
+LATEST_DEPLOY=`curl -s "https://api.github.com/repos/CDLUC3/mrt-admin-lambda/actions/artifacts" | jq -r ".artifacts[0]" | jq -r ".archive_download_url"`
+
+curl -u ${GH_TOKEN} -L -s ${LATEST_DEPLOY} -o deploy.zip
+
+# Copy ruby code into zip
 cd src
 zip -r ../deploy.zip *
 cd ..
