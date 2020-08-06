@@ -26,7 +26,11 @@ MERRITT_PATH=`get_ssm_value_by_name admintool/merritt-path`
 
 LATEST_DEPLOY=`curl -s "https://api.github.com/repos/CDLUC3/mrt-admin-lambda/actions/artifacts" | jq -r ".artifacts[0]" | jq -r ".archive_download_url"`
 
-curl -u ${GH_TOKEN} -L -s ${LATEST_DEPLOY} -o deploy.zip
+curl -u ${GH_TOKEN} -L -s ${LATEST_DEPLOY} -o artifact.zip
+
+rm deploy.zip
+unzip artifact.zip
+rm artifact.zip
 
 # Copy ruby code into zip
 cd src
@@ -41,3 +45,8 @@ aws lambda update-function-code --function-name ${LAMBDA_ARN} --zip-file fileb:/
 
 # Set environment and set timeout
 aws lambda update-function-configuration --function-name ${LAMBDA_ARN} --region us-west-2 --timeout 60 --memory-size 128 --environment "Variables={SSM_ROOT_PATH=${SSM_ROOT_PATH},MERRITT_PATH=${MERRITT_PATH}}"
+
+SITE_URL=`get_ssm_value_by_name admintool/site-url`
+
+echo " *** Preview changes at "
+echo $SITE_URL
