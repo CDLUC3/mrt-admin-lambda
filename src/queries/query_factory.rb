@@ -27,6 +27,8 @@ class QueryFactory
       CollectionQuery.new(self, path, myparams)
     elsif path == 'mimes'
       MimeQuery.new(self, path, myparams)
+    elsif path == 'collnodes'
+      CollectionNodesQuery.new(self, path, myparams)
     elsif path == 'nodes'
       NodesQuery.new(self, path, myparams)
     elsif path == 'objects_by_ark'
