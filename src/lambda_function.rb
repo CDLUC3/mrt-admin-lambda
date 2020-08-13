@@ -16,8 +16,8 @@ end
 
 
 def get_mysql
-  raise Exception.new "The configuration yaml must contain config['default']['dbconf']" unless @config['default']['dbconf']
-  dbconf = @config['default']['dbconf']
+  raise Exception.new "The configuration yaml must contain config['dbconf']" unless @config['dbconf']
+  dbconf = @config['dbconf']
   raise Exception.new "Configuration username not found" unless dbconf['username']
   db_user = dbconf['username']
   raise Exception.new "Configuration password not found" unless dbconf['password']
@@ -40,13 +40,12 @@ end
 def lambda_handler(event:, context:)
   begin
     config_path = ENV.key?('MERRITT_ADMIN_CONFIG') ? ENV['MERRITT_ADMIN_CONFIG'] : 'config/database.ssm.yml'
-    @config = Uc3Ssm::ConfigResolver.new.resolve_file_values(config_path)
-
+    @config = Uc3Ssm::ConfigResolver.new.resolve_file_values(file: config_path, resolve_key: 'default', return_key: 'default')
     client = get_mysql
     path = get_key_val(event, 'path').gsub(/^\//, '')
     myparams = get_key_val(event, 'queryStringParameters', {})
 
-    query_factory = QueryFactory.new(client, @config['default']['merritt_path'])
+    query_factory = QueryFactory.new(client, @config['merritt_path'])
     query = query_factory.get_query_for_path(path, myparams)
     json = query.run_sql.to_json
 
