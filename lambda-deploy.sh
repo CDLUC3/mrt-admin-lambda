@@ -25,6 +25,9 @@ LAMBDA_ARN=`get_ssm_value_by_name admintool/lambda-arn`
 MERRITT_PATH=`get_ssm_value_by_name admintool/merritt-path`
 
 CREATED_AT=`curl -s "https://api.github.com/repos/CDLUC3/mrt-admin-lambda/actions/artifacts" | jq -r ".artifacts[0]" | jq -r ".created_at"`
+
+CREATED_AT=`date -d $CREATED_AT`
+
 ZIPSIZE=`curl -s "https://api.github.com/repos/CDLUC3/mrt-admin-lambda/actions/artifacts" | jq -r ".artifacts[0]" | jq -r ".size_in_bytes"`
 
 echo " ********************* "
