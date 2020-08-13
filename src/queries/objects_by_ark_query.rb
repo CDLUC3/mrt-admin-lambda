@@ -1,7 +1,7 @@
 class ObjectsByArkQuery < ObjectsQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
-    @ark = get_param('ark', '')
+    @ark = CGI.unescape(get_param('ark', ''))
   end
 
   def get_title

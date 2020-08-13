@@ -1,7 +1,7 @@
 class ObjectsByAuthorQuery < ObjectsQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
-    @author = get_param('author', '')
+    @author = CGI.unescape(get_param('author', ''))
   end
 
   def get_title

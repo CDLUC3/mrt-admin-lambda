@@ -1,7 +1,7 @@
 class ObjectsByLocalIdQuery < ObjectsQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
-    @localid = get_param('localid', '')
+    @localid = CGI.unescape(get_param('localid', ''))
   end
 
   def get_title

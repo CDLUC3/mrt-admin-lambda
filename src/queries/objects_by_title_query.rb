@@ -1,7 +1,7 @@
 class ObjectsByTitleQuery < ObjectsQuery
   def initialize(query_factory, path, myparams)
     super(query_factory , path, myparams)
-    @title = get_param('title', '')
+    @title = CGI.unescape(get_param('title', ''))
   end
 
   def get_title
