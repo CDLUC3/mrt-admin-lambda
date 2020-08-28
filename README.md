@@ -26,6 +26,7 @@ The Lambda code is deployed to the Ruby 2.7 environment.  A build process is req
   - ../admintool/site-url - CloudFront website
 
 ## Lambda Build Process
+![Build Flow Chart](MerrittAdminTool/Slide1.jpeg)
 
 ### Configure Your GitHub Token
 
