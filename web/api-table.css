@@ -42,10 +42,17 @@ table.results td.name {
   width: 300px !important;
 }
 
+table.results th.datetime,
+table.results td.datetime {
+  width: 150px !important;
+}
+
 table.results th.mnemonic,
 table.results td.mnemonic {
   width: 150px !important;
   max-width: 150px !important;
+  text-overflow: ellipsis;
+  overflow-x: hidden;
 }
 
 table.results tr.row:nth-child(even) th.cell,

@@ -188,6 +188,8 @@ function format(cell, v, type, merritt_path) {
   } else if (type == 'data'){
     cell.text(Number(v).toLocaleString());
     cell.addClass("hasdata");
+  } else if (type == 'datetime'){
+    cell.text(v.replace(/ -\d+$/,''));
   } else if (type == 'node' && Number(v) > 0){
     link = $("<a/>")
       .text(v)
@@ -212,6 +214,11 @@ function format(cell, v, type, merritt_path) {
     link = $("<a/>")
       .text(v)
       .attr("href", "index.html?path=collection_details&coll="+v)
+      .appendTo(cell);
+  } else if (type == 'coll-date' && Number(v) > 0){
+    link = $("<a/>")
+      .text(v)
+      .attr("href", "index.html?path=objects_recent_coll&coll="+v)
       .appendTo(cell);
   } else if (type == 'ogroup' && !v.startsWith('ZZ')){
     link = $("<a/>")

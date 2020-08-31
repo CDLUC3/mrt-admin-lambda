@@ -45,6 +45,8 @@ class QueryFactory
       ObjectsManyFilesQuery.new(self, path, myparams)
     elsif path == 'objects_recent'
       ObjectsRecentQuery.new(self, path, myparams)
+    elsif path == 'objects_recent_coll'
+      ObjectsRecentCollQuery.new(self, path, myparams)
     elsif path == 'files_by_name_coll'
       FilesByNameCollQuery.new(self, path, myparams)
     elsif path == 'count_objects'
@@ -77,6 +79,8 @@ class QueryFactory
       AuditProcessedQuery.new(self, path, myparams)
     elsif path == 'replication_needed'
       ReplicationNeededQuery.new(self, path, myparams)
+    elsif path == 'replic_processed'
+      ReplicProcessedQuery.new(self, path, myparams)
     elsif path == 'wasabi'
       WasabiMigrationQuery.new(self, path, myparams)
     else

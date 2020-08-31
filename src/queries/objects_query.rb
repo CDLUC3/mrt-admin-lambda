@@ -3,6 +3,8 @@ class ObjectsQuery < AdminQuery
     super(query_factory, path, myparams)
     if sort == 'created'
       @sort = 'o.created desc'
+    elsif sort == 'modified'
+        @sort = 'o.modified desc'
     else
       @sort = 'o.id asc'
     end
@@ -43,7 +45,7 @@ class ObjectsQuery < AdminQuery
           where
             f.inv_object_id=o.id
         ) as billable_size,
-        date(o.created) as created
+        o.modified as modified
       from
         inv.inv_objects o
       inner join inv.inv_collections_inv_objects icio
@@ -53,16 +55,19 @@ class ObjectsQuery < AdminQuery
     } + get_where +
     %{
       order by #{@sort}
-      limit 50;
+      limit #{get_limit};
     }
   end
 
   def get_headers(results)
-    ['Object Id','Ark', 'Title', 'Author', 'Local Id', 'Version', 'Coll Id', 'Collection', 'File Count', 'Billable Size', 'Created']
+    ['Object Id','Ark', 'Title', 'Author', 'Local Id', 'Version', 'Coll Id', 'Collection', 'File Count', 'Billable Size', 'Modified']
   end
 
   def get_types(results)
-    ['', 'ark', 'name', '', '', '', 'coll', 'mnemonic', 'dataint', 'dataint', '']
+    ['', 'ark', 'name', '', '', '', 'coll', 'mnemonic', 'dataint', 'dataint', 'datetime']
   end
 
+  def get_limit
+    50
+  end
 end
