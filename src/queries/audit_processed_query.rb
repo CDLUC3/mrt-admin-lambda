@@ -11,6 +11,11 @@ class AuditProcessedQuery < AdminQuery
         now()
       union
       select
+        'Last 5 Minutes',
+        date_add(now(), interval -5 minute),
+        now()
+      union
+      select
         'Last Hour',
         date_add(now(), interval -1 hour),
         now()
