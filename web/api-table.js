@@ -189,7 +189,7 @@ function format(cell, v, type, merritt_path) {
     cell.text(Number(v).toLocaleString());
     cell.addClass("hasdata");
   } else if (type == 'datetime'){
-    cell.text(v.replace(/ -\d+$/,''));
+    cell.text(v.replace(/ [-\+]\d+$/,''));
   } else if (type == 'node' && Number(v) > 0){
     link = $("<a/>")
       .text(v)
