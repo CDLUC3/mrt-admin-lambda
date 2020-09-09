@@ -83,6 +83,8 @@ class QueryFactory
       ReplicProcessedQuery.new(self, path, myparams)
     elsif path == 'wasabi'
       WasabiMigrationQuery.new(self, path, myparams)
+    elsif path == 'doi'
+      DoiConflictQuery.new(self, path, myparams)
     else
       AdminQuery.new(self, path, myparams)
     end
