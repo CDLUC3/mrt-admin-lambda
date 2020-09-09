@@ -26,7 +26,7 @@ class DoiConflictQuery < AdminQuery
         c > 1
       order by
         min(created)
-      ;
+      ; 
     }
   end
 
