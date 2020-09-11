@@ -18,6 +18,16 @@ $(document).ready(function(){
   } else {
     $("#menu").show();
   }
+  $("a.json").each(function(){
+    var href = $(this).attr('href') + "&format=json";
+    var match = href.match(/path=([^&]*)&/);
+    var newhref = href.replace("index.html?", lambda_base + "/" + match[1] + "?") ;
+    var a = $("<a>📊</a>")
+      .insertAfter($(this))
+      .attr("target", "_blank")
+      .attr("href", newhref);
+    $("<span> </span>").insertBefore(a);
+  });
 });
 
 function iterateParams(parr) {
