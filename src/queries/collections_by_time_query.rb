@@ -71,7 +71,7 @@ class CollectionsByTimeQuery < AdminQuery
       where
         date_added >= ?
       and
-        date_added <= ?
+        date_added < ?
       #{@source_clause}
 
       union
@@ -92,7 +92,7 @@ class CollectionsByTimeQuery < AdminQuery
           and
             date_added >= ?
           and
-            date_added <= ?
+            date_added < ?
           #{@source_clause}
         ) as sumval
       from
@@ -118,7 +118,7 @@ class CollectionsByTimeQuery < AdminQuery
           and
             date_added >= ?
           and
-            date_added <= ?
+            date_added < ?
           #{@source_clause}
         ) as sumval
       from
