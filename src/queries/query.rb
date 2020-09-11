@@ -9,6 +9,7 @@ class AdminQuery
     @itparam1 = get_param('itparam1', '')
     @itparam2 = get_param('itparam2', '')
     @itparam3 = get_param('itparam3', '')
+    @format = myparams.key?('format') ? myparams['format'] : 'report'
   end
 
   def get_param(key, defval)
@@ -164,15 +165,34 @@ class AdminQuery
 
   def get_result_json(results)
     types = get_types(results)
-    {
-      title: get_title,
-      headers: get_headers(results),
-      types: types,
-      data: get_result_data(results, types),
-      filter_col: get_filter_col,
-      merritt_path: @merritt_path,
-      iterate: @iterate
-    }
+    data = get_result_data(results, types)
+    headers = get_headers(results)
+    if @format == 'report'
+      {
+        title: get_title,
+        headers: headers,
+        types: types,
+        data: data,
+        filter_col: get_filter_col,
+        merritt_path: @merritt_path,
+        iterate: @iterate
+      }
+    else
+      results = []
+      data.each do |r|
+        puts r
+        row = {}
+        headers.each_with_index do |c, i|
+          if types[i] != 'na'
+            row[c]=r[i]
+          end
+        end
+        results.push(row)
+      end
+      {
+        data: results
+      }
+    end
   end
 
 end
