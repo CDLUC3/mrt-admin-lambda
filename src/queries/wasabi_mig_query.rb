@@ -51,6 +51,8 @@ class WasabiMigrationQuery < AdminQuery
       where
         p.role='primary'
       and
+        p.created < '2020-09-01'
+      and
         not exists(
           select
             1
