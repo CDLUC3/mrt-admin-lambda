@@ -15,6 +15,6 @@ class FilesByNameCollQuery < FilesQuery
   end
 
   def get_where
-    "where f.pathname = ? and source = 'producer' and c.mnemonic = ?"
+    "where f.pathname like ? and source = 'producer' and c.mnemonic = ?"
   end
 end
