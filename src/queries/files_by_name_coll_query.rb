@@ -1,7 +1,7 @@
 class FilesByNameCollQuery < FilesQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
-    @file = CGI.unescapeget_param('file', ''))
+    @file = CGI.unescape(get_param('file', ''))
     @file = (@file == '') ? '' : "producer/#{@file}"
     @coll = get_param('coll', '')
   end
