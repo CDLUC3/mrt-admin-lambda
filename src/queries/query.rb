@@ -168,7 +168,7 @@ class AdminQuery
   end
   
   def is_int? string
-    true if Int(string) rescue false
+    true if Integer(string) rescue false
   end
 
   def get_result_json(results)
@@ -193,7 +193,7 @@ class AdminQuery
           if types[i] != 'na'
             row[c]=r[i]
             if is_int?(row[c])
-              row[c] = Int(row[c])
+              row[c] = Integer(row[c])
             elsif is_number?(row[c])
               row[c] = Float(row[c])
             end
