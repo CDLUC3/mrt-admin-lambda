@@ -171,10 +171,7 @@ class AdminQuery
     true if Integer(string) rescue false
   end
 
-  def get_result_json(results)
-    types = get_types(results)
-    data = get_result_data(results, types)
-    headers = get_headers(results)
+  def format_result_json(types, data, headers)
     if @format == 'report'
       {
         title: get_title,
@@ -205,6 +202,13 @@ class AdminQuery
         data: results
       }
     end
+  end
+
+  def get_result_json(results)
+    types = get_types(results)
+    data = get_result_data(results, types)
+    headers = get_headers(results)
+    format_result_json(types, data, headers)
   end
 
 end

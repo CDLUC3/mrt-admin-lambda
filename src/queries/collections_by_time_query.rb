@@ -159,13 +159,7 @@ class CollectionsByTimeQuery < AdminQuery
         combined_data[i].insert(-2, r[3])
       end
     end
-    {
-      title: get_title,
-      headers: get_headers(results),
-      types: types,
-      data: combined_data,
-      filter_col: get_filter_col
-    }
+    format_result_json(types, combined_data, get_headers(results))
   end
 
 
