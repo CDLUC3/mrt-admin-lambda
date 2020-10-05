@@ -1,6 +1,4 @@
 require 'json'
-require 'aws-sdk-ssm'
-require 'aws-sdk-lambda'
 require 'yaml'
 require 'uc3-ssm'
 require 'mysql2'

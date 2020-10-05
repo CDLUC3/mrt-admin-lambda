@@ -1,6 +1,6 @@
 require 'sinatra'
 require 'sinatra/base'
-require '../src/lambda_function'
+require_relative '../src/lambda_function'
 
 get '/web' do
   send_file "../web/index.html"

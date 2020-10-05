@@ -6,5 +6,5 @@ gem 'mysql2'
 #gem 'uc3-ssm', git: 'https://github.com/CDLUC3/uc3-ssm', branch: 'main'
 
 source "https://rubygems.pkg.github.com/cdluc3" do
-  gem "uc3-ssm", "0.1.7"
+  gem "uc3-ssm", "0.1.8"
 end

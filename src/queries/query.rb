@@ -163,6 +163,14 @@ class AdminQuery
     data
   end
 
+  def is_number? string
+    true if Float(string) rescue false
+  end
+  
+  def is_int? string
+    true if Int(string) rescue false
+  end
+
   def get_result_json(results)
     types = get_types(results)
     data = get_result_data(results, types)
@@ -180,11 +188,15 @@ class AdminQuery
     else
       results = []
       data.each do |r|
-        puts r
         row = {}
         headers.each_with_index do |c, i|
           if types[i] != 'na'
             row[c]=r[i]
+            if is_int?(row[c])
+              row[c] = Int(row[c])
+            elsif is_number?(row[c])
+              row[c] = Float(row[c])
+            end
           end
         end
         results.push(row)
