@@ -10,6 +10,7 @@ class AdminQuery
     @itparam2 = get_param('itparam2', '')
     @itparam3 = get_param('itparam3', '')
     @format = myparams.key?('format') ? myparams['format'] : 'report'
+    @totals = myparams.key?('totals') ? myparams['totals'] : 'Y'
   end
 
   def get_param(key, defval)
@@ -24,12 +25,12 @@ class AdminQuery
     nil
   end
 
-  def get_params
+  def get_params(total = true)
     []
   end
 
   def resolve_params
-    query_params = get_params
+    query_params = get_params(@totals == "Y")
     if @itparam1 != ''
       query_params.append(@itparam1)
     end
@@ -42,7 +43,7 @@ class AdminQuery
     query_params
   end
 
-  def get_sql
+  def get_base_sql
     if @itparam2 != ''
       "SELECT 'hello' as greeting, user() as user, ? as param1, ? as param2;"
     elsif @itparam1 != ''
@@ -52,19 +53,23 @@ class AdminQuery
     end
   end
 
-  def get_collection_query
-    %{
-      select
-        0 as coll
-      union
-      select
-        id as coll
-      from
-        inv.inv_collections
-    }
+  def get_union_sql
+    ''
   end
 
-  def get_campus_query
+  def get_order_sql
+    ''
+  end
+
+  def get_sql(total = true)
+    if total
+      get_base_sql + get_union_sql + get_order_sql
+    else
+      get_base_sql + get_order_sql
+    end
+  end
+
+   def get_campus_query
     %{
       select
         distinct ogroup
@@ -75,29 +80,6 @@ class AdminQuery
         'ZZ' as ogroup
       order by
         ogroup
-    }
-  end
-
-  def get_campus_and_total_query
-    %{
-      select
-        distinct ogroup,
-        1 as seq
-      from
-        owner_collections
-      union
-      select
-        distinct ogroup,
-        2 as seq
-      from
-        owner_collections
-      union
-      select
-        'ZZ' as ogroup,
-        1 as seq
-      order by
-        ogroup,
-        seq
     }
   end
 
@@ -129,10 +111,10 @@ class AdminQuery
   end
 
   def run_query_sql
-    sql = get_sql
+    sql = get_sql(@totals == 'Y')
     stmt = @client.prepare(sql)
     query_params = resolve_params
-    results = stmt.execute(*query_params)
+   results = stmt.execute(*query_params)
     get_result_json(results)
   rescue => e
     puts(e)

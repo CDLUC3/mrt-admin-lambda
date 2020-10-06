@@ -7,7 +7,7 @@ class CollectionQuery < AdminQuery
     3
   end
 
-  def get_sql
+  def get_base_sql
     %{
       select
         ogroup,
@@ -19,6 +19,11 @@ class CollectionQuery < AdminQuery
       from
         owner_coll_mime_use_details
       group by ogroup, inv_collection_id, mnemonic, collection_name
+    }
+  end
+
+  def get_union_sql
+    %{
       union
       select
         ogroup,
@@ -40,6 +45,11 @@ class CollectionQuery < AdminQuery
         sum(billable_size) size
       from
         owner_coll_mime_use_details
+    }
+  end
+
+  def get_order_sql
+    %{
       order by ogroup, collection_name
     }
   end

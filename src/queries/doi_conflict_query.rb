@@ -7,7 +7,7 @@ class DoiConflictQuery < AdminQuery
     "DOI Ark Conflict Query"
   end
 
-  def get_sql
+  def get_base_sql
     %{
       select
         substring_index(erc_where, '; ', -1) doi,

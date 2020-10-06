@@ -59,23 +59,8 @@ class CollectionsByTimeQuery < AdminQuery
     "Collection #{@col} Over Time (#{@start} - #{@end})"
   end
 
-  def get_sql
+  def get_base_sql
     %{
-      select distinct
-        'ZZ' as ogroup,
-        0 as ocid,
-        '-- Grand Total --' as ocname,
-        sum(#{@col})
-      from
-        owner_coll_mime_use_details
-      where
-        date_added >= ?
-      and
-        date_added < ?
-      #{@source_clause}
-
-      union
-
       select distinct
         oc.ogroup as ogroup,
         oc.inv_collection_id as ocid,
@@ -101,6 +86,24 @@ class CollectionsByTimeQuery < AdminQuery
         ogroup,
         ocid,
         ocname
+     }
+  end
+  
+  def get_union_sql
+    %{
+      union
+      select distinct
+        'ZZ' as ogroup,
+        0 as ocid,
+        '-- Grand Total --' as ocname,
+        sum(#{@col})
+      from
+        owner_coll_mime_use_details
+      where
+        date_added >= ?
+      and
+        date_added < ?
+      #{@source_clause}
 
       union
 
@@ -127,7 +130,11 @@ class CollectionsByTimeQuery < AdminQuery
         ogroup,
         ocid,
         ocname
+    }
+  end 
 
+  def get_order_sql
+    %{
       order by
         ogroup,
         ocid,
@@ -136,15 +143,21 @@ class CollectionsByTimeQuery < AdminQuery
   end
 
   def get_query_params(pstart, pend)
-    [
-      pstart, pend,
-      pstart, pend,
-      pstart, pend
-    ]
+    if @totals == 'Y'
+      [
+        pstart, pend,
+        pstart, pend,
+        pstart, pend
+      ]
+    else
+      [
+        pstart, pend
+      ]
+    end
   end
 
   def run_query_sql
-    stmt = @client.prepare(get_sql)
+    stmt = @client.prepare(get_sql(@totals == 'Y'))
     params = get_query_params(@start, @end)
 
     results = stmt.execute(*params)

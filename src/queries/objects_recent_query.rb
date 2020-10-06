@@ -3,7 +3,7 @@ class ObjectsRecentQuery < AdminQuery
     "Most Recent Update by Collection"
   end
 
-  def get_sql
+  def get_base_sql
     %{
       select
         c.id,

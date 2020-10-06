@@ -8,7 +8,7 @@ class ObjectsByTitleQuery < ObjectsQuery
     "Objects By Title Query: #{@title}"
   end
 
-  def get_params
+  def get_params(total = true)
     [@title]
   end
 

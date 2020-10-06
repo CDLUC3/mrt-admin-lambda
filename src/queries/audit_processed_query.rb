@@ -38,7 +38,7 @@ class AuditProcessedQuery < AdminQuery
     }
   end
 
-  def get_sql
+  def get_base_sql
     %{
       select
         ? as title,
@@ -55,7 +55,7 @@ class AuditProcessedQuery < AdminQuery
             status = 'verified'
          ) as pcount
         ;
-      }
+    }
   end
 
   def get_headers(results)

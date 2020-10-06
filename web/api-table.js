@@ -4,6 +4,8 @@ var urlbase = "";
 var pageparams = {};
 
 $(document).ready(function(){
+  $("p.buttons")
+    .hide();
   $("#exportTable").on('click', function(){
     exportTable($('table tbody tr:visible'));
   });
@@ -18,16 +20,6 @@ $(document).ready(function(){
   } else {
     $("#menu").show();
   }
-  $("a.json").each(function(){
-    var href = $(this).attr('href') + "&format=json";
-    var match = href.match(/path=([^&]*)&/);
-    var newhref = href.replace("index.html?", lambda_base + "/" + match[1] + "?") ;
-    var a = $("<a>📊</a>")
-      .insertAfter($(this))
-      .attr("target", "_blank")
-      .attr("href", newhref);
-    $("<span> </span>").insertBefore(a);
-  });
 });
 
 function iterateParams(parr) {
@@ -120,6 +112,9 @@ function query_iterate(){
 }
 
 function createTable(headers, types, data, filter_col, merritt_path, iterate) {
+  $("p.buttons")
+    .show();
+  $("#exportJson").attr("href", urlbase + document.location.search + "&format=json&totals=N");
   $("#data-table")
     .empty()
     .append($("<thead/>"))

@@ -4,7 +4,7 @@ class CollectionsByNodeQuery < AdminQuery
     @node = get_param('node', '')
   end
 
-  def get_params
+  def get_params(total = true)
     [@node]
   end
 
@@ -12,7 +12,7 @@ class CollectionsByNodeQuery < AdminQuery
     "Storage Node #{@node} Collections"
   end
 
-  def get_sql
+  def get_base_sql
     %{
       select
         c.id,

@@ -52,7 +52,7 @@ class InvoicesQuery < AdminQuery
     3
   end
 
-  def get_params
+  def get_params(total = true)
     [
       @dstart, @dend, @dytd, @rate,
       @dstart, @dend, @dytd, @rate,
@@ -60,7 +60,7 @@ class InvoicesQuery < AdminQuery
     ]
   end
 
-  def get_sql
+  def get_base_sql
     sqlfrag = %{
       /*
         The following query fragment will be used 3 times to create 3 levels of groupings.

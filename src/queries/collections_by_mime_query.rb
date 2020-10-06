@@ -5,8 +5,9 @@ class CollectionsByMimeQuery < AdminQuery
     @col = (col == 'mime_type' || col == 'mime_group') ? col : 'mime_type'
   end
 
-  def get_params
-    [@mime, @mime]
+  def get_params(total = true)
+    [@mime, @mime] if total 
+    [@mime]
   end
 
   def get_filter_col
@@ -17,7 +18,7 @@ class CollectionsByMimeQuery < AdminQuery
     "Collections for #{@col} #{@mime}"
   end
 
-  def get_sql
+  def get_base_sql
     %{
       select
         ogroup,
@@ -31,6 +32,11 @@ class CollectionsByMimeQuery < AdminQuery
       where
         #{@col} = ?
       group by ogroup, inv_collection_id, mnemonic, collection_name
+    }
+  end
+
+  def get_union_sql
+    %{
       union
       select
         max('ZZ'),
@@ -43,6 +49,11 @@ class CollectionsByMimeQuery < AdminQuery
         owner_coll_mime_use_details
       where
         #{@col} = ?
+    }
+  end
+
+  def get_order_sql
+    %{
       order by ogroup, collection_name;
     }
   end

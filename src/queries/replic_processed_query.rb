@@ -38,7 +38,7 @@ class ReplicProcessedQuery < AdminQuery
     }
   end
 
-  def get_sql
+  def get_base_sql
     %{
       select
         ? as title,

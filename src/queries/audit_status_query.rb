@@ -3,7 +3,7 @@ class AuditStatusQuery < AdminQuery
     "Audit Status (excluding verified)"
   end
 
-  def get_sql
+  def get_base_sql
     %{
       select
         'unverified' as status,

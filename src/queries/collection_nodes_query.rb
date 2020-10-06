@@ -3,7 +3,7 @@ class CollectionNodesQuery < AdminQuery
     "Collection Storage Nodes"
   end
 
-  def get_sql
+  def get_base_sql
     %{
       select
         c.name,

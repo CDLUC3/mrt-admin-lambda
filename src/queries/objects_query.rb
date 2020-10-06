@@ -18,7 +18,7 @@ class ObjectsQuery < AdminQuery
     ""
   end
 
-  def get_sql
+  def get_base_sql
     %{
       select
         o.id,

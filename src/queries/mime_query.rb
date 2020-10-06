@@ -7,7 +7,7 @@ class MimeQuery < AdminQuery
     1
   end
 
-  def get_sql
+  def get_base_sql
     %{
       select
         mime_group as g,
@@ -21,6 +21,11 @@ class MimeQuery < AdminQuery
       group by
          g,
          t
+    }
+  end
+
+  def get_union_sql
+    %{
       union
       select
         mime_group as g,
@@ -51,6 +56,11 @@ class MimeQuery < AdminQuery
         sum(billable_size)
       from
         mime_use_details
+    }
+  end 
+
+  def get_order_sql
+    %{
       order by
         g,
         t;

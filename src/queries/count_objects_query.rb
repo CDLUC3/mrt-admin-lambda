@@ -7,17 +7,8 @@ class CountObjectsQuery < AdminQuery
     1
   end
 
-  def get_sql
+  def get_base_sql
     %{
-      select
-        'ZZZ' as ogroup,
-        '-- Grand Total --' as collection_name,
-        sum(count_objects) as count_objects
-      from
-        owner_collections_objects
-
-      union
-
       select
         ogroup,
         collection_name,
@@ -27,6 +18,18 @@ class CountObjectsQuery < AdminQuery
       group by
         ogroup,
         collection_name
+    }
+  end
+
+  def get_union_sql
+    %{
+      union
+      select
+        'ZZZ' as ogroup,
+        '-- Grand Total --' as collection_name,
+        sum(count_objects) as count_objects
+      from
+        owner_collections_objects
 
       union
 
