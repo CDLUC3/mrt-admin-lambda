@@ -10,7 +10,7 @@ class FilesByNameCollQuery < FilesQuery
     "Object(s) by Filename/Coll: #{@file} in #{@coll}"
   end
 
-  def get_params(total = true)
+  def get_params
     [@file, @coll]
   end
 

@@ -4,15 +4,19 @@ class CollectionsByNodeQuery < AdminQuery
     @node = get_param('node', '')
   end
 
-  def get_params(total = true)
+  def get_params
     [@node]
+  end
+
+  def get_filter_col
+    0
   end
 
   def get_title
     "Storage Node #{@node} Collections"
   end
 
-  def get_base_sql
+  def get_sql
     %{
       select
         c.id,

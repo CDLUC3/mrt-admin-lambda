@@ -7,7 +7,11 @@ class MimeQuery < AdminQuery
     1
   end
 
-  def get_base_sql
+  def get_group_col
+    0
+  end
+
+  def get_sql
     %{
       select
         mime_group as g,
@@ -15,52 +19,22 @@ class MimeQuery < AdminQuery
         sum(count_files),
         sum(billable_size)
       from
-         mime_use_details
-       where
-         source = 'producer'
-      group by
-         g,
-         t
-    }
-  end
-
-  def get_union_sql
-    %{
-      union
-      select
-        mime_group as g,
-        max('-- Total --') as t,
-        sum(count_files),
-        sum(billable_size)
-      from
         mime_use_details
       where
         source = 'producer'
       group by
-        g
+        g,
+        t
       union
       select
-        max('ZZ Merritt System') as g,
-        max('-- Special Total --') as t,
+        max('ZZ Merritt System Files') as g,
+        max('') as t,
         sum(count_files),
         sum(billable_size)
       from
         mime_use_details
       where
         source != 'producer'
-      union
-      select
-        max('ZZZ') as g,
-        max('-- Grand Total --') as t,
-        sum(count_files),
-        sum(billable_size)
-      from
-        mime_use_details
-    }
-  end 
-
-  def get_order_sql
-    %{
       order by
         g,
         t;

@@ -8,7 +8,7 @@ class ObjectsByArkQuery < ObjectsQuery
     "Objects By Ark Query: #{@ark}"
   end
 
-  def get_params(total = true)
+  def get_params
     [@ark]
   end
 

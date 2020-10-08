@@ -7,7 +7,11 @@ class OwnerQuery < AdminQuery
     2
   end
 
-  def get_base_sql
+  def get_group_col
+    0
+  end
+
+  def get_sql
     %{
       select
         ogroup,
@@ -21,36 +25,6 @@ class OwnerQuery < AdminQuery
         ogroup,
         owner_id,
         own_name
-    }
-  end
-
-  def get_union_sql
-    %{
-      union
-      select
-        ogroup,
-        max(0) as owner_id,
-        max('-- Total --') as own_name,
-        sum(count_files) files,
-        sum(billable_size) size
-      from
-        owner_coll_mime_use_details
-      group by
-        ogroup
-        union
-      select
-        max('ZZZ') as ogroup,
-        max(0) as owner_id,
-        max('-- Grand Total --') as own_name,
-        sum(count_files) files,
-        sum(billable_size) size
-      from
-        owner_coll_mime_use_details
-    }
-  end 
-
-  def get_order_sql
-    %{
       order by
         ogroup,
         own_name

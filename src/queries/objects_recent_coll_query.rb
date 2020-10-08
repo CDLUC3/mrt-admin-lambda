@@ -8,7 +8,7 @@ class ObjectsRecentCollQuery < ObjectsQuery
     "Recently Modified Objects for collection: #{@coll}"
   end
 
-  def get_params(total = true)
+  def get_params
     [@coll]
   end
 

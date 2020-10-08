@@ -7,7 +7,11 @@ class CollectionQuery < AdminQuery
     3
   end
 
-  def get_base_sql
+  def get_group_col
+    0
+  end
+
+  def get_sql
     %{
       select
         ogroup,
@@ -19,37 +23,6 @@ class CollectionQuery < AdminQuery
       from
         owner_coll_mime_use_details
       group by ogroup, inv_collection_id, mnemonic, collection_name
-    }
-  end
-
-  def get_union_sql
-    %{
-      union
-      select
-        ogroup,
-        max(0),
-        max(''),
-        max('-- Total --') as collection_name,
-        sum(count_files) files,
-        sum(billable_size) size
-      from
-        owner_coll_mime_use_details
-      group by ogroup
-      union
-      select
-        max('ZZZ') as ogroup,
-        max(0),
-        max(''),
-        max('-- Grand Total --') as collection_name,
-        sum(count_files) files,
-        sum(billable_size) size
-      from
-        owner_coll_mime_use_details
-    }
-  end
-
-  def get_order_sql
-    %{
       order by ogroup, collection_name
     }
   end

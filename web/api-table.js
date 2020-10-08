@@ -71,6 +71,8 @@ function showUrl(url) {
         data.types,
         data.data,
         data.filter_col,
+        data.group_col,
+        data.show_grand_total,
         data.merritt_path,
         data.iterate
       )
@@ -100,6 +102,8 @@ function query_iterate(){
           data.types,
           data.data,
           data.filter_col,
+          data.group_col,
+          data.show_grand_total,
           data.merritt_path
         )
       },
@@ -111,23 +115,85 @@ function query_iterate(){
   }
 }
 
-function createTable(headers, types, data, filter_col, merritt_path, iterate) {
+function createTable(headers, types, data, filter_col, group_col, show_grand_total, merritt_path, iterate) {
   $("p.buttons")
     .show();
-  $("#exportJson").attr("href", urlbase + document.location.search + "&format=json&totals=N");
+  $("#exportJson").attr("href", urlbase + document.location.search + "&format=json");
   $("#data-table")
     .empty()
     .append($("<thead/>"))
     .append($("<tbody/>"));
   if (iterate) {
+    $("#exportJson").hide();
     iterativeParams = data;
     query_iterate();
   } else {
-    appendTable(headers, types, data, filter_col, merritt_path);
+    $("#exportJson").show();
+    appendTable(headers, types, data, filter_col, group_col, show_grand_total, merritt_path);
   }
 }
 
-function appendTable(headers, types, data, filter_col, merritt_path) {
+function createTotalRow(classname, group_col, filter_col, types, key) {
+  var totr = $("<tr/>").addClass(classname);
+  for(var c=0; c<types.length; c++) {
+    if (types[c] == 'na') {
+      continue;
+    }
+    data = "";
+    if (c == filter_col) {
+      data = (classname == "total") ? "-- Total --" : "-- Grand Total --";
+    } else if (c == group_col) {
+      data = key;
+    } else if (types[c] == "money" || types[c] == "dataint") {
+      data = "";
+    }
+    totr.append(createCell(data, types[c], false, "").addClass("c"+c));
+  }
+  return totr;
+}
+
+function updateTotalRow(totr, types, totdata) {
+  for(var c=0; c<types.length; c++) {
+    if (types[c] == 'na') {
+      continue;
+    }
+    if (totdata[c] == null) {
+      continue;
+    }
+    var n = Number(totdata[c]);
+    var data = n.toLocaleString();
+    if (types[c] == 'money') {
+      data = n.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits:2});
+    } 
+    totr.find(".c" + c).text(data);
+  }
+}
+
+function createTotalData(types) {
+  var data = [];
+  for(var c=0; c<types.length; c++) {
+    if (types[c] == "money" || types[c] == "dataint") {
+      data.push(0);
+    } else {
+      data.push(null);
+    }
+  }
+  return data;
+}
+
+function updateTotalData(totdata, types, row) {
+  for(var c=0; c<types.length; c++) {
+    if (totdata[c] == null) {
+      continue;
+    }
+    if ($.isNumeric(row[c])) {
+      totdata[c] += Number(row[c]);
+    }
+  }
+  return totdata;
+}
+
+function appendTable(headers, types, data, filter_col, group_col, show_grand_total, merritt_path) {
   if ($("#data-table tr.header").length == 0) {
     var tr = $("<tr/>").appendTo("#data-table thead");
     tr.addClass("header");
@@ -138,8 +204,24 @@ function appendTable(headers, types, data, filter_col, merritt_path) {
     }
   }
 
+  var totdata = createTotalData(types);
+  var gtotdata = createTotalData(types);
+  var totr = null;
+  var last = null;
   for(var r=0; r<data.length; r++) {
-    tr = $("<tr/>").appendTo("#data-table tbody")
+    var curval = (group_col != null) ? data[r][group_col] : null;
+    if (curval != last) {
+      if (totr != null) {
+        updateTotalRow(totr, types, totdata);
+      }
+      totdata = createTotalData(types);
+      last = curval;
+      totr = createTotalRow("total", group_col, filter_col, types, last)
+        .appendTo("#data-table tbody");
+    }
+    updateTotalData(totdata, types, data[r]);
+    updateTotalData(gtotdata, types, data[r]);
+    tr = $("<tr/>").appendTo("#data-table tbody");
 
     rclass = "row";
     if (filter_col != null) {
@@ -158,10 +240,20 @@ function appendTable(headers, types, data, filter_col, merritt_path) {
         tr.append(createCell(data[r][c], types[c], false, merritt_path));
       }
     }
+    if (totr != null) {
+      updateTotalRow(totr, types, totdata);
+    }
     if (tr.find("td.hasdata,th.hasdata").length == 0) {
       tr.addClass("nodata");
     }
   }
+
+  if (show_grand_total) {
+    totr = createTotalRow("grandtotal", group_col, filter_col, types, "")
+      .appendTo("#data-table tbody");
+    updateTotalRow(totr, types, gtotdata);
+  }
+
   $("#in-progress").dialog({
     position: {
       my: "center",

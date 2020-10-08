@@ -3,7 +3,7 @@ class NodesQuery < AdminQuery
     "Storage Nodes"
   end
 
-  def get_base_sql
+  def get_sql
     %{
       select
         number,
@@ -16,27 +16,6 @@ class NodesQuery < AdminQuery
       inner join inv.inv_nodes_inv_objects inio
         on n.id = inio.inv_node_id
       group by number, description
-    }
-  end
-
-  def get_union_sql
-    %{
-      union
-      select
-        0,
-        '-- Total --',
-        count(inio.id) as total,
-        sum(case when role ='primary' then 1 else 0 end),
-        sum(case when role ='secondary' then 1 else 0 end)
-      from
-        inv.inv_nodes n
-      inner join inv.inv_nodes_inv_objects inio
-        on n.id = inio.inv_node_id
-    }
-  end
-
-  def get_order_sql
-    %{
       order by
         total desc;
     }
@@ -52,6 +31,10 @@ class NodesQuery < AdminQuery
 
   def get_filter_col
     1
+  end
+
+  def get_group_col
+    nil
   end
 
 end

@@ -3,7 +3,7 @@ class AuditOldestQuery < AdminQuery
     "Audit Status"
   end
 
-  def get_base_sql
+  def get_sql
     %{
       select
         date(verified)

@@ -81,7 +81,7 @@ class WasabiMigrationQuery < AdminQuery
     "Wasabi Migration TODOs"
   end
 
-  def get_base_sql
+  def get_sql
     %{
       select
         'Total',
@@ -112,11 +112,15 @@ class WasabiMigrationQuery < AdminQuery
   end
 
   def get_types(results)
-    ['', 'dataint', 'dataint', 'money', 'dataint', 'money']
+    ['', 'dataint', 'money', 'dataint', 'money']
   end
 
   def get_filter_col
     0
+  end
+
+  def get_group_col
+    nil
   end
 
 end

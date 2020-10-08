@@ -8,7 +8,7 @@ class ObjectsByLocalIdQuery < ObjectsQuery
     "Objects By Local Id Query: #{@localid}"
   end
 
-  def get_params(total = true)
+  def get_params
     [@localid]
   end
 

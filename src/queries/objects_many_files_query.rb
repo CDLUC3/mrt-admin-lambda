@@ -26,7 +26,7 @@ class ObjectsManyFilesQuery < ObjectsQuery
     "Objects with Many Files (need to paginate)"
   end
 
-  def get_params(total = true)
+  def get_params
     @ids
   end
 

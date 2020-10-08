@@ -4,7 +4,7 @@ class CollectionsByOwnerQuery < AdminQuery
     @own = get_param('own', '')
   end
 
-  def get_params(total = true)
+  def get_params
     [@own]
   end
 
@@ -12,7 +12,7 @@ class CollectionsByOwnerQuery < AdminQuery
     "Counts by Owner #{@own}"
   end
 
-  def get_base_sql
+  def get_sql
     %{
       select
         c.id,

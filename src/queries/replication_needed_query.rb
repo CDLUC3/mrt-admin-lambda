@@ -3,7 +3,7 @@ class ReplicationNeededQuery < AdminQuery
     "Replication Needed"
   end
 
-  def get_base_sql
+  def get_sql
     %{
       select
         count(distinct p.inv_object_id) as obj,

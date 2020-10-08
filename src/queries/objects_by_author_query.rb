@@ -8,7 +8,7 @@ class ObjectsByAuthorQuery < ObjectsQuery
     "Objects By Author Query: #{@author}"
   end
 
-  def get_params(total = true)
+  def get_params
     [@author]
   end
 

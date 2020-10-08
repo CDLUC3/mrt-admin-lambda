@@ -26,7 +26,7 @@ class ObjectsLargeQuery < ObjectsQuery
     "Large Objects (need to paginate)"
   end
 
-  def get_params(total = true)
+  def get_params
     @ids
   end
 
