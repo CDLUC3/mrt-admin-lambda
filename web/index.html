@@ -9,7 +9,7 @@
     <script src="sorttable.js" type="text/javascript"></script>
   </head>
   <body>
-    <h1>Hello</h1>
+    <h1>Merritt Admin Tool</h1>
     <p><a href="index.html">Home</a></p>
     <p class="buttons">
       <button onclick="$('tr.row').toggle()">Filter Totals/Details</button>
@@ -20,14 +20,17 @@
     </p>
     <div id="menu">
 
-      <h3>Understanding Merritt Content</h3>
+      <h2>Collection Administration</h2>
+      <p><a href="collAdmin.html">Collection Admin Prototype</a></p>
+ 
+      <h2>Understanding Merritt Content</h2>
       <ul>
         <li><a class="json" href="index.html?path=collections">File Counts by Collections</a></li>
         <li><a class="json" href="index.html?path=owners">File Counts by Owner</a></li>
         <li><a class="json" href="index.html?path=mimes">Mime Groups</a></li>
       </ul>
 
-      <h3>Campus Invoices</h3>
+      <h2>Campus Invoices</h2>
       <ul>
         <li><a class="json" href="index.html?path=invoices&fy=2020">FY2020 Invoices</a></li>
         <li><a class="json" href="index.html?path=invoices&fy=2019">FY2019 Invoices</a></li>
@@ -36,7 +39,7 @@
         <li><a class="json" href="index.html?path=invoices&fy=2017">FY2017 Invoices</a></li>
       </ul>
 
-      <h3>Metadata Queries: Objects</h3>
+      <h2>Metadata Queries: Objects</h2>
       <ul>
         <li>
           <form action="index.html">
@@ -72,7 +75,7 @@
         </li>
       </ul>
 
-      <h3>Metadata Queries: Files</h3>
+      <h2>Metadata Queries: Files</h2>
       <ul>
         <li>
           <form action="index.html">
@@ -87,14 +90,14 @@
         </li>
       </ul>
 
-      <h3>Interesting Use Cases Content</h3>
+      <h2>Interesting Use Cases Content</h2>
       <ul>
         <li><a href="index.html?path=objects_large">Large Objects</a></li>
         <li><a href="index.html?path=objects_many_files">Objects with Many Files</a></li>
         <li><a href="index.html?path=count_objects">Object Counts by Owner and Collection</a></li>
       </ul>
 
-      <h3>Queries by ingest date</h3>
+      <h2>Queries by ingest date</h2>
       <ul>
         <li><a class="json" href="index.html?path=collections_by_time_count_producer">Producer Files Added by Date (All time)</a></li>
         <li><a class="json" href="index.html?path=collections_by_time_count">Files Added by Date (All time)</a></li>
@@ -108,7 +111,7 @@
         <li><a class="json" href="index.html?path=objects_recent">Recent object updates by collection (object details)</a></li>
       </ul>
 
-      <h3>Operational Information</h3>
+      <h2>Operational Information</h2>
       <ul>
         <li><a href="index.html?path=audit_status">Audit - Irregular Status</a></li>
         <li><a href="index.html?path=audit_oldest">Audit - Oldest Unprocessed Item</a></li>
@@ -122,12 +125,12 @@
         <li><a href="index.html?path=tbd">TBD: Ingests in progress (Lambda -> Ingest -> ZQ)</a></li>
       </ul>
 
-      <h3>Common Troubleshooting</h3>
+      <h2>Common Troubleshooting</h2>
       <ul>
         <li><a href="index.html?path=doi">DOI Ark Conflicts</a></li>
       </ul>
 
-      <h3>Source Code</h3>
+      <h2>Source Code</h2>
       <ul>
         <li><a href="https://github.com/CDLUC3/mrt-admin-lambda/tree/main/web">Web Interface</a></li>
         <li><a href="https://github.com/CDLUC3/mrt-admin-lambda/tree/main/src">Lambda Handler</a></li>

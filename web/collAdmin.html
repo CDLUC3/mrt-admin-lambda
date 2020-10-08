@@ -1,0 +1,48 @@
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <script	src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.css"></link>
+    <link rel="stylesheet" type="text/css" href="api-table.css"/>
+    <script type="text/javascript" src="api-table.js"></script>
+    <script src="sorttable.js" type="text/javascript"></script>
+  </head>
+  <body>
+    <h1>Merritt Collection Admin - Step 1</h1>
+    <p><a href="index.html">Home</a></p>
+    <h2>Provision EZID</h2>
+    <fieldset class="collsec">
+      <p>
+        <button onclick="$('#ezid').val('ark:/1234/567')">Request EZID</button>
+        <input id="ezid" type="text" readonly size="40"/>
+      </p>
+      <p>
+        <label for="ezid-status">EZID Status</label>
+        <input id="ezid-status" type="checkbox" value="unavailable"/>
+        <span>Unavailable</span>
+      </p>
+      <p>
+        <label for="ezid-harvest">EZID Harvest</label>
+        <input id="ezid-harvest" type="checkbox" value="enabled"/>
+        <span>Harvest Enabled</span>
+      </p>
+    </fieldset>
+    <h2>Collection Profile</h2>
+    <fieldset class="collsec">
+      <p>
+        <label for="profile-env">Environment</label>
+        <input id="profile-env" type="text" readonly size="40" value="derive from deployment"/>
+      </p>
+      <p>
+        <label for="profile-mnemonic">Collection mnemonic</label>
+        <input id="profile-mnemonic" type="input" size="60"/>
+      </p>
+      <p>
+        <label for="profile-description">Collection description</label>
+        <textarea id="profile-description" rows="3" cols="80">
+        </textarea>
+      </p>
+    </fieldset>
+  </body>
+</html>
