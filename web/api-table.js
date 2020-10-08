@@ -161,7 +161,7 @@ function updateTotalRow(totr, types, totdata) {
       continue;
     }
     var n = Number(totdata[c]);
-    var data = n.toLocaleString();
+    var data = n.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits:0});
     if (types[c] == 'money') {
       data = n.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits:2});
     } 
@@ -280,10 +280,10 @@ function format(cell, v, type, merritt_path) {
     cell.text(Number(v).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits:2}));
     cell.addClass("hasdata");
   } else if (type == 'dataint'){
-    cell.text(Number(v).toLocaleString());
+    cell.text(Number(v).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits:0}));
     cell.addClass("hasdata");
   } else if (type == 'data'){
-    cell.text(Number(v).toLocaleString());
+    cell.text(Number(v).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits:0}));
     cell.addClass("hasdata");
   } else if (type == 'datetime'){
     cell.text(v.replace(/ [-\+]\d+$/,''));
