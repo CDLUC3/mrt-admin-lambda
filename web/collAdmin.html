@@ -7,9 +7,55 @@
     <link rel="stylesheet" type="text/css" href="api-table.css"/>
     <script type="text/javascript" src="api-table.js"></script>
     <script src="sorttable.js" type="text/javascript"></script>
+    <style>
+      .form-body {
+        padding-left: 20px;
+        padding-right: 40px;
+        padding-bottom: 200px;
+      }
+      .container {
+        display:block;
+
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+      .dropbtn {
+        padding: 10px;
+        cursor: pointer;
+      }
+
+      .dropdown {
+        position: relative;
+        display: inline-block;
+      }
+
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f0f0f0;
+        min-width: 120px;
+        z-index: 1;
+      }
+
+      .dropdown-content a {
+        color: black;
+        padding: 12px 12px;
+        text-decoration: none;
+        display: block;
+      }
+
+      .dropdown-content a:hover {background-color: #d1d1d1}
+
+      .dropdown:hover .dropdown-content {
+        display: block;
+      }
+    </style>
   </head>
   <body>
-    <h1>Merritt Collection Admin - Step 1</h1>
+    <div class="form-body">
+    <h1>Merritt Collection Admin</h1>
     <p><a href="index.html">Home</a></p>
     <h2>Provision EZID</h2>
     <fieldset class="collsec">
@@ -28,7 +74,7 @@
         <span>Harvest Enabled</span>
       </p>
     </fieldset>
-    <h2>Collection Profile</h2>
+    <h2>Collection Profiles</h2>
     <fieldset class="collsec">
       <p>
         <label for="profile-env">Environment</label>
@@ -43,6 +89,147 @@
         <textarea id="profile-description" rows="3" cols="80">
         </textarea>
       </p>
+      <p>
+        <label for="collection-ark">Collection ARK</label>
+        <input id="collection-ark" type="input" size="20">
+      </p>
+      <p>
+        <label for="owner-ark">Owner ARK</label>
+        <input id="owner-ark" type="input" size="60">
+      </p>
+      <div class="adminNotifications">
+        <p>
+          <label for="admin-notifications">Admin Notifications (comma-separated list of email addresses):</label>
+        </p>
+        <p>
+          <input id="admin-notifications" type="input" size="140">
+        </p>
+      </div>
+      <div class="endUserNotifications">
+        <p>
+          <label for="end-user-notifications">End-user Notifications (comma-separated list of email addresses):</label>
+        </p>
+        <p>
+          <input id="end-user-notifications" type="input" size="140">
+        </p>
+      </div>
+      <div class="storageNodes">
+        <label>Primary Storage Node:</label>
+        <label class="container">
+          <input type="radio" checked="checked" name="radio">
+          <span class="checkmark"></span>
+          9501: Production Minio
+        </label>
+        <label class="container">
+          <input type="radio" name="radio">
+          <span class="checkmark"></span>
+          9502: Stage Minio
+        </label>
+        <label class="container">
+          <input type="radio" name="radio">
+          <span class="checkmark"></span>
+          5001: Production AWS Standard
+        </label>
+      </div>
+      <div>
+        <p>
+          <button>Create Profiles</button>
+        </p>
+      </div>
     </fieldset>
+    <h2>LDAP Entries</h2>
+    <fieldset class="collsec">
+      <p>
+        <label for="collection-ark-ldap">Collection ARK</label>
+        <input id="collection-ark-ldap" type="input" size="60"/>
+      </p>
+      <p>
+        <label for="collection-description">Collection Description</label>
+        <input id="collection-description" type="input" size="60"/>
+      </p>
+      <p>
+        <label for="submission-profile-name">Submission Profile Name</label>
+        <input id="submission-profile-name" type="input" size="60"/>
+      </p>
+      <p>
+        <button>Generate LDAP Entries</button>
+      </p>
+    </fieldset>
+    <h2>Collection Admin Object</h2>
+    <fieldset class="collsec">
+      <p>
+        <label>Primary Identifier (ARK)</label>
+        <input type="input" size="20">
+      </p>
+      <p>
+        <button>Select File</button><label> (Select a file to upload)</label>
+      </p>
+      <p>
+        <button>Add Object</button>
+      </p>
+    </fieldset>
+    <h2>Update Inventory</h2>
+    <fieldset class="collsec">
+      <h4>
+        Entries for inv_collections record
+      </h4>
+      <p>
+        <label for="collection-name">Collection name</label>
+        <input id="collection-name" type="input" size="60"/>
+      </p>
+      <p>
+        <label for="collection-mnemonic">Collection mnemonic</label>
+        <input id="collection-mnemonic" type="input" size="60"/>
+      </p>
+      <p>
+        <label for="collection-read-priv">Collection read privilege</label>
+        <input id="collection-read-priv" type="input" size="60" value="Restricted" />
+      </p>
+      <p>
+        <label for="collection-write-priv">Collection write privilege</label>
+        <input id="collection-write-priv" type="input" size="60" value="Restricted" />
+      </p>
+      <p>
+        <label for="collection-download-priv">Collection download privilege</label>
+        <input id="collection-download-priv" type="input" size="60" value="Restricted" />
+      </p>
+      <p>
+        <label for="collection-storage-tier">Collection storage tier</label>
+        <input id="collection-storage-tier" type="input" size="60" value="Standard" />
+      </p>
+      <h4>
+        Entries for inv_collections_inv_nodes record
+      </h4>
+      <p>
+        Secondary Storage node 1:
+      </p>
+      <div class="dropdown">
+        <button class="dropbtn">Node Selection</button>
+          <div class="dropdown-content">
+            <a href="#">Wasabi</a>
+            <a href="#">Glacier</a>
+            <a href="#">SDSC</a>
+            <a href="#">S3</a>
+          </div>
+      </div>
+      <p>
+        Secondary Storage node 2:
+      </p>
+      <p>
+      <div class="dropdown">
+        <button class="dropbtn">Node Selection</button>
+          <div class="dropdown-content">
+            <a href="#">Wasabi</a>
+            <a href="#">Glacier</a>
+            <a href="#">SDSC</a>
+            <a href="#">S3</a>
+          </div>
+      </div>
+      </p>
+      <p>
+        <button>Submit Inventory Updates</button>
+      </p>
+    </fieldset>
+  </div>
   </body>
 </html>
