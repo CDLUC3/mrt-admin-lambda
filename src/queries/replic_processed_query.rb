@@ -34,6 +34,46 @@ class ReplicProcessedQuery < AdminQuery
         '2 Days Ago',
         date_add(date(now()), INTERVAL -2 DAY),
         date_add(date(now()), INTERVAL -1 DAY)
+      union
+      select
+        'Last 7 days',
+        date_add(date(now()), INTERVAL -7 DAY),
+        date(now())
+      union
+      select
+        '7 - 14 days ago',
+        date_add(date(now()), INTERVAL -14 DAY),
+        date_add(date(now()), INTERVAL -7 DAY)
+      union
+      select
+        '14 - 21 days ago',
+        date_add(date(now()), INTERVAL -21 DAY),
+        date_add(date(now()), INTERVAL -14 DAY)
+      union
+      select
+        '21 - 28 days ago',
+        date_add(date(now()), INTERVAL -28 DAY),
+        date_add(date(now()), INTERVAL -21 DAY)
+      union
+      select
+        'Last 30 days',
+        date_add(date(now()), INTERVAL -30 DAY),
+        date(now())
+      union
+      select
+        '30 - 60 days ago',
+        date_add(date(now()), INTERVAL -60 DAY),
+        date_add(date(now()), INTERVAL -30 DAY)
+      union
+      select
+        '60 - 90 days ago',
+        date_add(date(now()), INTERVAL -90 DAY),
+        date_add(date(now()), INTERVAL -60 DAY)
+      union
+      select
+        '90 - 120 days ago',
+        date_add(date(now()), INTERVAL -120 DAY),
+        date_add(date(now()), INTERVAL -90 DAY)
       ;
     }
   end
