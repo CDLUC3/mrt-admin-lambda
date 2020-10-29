@@ -4,44 +4,25 @@ class CollectionsByTimeCumulativeQuery < AdminQuery
     super(query_factory, path, myparams)
     @col = (col == 'count_files' || col == 'billable_size') ? col : 'count_files'
     @source_clause = (source == 'producer') ? " and source='producer'" : ""
-    @interval = get_param('interval', '')
-    @interval = (@interval == 'cumulative' || @interval == 'years' || @interval == 'days' || @interval == 'weeks') ? @interval : 'years'
     @ranges = []
 
-    if (@interval == 'days')
-      @end = Date.today + 1
-      @start=@end - 7
-      rstart = @start
-      while rstart < @end do
-        @ranges.push([rstart, rstart+1])
-        rstart = rstart + 1
-      end
-    elsif (@interval == 'weeks')
-      @end = Date.today - Date.today.cwday + 7
-      @start=@end - 28
-      rstart = @start
-      while rstart < @end do
-        @ranges.push([rstart, rstart+7])
-        rstart = rstart + 7
-      end
-    else
-      @end = Date.today.next_year.prev_month(Date.today.month - 1) - Date.today.mday + 1
-      @start=Date.new(2013,01,01)
-      rstart = @start
-      while rstart < @end do
-        @ranges.push([@start, rstart.next_year])
-        rstart = rstart.next_year
-      end
+    @end = Date.today.next_year.next_year.prev_month(Date.today.month - 1) - Date.today.mday + 1
+    @start=Date.new(2013,01,01)
+    rstart = @start
+    while rstart < @end do
+      @ranges.push([@start, rstart.next_year])
+      rstart = rstart.next_year
     end
+
     @headers = ['Group', 'Collection Id', 'Collection Name']
     @types = ['ogroup', 'coll', 'name']
     @ranges.each do |range|
       @headers.push(range[1])
       @types.push('dataint')
     end
-    @headers.push('Total')
+    @headers.push('Actual Total')
     @types.push('dataint')
-  end
+end
 
   def get_headers(results)
     @headers
@@ -83,7 +64,20 @@ class CollectionsByTimeCumulativeQuery < AdminQuery
           and
             date_added < ?
           #{@source_clause}
-        ) as sumval
+        ) + (
+          select
+            ? * sum(#{@col}) / 730
+          from
+            owner_coll_mime_use_details ocmud
+          where
+            oc.ogroup = ocmud.ogroup
+          and
+            oc.inv_collection_id = ocmud.inv_collection_id
+          and
+            date_added >= date_add(now(), interval - 730 day)
+          #{@source_clause}
+        )
+        as sumval
       from
         owner_collections oc
       group by
@@ -98,14 +92,16 @@ class CollectionsByTimeCumulativeQuery < AdminQuery
   end
 
   def get_query_params(pstart, pend)
+    x = (pend - Date.today).to_i
+    x = 0 if (x < 0)
     [
-      pstart, pend
+      pstart, pend, x
     ]
   end
 
   def run_query_sql
     stmt = @client.prepare(get_sql)
-    params = get_query_params(@start, @end)
+    params = get_query_params(@start, Date.today)
 
     results = stmt.execute(*params)
     types = get_types(results)
