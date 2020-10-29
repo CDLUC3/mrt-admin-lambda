@@ -46,13 +46,13 @@ end
 
   def get_sql
     %{
-      select distinct
+      select 
         oc.ogroup as ogroup,
         oc.inv_collection_id as ocid,
         oc.collection_name as ocname,
         (
           select
-            sum(#{@col})
+            ifnull(sum(#{@col}), 0)
           from
             owner_coll_mime_use_details ocmud
           where
@@ -66,7 +66,7 @@ end
           #{@source_clause}
         ) + (
           select
-            ? * sum(#{@col}) / 730
+            ? * ifnull(sum(#{@col}), 0) / 730
           from
             owner_coll_mime_use_details ocmud
           where
