@@ -7,8 +7,8 @@ class CollectionsByTimeCumulativeQuery < AdminQuery
     @ranges = []
 
     @end = Date.today.next_year.next_year.prev_month(Date.today.month - 1) - Date.today.mday + 1
-    @start=Date.new(2013,01,01)
-    rstart = @start
+    @start=Date.new(2012,07,01)
+    rstart = Date.new(2012,07,01)
     while rstart < @end do
       @ranges.push([@start, rstart.next_year])
       rstart = rstart.next_year
