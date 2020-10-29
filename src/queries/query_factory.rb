@@ -65,6 +65,8 @@ class QueryFactory
       CollectionsByTimeQuery.new(self, path, myparams, 'count_files', '')
     elsif path == 'collections_by_time_size'
       CollectionsByTimeQuery.new(self, path, myparams, 'billable_size', '')
+    elsif path == 'collections_by_time_size_cumulative'
+      CollectionsByTimeCumulativeQuery.new(self, path, myparams, 'billable_size', '')
     elsif path == 'collection_details'
       CollectionDetailsQuery.new(self, path, myparams, 'inv_collection_id')
     elsif path == 'collection_group_details'

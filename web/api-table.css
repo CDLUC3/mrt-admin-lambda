@@ -90,3 +90,8 @@ p.buttons {
   border-style: solid; border-width: 2px;
   border-radius: 25px;
 }
+
+.collsec {
+  padding-left: 10px;
+  margin: 10px;
+}
