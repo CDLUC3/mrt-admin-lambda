@@ -322,6 +322,11 @@ function format(cell, v, type, merritt_path) {
       .text(v)
       .attr("href", "index.html?path=collection_group_details&coll="+v)
       .appendTo(cell);
+  } else if (type == 'batch') {
+    link = $("<a/>")
+      .text(v)
+      .attr("href", "index.html?path=objects_by_batch&batch="+v)
+      .appendTo(cell);
   } else if (type == 'mnemonic'){
     link = $("<a/>")
       .text(v)
