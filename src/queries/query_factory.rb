@@ -87,7 +87,9 @@ class QueryFactory
       WasabiMigrationQuery.new(self, path, myparams)
     elsif path == 'doi'
       DoiConflictQuery.new(self, path, myparams)
-    else
+    elsif path == 'big_ingest'
+      BigIngestQuery.new(self, path, myparams)
+     else
       AdminQuery.new(self, path, myparams)
     end
   end
