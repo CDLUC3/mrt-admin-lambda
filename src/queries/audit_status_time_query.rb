@@ -23,93 +23,20 @@ class AuditStatusTimeQuery < AdminQuery
   def get_sql
     %{
       select
-        'unverified' as status,
-        (
-          select
-            count(*)
-          from
-            inv.inv_audits
-          where
-            status = 'unverified'
-          and
-            modified > date_add(now(), INTERVAL ? #{@unit})
-        )
-      union
-      select
-        'size-mismatch' as status,
-        (
-          select
-            count(*)
-          from
-            inv.inv_audits
-          where
-            status = 'size-mismatch'
-          and
-            modified > date_add(now(), INTERVAL ? #{@unit})
-        )
-      union
-      select
-        'digest-mismatch' as status,
-        (
-          select
-            count(*)
-          from
-            inv.inv_audits
-          where
-            status = 'digest-mismatch'
-          and
-            modified > date_add(now(), INTERVAL ? #{@unit})
-        )
-      union
-      select
-        'system-unavailable' as status,
-        (
-          select
-            count(*)
-          from
-            inv.inv_audits
-          where
-            status = 'system-unavailable'
-          and
-            modified > date_add(now(), INTERVAL ? #{@unit})
-        )
-      union
-      select
-        'processing' as status,
-        (
-          select
-            count(*)
-          from
-            inv.inv_audits
-          where
-            status = 'processing'
-          and
-            modified > date_add(now(), INTERVAL ? #{@unit})
-        )
-      union
-      select
-        'unknown' as status,
-        (
-          select
-            count(*)
-          from
-            inv.inv_audits
-          where
-            status = 'unknown'
-          and
-            modified > date_add(now(), INTERVAL ? #{@unit})
-        )
+        status,
+        count(*)
+      from
+        inv.inv_audits
+      where
+        verified > date_add(now(), INTERVAL ? #{@unit})
+      group by 
+        status
       ;
     }
   end
 
   def get_params
       [ 
-        @count, 
-        @count, 
-        @count,
-        @count,
-        @count,
         @count
       ]
   end
