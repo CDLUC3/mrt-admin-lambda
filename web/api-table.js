@@ -74,6 +74,7 @@ function showUrl(url) {
         data.group_col,
         data.show_grand_total,
         data.merritt_path,
+        data.alternative_queries,
         data.iterate
       )
     },
@@ -115,9 +116,17 @@ function query_iterate(){
   }
 }
 
-function createTable(headers, types, data, filter_col, group_col, show_grand_total, merritt_path, iterate) {
+function createTable(headers, types, data, filter_col, group_col, show_grand_total, merritt_path, alternative_queries, iterate) {
   $("p.buttons")
     .show();
+  $('#alternative ul').empty().hide();
+  $.each(alternative_queries, function(i, q){
+    $('#alternative ul').show().append(
+      $("<li/>").append(
+        $("<a/>").text(q['label']).attr('href', document.location.pathname + "?" + q['url'])
+      )
+    );
+  });
   $("#exportJson").attr("href", urlbase + document.location.search + "&format=json");
   $("#data-table")
     .empty()

@@ -2,19 +2,9 @@ class AuditStatusTimeQuery < AdminQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
     @count = CGI.unescape(get_param('count', '-1')).to_i
-    @unit = verify_unit(CGI.unescape(get_param('unit', 'DAYS')))
+    @unit = verify_interval_unit(CGI.unescape(get_param('unit', 'DAYS')))
   end
 
-  def verify_unit(unit) 
-    return unit if unit == 'DAY'
-    return unit if unit == 'HOUR'
-    return unit if unit == 'MINUTE'
-    return unit if unit == 'SECOND'
-    return unit if unit == 'WEEK'
-    return unit if unit == 'MONTH'
-    return unit if unit == 'YEAR'
-    'DAY'
-  end
 
   def get_title
     "Audit Status Over Time: #{@count} #{@unit}"
@@ -47,6 +37,37 @@ class AuditStatusTimeQuery < AdminQuery
 
   def get_types(results)
     ['', 'dataint']
+  end
+
+  def get_alternative_queries
+    #[{label: '', url: ''}]
+    [
+      {
+        label: 'Last minute', 
+        url: 'path=audit_status_time&unit=MINUTE&count=-1'
+      },
+      {
+        label: 'Last 10 minute', 
+        url: 'path=audit_status_time&unit=MINUTE&count=-10'
+      },
+      {
+        label: 'Last Hour', 
+        url: 'path=audit_status_time&unit=HOUR&count=-1'
+      },
+      {
+        label: 'Last 3 Hours', 
+        url: 'path=audit_status_time&unit=HOUR&count=-3'
+      },
+      {
+        label: 'Last Day', 
+        url: 'path=audit_status_time&unit=DAY&count=-1'
+      },
+      {
+        label: 'Last 2 Days', 
+        url: 'path=audit_status_time&unit=DAY&count=-2'
+      }
+
+    ]
   end
 
 end

@@ -141,6 +141,7 @@ class AdminQuery
         group_col: get_group_col,
         show_grand_total: show_grand_total,
         merritt_path: @merritt_path,
+        alternative_queries: get_alternative_queries,
         iterate: @iterate
       }
     else
@@ -170,6 +171,22 @@ class AdminQuery
     data = get_result_data(results, types)
     headers = get_headers(results)
     format_result_json(types, data, headers)
+  end
+
+  def get_alternative_queries
+    #[{label: '', url: ''}]
+    []
+  end
+
+  def verify_interval_unit(unit) 
+    return unit if unit == 'DAY'
+    return unit if unit == 'HOUR'
+    return unit if unit == 'MINUTE'
+    return unit if unit == 'SECOND'
+    return unit if unit == 'WEEK'
+    return unit if unit == 'MONTH'
+    return unit if unit == 'YEAR'
+    'DAY'
   end
 
 end
