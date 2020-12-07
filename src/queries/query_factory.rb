@@ -77,6 +77,8 @@ class QueryFactory
       InvoicesQuery.new(self, path, myparams)
     elsif path == 'audit_status'
       AuditStatusQuery.new(self, path, myparams)
+    elsif path == 'audit_status_time'
+      AuditStatusTimeQuery.new(self, path, myparams)
     elsif path == 'audit_oldest'
       AuditOldestQuery.new(self, path, myparams)
     elsif path == 'audit_processed'
