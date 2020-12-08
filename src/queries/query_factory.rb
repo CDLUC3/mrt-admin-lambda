@@ -93,7 +93,9 @@ class QueryFactory
       DoiConflictQuery.new(self, path, myparams)
     elsif path == 'big_ingest'
       BigIngestQuery.new(self, path, myparams)
-     else
+    elsif path == 'yaml'
+      YamlQuery.new(self, path, myparams)
+    else
       AdminQuery.new(self, path, myparams)
     end
   end
