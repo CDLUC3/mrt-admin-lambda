@@ -1,0 +1,82 @@
+program: 
+  name: uc3
+  systems:
+    merritt: 
+      name: Merritt
+      repos:
+      - a
+      - b
+      subsystems:
+        ui:
+          name: Merritt User Interface and API
+          repos:
+          url:
+          healthcheck-url:
+          tasks:
+            nuxeo-feed:
+              name: Merritt Nuxeo Harvest
+              host:
+            zookeeper:
+              name: Zoo Keeper Host (X must remain live for a quorum)
+              host:
+        ingest:
+          name: Merritt Ingest Service
+          repos:
+          url:
+          healthcheck-url:
+        store:
+          name: Merritt Storage (Ingest)
+          repos:
+          url:
+          healthcheck-url:
+        store-access:
+          name: Merritt Storage (Access)
+          repos:
+          url:
+          healthcheck-url:
+        inventory:
+          name: Merritt Inventory Service
+          repos:
+          url:
+          healthcheck-url:
+        audit:
+          name: Merritt Audit Checksum
+          repos:
+          url:
+          healthcheck-url:
+        replic:
+          name: Merritt Replicate Cloud Storage
+          repos:
+          url:
+          healthcheck-url:
+        sword:
+          name: Merritt Sword Deposit (used by Dryad)
+          repos:
+          url:
+          healthcheck-url:
+        oai:
+          name: Merritt OAI Harvest (used by Dryad)
+          repos:
+          url:
+          healthcheck-url:
+        etds:
+          name: Merritt Electronic Theses and Dissertations
+          tasks:
+            etd-feed-ucb:
+              host:
+            etd-feed-ucla:
+              host:
+            etd-feed-ucsd:
+              host:
+        admin:
+          name: Merritt Admin Tool
+          tasks:
+            billing-update:
+              name: Daily Billing Update
+              host:
+        docker:
+          name: Merritt Docker Development Environment
+    dryad:
+    dmp:
+    ezid:
+    

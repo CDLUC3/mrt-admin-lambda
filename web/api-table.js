@@ -347,6 +347,12 @@ function format(cell, v, type, merritt_path) {
       .attr("href", merritt_path + "/m/" + encodeURIComponent(v))
       .appendTo(cell);
     cell.addClass("hasdata");
+  } else if (type == 'demolink'){
+    link = $("<a/>")
+      .text(v)
+      .attr("href", "javascript:alert('this link is for prototype purposes')")
+      .appendTo(cell);
+    cell.addClass("hasdata");
   } else {
     cell.text(v);
   }
