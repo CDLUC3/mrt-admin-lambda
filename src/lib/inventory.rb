@@ -209,11 +209,11 @@ class Inventory
   def initialize
     @tasks = {}
     @subsystems = {}
-    @config = YAML.load_file('../src/inventory/inventory.yml')
+    @config = YAML.load_file("inventory/inventory.yml")
     @prog = Program.new(self, @config.fetch('program', {}))
 
     @hosts = {}
-    file = File.read('../src/inventory/inventory.json')
+    file = File.read('inventory/inventory.json')
     jhosts = JSON.parse(file)
     jhosts.fetch('data', []).each do |host|
       load_host(host)
