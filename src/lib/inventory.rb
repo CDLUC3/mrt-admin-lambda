@@ -20,6 +20,10 @@ class InvObj
     @basekey
   end
 
+  def is_parent_object?
+    @basekey == '_na'
+  end
+
   def name
     @name
   end
@@ -149,22 +153,22 @@ class Subsystem < InvObj
   end
 
   def repo
-    return @service.repo if name == ''
+    return @service.repo if is_parent_object?
     super()
   end
 
   def documentation
-    return @service.documentation if name == ''
+    return @service.documentation if is_parent_object?
     super()
   end
 
   def healthcheck
-    return @service.healthcheck if name == ''
+    return @service.healthcheck if is_parent_object?
     super()
   end
 
   def note
-    return @service.note if name == ''
+    return @service.note if is_parent_object?
     super()
   end
 end
@@ -193,27 +197,27 @@ class Task < InvObj
   end
 
   def hosts
-    return super() unless name == ''
+    return super() unless is_parent_object?
     @subsystem.hosts
   end
 
   def repo
-    return @subsystem.repo if name == ''
+    return @subsystem.repo if is_parent_object?
     super()
   end
 
   def documentation
-    return @subsystem.documentation if name == ''
+    return @subsystem.documentation if is_parent_object?
     super()
   end
 
   def healthcheck
-    return @subsystem.healthcheck if name == ''
+    return @subsystem.healthcheck if is_parent_object?
     super()
   end
 
   def note
-    return @subsystem.note if name == ''
+    return @subsystem.note if is_parent_object?
     super()
   end
 end
