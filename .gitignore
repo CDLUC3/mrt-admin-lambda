@@ -16,3 +16,4 @@ test/config/database.localcred.yml
 mysql-deps/mysql-dependencies.zip
 ~$MerrittAdminTool.pptx
 inventory/inventory.json
+src/inventory/inventory.json
