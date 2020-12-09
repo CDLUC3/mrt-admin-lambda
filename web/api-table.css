@@ -33,6 +33,7 @@ table.results td.dataint {
 table.results th.cell,
 table.results td.cell {
   width: 100px;
+  word-break: break-word;
 }
 
 table.results th.mime,
@@ -47,6 +48,8 @@ table.results td.datetime {
   width: 150px !important;
 }
 
+table.results th.list-doc,
+table.results td.list-doc,
 table.results th.list-host,
 table.results td.list-host {
   width: 250px !important;

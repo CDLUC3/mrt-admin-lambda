@@ -52,15 +52,15 @@ end
     if is_host_report
       ['Host/Lambda/Container', 'Platform', 'Instance Type', 'AZ', 'Env', 'Service', 'Subservice', 'Tasks']
     else
-      ['Service', 'Service Name', 'Subservice', 'Subservice Name', 'Code Repo', 'Health Check', 'Documentation',  'Task', 'Host/Lambda']
+      ['Service', 'Service Name', 'Subservice', 'Subservice Name', 'Code Repo', 'Health Check', 'Documentation',  'Task', 'Host/Lambda', 'Note']
     end
   end
 
   def get_types(data)
     if is_host_report
-      ['host', 'key', 'key', 'key', 'env', 'service-host', 'subservice', 'key']
+      ['host', 'key', 'key', 'key', 'env', 'service-host', 'subservice', 'key', 'name']
     else
-      ['service', 'key', 'subservice', 'key', 'list-doc', 'list-doc', 'list-doc', 'key', 'list-host']
+      ['service', 'key', 'subservice', 'key', 'list-doc', 'list-doc', 'list-doc', 'key', 'list-host', 'name']
     end
   end
 

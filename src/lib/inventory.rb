@@ -8,6 +8,7 @@ class InvObj
     @repo = json.fetch('repo', [])
     @healthcheck = json.fetch('healthcheck', [])
     @documentation = json.fetch('documentation', [])
+    @note = json.fetch('note', '')
     @hosts = []
   end
 
@@ -41,6 +42,10 @@ class InvObj
 
   def healthcheck
     @healthcheck.join(',') if @healthcheck
+  end
+
+  def note
+    @note
   end
 end
 
@@ -157,6 +162,11 @@ class Subsystem < InvObj
     return @service.healthcheck if name == ''
     super()
   end
+
+  def note
+    return @service.note if name == ''
+    super()
+  end
 end
 
 class Task < InvObj
@@ -199,6 +209,11 @@ class Task < InvObj
 
   def healthcheck
     return @subsystem.healthcheck if name == ''
+    super()
+  end
+
+  def note
+    return @subsystem.note if name == ''
     super()
   end
 end
@@ -282,7 +297,8 @@ class Inventory
           task.healthcheck,
           task.documentation,
           task.name,
-          task.hosts
+          task.hosts,
+          task.note
         ]
       )
     end
