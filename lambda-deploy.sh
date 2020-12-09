@@ -47,6 +47,9 @@ rm deploy.zip
 unzip artifact.zip
 rm artifact.zip
 
+# Temporary install step - chat with Ashley to ensure valid json wrapper
+cp ~/inventory.json src/inventory
+
 # Copy ruby code into zip
 cd src
 zip -r ../deploy.zip *
