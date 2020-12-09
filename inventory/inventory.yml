@@ -1,15 +1,15 @@
 program: 
   name: uc3
-  systems:
-    merritt: 
+  services:
+    uc3-mrt: 
       name: Merritt
-      repos:
-      - a
-      - b
+      repo:
+      - https://github.com/CDLUC3/mrt-doc
       subsystems:
-        ui:
+        uc3-mrt-ui:
           name: Merritt User Interface and API
-          repos:
+          repo:
+          - https://github.com/CDLUC3/mrt-dashboard
           url:
           healthcheck-url:
           tasks:
@@ -19,48 +19,56 @@ program:
             zookeeper:
               name: Zoo Keeper Host (X must remain live for a quorum)
               host:
-        ingest:
+        uc3-mrt-ingest:
           name: Merritt Ingest Service
-          repos:
+          repo:
+          - https://github.com/CDLUC3/mrt-ingest
           url:
           healthcheck-url:
-        store:
+        uc3-mrt-store:
           name: Merritt Storage (Ingest)
-          repos:
+          repo:
           url:
           healthcheck-url:
-        store-access:
+        uc3-mrt-access:
           name: Merritt Storage (Access)
-          repos:
+          repo:
+          - https://github.com/CDLUC3/mrt-store
           url:
           healthcheck-url:
-        inventory:
+        uc3-mrt-inventory:
           name: Merritt Inventory Service
-          repos:
+          repo:
           url:
           healthcheck-url:
-        audit:
+        uc3-mrt-audit:
           name: Merritt Audit Checksum
-          repos:
+          repo:
+          - https://github.com/CDLUC3/mrt-inventory
           url:
           healthcheck-url:
-        replic:
+        uc3-mrt-replic:
           name: Merritt Replicate Cloud Storage
-          repos:
+          repo:
+          - https://github.com/CDLUC3/mrt-replic
           url:
           healthcheck-url:
-        sword:
+        uc3-mrt-sword:
           name: Merritt Sword Deposit (used by Dryad)
-          repos:
+          repo:
+          - https://github.com/CDLUC3/mrt-sword
           url:
           healthcheck-url:
-        oai:
+        uc3-mrt-oai:
           name: Merritt OAI Harvest (used by Dryad)
-          repos:
+          repo:
+          - https://github.com/CDLUC3/mrt-oai
           url:
           healthcheck-url:
-        etds:
+        uc3-mrt-etd:
           name: Merritt Electronic Theses and Dissertations
+          repo:
+          - https://github.com/CDLUC3/uc3-etds
           tasks:
             etd-feed-ucb:
               host:
@@ -68,15 +76,21 @@ program:
               host:
             etd-feed-ucsd:
               host:
-        admin:
+        uc3-mrt-admin:
           name: Merritt Admin Tool
+          repo:
+          - https://github.com/CDLUC3/mrt-admin-lambda
           tasks:
             billing-update:
               name: Daily Billing Update
               host:
-        docker:
+        uc3-mrt-docker:
           name: Merritt Docker Development Environment
-    dryad:
-    dmp:
-    ezid:
+        uc3-mrt-web:
+          name: Merritt Load Balancer
+        uc3-mrt-build:
+          name: Merritt Build Server
+    uc3-dryad:
+    uc3-dmp:
+    uc3-ezid:
     

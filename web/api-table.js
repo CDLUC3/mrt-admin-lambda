@@ -353,6 +353,21 @@ function format(cell, v, type, merritt_path) {
       .attr("href", "javascript:alert('this link is for prototype purposes')")
       .appendTo(cell);
     cell.addClass("hasdata");
+  } else if (type == 'list' && v != ''){
+    var ul = $("<ul/>").appendTo(cell);
+    $.each(v.split(","), function(i,txt){
+      $("<li/>").text(txt).appendTo(ul);
+    });
+    cell.addClass("hasdata");
+  } else if (type == 'linklist' && v != ''){
+    var ul = $("<ul/>").appendTo(cell);
+    $.each(v.split(","), function(i,txt){
+      $("<a/>")
+        .text(txt.replace(/https:.*github\.com./, ''))
+        .attr('href', txt)
+        .appendTo($("<li/>").appendTo(ul));
+    });
+    cell.addClass("hasdata");
   } else {
     cell.text(v);
   }
