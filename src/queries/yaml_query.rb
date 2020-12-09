@@ -4,6 +4,10 @@ class YamlQuery < AdminQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
     @datatype = get_param('datatype', 'systems')
+    @filter_service = get_param('service', '')
+    @filter_host = get_param('host', '')
+    @filter_subservice = get_param('subservice', '')
+    @filter_env = get_param('env', '')
     @inventory = Inventory.new
   end
 
@@ -21,9 +25,9 @@ class YamlQuery < AdminQuery
 
   def get_yml_data
     if is_host_report
-      @inventory.get_host_data
+      @inventory.get_host_data(@filter_host, @filter_service, @filter_env)
     else
-      @inventory.get_system_data
+      @inventory.get_system_data(@filter_service, @filter_subservice)
     end
   end
 
@@ -46,17 +50,17 @@ end
 
   def get_headers(data)
     if is_host_report
-      ['Host/Lambda/Container', 'Type', 'Size', 'Subsystems', 'Tasks']
+      ['Host/Lambda/Container', 'Platform', 'Instance Type', 'AZ', 'Env', 'Service', 'Subservice', 'Tasks']
     else
-      ['System', 'Subsystem', 'Code Repo', 'Health Check', 'Documentation',  'Task', 'Host/Lambda']
+      ['Service', 'Service Name', 'Subservice', 'Subservice Name', 'Code Repo', 'Health Check', 'Documentation',  'Task', 'Host/Lambda']
     end
   end
 
   def get_types(data)
     if is_host_report
-      ['key', 'key', 'key', 'key', 'key']
+      ['host', 'key', 'key', 'key', 'env', 'service-host', 'subservice', 'key']
     else
-      ['key', 'key', 'linklist', 'linklist', 'linklist', 'key', 'list']
+      ['service', 'key', 'subservice', 'key', 'list-doc', 'list-doc', 'list-doc', 'key', 'list-host']
     end
   end
 

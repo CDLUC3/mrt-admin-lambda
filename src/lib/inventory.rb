@@ -4,7 +4,7 @@ require 'json'
 class InvObj
   def initialize(key, json)
     @basekey = key
-    @name = json.fetch('name', json.fetch(:name, key))
+    @name = json.fetch('name', json.fetch(:name, ''))
     @repo = json.fetch('repo', [])
     @healthcheck = json.fetch('healthcheck', [])
     @documentation = json.fetch('documentation', [])
@@ -20,9 +20,7 @@ class InvObj
   end
 
   def name
-    return '' if @name == ''
-    return @name if @name == @basekey
-    "#{@name} (#{@basekey})"
+    @name
   end
 
   def add_host(hostkey)
@@ -68,7 +66,7 @@ class Program < InvObj
 
   def service(ksys)
     return @services[ksys] if @services.key?(ksys)
-    add_service(Service.new(self, ksys, {name: ksys}))
+    add_service(Service.new(self, ksys, {}))
   end
 end
 
@@ -97,7 +95,7 @@ class Service < InvObj
 
   def subsystem(ksubs)
     return @subsystems[ksubs] if @subsystems.key?(ksubs)
-    add_subsystem(Subsystem.new(self, ksubs, {name: ksubs}))
+    add_subsystem(Subsystem.new(self, ksubs, {}))
   end
 
   def add_host(hostkey)
@@ -126,9 +124,9 @@ class Subsystem < InvObj
     @service
   end
 
-  def key 
-    "#{@service.key}_#{super()}"
-  end
+  #def key 
+  #  "#{@service.key}_#{super()}"
+  #end
 
   def add_task(task)
     @tasks[task.basekey] = task
@@ -209,11 +207,14 @@ class Inventory
   def initialize
     @tasks = {}
     @subsystems = {}
-    @config = YAML.load_file("inventory/inventory.yml")
+
+    rel = File.basename(Dir.getwd) == 'test' ? '../src/' : '.'
+
+    @config = YAML.load_file("#{rel}/inventory/inventory.yml")
     @prog = Program.new(self, @config.fetch('program', {}))
 
     @hosts = {}
-    file = File.read('inventory/inventory.json')
+    file = File.read("#{rel}/inventory/inventory.json")
     jhosts = JSON.parse(file)
     jhosts.fetch('data', []).each do |host|
       load_host(host)
@@ -239,14 +240,23 @@ class Inventory
     subsystem.add_host(key)
   end
 
-  def get_host_data
+  def get_host_data(filter_host = '', filter_service = '', filter_env = '')
     res = []
     @hosts.sort.to_h.each do |kh, host|
+      hostname = host.fetch('hostname', '')
+      next unless filter_host == '' || hostname == filter_host
+      henv = host.fetch('fqsn', '').split('-').last
+      next unless filter_env == '' || henv == filter_env
+      service = host.fetch('service', '')
+      next unless filter_service == '' || service == filter_service
       res.push(
         [
-          host.fetch('hostname', ''),
+          hostname,
           'ec2',
           host.fetch('ec2_instance_type', ''),
+          host.fetch('ec2_availability_zone', ''),
+          henv,          
+          service,
           host.fetch('subservice', ''),
           ''
         ]
@@ -255,12 +265,18 @@ class Inventory
     res
   end
 
-  def get_system_data
+  def get_system_data(filter_service = '', filter_subservice = '')
     res = []
     @tasks.sort.to_h.each do |ktask, task|
+      servicekey = task.subsystem.service.key
+      next unless filter_service == '' || servicekey ==  filter_service
+      subservicekey = task.subsystem.key
+      next unless filter_subservice == '' || subservicekey ==  filter_subservice
       res.push(
         [
+          task.subsystem.service.key,
           task.subsystem.service.name,
+          task.subsystem.key,
           task.subsystem.name,
           task.repo,
           task.healthcheck,

@@ -347,6 +347,36 @@ function format(cell, v, type, merritt_path) {
       .attr("href", merritt_path + "/m/" + encodeURIComponent(v))
       .appendTo(cell);
     cell.addClass("hasdata");
+  } else if (type == 'service'){
+    link = $("<a/>")
+      .text(v)
+      .attr("href", "index.html?path=yaml&service=" + v)
+      .appendTo(cell);
+    cell.addClass("hasdata");
+  } else if (type == 'service-host'){
+    link = $("<a/>")
+      .text(v)
+      .attr("href", "index.html?path=yaml&datatype=hosts&service=" + v)
+      .appendTo(cell);
+    cell.addClass("hasdata");
+  } else if (type == 'env'){
+    link = $("<a/>")
+      .text(v)
+      .attr("href", "index.html?path=yaml&datatype=hosts&env=" + v)
+      .appendTo(cell);
+    cell.addClass("hasdata");
+  } else if (type == 'subservice'){
+    link = $("<a/>")
+      .text(v)
+      .attr("href", "index.html?path=yaml&subservice=" + v)
+      .appendTo(cell);
+    cell.addClass("hasdata");
+  } else if (type == 'host'){
+    link = $("<a/>")
+      .text(v)
+      .attr("href", "index.html?path=yaml&datatype=hosts&host=" + v)
+      .appendTo(cell);
+    cell.addClass("hasdata");
   } else if (type == 'demolink'){
     link = $("<a/>")
       .text(v)
@@ -359,12 +389,21 @@ function format(cell, v, type, merritt_path) {
       $("<li/>").text(txt).appendTo(ul);
     });
     cell.addClass("hasdata");
-  } else if (type == 'linklist' && v != ''){
+  } else if (type == 'list-doc' && v != ''){
     var ul = $("<ul/>").appendTo(cell);
     $.each(v.split(","), function(i,txt){
       $("<a/>")
         .text(txt.replace(/https:.*github\.com./, ''))
         .attr('href', txt)
+        .appendTo($("<li/>").appendTo(ul));
+    });
+    cell.addClass("hasdata");
+  } else if (type == 'list-host' && v != ''){
+    var ul = $("<ul/>").appendTo(cell);
+    $.each(v.split(","), function(i,txt){
+      $("<a/>")
+        .text(txt)
+        .attr('href', "index.html?path=yaml&datatype=hosts&host=" + txt)
         .appendTo($("<li/>").appendTo(ul));
     });
     cell.addClass("hasdata");
