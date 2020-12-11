@@ -346,16 +346,6 @@ function format(cell, v, type, merritt_path) {
   } else if (type == 'ark'){
     makeLink(cell, v, merritt_path + "/m/" + encodeURIComponent(v));
     cell.addClass("hasdata");
-  } else if (type == 'service'){
-    makeLink(cell, v, "index.html?path=yaml&service=" + v);
-  } else if (type == 'service-host'){
-    makeLink(cell, v, "index.html?path=yaml&datatype=hosts&service=" + v);
-  } else if (type == 'env'){
-    makeLink(cell, v, "index.html?path=yaml&datatype=hosts&env=" + v);
-  } else if (type == 'subservice'){
-    makeLink(cell, v, "index.html?path=yaml&subservice=" + v);
-  } else if (type == 'host'){
-    makeLink(cell, v, "index.html?path=yaml&datatype=hosts&host=" + v);
   } else if (type == 'list' && v != ''){
     var ul = makeUl(cell);
     $.each(v.split(","), function(i,txt){
