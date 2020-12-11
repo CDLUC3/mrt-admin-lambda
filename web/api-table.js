@@ -281,6 +281,35 @@ function createCell(v, type, isHeader, merritt_path) {
   return cell;
 }
 
+function makeLink(parent, v, href) {
+  return $("<a/>")
+    .text(v)
+    .attr("href", href)
+    .appendTo(parent);
+}
+
+function makeLiLink(parent, v, href) {
+  return $("<li/>")
+    .append(
+      $("<a/>")
+        .text(v)
+        .attr("href", href)
+    )
+    .appendTo(parent);
+}
+
+function makeUl(parent) {
+  return $("<ul/>")
+    .appendTo(parent);
+}
+
+
+function makeLi(parent, v) {
+  return $("<li/>")
+    .text(v)
+    .appendTo(parent);
+}
+
 function format(cell, v, type, merritt_path) {
   if (v == null) {
   } else if (type == 'foo') {
@@ -297,114 +326,51 @@ function format(cell, v, type, merritt_path) {
   } else if (type == 'datetime'){
     cell.text(v.replace(/ [-\+]\d+$/,''));
   } else if (type == 'node' && Number(v) > 0){
-    link = $("<a/>")
-      .text(v)
-      .attr("href", "index.html?path=collections_by_node&node="+v)
-      .appendTo(cell);
+    makeLink(cell, v, "index.html?path=collections_by_node&node="+v);
   } else if (type == 'own' && Number(v) > 0){
-    link = $("<a/>")
-      .text(v)
-      .attr("href", "index.html?path=collections_by_owner&own="+v)
-      .appendTo(cell);
+    makeLink(cell, v, "index.html?path=collections_by_owner&own="+v);
   } else if (type == 'mime' && !v.startsWith('--')){
-    link = $("<a/>")
-      .text(v)
-      .attr("href", "index.html?path=collections_by_mime_type&mime="+v)
-      .appendTo(cell);
+    makeLink(cell, v, "index.html?path=collections_by_mime_type&mime="+v);
   } else if (type == 'gmime' && v != '' && !v.startsWith('ZZ')){
-    link = $("<a/>")
-      .text(v)
-      .attr("href", "index.html?path=collections_by_mime_group&mime="+v)
-      .appendTo(cell);
+    makeLink(cell, v, "index.html?path=collections_by_mime_group&mime="+v);
   } else if (type == 'coll' && Number(v) > 0){
-    link = $("<a/>")
-      .text(v)
-      .attr("href", "index.html?path=collection_details&coll="+v)
-      .appendTo(cell);
+    makeLink(cell, v, "index.html?path=collection_details&coll="+v);
   } else if (type == 'coll-date' && Number(v) > 0){
-    link = $("<a/>")
-      .text(v)
-      .attr("href", "index.html?path=objects_recent_coll&coll="+v)
-      .appendTo(cell);
+    makeLink(cell, v, "index.html?path=objects_recent_coll&coll="+v);
   } else if (type == 'ogroup' && !v.startsWith('ZZ')){
-    link = $("<a/>")
-      .text(v)
-      .attr("href", "index.html?path=collection_group_details&coll="+v)
-      .appendTo(cell);
+    makeLink(cell, v, "index.html?path=collection_group_details&coll="+v);
   } else if (type == 'batch') {
-    link = $("<a/>")
-      .text(v)
-      .attr("href", "index.html?path=objects_by_batch&batch="+v)
-      .appendTo(cell);
+    makeLink(cell, v, "index.html?path=objects_by_batch&batch="+v);
   } else if (type == 'mnemonic'){
-    link = $("<a/>")
-      .text(v)
-      .attr("href", merritt_path + "/m/" + v)
-      .appendTo(cell);
+    makeLink(cell, v, merritt_path + "/m/" + v);
   } else if (type == 'ark'){
-    link = $("<a/>")
-      .text(v)
-      .attr("href", merritt_path + "/m/" + encodeURIComponent(v))
-      .appendTo(cell);
+    makeLink(cell, v, merritt_path + "/m/" + encodeURIComponent(v));
     cell.addClass("hasdata");
   } else if (type == 'service'){
-    link = $("<a/>")
-      .text(v)
-      .attr("href", "index.html?path=yaml&service=" + v)
-      .appendTo(cell);
-    cell.addClass("hasdata");
+    makeLink(cell, v, "index.html?path=yaml&service=" + v);
   } else if (type == 'service-host'){
-    link = $("<a/>")
-      .text(v)
-      .attr("href", "index.html?path=yaml&datatype=hosts&service=" + v)
-      .appendTo(cell);
-    cell.addClass("hasdata");
+    makeLink(cell, v, "index.html?path=yaml&datatype=hosts&service=" + v);
   } else if (type == 'env'){
-    link = $("<a/>")
-      .text(v)
-      .attr("href", "index.html?path=yaml&datatype=hosts&env=" + v)
-      .appendTo(cell);
-    cell.addClass("hasdata");
+    makeLink(cell, v, "index.html?path=yaml&datatype=hosts&env=" + v);
   } else if (type == 'subservice'){
-    link = $("<a/>")
-      .text(v)
-      .attr("href", "index.html?path=yaml&subservice=" + v)
-      .appendTo(cell);
-    cell.addClass("hasdata");
+    makeLink(cell, v, "index.html?path=yaml&subservice=" + v);
   } else if (type == 'host'){
-    link = $("<a/>")
-      .text(v)
-      .attr("href", "index.html?path=yaml&datatype=hosts&host=" + v)
-      .appendTo(cell);
-    cell.addClass("hasdata");
-  } else if (type == 'demolink'){
-    link = $("<a/>")
-      .text(v)
-      .attr("href", "javascript:alert('this link is for prototype purposes')")
-      .appendTo(cell);
-    cell.addClass("hasdata");
+    makeLink(cell, v, "index.html?path=yaml&datatype=hosts&host=" + v);
   } else if (type == 'list' && v != ''){
-    var ul = $("<ul/>").appendTo(cell);
+    var ul = makeUl(cell);
     $.each(v.split(","), function(i,txt){
-      $("<li/>").text(txt).appendTo(ul);
+      makeLi(ul, v);
     });
     cell.addClass("hasdata");
   } else if (type == 'list-doc' && v != ''){
-    var ul = $("<ul/>").appendTo(cell);
+    var ul = makeUl(cell);
     $.each(v.split(","), function(i,txt){
-      $("<a/>")
-        .text(txt.replace(/https:.*github\.com./, ''))
-        .attr('href', txt)
-        .appendTo($("<li/>").appendTo(ul));
+      makeLiLink(ul, txt.replace(/https:.*github\.com./, ''), txt);
     });
-    cell.addClass("hasdata");
   } else if (type == 'list-host' && v != ''){
-    var ul = $("<ul/>").appendTo(cell);
+    var ul = makeUl(cell);
     $.each(v.split(","), function(i,txt){
-      $("<a/>")
-        .text(txt)
-        .attr('href', "index.html?path=yaml&datatype=hosts&host=" + txt)
-        .appendTo($("<li/>").appendTo(ul));
+      makeLiLink(ul, txt, "index.html?path=yaml&datatype=hosts&host=" + txt);
     });
     cell.addClass("hasdata");
   } else {
