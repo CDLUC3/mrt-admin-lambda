@@ -17,3 +17,4 @@ mysql-deps/mysql-dependencies.zip
 ~$MerrittAdminTool.pptx
 inventory/inventory.json
 src/inventory/inventory.json
+test/config/setup.config.sh
