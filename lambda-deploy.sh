@@ -1,70 +1,37 @@
 #!/bin/bash
 
-# A zip file of dependencies will be constructed with GitHub actions.
-# The results are saved to a GitHub actions artifact.
-
-# In order to pull this artifact, you must create a GitHub access token
-# with the following privileges. (Click settings on your GH user account.)
-# - repo:status
-# - public_repo
-# - read:packages
-# Save your token to a variable GH_TOKEN in your account
-# export GH_TOKEN=username:token
-
-# Depends on https://github.com/CDLUC3/uc3-aws-cli scripts
+export SSM_ROOT_PATH=/uc3/mrt/dev/
 EXIT_ON_DIE=true
 source ~/.profile.d/uc3-aws-util.sh
 
 # Check that the SSM_ROOT_PATH has been initialized
 check_ssm_root
 
+DEPLOY_ENV=dev
+SSM_DEPLOY_PATH=${SSM_ROOT_PATH//dev/${DEPLOY_ENV}}
+
 # Get the ARN for the lambda to publish
-LAMBDA_ARN=`get_ssm_value_by_name admintool/lambda-arn`
+LAMBDA_ARN_BASE=`get_ssm_value_by_name admintool/lambda-arn-base`
+LAMBDA_ARN=${LAMBDA_ARN_BASE}-${DEPLOY_ENV}
+
+# Get the ECR image to publish
+ECR_REGISTRY=`get_ssm_value_by_name admintool/ecr-registry`
+ECR_IMAGE_NAME=`get_ssm_value_by_name admintool/ecr-image`
+ECR_IMAGE_TAG=${ECR_REGISTRY}${ECR_IMAGE_NAME}:${DEPLOY_ENV}
 
 # Get the URL for links to Merritt
 MERRITT_PATH=`get_ssm_value_by_name admintool/merritt-path`
-
-CREATED_AT=`curl -s "https://api.github.com/repos/CDLUC3/mrt-admin-lambda/actions/artifacts" | jq -r ".artifacts[0]" | jq -r ".created_at"`
-
-CREATED_AT=`date -d $CREATED_AT`
-
-ZIPSIZE=`curl -s "https://api.github.com/repos/CDLUC3/mrt-admin-lambda/actions/artifacts" | jq -r ".artifacts[0]" | jq -r ".size_in_bytes"`
-
-echo " ********************* "
-echo " ===> ${SSM_ROOT_PATH}"
-echo " Created:  ${CREATED_AT}"
-echo " Zip Size: ${ZIPSIZE}"
-echo " ********************* "
-echo "Press Enter to continue or Cntl-C to cancel"
-
-read
-
-LATEST_DEPLOY=`curl -s "https://api.github.com/repos/CDLUC3/mrt-admin-lambda/actions/artifacts" | jq -r ".artifacts[0]" | jq -r ".archive_download_url"`
-
-curl -u ${GH_TOKEN} -L -s ${LATEST_DEPLOY} -o artifact.zip
-
-rm deploy.zip
-unzip artifact.zip
-rm artifact.zip
-
-# Temporary install step - chat with Ashley to ensure valid json wrapper
-cp ~/inventory.json src/inventory
-
-# Copy ruby code into zip
-cd src
-zip -r ../deploy.zip *
-cd ..
-
-# Display zip contents to the user
-unzip -l deploy.zip
+# if [ $DEPLOY_ENV == '...' ]
+# then
+#  MERRITT_PATH=
+# fi
+aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin ${ECR_REGISTRY}
+docker build -t ${ECR_IMAGE_TAG} .
+docker push ${ECR_IMAGE_TAG} 
 
 # deploy lambda code
-aws lambda update-function-code --function-name ${LAMBDA_ARN} --zip-file fileb://deploy.zip --region us-west-2
+aws lambda update-function-code --function-name ${LAMBDA_ARN} --image-uri ${ECR_IMAGE_TAG} --region us-west-2
 
 # Set environment and set timeout
-aws lambda update-function-configuration --function-name ${LAMBDA_ARN} --region us-west-2 --timeout 60 --memory-size 128 --environment "Variables={SSM_ROOT_PATH=${SSM_ROOT_PATH},MERRITT_PATH=${MERRITT_PATH}}"
+aws lambda update-function-configuration --function-name ${LAMBDA_ARN} --region us-west-2 --timeout 60 --memory-size 128 --environment "Variables={SSM_ROOT_PATH=${SSM_DEPLOY_PATH},MERRITT_PATH=${MERRITT_PATH}}"
 
-SITE_URL=`get_ssm_value_by_name admintool/site-url`
-
-echo " *** Preview changes at "
-echo $SITE_URL
