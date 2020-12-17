@@ -1,6 +1,5 @@
 #!/bin/bash
 
-export SSM_ROOT_PATH=/uc3/mrt/dev/
 EXIT_ON_DIE=true
 source ~/.profile.d/uc3-aws-util.sh
 
@@ -8,6 +7,8 @@ source ~/.profile.d/uc3-aws-util.sh
 check_ssm_root
 
 DEPLOY_ENV=dev
+# Assume deploy runs from DEV
+# Set ENV based on deploy env
 SSM_DEPLOY_PATH=${SSM_ROOT_PATH//dev/${DEPLOY_ENV}}
 
 # Get the ARN for the lambda to publish
@@ -25,13 +26,29 @@ MERRITT_PATH=`get_ssm_value_by_name admintool/merritt-path`
 # then
 #  MERRITT_PATH=
 # fi
-aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin ${ECR_REGISTRY}
-docker build -t ${ECR_IMAGE_TAG} .
-docker push ${ECR_IMAGE_TAG} 
+docker build -t ${ECR_IMAGE_TAG} . || die "Image build failure"
+
+aws ecr get-login-password --region us-west-2 | \
+  docker login --username AWS \
+    --password-stdin ${ECR_REGISTRY}
+
+docker push ${ECR_IMAGE_TAG} || die "Image push failure"
 
 # deploy lambda code
-aws lambda update-function-code --function-name ${LAMBDA_ARN} --image-uri ${ECR_IMAGE_TAG} --region us-west-2
+aws lambda update-function-code \
+  --function-name ${LAMBDA_ARN} \
+  --image-uri ${ECR_IMAGE_TAG} \
+  --output text --region us-west-2 \
+  || die "Lambda Update failure"
 
-# Set environment and set timeout
-aws lambda update-function-configuration --function-name ${LAMBDA_ARN} --region us-west-2 --timeout 60 --memory-size 128 --environment "Variables={SSM_ROOT_PATH=${SSM_DEPLOY_PATH},MERRITT_PATH=${MERRITT_PATH}}"
-
+if [ $run_config == 'Y' ]
+then
+  aws lambda update-function-configuration \
+    --function-name ${LAMBDA_ARN} \
+    --region us-west-2 \
+    --output text \
+    --timeout 60 \
+    --memory-size 128 \
+    --environment "Variables={SSM_ROOT_PATH=${SSM_DEPLOY_PATH},MERRITT_PATH=${MERRITT_PATH}}" \
+    || die "Lambda Config Update failure"
+fi
