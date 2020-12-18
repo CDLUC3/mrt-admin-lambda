@@ -37,32 +37,45 @@ end
 
 module LambdaFunctions
   class Handler
+    def self.process2(event:,context:)
+      {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'content-type':'application/json; charset=utf-8'
+        },
+        statusCode: 200,
+        body: {foo: 'bar'}.to_json
+      }
+    end
+
     def self.process(event:,context:)
       begin
         config_file = 'config/database.ssm.yml'
         config_block = ENV.key?('MERRITT_ADMIN_CONFIG') ? ENV['MERRITT_ADMIN_CONFIG'] : 'default'
         @config = Uc3Ssm::ConfigResolver.new.resolve_file_values(file: config_file, resolve_key: config_block, return_key: config_block)
         client = get_mysql
-        path = get_key_val(event, 'path').gsub(/^\//, '')
-        myparams = get_key_val(event, 'queryStringParameters', {})
-    
+
+        data = event ? event : {}
+        
+        myparams = get_key_val(data, 'queryStringParameters', data)
+        puts "PARAMS #{myparams.to_json}"
+        path = get_key_val(myparams, 'path', 'na')
+        puts "PATH #{path}"
         query_factory = QueryFactory.new(client, @config['merritt_path'])
         query = query_factory.get_query_for_path(path, myparams)
-        json = query.run_sql.to_json
+        result = query.run_sql
     
         {
           headers: {
-            'Access-Control-Allow-Origin': '*',
-            'content-type':'application/json; charset=utf-8'
+            'Access-Control-Allow-Origin': '*'
           },
           statusCode: 200,
-          body: json
+          body: result
         }
       rescue => e
         {
           headers: {
-            'Access-Control-Allow-Origin': '*',
-            'content-type':'application/json; charset=utf-8'
+            'Access-Control-Allow-Origin': '*'
           },
           statusCode: 500,
           body: { error: e.message }.to_json

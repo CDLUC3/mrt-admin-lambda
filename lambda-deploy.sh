@@ -28,6 +28,9 @@ MERRITT_PATH=`get_ssm_value_by_name admintool/merritt-path`
 # fi
 docker build -t ${ECR_IMAGE_TAG} . || die "Image build failure"
 
+# To test: 
+#   docker run --rm -p 8090:8080 --name admintool -d ${ECR_IMAGE_TAG}
+
 aws ecr get-login-password --region us-west-2 | \
   docker login --username AWS \
     --password-stdin ${ECR_REGISTRY}
