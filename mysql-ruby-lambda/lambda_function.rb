@@ -13,7 +13,7 @@ module LambdaFunctions
         {
           headers: {
             'Access-Control-Allow-Origin': '*',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json; charset=utf-8'
           },
           statusCode: 200,
           body: json.to_json
@@ -22,7 +22,7 @@ module LambdaFunctions
         {
           headers: {
             'Access-Control-Allow-Origin': '*',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json; charset=utf-8'
           },
           statusCode: 500,
           body: { error: e.message }.to_json
