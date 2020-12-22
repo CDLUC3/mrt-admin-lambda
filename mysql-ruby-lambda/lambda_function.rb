@@ -6,21 +6,23 @@ module LambdaFunctions
   class Handler
     def self.process(event:,context:)
       begin
-        json = {message: 'This is a placeholder for your lambda code'}.to_json
-    
+        json = {
+          message: 'This is a placeholder for your lambda code',
+          event: event
+        }
         {
           headers: {
             'Access-Control-Allow-Origin': '*',
-            'content-type':'application/json; charset=utf-8'
+            'Content-Type': 'application/json'
           },
           statusCode: 200,
-          body: json
+          body: json.to_json
         }
       rescue => e
         {
           headers: {
             'Access-Control-Allow-Origin': '*',
-            'content-type':'application/json; charset=utf-8'
+            'Content-Type': 'application/json'
           },
           statusCode: 500,
           body: { error: e.message }.to_json
