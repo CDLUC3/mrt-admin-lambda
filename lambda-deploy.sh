@@ -44,7 +44,7 @@ aws lambda update-function-code \
   --output text --region us-west-2 \
   || die "Lambda Update failure"
 
-if [ $run_config == 'Y' ]
+if [ "$run_config" == 'Y' ]
 then
   aws lambda update-function-configuration \
     --function-name ${LAMBDA_ARN} \

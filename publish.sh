@@ -16,7 +16,7 @@ DATESTR=`date +%Y%m%d_%H%M%S`
 # Embed the api path into the javascript for ajax requests
 git checkout -- lambda.base.js
 git checkout -- index.html
-sed -i -e "s|/lambda|${APIGW_URL}|" api-table.js
+sed -i -e "s|/lambda|${APIGW_URL}|" lambda.base.js
 sed -i -e "s|lambda.base.js|lambda.base.js?${DATESTR}|" index.html
 sed -i -e "s|api-table.js|api-table.js?${DATESTR}|" index.html
 sed -i -e "s|api-table.css|api-table.css?${DATESTR}|" index.html
