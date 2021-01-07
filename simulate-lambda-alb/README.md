@@ -9,3 +9,14 @@ docker build -t cdluc3/simulate-lambda-alb .
 docker push cdluc3/simulate-lambda-alb
 ```
 
+## docker-compose file for testing
+
+[docker-compose.yml](../docker-compose.yml)
+
+```
+docker-compose up -d
+```
+
+Open the following URL to test.
+
+- [http://localhost:8091/web/index.html](http://localhost:8091/web/index.html)

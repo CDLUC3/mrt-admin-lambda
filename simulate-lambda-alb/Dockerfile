@@ -1,5 +1,11 @@
+#*********************************************************************
+#   Copyright 2021 Regents of the University of California
+#   All rights reserved
+#*********************************************************************
+
 # This image is intended to simulate an ALB fronting a Lambda
 # docker build -t cdluc3/simulate-lambda-alb .
+
 FROM ruby:2.7
 
 RUN gem install bundler

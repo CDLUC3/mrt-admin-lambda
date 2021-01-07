@@ -1,5 +1,10 @@
+#*********************************************************************
+#   Copyright 2021 Regents of the University of California
+#   All rights reserved
+#*********************************************************************
 # This image is based on an architecture that matches the Lambda Ruby runtime
 # docker build -t cdluc3/mysql-ruby-lambda .
+
 FROM public.ecr.aws/lambda/ruby:2.7
 
 # Install an os-specific MySQL installation.  

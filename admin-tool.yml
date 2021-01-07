@@ -5,7 +5,7 @@
 version: '3.7'
 services:
   lambda-container:
-    image: ${ECR_REGISTRY}uc3-mrt-admin-lambda:dev
+    image: cdluc3/uc3-mrt-admin-lambda:dev
     build:
       context: .
       dockerfile: Dockerfile

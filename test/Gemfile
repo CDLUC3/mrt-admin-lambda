@@ -1,8 +1,0 @@
-source "https://rubygems.org"
-gem 'json'
-gem 'sinatra'
-gem 'httpclient'
-
-#gem 'mysql2'
-#gem 'uc3-ssm', git: 'https://github.com/CDLUC3/uc3-ssm.git', branch: 'main'
-

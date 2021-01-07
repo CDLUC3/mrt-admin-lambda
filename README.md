@@ -1,75 +1,51 @@
 # Admin Lambda
 
+![Admin Tool Flow Chart](MerrittAdminTool/Slide1.jpeg)
+
 This code contains a generalized query tool for the Merritt team.
 
 This code will be deployed as an AWS Lambda that is accessible to staff from a static website deployed to S3.
 
-The Lambda deployment will pull database credentials from AWS SSM.  SSM Parameters will be explicitly granted to the Lambda.
+The Lambda deployment will pull database credentials from AWS SSM.  SSM Parameters will be explicitly granted to the Lambda.  The lambda will be packaged as a docker image built from [cdluce3/mysql-ruby-lambda](mysql-ruby-lambda).
 
-For testing purposes, a local copy of the code will be accessible using Sinatra.  Database credentials will be pulled from a config file.
+For testing purposes, another docker image will be run to simulate the ALB interface to the lambda.  See [cdluc3/simulate-lambda-alb](simulate-lambda-alb).  The files [docker-compose.yml](docker-compose.yml) and [admin-tool.yml](admin-tool.yml) will facilitate application testing.
 
 The Lambda code is deployed to the Ruby 2.7 environment.  A build process is required to prepare a deployment zip file for Lambda.
 
 ## Directories
+- mysql-ruby-lambda
+  - base image for the lambda code
+- simulate-lambda-alb
+  - docker image to facilitate localhost testing with docker-compose
 - src: Lambda source code
-- mysql-deps: build OS-specific mysql binaries used by mysql gems
-- test: Sinatra driver for desktop testing
 - web: static website code to be deployed to S3
 
 ## Deployment Preparation
 - This code relies on a set of SSM parameters to control the application.
 - https://github.com/CDLUC3/uc3-aws-cli contains the code for reading Merritt SSM parameters.
-  - ../admintool/lambda-arn - arn for the function
+- Lambda Image Push/Deploy variables
+  - ../admintool/lambda-arn-base - arn for the function
+  - ../admintool/merritt-path - Merritt system URL (for hyperlinks)
+  - ../admintool/ecr-registry - AWS ECR Registry name
+  - ../admintool/ecr-image - Name of image to be published to the registry
+- Static Website variables
   - ../admintool/api-path - api gateway path (or cloudfront path)
   - ../admintool/s3-bucket - Website S3 bucket
   - ../admintool/s3-path - Website path in S3
   - ../admintool/site-url - CloudFront website
 
-## Lambda Build Process
-![Build Flow Chart](MerrittAdminTool/Slide1.jpeg)
-
-### Configure Your GitHub Token
-
-In order to pull this artifact, you must create a GitHub access token
-with the following privileges. (Click settings on your GH user account.)
-- repo:status
-- public_repo
-- read:packages
-
-Save your token to a variable GH_TOKEN in your account
-
-```
-export GH_TOKEN=username:token
-```
-
-### UC3-SSM Gem
-The uc3-ssm gem is built by GitHub Actions.  
-
-The gem requires a GitHub token to pull the packaged gem.
-
-https://github.com/CDLUC3/uc3-ssm/packages
-
-### Build MySql dependencies for Lambda OS
-
-The following GitHub Action will build a zip file containing all Gem dependencies needed to run the application.
-
-- [GitHub Action Build](.github/workflows/build-deploy-zip.yml)
-
-This action generates a GitHub artifact named **deploy.zip**
-
-This GitHub action utilizes a Dockerfile that pre-builds dependencies for a Ruby Lambda with MySql.  See the [cdluc3/mysql-ruby-lambda Dockerfile](mysql-ruby-lambda/Dockerfile)
-
 ### Deploy the Lambda Code
 
-The following script should be run from a host that is authorized to deploy to Lambda.
+The following script should be run from a host that is authorized to 
+- push to ECR
+- deploy to Lambda.
 
+Deploy Script
 - [lambda-deploy.sh](lambda-deploy.sh)
 
-This will download the artifact dependencies from GitHub and re-embed source files into the zip file.
+This will build a docker image, push it to ECR, and update lambda to use the new image.
 
 This script requires SSM parameters to be configured.  Requires lambda update function permissions.
-
-Output: **deploy.zip**
 
 ## Static Website Publishing
 - A static website provides the user interface for these queries.
@@ -81,6 +57,11 @@ Output: **deploy.zip**
   - Cloud Front is also used to restrict access to the website
 
 ## Local Testing
-- A Sinatra web server can be started in lieu of Cloud Front / API Gateway / Lambda.
-- This web server is designed to mimic the pass through of request parameters to a Lambda function.  Request parameters are packaged into an event object.
-- Since the desktop environment may not have a local copy of SSM parameters, the code is configured to pull database credentials from an untracked configuration file `test/config/database.localcred.yml`
+
+```
+docker-compose -f docker-compose.yml -f admin-tool.yml up -d
+```
+
+Open the following URL to test.
+
+- [http://localhost:8091/web/index.html](http://localhost:8091/web/index.html)
