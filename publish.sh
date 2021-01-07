@@ -1,16 +1,28 @@
 #!/bin/bash
 # Depends on https://github.com/CDLUC3/uc3-aws-cli scripts
+
+DEPLOY_ENV=${1:-dev}
+
 EXIT_ON_DIE=true
+
 source ~/.profile.d/uc3-aws-util.sh
 
 # Check that the SSM_ROOT_PATH has been initialized
 check_ssm_root
 
+SSM_DEPLOY_PATH=${SSM_ROOT_PATH//dev/${DEPLOY_ENV}}
+
 cd web
 APIGW_URL=`get_ssm_value_by_name admintool/api-path`
+APIGW_URL=${APIGW_URL//dev/${DEPLOY_ENV}}
+
 S3WEB_BUCKET=`get_ssm_value_by_name admintool/s3-bucket`
+S3WEB_BUCKET=${S3WEB_BUCKET//dev/${DEPLOY_ENV}}
+
 S3WEB_PATH=`get_ssm_value_by_name admintool/s3-path`
 SITE_URL=`get_ssm_value_by_name admintool/site-url`
+SITE_URL=${SITE_URL//dev/${DEPLOY_ENV}}
+
 DATESTR=`date +%Y%m%d_%H%M%S`
 
 # Embed the api path into the javascript for ajax requests

@@ -1,12 +1,13 @@
 #!/bin/bash
 
+DEPLOY_ENV=${1:-dev}
+
 EXIT_ON_DIE=true
 source ~/.profile.d/uc3-aws-util.sh
 
 # Check that the SSM_ROOT_PATH has been initialized
 check_ssm_root
 
-DEPLOY_ENV=dev
 # Assume deploy runs from DEV
 # Set ENV based on deploy env
 SSM_DEPLOY_PATH=${SSM_ROOT_PATH//dev/${DEPLOY_ENV}}
