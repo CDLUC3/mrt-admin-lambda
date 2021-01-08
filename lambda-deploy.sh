@@ -2,6 +2,9 @@
 
 DEPLOY_ENV=${1:-dev}
 
+# Uncommend the following line when a config change is needed
+# run_config=Y
+
 EXIT_ON_DIE=true
 source ~/.profile.d/uc3-aws-util.sh
 
@@ -23,10 +26,13 @@ ECR_IMAGE_TAG=${ECR_REGISTRY}${ECR_IMAGE_NAME}:${DEPLOY_ENV}
 
 # Get the URL for links to Merritt
 MERRITT_PATH=`get_ssm_value_by_name admintool/merritt-path`
-# if [ $DEPLOY_ENV == '...' ]
-# then
-#  MERRITT_PATH=
-# fi
+if [ $DEPLOY_ENV == 'stg' ]
+then
+  MERRITT_PATH=http://merritt-stage.cdlib.org
+elif [ $DEPLOY_ENV == 'prd' ]
+then
+  MERRITT_PATH=http://merritt.cdlib.org
+fi
 docker build -t ${ECR_IMAGE_TAG} . || die "Image build failure"
 
 # To test: 
@@ -47,12 +53,14 @@ aws lambda update-function-code \
 
 if [ "$run_config" == 'Y' ]
 then
+  echo " -- pause 60 sec then update function config"
+  sleep 60
+
   aws lambda update-function-configuration \
     --function-name ${LAMBDA_ARN} \
     --region us-west-2 \
     --output text \
     --timeout 60 \
     --memory-size 128 \
-    --environment "Variables={SSM_ROOT_PATH=${SSM_DEPLOY_PATH},MERRITT_PATH=${MERRITT_PATH}}" \
-    || die "Lambda Config Update failure"
+    --environment "Variables={SSM_ROOT_PATH=${SSM_DEPLOY_PATH},MERRITT_PATH=${MERRITT_PATH}}" 
 fi
