@@ -47,6 +47,9 @@ This will build a docker image, push it to ECR, and update lambda to use the new
 
 This script requires SSM parameters to be configured.  Requires lambda update function permissions.
 
+This script **requires aws cli V2** in order to deploy a docker image to lambda.  
+- The host running this script needs to be able to push to ECR and to update a lambda.
+
 ## Static Website Publishing
 - A static website provides the user interface for these queries.
 - On page load, URL parameters are read to determine the query to run
