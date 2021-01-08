@@ -25,6 +25,8 @@ class QueryFactory
       OwnerQuery.new(self, path, myparams)
     elsif path == 'collections'
       CollectionQuery.new(self, path, myparams)
+    elsif path == 'martin'
+      MimeQuery.new(self, path, myparams)
     elsif path == 'mimes'
       MimeQuery.new(self, path, myparams)
     elsif path == 'collnodes'

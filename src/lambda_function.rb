@@ -35,34 +35,42 @@ def get_mysql
     :port => db_port)
 end
 
-def lambda_handler(event:, context:)
-  begin
-    config_path = ENV.key?('MERRITT_ADMIN_CONFIG') ? ENV['MERRITT_ADMIN_CONFIG'] : 'config/database.ssm.yml'
-    @config = Uc3Ssm::ConfigResolver.new.resolve_file_values(file: config_path, resolve_key: 'default', return_key: 'default')
-    client = get_mysql
-    path = get_key_val(event, 'path').gsub(/^\//, '')
-    myparams = get_key_val(event, 'queryStringParameters', {})
+module LambdaFunctions
+  class Handler
+    def self.process(event:,context:)
+      begin
+        config_file = 'config/database.ssm.yml'
+        config_file = "../src/#{config_file}" unless File.file?(config_file)
+        config_block = ENV.key?('MERRITT_ADMIN_CONFIG') ? ENV['MERRITT_ADMIN_CONFIG'] : 'default'
+        @config = Uc3Ssm::ConfigResolver.new.resolve_file_values(file: config_file, resolve_key: config_block, return_key: config_block)
+        client = get_mysql
 
-    query_factory = QueryFactory.new(client, @config['merritt_path'])
-    query = query_factory.get_query_for_path(path, myparams)
-    json = query.run_sql.to_json
-
-    {
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'content-type':'application/json; charset=utf-8'
-      },
-      statusCode: 200,
-      body: json
-    }
-  rescue => e
-    {
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'content-type':'application/json; charset=utf-8'
-      },
-      statusCode: 500,
-      body: { error: e.message }.to_json
-    }
+        data = event ? event : {}
+        
+        myparams = get_key_val(data, 'queryStringParameters', data)
+        path = get_key_val(myparams, 'path', 'na')
+        query_factory = QueryFactory.new(client, @config['merritt_path'])
+        query = query_factory.get_query_for_path(path, myparams)
+        result = query.run_sql
+     
+        {
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Content-Type': 'application/json; charset=utf-8'
+          },
+          statusCode: 200,
+          body: result.to_json
+        }
+      rescue => e
+        {
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Content-Type': 'application/json; charset=utf-8'
+          },
+          statusCode: 500,
+          body: { error: e.message }.to_json
+        }
+      end
+    end
   end
 end

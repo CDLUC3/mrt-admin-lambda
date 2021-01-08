@@ -1,4 +1,3 @@
-var lambda_base = "http://localhost:4567"
 var iterativeParams = [];
 var urlbase = "";
 var pageparams = {};

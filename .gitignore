@@ -15,5 +15,5 @@ src/config/database.localcred.yml
 test/config/database.localcred.yml
 mysql-deps/mysql-dependencies.zip
 ~$MerrittAdminTool.pptx
-inventory/inventory.json
-src/inventory/inventory.json
+mysql-ruby-lambda/.bundle/
+mysql-ruby-lambda/vendor/
