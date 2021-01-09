@@ -33,7 +33,7 @@ elif [ $DEPLOY_ENV == 'prd' ]
 then
   MERRITT_PATH=http://merritt.cdlib.org
 fi
-docker build -t ${ECR_IMAGE_TAG} . || die "Image build failure"
+docker build -t ${ECR_IMAGE_TAG} src-admintool || die "Image build failure"
 
 # To test: 
 #   docker run --rm -p 8090:8080 --name admintool -d ${ECR_IMAGE_TAG}

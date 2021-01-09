@@ -7,7 +7,7 @@ services:
   lambda-container:
     image: cdluc3/uc3-mrt-admin-lambda:dev
     build:
-      context: .
+      context: src-admintool
       dockerfile: Dockerfile
     environment:
       SSM_ROOT_PATH: /uc3/mrt/dev/
