@@ -18,7 +18,12 @@ class AdminAction
 
   def get_profiles
     data = []
-    Dir['/profiles/*'].each {|file| data.push([file.to_s, 1]) }
+    Dir['/profiles/*'].each do |file|
+      row = []
+      row.push(file.to_s)
+      row.push('x') 
+      data.push(row) 
+    end
     data
   end
 
@@ -27,7 +32,7 @@ class AdminAction
     {
       title: get_title,
       headers: ['name','h2'],
-      types: ['data','data'],
+      types: ['',''],
       data: get_profiles,
       filter_col: nil,
       group_col: nil,
