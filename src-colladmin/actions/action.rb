@@ -16,12 +16,19 @@ class AdminAction
     "Collection Admin Query"
   end
 
+  def get_profiles
+    data = []
+    Dir['/profiles/*'].each {|file| data.push([file.to_s, 1]) }
+    data
+  end
+
+
   def format_result_json
     {
       title: get_title,
-      headers: ['h1','h2'],
+      headers: ['name','h2'],
       types: ['data','data'],
-      data: [[1,2]],
+      data: get_profiles,
       filter_col: nil,
       group_col: nil,
       show_grand_total: false,
