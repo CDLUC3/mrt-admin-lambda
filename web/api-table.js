@@ -64,18 +64,7 @@ function showUrl(url) {
     url: url,
     data: pageparams,
     success: function(data) {
-      $("h1").text(data.title);
-      createTable(
-        data.headers,
-        data.types,
-        data.data,
-        data.filter_col,
-        data.group_col,
-        data.show_grand_total,
-        data.merritt_path,
-        data.alternative_queries,
-        data.iterate
-      )
+      processResult(data);
     },
     error: function( xhr, status ) {
       alert("An error has occurred.  Possibly a timeout.\n"+xhr.responseText)
@@ -83,6 +72,25 @@ function showUrl(url) {
     }
   });
 }
+
+function processResult(data) {
+  $("h1").text(data.title);
+
+  if (data.headers && data.types && data.data){
+    createTable(
+      data.headers,
+      data.types,
+      data.data,
+      data.filter_col,
+      data.group_col,
+      data.show_grand_total,
+      data.merritt_path,
+      data.alternative_queries,
+      data.iterate
+    )
+   }
+}
+
 
 function query_iterate(){
   if (iterativeParams.length == 0) {
