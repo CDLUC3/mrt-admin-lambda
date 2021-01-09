@@ -19,11 +19,29 @@ class AdminAction
   def get_profiles
     data = []
     Dir['/profiles/*'].each do |file|
+      fname = file.split('/').last
+      next if fname == 'TEMPLATE-PROFILE'
+      next unless File.file?(file)
+      next unless File.readable?(file)
+      prop  = {}
+      File.open(file, "r").each_line do |line|
+        next if line.match(/^#/)
+        m = line.match(/^([^:\s]+)\s*:\s*(.*)$/)
+        if (m)
+          prop[m[1]] = m[2]
+        end
+      end
       row = []
-      row.push(file.to_s)
-      row.push('x') 
+      # puts prop
+      profile = prop.fetch('ProfileID', 'na')
+      next if profile == 'na'
+      row.push(fname)
+      row.push(profile)
+      row.push(prop.fetch('ProfileDescription', 'na')) 
+      #puts row
       data.push(row) 
     end
+    puts data
     data
   end
 
@@ -31,8 +49,8 @@ class AdminAction
   def format_result_json
     {
       title: get_title,
-      headers: ['name','h2'],
-      types: ['',''],
+      headers: ['file', 'profile', 'name'],
+      types: ['','', ''],
       data: get_profiles,
       filter_col: nil,
       group_col: nil,
