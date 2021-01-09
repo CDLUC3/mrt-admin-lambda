@@ -9,7 +9,7 @@
 FROM cdluc3/mysql-ruby-lambda 
 
 # Add Admin Tool Code to the image
-COPY src/ /var/task/
+COPY . /var/task/
 
 # Bundle dependencies
 RUN bundle install 
