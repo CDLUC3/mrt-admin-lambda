@@ -17,3 +17,5 @@ mysql-deps/mysql-dependencies.zip
 ~$MerrittAdminTool.pptx
 inventory/inventory.json
 src/inventory/inventory.json
+mysql-ruby-lambda/vendor
+mysql-ruby-lambda/bundle
