@@ -262,6 +262,9 @@ function appendTable(headers, types, data, filter_col, group_col, show_grand_tot
     if (tr.find("td.hasdata,th.hasdata").length == 0) {
       tr.addClass("nodata");
     }
+    if (tr.find("td.flag,th.flag").length == 0) {
+      tr.addClass("noflag");
+    }
   }
 
   if (show_grand_total) {
@@ -353,10 +356,18 @@ function format(cell, v, type, merritt_path) {
   } else if (type == 'ark'){
     makeLink(cell, v, merritt_path + "/m/" + encodeURIComponent(v));
     cell.addClass("hasdata");
+  } else if (type == 'alert'){
+    if (v.match(/!$/)) {
+      cell.addClass("flag");
+      v = v.replace(/!$/, '');
+    }
+    cell.text(v);
+  } else if (type == 'profile'){
+    makeLink(cell, v, "index.html?path=collections_by_mime_group&profile="+v);
   } else if (type == 'list' && v != ''){
     var ul = makeUl(cell);
     $.each(v.split(","), function(i,txt){
-      makeLi(ul, v);
+      makeLi(ul, txt);
     });
     cell.addClass("hasdata");
   } else if (type == 'list-doc' && v != ''){

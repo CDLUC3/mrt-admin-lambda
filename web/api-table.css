@@ -48,6 +48,18 @@ table.results td.datetime {
   width: 150px !important;
 }
 
+table.results th.alert,
+table.results td.alert {
+  width: 300px !important;
+}
+
+table.results th.profile,
+table.results td.profile {
+  width: 200px !important;
+}
+
+table.results th.list,
+table.results td.list,
 table.results th.list-doc,
 table.results td.list-doc,
 table.results th.list-host,
@@ -88,6 +100,11 @@ table.results tr.header th,
 table.results tr.header td {
   background-color: yellow;
 }
+
+table.results tr td.flag {
+  color: red;
+}
+
 
 p.buttons {
   display: none;

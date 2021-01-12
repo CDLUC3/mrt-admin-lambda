@@ -1,4 +1,8 @@
 require 'cgi'
+require_relative 'profile'
+require_relative 'all_profiles'
+require_relative 'compare_profiles'
+
 class AdminAction
   def initialize(client, merritt_path, path, myparams)
     @client = client
@@ -6,6 +10,7 @@ class AdminAction
     @path = path
     @myparams = myparams
     @format = 'report'
+    @template = IngestProfile.new('/profiles/TEMPLATE-PROFILE')
   end
 
   def get_param(key, defval)
@@ -16,49 +21,30 @@ class AdminAction
     "Collection Admin Query"
   end
 
-  def get_profiles
-    data = []
-    Dir['/profiles/*'].each do |file|
-      fname = file.split('/').last
-      next if fname == 'TEMPLATE-PROFILE'
-      next unless File.file?(file)
-      next unless File.readable?(file)
-      prop  = {}
-      File.open(file, "r").each_line do |line|
-        next if line.match(/^#/)
-        m = line.match(/^([^:\s]+)\s*:\s*(.*)$/)
-        if (m)
-          prop[m[1]] = m[2]
-        end
-      end
-      row = []
-      # puts prop
-      profile = prop.fetch('ProfileID', 'na')
-      next if profile == 'na'
-      row.push(fname)
-      row.push(profile)
-      row.push(prop.fetch('ProfileDescription', 'na')) 
-      #puts row
-      data.push(row) 
+  def get_data
+    profile_param =  @myparams.fetch('profile', '')
+    if (profile_param == '')
+      get_profiles
+    else
+      profile = IngestProfile.new("/profiles/#{profile_param}", @template)
+      compare_profiles(profile)
     end
-    puts data
-    data
   end
 
+  def get_profiles
+    allprofiles = AllProfiles.new(@merritt_path)
+    Dir['/profiles/*'].each do |file|
+      next unless IngestProfile.profile?(file)
+      profile = IngestProfile.new(file, @template)
+      next unless profile.valid?
+      allprofiles.add_profile(profile)
+    end
+    allprofiles.format_result_json
+  end
 
-  def format_result_json
-    {
-      title: get_title,
-      headers: ['file', 'profile', 'name'],
-      types: ['','', ''],
-      data: get_profiles,
-      filter_col: nil,
-      group_col: nil,
-      show_grand_total: false,
-      merritt_path: @merritt_path,
-      alternative_queries: [],
-      iterate: false
-    }
+  def compare_profiles(profile)
+    cprof = CompareProfiles.new(@merritt_path, @template, profile)
+    cprof.format_result_json
   end
 
 end

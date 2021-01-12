@@ -51,7 +51,7 @@ module LambdaFunctions
         path = get_key_val(myparams, 'path', 'na')
         action = AdminAction.new(client, @config['merritt_path'], path, myparams)
 
-        result = action.format_result_json
+        result = action.get_data
      
         {
           headers: {
