@@ -1,0 +1,10 @@
+#*********************************************************************
+#   Copyright 2020 Regents of the University of California
+#   All rights reserved
+#*********************************************************************
+version: '3.7'
+services:
+  lambda-container:
+    environment:
+      MERRITT_ADMIN_CONFIG: development
+      USE_MYSQL: N
