@@ -44,7 +44,6 @@ module LambdaFunctions
         config_block = ENV.key?('MERRITT_ADMIN_CONFIG') ? ENV['MERRITT_ADMIN_CONFIG'] : 'default'
         @config = Uc3Ssm::ConfigResolver.new.resolve_file_values(file: config_file, resolve_key: config_block, return_key: config_block)
         #client = get_mysql
-        client = nil
 
         data = event ? event : {}
         
