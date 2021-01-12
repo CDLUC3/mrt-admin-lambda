@@ -42,7 +42,12 @@ module LambdaFunctions
         config_file = 'config/database.ssm.yml'
         config_file = "../src/#{config_file}" unless File.file?(config_file)
         config_block = ENV.key?('MERRITT_ADMIN_CONFIG') ? ENV['MERRITT_ADMIN_CONFIG'] : 'default'
-        @config = Uc3Ssm::ConfigResolver.new.resolve_file_values(file: config_file, resolve_key: config_block, return_key: config_block)
+        @config = Uc3Ssm::ConfigResolver.new({
+          def_value: 'N/A' 
+        }).resolve_file_values({
+          file: config_file, 
+          return_key: config_block
+        })
         client = get_mysql unless ENV.fetch('USE_MYSQL', '') == 'N'
 
         data = event ? event : {}
