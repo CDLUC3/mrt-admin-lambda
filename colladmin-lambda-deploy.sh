@@ -16,12 +16,12 @@ check_ssm_root
 SSM_DEPLOY_PATH=${SSM_ROOT_PATH//dev/${DEPLOY_ENV}}
 
 # Get the ARN for the lambda to publish
-LAMBDA_ARN_BASE=`get_ssm_value_by_name admintool/lambda-arn-base`
+LAMBDA_ARN_BASE=`get_ssm_value_by_name colladmin/lambda-arn-base`
 LAMBDA_ARN=${LAMBDA_ARN_BASE}-${DEPLOY_ENV}
 
 # Get the ECR image to publish
 ECR_REGISTRY=`get_ssm_value_by_name admintool/ecr-registry`
-ECR_IMAGE_NAME=`get_ssm_value_by_name admintool/ecr-image`
+ECR_IMAGE_NAME=`get_ssm_value_by_name colladmin/ecr-image`
 ECR_IMAGE_TAG=${ECR_REGISTRY}${ECR_IMAGE_NAME}:${DEPLOY_ENV}
 
 # Get the URL for links to Merritt

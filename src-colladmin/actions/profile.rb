@@ -11,6 +11,13 @@ class IngestProfile
     true
   end
 
+  def self.s3_profile?(path)
+    puts path
+    return false if IngestProfile.get_fname(path) == 'TEMPLATE-PROFILE'
+    return false if path.include?('/')
+    true
+  end
+
   def self.get_single_labels
     [
       'Identifier-scheme',
@@ -39,11 +46,19 @@ class IngestProfile
     ]
   end
 
-  def initialize(path, template = nil)
+  def self.create_from_file(path, template = nil)
+    IngestProfile.new(path, File.open(path, "r"), template)
+  end
+
+  def self.create_from_stream(path, stream, template = nil)
+    IngestProfile.new(path, stream, template)
+  end
+
+  def initialize(path, stream, template = nil)
     @template = template
     @fname = IngestProfile.get_fname(path)
     @prop  = {}
-    File.open(path, "r").each_line do |line|
+    stream.each_line do |line|
       next if line.match(/^#/)
       m = line.match(/^([^:\s]+)\s*:\s*(.*)$/)
       if (m)
