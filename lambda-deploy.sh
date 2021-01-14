@@ -51,6 +51,7 @@ aws lambda update-function-code \
   --function-name ${LAMBDA_ARN} \
   --image-uri ${ECR_IMAGE_TAG} \
   --output text --region us-west-2 \
+  --no-cli-pager \
   || die "Lambda Update failure"
 
 if [ "$run_config" == 'Y' ]
@@ -64,5 +65,6 @@ then
     --output text \
     --timeout 60 \
     --memory-size 128 \
+    --no-cli-pager \
     --environment "Variables={SSM_ROOT_PATH=${SSM_DEPLOY_PATH},MERRITT_PATH=${MERRITT_PATH}}" 
 fi
