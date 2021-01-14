@@ -1,0 +1,19 @@
+## Tasks
+- [ ] Display profile list
+- [ ] Compare profile to template
+- [ ] Compare profile to database copy of fields
+- [ ] Modify database fields (collection name, node?, oai settings)
+  - or force these values to stay in sync with the profile code
+- [ ] Refactor profiles to leverage re-use
+- [ ] View submission queue
+- [ ] Pause/unpause submission queue
+- [ ] Restart a submission
+- [ ] Construct a new profile/ownership object
+- [ ] Submit a new profile/ownership object
+- [ ] Create ezid identifiers needed for new collection/object
+- [ ] Validate data in ezid
+- [ ] Update attributes in ezid ? (if ever needed)
+- [ ] Create LDAP entries needed for new owners and profiles
+- [ ] Verify LDAP entries linked to profiles
+- [ ] Query/report on LDAP
+- [ ] Update LDAP
