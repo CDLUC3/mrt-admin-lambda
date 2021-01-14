@@ -12,7 +12,6 @@ class IngestProfile
   end
 
   def self.s3_profile?(path)
-    puts path
     return false if IngestProfile.get_fname(path) == 'TEMPLATE-PROFILE'
     return false if path.include?('/')
     true
