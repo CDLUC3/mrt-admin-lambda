@@ -6,6 +6,7 @@
   - or force these values to stay in sync with the profile code
 - [ ] Refactor profiles to leverage re-use
 - [ ] View submission queue
+  - Enumerate failed submissions
 - [ ] Pause/unpause submission queue
 - [ ] Restart a submission
 - [ ] Construct a new profile/ownership object
