@@ -6,9 +6,12 @@ require_relative 'all_profiles'
 require_relative 'compare_profiles'
 
 class AdminAction
-  def initialize(client, merritt_path, path, myparams)
+  def initialize(client, config, path, myparams)
+    @config = config
     @client = client
-    @merritt_path = merritt_path
+    @merritt_path = config.fetch('merritt_path','na')
+    @bucket = config.fetch('bucket','na')
+    @profiles = config.fetch('profiles','na')
     @path = path
     @myparams = myparams
     @format = 'report'
@@ -32,8 +35,8 @@ class AdminAction
 
   def get_s3zip_profiles
     s3 = Aws::S3::Client.new({region: 'us-west-2'})
-    bucket = "uc3-s3-dev"
-    key = "mrt/colladmin/profiles.zip"
+    bucket = @bucket
+    key = @profiles
     resp = s3.get_object({bucket: bucket, key: key})
     resp.body
   end

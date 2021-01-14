@@ -54,7 +54,7 @@ module LambdaFunctions
         
         myparams = get_key_val(data, 'queryStringParameters', data)
         path = get_key_val(myparams, 'path', 'na')
-        action = AdminAction.new(client, @config['merritt_path'], path, myparams)
+        action = AdminAction.new(client, @config, path, myparams)
 
         result = action.get_data
      

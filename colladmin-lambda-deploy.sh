@@ -33,7 +33,7 @@ elif [ $DEPLOY_ENV == 'prd' ]
 then
   MERRITT_PATH=http://merritt.cdlib.org
 fi
-docker build -t ${ECR_IMAGE_TAG} src-admintool || die "Image build failure"
+docker build -t ${ECR_IMAGE_TAG} src-colladmin || die "Image build failure"
 
 # To test: 
 #   docker run --rm -p 8090:8080 --name admintool -d ${ECR_IMAGE_TAG}
@@ -59,6 +59,9 @@ then
   echo " -- pause 60 sec then update function config"
   sleep 60
 
+  S3WEB_BUCKET=`get_ssm_value_by_name admintool/s3-bucket`
+  S3WEB_BUCKET=${S3WEB_BUCKET//dev/${DEPLOY_ENV}}
+
   aws lambda update-function-configuration \
     --function-name ${LAMBDA_ARN} \
     --region us-west-2 \
@@ -66,5 +69,5 @@ then
     --timeout 60 \
     --memory-size 128 \
     --no-cli-pager \
-    --environment "Variables={SSM_ROOT_PATH=${SSM_DEPLOY_PATH},MERRITT_PATH=${MERRITT_PATH}}" 
+    --environment "Variables={SSM_ROOT_PATH=${SSM_DEPLOY_PATH},MERRITT_PATH=${MERRITT_PATH},BUCKET=${S3WEB_BUCKET}}" 
 fi
