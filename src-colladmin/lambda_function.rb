@@ -2,6 +2,8 @@ require 'json'
 require 'yaml'
 require 'uc3-ssm'
 require 'mysql2'
+require 'httpclient'
+
 
 require_relative 'actions/action'
 
@@ -35,28 +37,42 @@ def get_mysql
     :port => db_port)
 end
 
+def get_config
+  config_file = 'config/database.ssm.yml'
+  config_file = "../src/#{config_file}" unless File.file?(config_file)
+  config_block = ENV.key?('MERRITT_ADMIN_CONFIG') ? ENV['MERRITT_ADMIN_CONFIG'] : 'default'
+  Uc3Ssm::ConfigResolver.new({
+    def_value: 'N/A' 
+  }).resolve_file_values({
+    file: config_file, 
+    return_key: config_block
+  })
+end
+
+
 module LambdaFunctions
   class Handler
     def self.process(event:,context:)
       begin
-        config_file = 'config/database.ssm.yml'
-        config_file = "../src/#{config_file}" unless File.file?(config_file)
-        config_block = ENV.key?('MERRITT_ADMIN_CONFIG') ? ENV['MERRITT_ADMIN_CONFIG'] : 'default'
-        @config = Uc3Ssm::ConfigResolver.new({
-          def_value: 'N/A' 
-        }).resolve_file_values({
-          file: config_file, 
-          return_key: config_block
-        })
+        @config = get_config
         client = get_mysql unless ENV.fetch('USE_MYSQL', '') == 'N'
 
         data = event ? event : {}
         
         myparams = get_key_val(data, 'queryStringParameters', data)
         path = get_key_val(myparams, 'path', 'na')
-        action = AdminAction.new(client, @config, path, myparams)
+        result = {message: "Path undefined"}
 
-        result = action.get_data
+        if path == "profiles"
+          action = AdminAction.new(client, @config, path, myparams)
+          result = action.get_data
+        elsif path == "state"
+          cli = HTTPClient.new
+          url = "http://merritt-stage.cdlib.org:33121/ingest/state"
+          resp = cli.get(url, event)
+          body = JSON.parse(resp.body)
+          result = {message: body.to_s}
+        end
      
         {
           headers: {
