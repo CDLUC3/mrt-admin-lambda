@@ -8,7 +8,7 @@ This code will be deployed as an AWS Lambda that is accessible to staff from a s
 
 The Lambda deployment will pull database credentials from AWS SSM.  SSM Parameters will be explicitly granted to the Lambda.  The lambda will be packaged as a docker image built from [cdluce3/mysql-ruby-lambda](mysql-ruby-lambda).
 
-For testing purposes, another docker image will be run to simulate the ALB interface to the lambda.  See [cdluc3/simulate-lambda-alb](simulate-lambda-alb).  The files [docker-compose.yml](docker-compose.yml) and [admin-tool.yml](admin-tool.yml) will facilitate application testing.
+For testing purposes, another docker image will be run to simulate the ALB interface to the lambda.  See [cdluc3/simulate-lambda-alb](simulate-lambda-alb).  The files [docker-compose.yml](docker-compose.yml) and [admintool.yml](admintool.yml) will facilitate application testing.
 
 The Lambda code is deployed to the Ruby 2.7 environment.  A build process is required to prepare a deployment zip file for Lambda.
 
@@ -62,7 +62,7 @@ This script **requires aws cli V2** in order to deploy a docker image to lambda.
 ## Local Testing
 
 ```
-docker-compose -f docker-compose.yml -f admin-tool.yml up -d
+docker-compose -f docker-compose.yml -f admintool.yml up -d
 ```
 
 Open the following URL to test.

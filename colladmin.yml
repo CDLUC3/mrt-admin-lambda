@@ -1,0 +1,19 @@
+#*********************************************************************
+#   Copyright 2020 Regents of the University of California
+#   All rights reserved
+#*********************************************************************
+version: '3.7'
+services:
+  lambda-container:
+    image: cdluc3/uc3-mrt-colladmin-lambda:dev
+    build:
+      context: src-colladmin
+      dockerfile: Dockerfile
+    environment:
+      SSM_ROOT_PATH: /uc3/mrt/dev/
+      BUCKET: uc3-s3-dev
+    volumes:
+    - "../mrt-ingest-profile:/profiles"
+  alb-simulate:
+    volumes:
+    - "./web/:/web/"

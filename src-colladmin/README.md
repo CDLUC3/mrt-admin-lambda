@@ -1,0 +1,60 @@
+## Tasks
+- [ ] Display profile list
+  - GET /profiles
+  - TODO: include database values
+- [ ] Compare profile to template
+  - GET /compare-profile
+    - profile-id
+  - TODO: include database values
+- [ ] Check profile currentness (in s3)
+  - GET /profile-refresh
+- [ ] Refresh profiles from git
+  - POST /profile-refresh
+  - TODO: or determine if this will only be done via a PUSH from github actions
+- [ ] Modify database fields (collection name, node?, oai settings)
+  - POST /profile-database/[profile-id]
+    - name
+    - (other attrs)
+  - TODO: or force these values to stay in sync with the profile code
+- [ ] Refactor profiles to leverage re-use
+- [ ] View submission queue
+  - GET /queues
+  - GET /queue
+    - queue-name
+  - GET /submissions 
+    - submission-id (batch/job/both?)
+  - Enumerate failed submissions
+- [ ] Pause/unpause submission queue
+  - GET /queue-state
+    - status (HOLD|RELEASE)
+- [ ] Restart a submission
+  - POST /submission-restart/[submission-id]
+- [ ] Construct a new profile/ownership object
+  - TODO: separate webpage
+  - QUESTION: post to git or just construct a file and assume the user will check into git
+- [ ] Submit a new profile/ownership object
+  - POST /submit-profile
+    - profile
+    - ownership
+    - other types of objects?
+- [ ] Create ezid identifiers needed for new collection/object
+  - POST /mint-id
+    - params?
+- [ ] Validate data in ezid
+  - GET /identifier
+    - id
+- [ ] Update attributes in ezid ? (if ever needed)
+  - POST /identifier/[id]
+    - attr?
+- [ ] Create LDAP entries needed for new owners and profiles
+  - POST /ldap-user?
+  - POST /ldap-role?
+- [ ] Verify LDAP entries linked to profiles
+  - GET /ldap-user/[id]
+  - GET /ldap-role/[id]
+- [ ] Query/report on LDAP
+  - /ldap-users/
+  - /ldap-roles/
+- [ ] Update LDAP
+  - POST /ldap-user/[id]
+  - POST /ldap-role/[id]

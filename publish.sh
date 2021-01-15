@@ -13,8 +13,11 @@ check_ssm_root
 SSM_DEPLOY_PATH=${SSM_ROOT_PATH//dev/${DEPLOY_ENV}}
 
 cd web
-APIGW_URL=`get_ssm_value_by_name admintool/api-path`
-APIGW_URL=${APIGW_URL//dev/${DEPLOY_ENV}}
+ADMIN_ALB_URL=`get_ssm_value_by_name admintool/api-path`
+ADMIN_ALB_URL=${ADMIN_ALB_URL//dev/${DEPLOY_ENV}}
+
+COLLADMIN_ALB_URL=`get_ssm_value_by_name colladmin/api-path`
+COLLADMIN_ALB_URL=${COLLADMIN_ALB_URL//dev/${DEPLOY_ENV}}
 
 S3WEB_BUCKET=`get_ssm_value_by_name admintool/s3-bucket`
 S3WEB_BUCKET=${S3WEB_BUCKET//dev/${DEPLOY_ENV}}
@@ -27,8 +30,10 @@ DATESTR=`date +%Y%m%d_%H%M%S`
 
 # Embed the api path into the javascript for ajax requests
 git checkout -- lambda.base.js
+git checkout -- coll-lambda.base.js
 git checkout -- index.html
-sed -i -e "s|/lambda|${APIGW_URL}|" lambda.base.js
+sed -i -e "s|/lambda|${ADMIN_ALB_URL}|" lambda.base.js
+sed -i -e "s|/lambda|${COLLADMIN_ALB_URL}|" coll-lambda.base.js
 sed -i -e "s|lambda.base.js|lambda.base.js?${DATESTR}|" index.html
 sed -i -e "s|api-table.js|api-table.js?${DATESTR}|" index.html
 sed -i -e "s|api-table.css|api-table.css?${DATESTR}|" index.html
@@ -39,6 +44,7 @@ do
   aws s3 cp $file s3://${S3WEB_BUCKET}${S3WEB_PATH}
 done
 
+git checkout -- coll-lambda.base.js
 git checkout -- lambda.base.js
 git checkout -- index.html
 
