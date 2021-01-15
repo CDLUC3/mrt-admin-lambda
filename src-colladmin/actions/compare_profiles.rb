@@ -74,7 +74,7 @@ class CompareProfiles
       alternative_queries: [
         {
           label: 'All profiles', 
-          url: '/web/collindex.html?path=profiles'
+          url: 'path=profiles'
         }
       ],
       iterate: false
