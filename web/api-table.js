@@ -88,7 +88,9 @@ function processResult(data) {
       data.alternative_queries,
       data.iterate
     )
-   }
+  } else if (data.message) {
+    alert(data.message)
+  }
 }
 
 

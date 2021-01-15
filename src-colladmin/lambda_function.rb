@@ -4,7 +4,6 @@ require 'uc3-ssm'
 require 'mysql2'
 require 'httpclient'
 
-
 require_relative 'actions/action'
 
 def get_key_val(obj, key, defval='')
@@ -13,7 +12,6 @@ def get_key_val(obj, key, defval='')
   return obj[key.to_sym] if obj[key.to_sym]
   defval
 end
-
 
 def get_mysql
   raise Exception.new "The configuration yaml must contain config['dbconf']" unless @config['dbconf']
@@ -49,12 +47,12 @@ def get_config
   })
 end
 
-
 module LambdaFunctions
   class Handler
     def self.process(event:,context:)
       begin
         @config = get_config
+
         client = get_mysql unless ENV.fetch('USE_MYSQL', '') == 'N'
 
         data = event ? event : {}

@@ -55,7 +55,7 @@ class AdminAction
       Zip::InputStream.open(get_s3zip_profiles) do |io|
         while (entry = io.get_next_entry)
           next unless IngestProfile.s3_profile?(entry.name)
-          profile = IngestProfile.create_from_stream(entry.name, io.read, @template)
+          profile = IngestProfile.create_from_stream(entry.name, io.read.force_encoding("UTF-8"), @template)
           next unless profile.valid?
           allprofiles.add_profile(profile)
         end

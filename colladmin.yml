@@ -5,7 +5,7 @@
 version: '3.7'
 services:
   lambda-container:
-    image: cdluc3/uc3-mrt-colladmin-lambda:dev
+    image: cdluc3/uc3-mrt-colladmin-lambda
     build:
       context: src-colladmin
       dockerfile: Dockerfile
