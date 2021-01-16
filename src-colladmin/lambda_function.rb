@@ -47,6 +47,7 @@ def get_config
   })
 end
 
+
 module LambdaFunctions
   class Handler
     def self.process(event:,context:)
@@ -64,12 +65,11 @@ module LambdaFunctions
         if path == "profiles"
           action = AdminAction.new(client, @config, path, myparams)
           result = action.get_data
-        elsif path == "state"
+        elsif path == "state" && get_ingest_server != ''
           cli = HTTPClient.new
-          url = "http://merritt-stage.cdlib.org:33121/ingest/state"
-          resp = cli.get(url, event)
-          body = JSON.parse(resp.body)
-          result = {message: body.to_s}
+          url = "#{get_ingest_server}state"
+          resp = cli.get(url, event, {"Accept": "application/json"})
+          result = {message: "Status #{resp.status}; URL: #{url}"}
         end
      
         {
@@ -90,6 +90,13 @@ module LambdaFunctions
           body: { error: e.message }.to_json
         }
       end
+
     end
+
+    def self.get_ingest_server
+      @config.fetch('ingest-services', '').split(',').first
+    end
+  
   end
+
 end

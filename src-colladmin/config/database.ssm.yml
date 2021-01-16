@@ -8,8 +8,9 @@ default:
     username: "{!SSM: billing/readonly/db-user}"
     password: "{!SSM: billing/readonly/db-password}"
   merritt_path: "{!ENV: MERRITT_PATH !DEFAULT: https://merritt.cdlib.org}"
-  bucket: "{!ENV: BUCKET}"
+  bucket: "{!SSM: colladmin/profile-bucket}"
   profiles: "mrt/colladmin/profiles.zip"
+  ingest-services: "{!SSM: colladmin/ingest-services}"
 
 # use personal credentials when configuring a local environment
 # set up a script to set these variables
@@ -25,3 +26,4 @@ development:
   merritt_path: "{!ENV: MERRITT_PATH !DEFAULT: https://merritt.cdlib.org}"
   bucket: "{!ENV: BUCKET}"
   profiles: "mrt/colladmin/profiles.zip"
+  ingest-services: "{!ENV: INGEST_SERVICES}"

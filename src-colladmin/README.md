@@ -1,16 +1,21 @@
 ## Tasks
 - [ ] Display profile list
   - GET /profiles
-  - TODO: include database values
+  - TODO: include database values and display beside the profile value
+  - TODO: could the ingest service return the profiles back as JSON rather than using S3?
 - [ ] Compare profile to template
   - GET /compare-profile
     - profile-id
-  - TODO: include database values
+  - TODO: include database values and display beside the profile value
+  - TODO: could the ingest service return the profiles back as JSON rather than using S3?
 - [ ] Check profile currentness (in s3)
   - GET /profile-refresh
+  - TODO: not applicable if returned from the ingest service
+  - Save (in S3 metadata or a text file) the hash of the most recent commit
 - [ ] Refresh profiles from git
   - POST /profile-refresh
   - TODO: or determine if this will only be done via a PUSH from github actions
+  - TODO: not applicable if returned from the ingest service
 - [ ] Modify database fields (collection name, node?, oai settings)
   - POST /profile-database/[profile-id]
     - name
@@ -21,12 +26,16 @@
   - GET /queues
   - GET /queue
     - queue-name
+    - TODO: can this information be returned from the ingest service or is it necessary to talk to ZK directly?
   - GET /submissions 
     - submission-id (batch/job/both?)
+    - TODO: can this information be returned from the ingest service or is it necessary to talk to ZK directly?
   - Enumerate failed submissions
+    - TODO: can this information be returned from the ingest service or is it necessary to talk to ZK directly?
 - [ ] Pause/unpause submission queue
   - GET /queue-state
     - status (HOLD|RELEASE)
+    - Implement in ingest service
 - [ ] Restart a submission
   - POST /submission-restart/[submission-id]
 - [ ] Construct a new profile/ownership object
