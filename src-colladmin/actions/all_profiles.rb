@@ -1,7 +1,30 @@
-class AllProfiles
-  def initialize(merritt_path)
+require_relative 'profile_action'
+
+class AllProfiles < ProfileAction
+  def initialize(config, path, myparams)
+    super(config, path, myparams)
     @profiles = []
-    @merritt_path = merritt_path
+  end
+
+  def get_data
+    if skip_s3
+      Dir['/profiles/*'].each do |file|
+        next unless IngestProfile.profile?(file)
+        profile = IngestProfile.create_from_file(file, @template)
+        next unless profile.valid?
+        add_profile(profile)
+      end
+    else
+      Zip::InputStream.open(get_s3zip_profiles) do |io|
+        while (entry = io.get_next_entry)
+          next unless IngestProfile.s3_profile?(entry.name)
+          profile = IngestProfile.create_from_stream(entry.name, io.read.force_encoding("UTF-8"), @template)
+          next unless profile.valid?
+          add_profile(profile)
+        end
+      end    
+    end
+    format_result_json
   end
 
   def add_profile(profile)

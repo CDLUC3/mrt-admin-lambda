@@ -1,38 +1,17 @@
 require 'json'
 require 'yaml'
 require 'uc3-ssm'
-require 'mysql2'
 require 'httpclient'
 
 require_relative 'actions/action'
+require_relative 'actions/all_profiles'
+require_relative 'actions/compare_profiles'
 
 def get_key_val(obj, key, defval='')
   return "" unless obj
   return obj[key] if obj[key]
   return obj[key.to_sym] if obj[key.to_sym]
   defval
-end
-
-def get_mysql
-  raise Exception.new "The configuration yaml must contain config['dbconf']" unless @config['dbconf']
-  dbconf = @config['dbconf']
-  raise Exception.new "Configuration username not found" unless dbconf['username']
-  db_user = dbconf['username']
-  raise Exception.new "Configuration password not found" unless dbconf['password']
-  db_password = dbconf['password']
-  raise Exception.new "Configuration database not found" unless dbconf['database']
-  db_name = dbconf['database']
-  raise Exception.new "Configuration host not found" unless dbconf['host']
-  db_host = dbconf['host']
-  raise Exception.new "Configuration port not found" unless dbconf['port']
-  db_port = dbconf['port']
-
-  Mysql2::Client.new(
-    :host => db_host,
-    :username => db_user,
-    :database=> db_name,
-    :password=> db_password,
-    :port => db_port)
 end
 
 def get_config
@@ -47,14 +26,11 @@ def get_config
   })
 end
 
-
 module LambdaFunctions
   class Handler
     def self.process(event:,context:)
       begin
         @config = get_config
-
-        client = get_mysql unless ENV.fetch('USE_MYSQL', '') == 'N'
 
         data = event ? event : {}
         
@@ -63,8 +39,11 @@ module LambdaFunctions
         result = {message: "Path undefined"}
 
         if path == "profiles"
-          action = AdminAction.new(client, @config, path, myparams)
-          result = action.get_data
+          if myparams.fetch('profile', '') == ''
+            result = AllProfiles.new(@config, path, myparams).get_data
+          else
+            result = CompareProfiles.new(@config, path, myparams).get_data
+          end
         elsif path == "state" && get_ingest_server != ''
           cli = HTTPClient.new
           url = "#{get_ingest_server}state"

@@ -1,8 +1,14 @@
-class CompareProfiles
-  def initialize(merritt_path, template, profile)
-    @merritt_path = merritt_path
-    @template = template
-    @profile = profile
+require_relative 'profile_action'
+
+class CompareProfiles < ProfileAction
+  def initialize(config, path, myparams)
+    super(config, path, myparams)
+    profile_param =  @myparams.fetch('profile', '')
+    @profile = get_profile(profile_param)
+  end
+
+  def get_data
+    format_result_json
   end
 
   def table_headers
