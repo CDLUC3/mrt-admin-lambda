@@ -1,36 +1,48 @@
 require 'cgi'
 require 'aws-sdk-s3'
 require 'zip'
-require_relative 'profile'
-require_relative 'all_profiles'
-require_relative 'compare_profiles'
+require 'mysql2'
 
 class AdminAction
-  def initialize(client, config, path, myparams)
+  def initialize(config, path, myparams)
     @config = config
-    @client = client
-    @merritt_path = config.fetch('merritt_path','na')
-    @bucket = config.fetch('bucket','na')
-    @profiles = config.fetch('profiles','na')
     @path = path
     @myparams = myparams
     @format = 'report'
-    @template = get_profile('TEMPLATE-PROFILE')
   end
 
+  def skip_s3
+    ENV.fetch('USE_S3', '') == 'N'
+  end
+
+  def get_mysql
+    raise Exception.new "The configuration yaml must contain config['dbconf']" unless @config['dbconf']
+    dbconf = @config['dbconf']
+    raise Exception.new "Configuration username not found" unless dbconf['username']
+    db_user = dbconf['username']
+    raise Exception.new "Configuration password not found" unless dbconf['password']
+    db_password = dbconf['password']
+    raise Exception.new "Configuration database not found" unless dbconf['database']
+    db_name = dbconf['database']
+    raise Exception.new "Configuration host not found" unless dbconf['host']
+    db_host = dbconf['host']
+    raise Exception.new "Configuration port not found" unless dbconf['port']
+    db_port = dbconf['port']
+  
+    Mysql2::Client.new(
+      :host => db_host,
+      :username => db_user,
+      :database=> db_name,
+      :password=> db_password,
+      :port => db_port)
+  end
+  
   def get_param(key, defval)
     @myparams.key?(key) ? CGI.unescape(@myparams[key].strip) : defval
   end
 
   def get_title
     "Collection Admin Query"
-  end
-
-  def get_data
-    profile_param =  @myparams.fetch('profile', '')
-    return get_profiles if profile_param == ''
-    profile = get_profile(profile_param)
-    compare_profiles(profile)
   end
 
   def get_s3zip_profiles
@@ -41,31 +53,8 @@ class AdminAction
     resp.body
   end
 
-  def get_profiles
-    allprofiles = AllProfiles.new(@merritt_path)
-
-    if ENV.fetch('USE_S3', '') == 'N'
-      Dir['/profiles/*'].each do |file|
-        next unless IngestProfile.profile?(file)
-        profile = IngestProfile.create_from_file(file, @template)
-        next unless profile.valid?
-        allprofiles.add_profile(profile)
-      end
-    else
-      Zip::InputStream.open(get_s3zip_profiles) do |io|
-        while (entry = io.get_next_entry)
-          next unless IngestProfile.s3_profile?(entry.name)
-          profile = IngestProfile.create_from_stream(entry.name, io.read.force_encoding("UTF-8"), @template)
-          next unless profile.valid?
-          allprofiles.add_profile(profile)
-        end
-      end    
-    end
-    allprofiles.format_result_json
-  end
-
   def get_profile(pname)
-    return IngestProfile.create_from_file("/profiles/#{pname}", @template) if ENV.fetch('USE_S3', '') == 'N'
+    return IngestProfile.create_from_file("/profiles/#{pname}", @template) if skip_s3
     Zip::InputStream.open(get_s3zip_profiles) do |io|
       while (entry = io.get_next_entry)
         next unless pname == entry.name
@@ -73,11 +62,6 @@ class AdminAction
       end
     end
     return IngestProfile.create_from_stream("", StringIO.new(""), @template)
-  end
-
-  def compare_profiles(profile)
-    cprof = CompareProfiles.new(@merritt_path, @template, profile)
-    cprof.format_result_json
   end
 
 end
