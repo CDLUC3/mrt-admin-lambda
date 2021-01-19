@@ -80,14 +80,14 @@ docker-compose -f docker-compose.yml -f admintool.yml up -d
 ```
 
 ### Collection Admin Tool (from server with SSM)
+- Home page: [web/collAdmin.html](web/collAdmin.html)
+- Lambda entrypoint: [src-colladmin/lambda_function.rb](src-colladmin/lambda_function.rb)
+- Lambda Dockerfile: [src-colladmin/Dockerfile](src-colladmin/Dockerfile)
 ```
 docker-compose -f docker-compose.yml -f colladmin.yml up -d
 ```
 
 ### Collection Admin Tool (from desktop without SSM)
-- Home page: [web/collAdmin.html](web/collAdmin.html)
-- Lambda entrypoint: [src-colladmin/lambda_function.rb](src-colladmin/lambda_function.rb)
-- Lambda Dockerfile: [src-colladmin/Dockerfile](src-colladmin/Dockerfile)
 ```
 docker-compose -f docker-compose.yml -f colladmin.yml -f local.yml up -d
 ```
@@ -95,3 +95,4 @@ docker-compose -f docker-compose.yml -f colladmin.yml -f local.yml up -d
 Open the following URL to test.
 
 - [http://localhost:8091/web/index.html](http://localhost:8091/web/index.html)
+- [http://localhost:8091/web/collAdmin.html](http://localhost:8091/web/collAdmin.html)
