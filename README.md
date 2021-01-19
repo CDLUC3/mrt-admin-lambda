@@ -40,8 +40,9 @@ The following script should be run from a host that is authorized to
 - push to ECR
 - deploy to Lambda.
 
-Deploy Script
-- [lambda-deploy.sh](lambda-deploy.sh)
+Deploy Scripts
+- Admin Tool: [lambda-deploy.sh](lambda-deploy.sh)
+- Collection Admin Tool: [colladmin-lambda-deploy.sh](colladmin-lambda-deploy.sh)
 
 This will build a docker image, push it to ECR, and update lambda to use the new image.
 
@@ -61,8 +62,19 @@ This script **requires aws cli V2** in order to deploy a docker image to lambda.
 
 ## Local Testing
 
+Admin Tool (from server with SSM)
 ```
 docker-compose -f docker-compose.yml -f admintool.yml up -d
+```
+
+Collection Admin Tool (from server with SSM)
+```
+docker-compose -f docker-compose.yml -f colladmin.yml up -d
+```
+
+Collection Admin Tool (from desktop without SSM)
+```
+docker-compose -f docker-compose.yml -f colladmin.yml -f local.yml up -d
 ```
 
 Open the following URL to test.
