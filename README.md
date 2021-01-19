@@ -62,17 +62,32 @@ This script **requires aws cli V2** in order to deploy a docker image to lambda.
 
 ## Local Testing
 
-Admin Tool (from server with SSM)
+### Placeholder Lambda Testing
+- Home page: [simulate-lambda-alb/web/index.html](simulate-lambda-alb/web/index.html)
+- Lambda entrypoint: [simulate-lambda-alb/alb_simulate.rb](simulate-lambda-alb/alb_simulate.rb)
+- Lambda Dockerfile: [simulate-lambda-alb/Dockerfile](simulate-lambda-alb/Dockerfile)
+
+```
+docker-compose -f docker-compose.yml up -d
+```
+
+### Admin Tool (from server with SSM)
+- Home page: [web/index.html](web/index.html)
+- Lambda entrypoint: [src-admintool/lambda_function.rb](src-admintool/lambda_function.rb)
+- Lambda Dockerfile: [src-admintool/Dockerfile](src-admintool/Dockerfile)
 ```
 docker-compose -f docker-compose.yml -f admintool.yml up -d
 ```
 
-Collection Admin Tool (from server with SSM)
+### Collection Admin Tool (from server with SSM)
 ```
 docker-compose -f docker-compose.yml -f colladmin.yml up -d
 ```
 
-Collection Admin Tool (from desktop without SSM)
+### Collection Admin Tool (from desktop without SSM)
+- Home page: [web/collAdmin.html](web/collAdmin.html)
+- Lambda entrypoint: [src-colladmin/lambda_function.rb](src-colladmin/lambda_function.rb)
+- Lambda Dockerfile: [src-colladmin/Dockerfile](src-colladmin/Dockerfile)
 ```
 docker-compose -f docker-compose.yml -f colladmin.yml -f local.yml up -d
 ```
