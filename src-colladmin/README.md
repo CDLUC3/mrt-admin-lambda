@@ -1,69 +1,24 @@
 ## Tasks
-- [ ] Display profile list
-  - GET /profiles
-  - TODO: include database values and display beside the profile value
-  - TODO: could the ingest service return the profiles back as JSON rather than using S3?
-- [ ] Compare profile to template
-  - GET /compare-profile
-    - profile-id
-  - TODO: include database values and display beside the profile value
-  - TODO: could the ingest service return the profiles back as JSON rather than using S3?
-- [ ] Check profile currentness (in s3)
-  - GET /profile-refresh
-  - TODO: not applicable if returned from the ingest service
-  - Save (in S3 metadata or a text file) the hash of the most recent commit
-- [ ] Refresh profiles from git
-  - POST /profile-refresh
-  - TODO: or determine if this will only be done via a PUSH from github actions
-  - TODO: not applicable if returned from the ingest service
-- [ ] Modify database fields (collection name, node?, oai settings)
-  - POST /profile-database/[profile-id]
-    - name
-    - (other attrs)
-  - TODO: or force these values to stay in sync with the profile code
-- [ ] Refactor profiles to leverage re-use
-- [ ] View submission queue
-  - GET /queues
-  - GET /queue
-    - queue-name
-    - TODO: can this information be returned from the ingest service or is it necessary to talk to ZK directly?
-  - GET /submissions 
-    - submission-id (batch/job/both?)
-    - TODO: can this information be returned from the ingest service or is it necessary to talk to ZK directly?
-  - Enumerate failed submissions
-    - TODO: can this information be returned from the ingest service or is it necessary to talk to ZK directly?
-- [ ] Pause/unpause submission queue
-  - GET /queue-state
-    - status (HOLD|RELEASE)
-    - Implement in ingest service
-- [ ] Restart a submission
-  - POST /submission-restart/[submission-id]
-- [ ] Construct a new profile/ownership object
-  - TODO: separate webpage
-  - QUESTION: post to git or just construct a file and assume the user will check into git
-- [ ] Submit a new profile/ownership object
-  - POST /submit-profile
-    - profile
-    - ownership
-    - other types of objects?
-- [ ] Create ezid identifiers needed for new collection/object
-  - POST /mint-id
-    - params?
-- [ ] Validate data in ezid
-  - GET /identifier
-    - id
-- [ ] Update attributes in ezid ? (if ever needed)
-  - POST /identifier/[id]
-    - attr?
-- [ ] Create LDAP entries needed for new owners and profiles
-  - POST /ldap-user?
-  - POST /ldap-role?
-- [ ] Verify LDAP entries linked to profiles
-  - GET /ldap-user/[id]
-  - GET /ldap-role/[id]
-- [ ] Query/report on LDAP
-  - /ldap-users/
-  - /ldap-roles/
-- [ ] Update LDAP
-  - POST /ldap-user/[id]
-  - POST /ldap-role/[id]
+| Action | Collection Admin Endpoint | Ingest Endpoint | Note |
+| ------ | ------------------------- | --------------- | ---- |
+| Display Profiles | GET /profiles | GET /admin/profiles/ | TODO: retrieve from ingest server rather than from S3 (simplification) |
+| Compare profile to template | GET /profile | GET /admin/profile | Merge database properties with underlying profiles |
+| | - profile | - profile | profile id to retrieve |
+| Update database properties for profile | POST /profile/profile-id | N/A | Update MySQL |
+| Get Queue Counts | GET /queues | GET /admin/queues | Return per-queue counts (active, failed) |
+| Get Queue Details (paginated) | GET /queues/queue-id | GET /admin/queues/queue-id | |
+| Get Submission (Batch?) Details | GET /queue/queue-id/submission-id | GET /admin/queue/queue-id/submission-id | |
+| Restart submission | POST /queue/queue-id/submission-id | POST /admin/queue/queue-id/submission-id | |
+| Generate Profile/Ownership Object | Javascript | | User will copy/paste into Git |
+| Submit Profile | POST /profile/profile-id/submit | (existing endpoint) | | 
+| Generate Ark | POST /ezid/mint | | Call ezid |
+| Query LDAP Users | POST /ldap/users | | |
+| Generate LDAP User | POST /ldap/user | | |
+| Update LDAP User | PUT /ldap/user/id | | |
+| Query LDAP Roles | POST /ldap/roles | | |
+| Generate LDAP Role | POST /ldap/role | | |
+| Update LDAP Role | PUT /ldap/role/id | | |
+
+## Discussion items
+- [ ] Discuss profile refactoring with Mark
+
