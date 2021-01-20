@@ -29,6 +29,9 @@ The Lambda code is deployed to the Ruby 2.7 environment.  A build process is req
   - ../admintool/merritt-path - Merritt system URL (for hyperlinks)
   - ../admintool/ecr-registry - AWS ECR Registry name
   - ../admintool/ecr-image - Name of image to be published to the registry
+- Colladmin Lambda deploy variables
+  - ../colladmin/lambda-arn-base
+  - ../colladmin/ecr-image
 - Static Website variables
   - ../admintool/api-path - api gateway path (or cloudfront path)
   - ../admintool/s3-bucket - Website S3 bucket
