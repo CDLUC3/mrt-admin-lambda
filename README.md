@@ -57,7 +57,7 @@ This script **requires aws cli V2** in order to deploy a docker image to lambda.
 - On page load, URL parameters are read to determine the query to run
 - A query request is made via ajax
 - Query results are reformatted into an html table and displayed to the user  
-- A publishing script `publish.sh` will copy assets into an S3 bucket
+- A publishing script [publish.sh](publish.sh) will copy assets into an S3 bucket
 - AWS Cloud Front has been configured to provide a URL for the static website
   - Cloud Front is also used to restrict access to the website
 
