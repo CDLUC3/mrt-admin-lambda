@@ -18,6 +18,7 @@ The Lambda code is deployed to the Ruby 2.7 environment.  A build process is req
 - simulate-lambda-alb
   - docker image to facilitate localhost testing with docker-compose
 - src-admintool: Admintool Lambda source code
+- src-colladmin: Collection Admin Lambda source code
 - web: static website code to be deployed to S3
 
 ## Deployment Preparation
