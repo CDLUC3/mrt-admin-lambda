@@ -133,6 +133,7 @@ class AdminQuery
   def format_result_json(types, data, headers)
     if @format == 'report'
       {
+        format: 'report',
         title: get_title,
         headers: headers,
         types: types,
