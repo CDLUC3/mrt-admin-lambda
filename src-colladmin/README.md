@@ -1,6 +1,6 @@
 ## Tasks
 | Action | Collection Admin Endpoint | Calls Service | Service Endpoint | Note |
-| ------ | ------------------------- | --------------- | ---- |
+| ------ | ------------------------- | --------------- | ---- | ---- |
 | Display Profiles | GET /profiles | Ingest | GET /admin/profiles/ | TODO: retrieve from ingest server rather than from S3 (simplification) |
 | Compare profile to template | GET /profile | Ingest | GET /admin/profile | Merge database properties with underlying profiles |
 | | - profile | | - profile | profile id to retrieve |
