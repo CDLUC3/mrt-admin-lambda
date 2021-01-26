@@ -121,3 +121,47 @@ p.buttons {
   padding-left: 10px;
   margin: 10px;
 }
+
+.form-body {
+  padding-left: 20px;
+  padding-right: 40px;
+  padding-bottom: 200px;
+}
+.form-body .container {
+  display:block;
+
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.form-body .dropbtn {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.form-body .dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.form-body .dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f0f0f0;
+  min-width: 120px;
+  z-index: 1;
+}
+
+.form-body .dropdown-content a {
+  color: black;
+  padding: 12px 12px;
+  text-decoration: none;
+  display: block;
+}
+
+.form-body .dropdown-content a:hover {background-color: #d1d1d1}
+
+.form-body .dropdown:hover .dropdown-content {
+  display: block;
+}

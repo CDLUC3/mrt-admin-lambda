@@ -8,61 +8,20 @@
     <script type="text/javascript" src="coll-lambda.base.js"></script>
     <script type="text/javascript" src="api-table.js"></script>
     <script src="sorttable.js" type="text/javascript"></script>
-    <style>
-      .form-body {
-        padding-left: 20px;
-        padding-right: 40px;
-        padding-bottom: 200px;
-      }
-      .container {
-        display:block;
-
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-      }
-      .dropbtn {
-        padding: 10px;
-        cursor: pointer;
-      }
-
-      .dropdown {
-        position: relative;
-        display: inline-block;
-      }
-
-      .dropdown-content {
-        display: none;
-        position: absolute;
-        background-color: #f0f0f0;
-        min-width: 120px;
-        z-index: 1;
-      }
-
-      .dropdown-content a {
-        color: black;
-        padding: 12px 12px;
-        text-decoration: none;
-        display: block;
-      }
-
-      .dropdown-content a:hover {background-color: #d1d1d1}
-
-      .dropdown:hover .dropdown-content {
-        display: block;
-      }
-    </style>
   </head>
   <body>
     <div class="form-body">
     <h1>Merritt Collection Admin</h1>
-    <p><a href="index.html">Admin Tool Home</a> / <a href="CollIndex.html">CollAdmin Tool Home</a></p>
+    <p><a href="index.html">Admin Tool Home</a> / <a href="collAdmin.html">CollAdmin Tool Home</a></p>
     <ul>
       <li><a href="collIndex.html?path=s3profiles">Collection Profiles (s3)</a></li>
       <li><a href="collIndex.html?path=profiles">Collection Profiles (ingest)</a></li>
       <li><a href="collIndex.html?path=state">Ingest Service State Request</a></li>
       <li><a href="collIndex.html?path=queues">Ingest Service Show Queues</a></li>
+      <li><a href="collIndex.html?path=submissions/pause">Pause Submissions</a></li>
+      <li><a href="collIndex.html?path=submissions/unpause">Unpause Submissions</a></li>
+      <li><a href="collIndex.html?path=ldap/users">LDAP Users</a></li>
+      <li><a href="collIndex.html?path=ldap/roles">LDAP Roles</a></li>
     </ul>
     <h2>Provision EZID</h2>
     <fieldset class="collsec">

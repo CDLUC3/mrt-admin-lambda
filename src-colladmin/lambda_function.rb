@@ -6,6 +6,7 @@ require_relative 'actions/action'
 require_relative 'actions/all_profiles'
 require_relative 'actions/compare_profiles'
 require_relative 'actions/forward_to_ingest_action'
+require_relative 'actions/ldap_action'
 
 def get_key_val(obj, key, defval='')
   return "" unless obj
@@ -43,11 +44,19 @@ module LambdaFunctions
         elsif path == "s3profiles"
           result = CompareProfiles.new(@config, path, myparams).get_data
         elsif path == "profiles" 
-          result = ForwardToIngestAction.new(@config, path, myparams, "admin/profiles").get_data
+          result = ForwardToIngestAction.new(@config, path, myparams, "admin/#{path}").get_data
         elsif path == "state" 
           result = ForwardToIngestAction.new(@config, path, myparams, "state").get_data
         elsif path == "queues" 
-          result = ForwardToIngestAction.new(@config, path, myparams, "admin/queues").get_data
+          result = ForwardToIngestAction.new(@config, path, myparams, "admin/#{path}").get_data
+        elsif path == "submissions/pause" 
+          result = ForwardToIngestAction.new(@config, path, myparams, "admin/#{path}").get_data
+        elsif path == "submissions/unpause" 
+          result = ForwardToIngestAction.new(@config, path, myparams, "admin/#{path}").get_data
+        elsif path == "ldap/users" 
+          result = LDAPAction.new(@config, path, myparams).get_data
+        elsif path == "ldap/roles" 
+          result = LDAPAction.new(@config, path, myparams).get_data
         end
      
         {
