@@ -84,6 +84,7 @@ class AllProfiles < ProfileAction
 
   def format_result_json
     {
+      format: 'report',
       title: get_title,
       headers: table_headers,
       types: table_types,
@@ -94,7 +95,7 @@ class AllProfiles < ProfileAction
       merritt_path: @merritt_path,
       alternative_queries: [],
       iterate: false
-    }
+    }.to_json
   end
   
 end

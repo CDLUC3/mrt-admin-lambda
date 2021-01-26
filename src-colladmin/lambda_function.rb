@@ -1,11 +1,11 @@
 require 'json'
 require 'yaml'
 require 'uc3-ssm'
-require 'httpclient'
 
 require_relative 'actions/action'
 require_relative 'actions/all_profiles'
 require_relative 'actions/compare_profiles'
+require_relative 'actions/forward_to_ingest_action'
 
 def get_key_val(obj, key, defval='')
   return "" unless obj
@@ -36,19 +36,18 @@ module LambdaFunctions
         
         myparams = get_key_val(data, 'queryStringParameters', data)
         path = get_key_val(myparams, 'path', 'na')
-        result = {message: "Path undefined"}
+        result = {message: "Path undefined"}.to_json
 
-        if path == "profiles"
-          if myparams.fetch('profile', '') == ''
-            result = AllProfiles.new(@config, path, myparams).get_data
-          else
-            result = CompareProfiles.new(@config, path, myparams).get_data
-          end
-        elsif path == "state" && get_ingest_server != ''
-          cli = HTTPClient.new
-          url = "#{get_ingest_server}state"
-          resp = cli.get(url, event, {"Accept": "application/json"})
-          result = {message: "Status #{resp.status}; URL: #{url}"}
+        if path == "s3profiles" && myparams.fetch('profile', '') == ''
+          result = AllProfiles.new(@config, path, myparams).get_data
+        elsif path == "s3profiles"
+          result = CompareProfiles.new(@config, path, myparams).get_data
+        elsif path == "profiles" 
+          result = ForwardToIngestAction.new(@config, path, myparams, "admin/profiles").get_data
+        elsif path == "state" 
+          result = ForwardToIngestAction.new(@config, path, myparams, "state").get_data
+        elsif path == "queues" 
+          result = ForwardToIngestAction.new(@config, path, myparams, "admin/queues").get_data
         end
      
         {
@@ -57,7 +56,7 @@ module LambdaFunctions
             'Content-Type': 'application/json; charset=utf-8'
           },
           statusCode: 200,
-          body: result.to_json
+          body: result
         }
       rescue => e
         {
@@ -72,10 +71,6 @@ module LambdaFunctions
 
     end
 
-    def self.get_ingest_server
-      @config.fetch('ingest-services', '').split(',').first
-    end
-  
   end
 
 end

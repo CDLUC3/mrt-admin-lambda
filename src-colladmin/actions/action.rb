@@ -9,6 +9,7 @@ class AdminAction
     @path = path
     @myparams = myparams
     @format = 'report'
+    @merritt_path = config.fetch('merritt_path','na')
   end
 
   def skip_s3

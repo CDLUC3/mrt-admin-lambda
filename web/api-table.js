@@ -76,7 +76,7 @@ function showUrl(url) {
 function processResult(data) {
   $("h1").text(data.title);
 
-  if (data.headers && data.types && data.data){
+  if (data.format == 'report'){
     createTable(
       data.headers,
       data.types,
@@ -88,8 +88,8 @@ function processResult(data) {
       data.alternative_queries,
       data.iterate
     )
-  } else if (data.message) {
-    alert(data.message)
+  } else {
+    document.body.innerHTML = JSON.stringify(data);
   }
 }
 
@@ -365,7 +365,7 @@ function format(cell, v, type, merritt_path) {
     }
     cell.text(v);
   } else if (type == 'profile'){
-    makeLink(cell, v, "collIndex.html?path=profiles&profile="+v);
+    makeLink(cell, v, "collIndex.html?path=s3profiles&profile="+v);
   } else if (type == 'list' && v != ''){
     var ul = makeUl(cell);
     $.each(v.split(","), function(i,txt){

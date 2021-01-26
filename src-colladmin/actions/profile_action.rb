@@ -7,7 +7,6 @@ require_relative 'action'
 class ProfileAction < AdminAction
   def initialize(config, path, myparams)
     super(config, path, myparams)
-    @merritt_path = config.fetch('merritt_path','na')
     @bucket = config.fetch('bucket','na')
     @profiles_loc = config.fetch('profiles','na')
     @path = path
