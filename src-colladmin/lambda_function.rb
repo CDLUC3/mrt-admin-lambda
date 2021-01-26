@@ -36,7 +36,7 @@ module LambdaFunctions
         data = event ? event : {}
         
         myparams = get_key_val(data, 'queryStringParameters', data)
-        path = get_key_val(myparams, 'path', 'na')
+        path = CGI.unescape(get_key_val(myparams, 'path', 'na'))
         result = {message: "Path undefined"}.to_json
 
         if path == "s3profiles" && myparams.fetch('profile', '') == ''
