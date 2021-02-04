@@ -48,7 +48,8 @@ module LambdaFunctions
         elsif path == "state" 
           result = ForwardToIngestAction.new(@config, path, myparams, "state").get_data
         elsif path == "queues" 
-          result = ForwardToIngestAction.new(@config, path, myparams, "admin/#{path}").get_data
+          #result = ForwardToIngestAction.new(@config, path, myparams, "admin/#{path}").get_data
+          result = ForwardToIngestAction.new(@config, path, myparams, "poster/queue?t=json").get_data
         elsif path == "submissions/pause" 
           result = ForwardToIngestAction.new(@config, path, myparams, "admin/#{path}").get_data
         elsif path == "submissions/unpause" 
