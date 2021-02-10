@@ -45,8 +45,11 @@ class IngestQueueAction < ForwardToIngestAction
     data = JSON.parse(body)
     data = data.fetch('que:queueState', {})
     data = data.fetch('que:queueEntries', {})
+    # Ingest currently returns "" when empty
     data = {} if data == ""
     data = data.fetch('que:queueEntryState', [])
+    # Ingest currently returns a hash when only one item is found
+    data = [data] if data.instance_of?(Hash)
     rows = []
     data.each do |r|
       rows.append(
