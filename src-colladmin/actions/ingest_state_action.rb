@@ -39,21 +39,8 @@ class IngestStateAction < ForwardToIngestAction
     rows
   end
 
-  def convertJsonToTable(body)
-    {
-      format: 'report',
-      title: get_title,
-      headers: table_headers,
-      types: table_types,
-      data: table_rows(body),
-      filter_col: nil,
-      group_col: nil,
-      show_grand_total: false,
-      merritt_path: @merritt_path,
-      alternative_queries: [
-      ],
-      iterate: false
-    }.to_json
+  def hasTable
+    true
   end
 
 end

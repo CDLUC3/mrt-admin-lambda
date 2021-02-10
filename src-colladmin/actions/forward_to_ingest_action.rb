@@ -7,8 +7,26 @@ class ForwardToIngestAction < AdminAction
     @endpoint = endpoint
   end
 
+  def hasTable
+    false
+  end
+
   def convertJsonToTable(body)
-    body
+    return body unless hasTable
+    {
+      format: 'report',
+      title: get_title,
+      headers: table_headers,
+      types: table_types,
+      data: table_rows(body),
+      filter_col: nil,
+      group_col: nil,
+      show_grand_total: false,
+      merritt_path: @merritt_path,
+      alternative_queries: [
+      ],
+      iterate: false
+    }.to_json
   end
 
   def get_data
