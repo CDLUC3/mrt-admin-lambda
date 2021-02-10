@@ -30,11 +30,12 @@ class IngestStateAction < ForwardToIngestAction
     data = data.fetch('ing:ingestServiceState', {})
     rows = []
     data.keys.each do |k|
-      v = data.fetch(k, "")
+      v = 
       if k == 'ing:storageInstances' 
-        v = data.fetch("ing:storageInstances", {}).fetch("ing:storageURL", {}).fetch("ing:uRL", "")
+        rows.append([k, data.fetch("ing:storageInstances", {}).fetch("ing:storageURL", {}).fetch("ing:uRL", "")])
+      else
+        rows.append([k, data.fetch(k, "")])
       end
-      rows.append([k, v])
     end
     rows
   end
