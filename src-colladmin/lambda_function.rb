@@ -7,6 +7,7 @@ require_relative 'actions/all_profiles'
 require_relative 'actions/compare_profiles'
 require_relative 'actions/forward_to_ingest_action'
 require_relative 'actions/ingest_queue_action'
+require_relative 'actions/ingest_state_action'
 require_relative 'actions/ldap_action'
 
 def get_key_val(obj, key, defval='')
@@ -43,7 +44,7 @@ module LambdaFunctions
         if path == "profiles" 
           result = ForwardToIngestAction.new(@config, path, myparams, "admin/#{path}").get_data
         elsif path == "state" 
-          result = ForwardToIngestAction.new(@config, path, myparams, "state").get_data
+          result = IngestStateAction.new(@config, path, myparams).get_data
         elsif path == "queues" 
           result = IngestQueueAction.new(@config, path, myparams).get_data
         elsif path == "submissions/pause" 
