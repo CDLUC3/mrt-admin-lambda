@@ -8,10 +8,10 @@ class DashQuery < AdminQuery
  select 
   trim(substring_index(o.erc_where, ';', -1)) doi,
   o.ark,
-  (select count(*) from inv_versions v where v.inv_object_id=o.id) as vercount,
-  (select count(*) from inv_files f where f.inv_object_id=o.id) as filecount
+  (select count(*) from inv.inv_versions v where v.inv_object_id=o.id) as vercount,
+  (select count(*) from inv.inv_files f where f.inv_object_id=o.id) as filecount
 from
-  inv_objects o
+  inv.inv_objects o
 where 
   o.ark in (
     'ark:/b7272/q6h41pb7',
