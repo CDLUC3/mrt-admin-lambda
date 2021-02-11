@@ -21,8 +21,31 @@ select
   trim(substring_index(o.erc_where, ';', -1)) doi,
   o.ark,
   date(created),
-  (select count(*) from inv.inv_versions v where v.inv_object_id=o.id) as vercount,
-  (select count(*) from inv.inv_files f where f.inv_object_id=o.id) as filecount
+  (
+    select count(*) 
+    from inv.inv_versions v 
+    where v.inv_object_id=o.id
+  ) as vercount,
+  (
+    select count(*) 
+    from inv.inv_files f 
+    where f.inv_object_id=o.id
+  ) as filecount,
+  (
+    select count(*) 
+    from inv.inv_files f 
+    where f.inv_object_id=o.id and source='producer'
+  ) as pfilecount,
+  (
+    select sum(billable_size) 
+    from inv.inv_files f 
+    where f.inv_object_id=o.id
+  ) as size,
+  (
+    select sum(billable_size) 
+    from inv.inv_files f 
+    where f.inv_object_id=o.id and source='producer'
+  ) as psize
 from
   inv.inv_objects o
 where 
@@ -36,11 +59,11 @@ order by doi, created
 end
 
 def get_headers(results)
-  ['DOI', 'Ark', 'Created', 'Num Ver', 'Num File']
+  ['DOI', 'Ark', 'Created', 'Num Ver', 'Num File', 'Producer Files', 'File Size', 'Producer Size']
 end
 
 def get_types(results)
-  ['doi', 'ark', 'date', 'data', 'data']
+  ['doi', 'ark', 'date', 'data', 'data', 'data', 'data', 'data']
 end
 
 end

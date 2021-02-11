@@ -15,17 +15,21 @@
     <div id="arkform">
       <fieldset>
         <legend>Input containing arks</legend>
+        <p>Copy a text file containing a set of arks.  The arks will be parsed into a list.</p>
         <textarea rows="10" cols="80" name="input" id="arkinput"></textarea>
       </fieldset>
       <fieldset>
-        <legend>Normalized arks</legend>
+        <legend>Here are the <output name="count" id="arkcount">0</output> arks that will be processed.</legend>
         <textarea rows="10" cols="80" name="list" id="arkoutput" readonly="Y"></textarea>
       </fieldset>
       <form action="index.html">
-        <input type="hidden" name="path" value="arklist"/>
-        <input type="hidden" name="method" value="post"/>
-        <input type="hidden" name="key" value="arklist"/>
-        <input type="submit"/>
+        <fieldset>
+          <legend>Report</legend>
+          <input type="radio" name="path" value="arklist" checked>Object summary</input>
+          <input type="hidden" name="method" value="post"/>
+          <input type="hidden" name="key" value="arklist"/>
+          <input type="submit"/>
+        </fieldset>
       </form>
     </div>
  </body>

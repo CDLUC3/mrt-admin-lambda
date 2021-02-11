@@ -50,9 +50,6 @@ get '/lambda*' do
   path = params['splat'][0]
   path=path.gsub(/^lambda\//,'')
   event = {path: path, queryStringParameters: params}.to_json
-  puts("get")
-  puts(path)
-  puts(event)
   lambda_process(event)
 end
 
@@ -60,9 +57,5 @@ post '/lambda*' do
   path = params['splat'][0]
   path=path.gsub(/^lambda\//,'')
   event = {path: path, queryStringParameters: params}.to_json
-  puts("post")
-  puts(path)
-  puts(event)
-  puts(111)
   lambda_process(event)
 end

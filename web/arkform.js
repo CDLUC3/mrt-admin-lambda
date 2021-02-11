@@ -10,5 +10,6 @@ function updateOutput() {
   res = s.match(/ark:\/[a-z0-9]+\/[a-z0-9]+/g);
   s=res.join(",\n");
   $("#arkoutput").val(s);
+  $("#arkcount").val(res.length);
   localStorage.setItem('arklist', res.join(","));
 }

@@ -169,3 +169,7 @@ p.buttons {
 #arkoutput {
   background-color: lightgray;
 }
+
+fieldset {
+  display: inline;
+}
