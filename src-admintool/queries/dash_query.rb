@@ -8,6 +8,7 @@ class DashQuery < AdminQuery
  select 
   trim(substring_index(o.erc_where, ';', -1)) doi,
   o.ark,
+  created,
   (select count(*) from inv.inv_versions v where v.inv_object_id=o.id) as vercount,
   (select count(*) from inv.inv_files f where f.inv_object_id=o.id) as filecount
 from
@@ -2329,17 +2330,17 @@ where
     'ark:/13030/m55r0dh6',
     'ark:/13030/m5h76089'
   )
-order by doi, ark
+order by doi, created
 ;
 }
 end
 
 def get_headers(results)
-  ['DOI', 'Ark', 'Num Ver', 'Num File']
+  ['DOI', 'Ark', 'Created', 'Num Ver', 'Num File']
 end
 
 def get_types(results)
-  ['doi', 'ark', 'data', 'data']
+  ['doi', 'ark', 'date', 'data', 'data']
 end
 
 end
