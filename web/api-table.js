@@ -59,8 +59,19 @@ function showUrl(url) {
       collision: "none"
     }
   });
+
+  if (pageparams['method'] == "post" ) {
+    method = "POST";
+    key = ('key' in pageparams) ? pageparams['key'] : 'key-na';
+    value = (key in localStorage) ? localStorage[key] : 'na';
+    pageparams = {};
+    pageparams[key] = value;
+  } else {
+    method = "GET";
+  }
   $.ajax({
     dataType: "json",
+    method: method,
     url: url,
     data: pageparams,
     success: function(data) {
@@ -71,6 +82,7 @@ function showUrl(url) {
       $("#in-progress").dialog("close");
     }
   });
+
 }
 
 function processResult(data) {

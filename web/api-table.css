@@ -165,3 +165,7 @@ p.buttons {
 .form-body .dropdown:hover .dropdown-content {
   display: block;
 }
+
+#arkoutput {
+  background-color: lightgray;
+}
