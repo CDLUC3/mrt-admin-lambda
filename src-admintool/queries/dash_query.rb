@@ -8,7 +8,7 @@ class DashQuery < AdminQuery
  select 
   trim(substring_index(o.erc_where, ';', -1)) doi,
   o.ark,
-  created,
+  date(created),
   (select count(*) from inv.inv_versions v where v.inv_object_id=o.id) as vercount,
   (select count(*) from inv.inv_files f where f.inv_object_id=o.id) as filecount
 from
