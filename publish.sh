@@ -34,9 +34,14 @@ git checkout -- coll-lambda.base.js
 git checkout -- index.html
 sed -i -e "s|/lambda|${ADMIN_ALB_URL}|" lambda.base.js
 sed -i -e "s|/lambda|${COLLADMIN_ALB_URL}|" coll-lambda.base.js
-sed -i -e "s|lambda.base.js|lambda.base.js?${DATESTR}|" index.html
-sed -i -e "s|api-table.js|api-table.js?${DATESTR}|" index.html
-sed -i -e "s|api-table.css|api-table.css?${DATESTR}|" index.html
+
+for file in index.html ark.html doi.html localid.html
+do
+  sed -i -e "s|lambda.base.js|lambda.base.js?${DATESTR}|" $file
+  sed -i -e "s|api-table.js|api-table.js?${DATESTR}|" $file
+  sed -i -e "s|api-table.css|api-table.css?${DATESTR}|" $file
+  sed -i -e "s|api-table.css|arkform.js?${DATESTR}|" $file
+done
 
 # Copy static website assets to S3
 for file in *.*

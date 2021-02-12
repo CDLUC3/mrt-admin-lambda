@@ -64,6 +64,7 @@ module LambdaFunctions
         client = get_mysql
 
         myparams = get_params_from_event(event)
+        puts(myparams)
 
         path = get_key_val(myparams, 'path', 'na')
         query_factory = QueryFactory.new(client, @config['merritt_path'])

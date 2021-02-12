@@ -2,6 +2,7 @@
 require_relative 'query'
 require_relative 'objects_query'
 require_relative 'files_query'
+require_relative 'idlist_query'
 
 # Include all Query classes
 Dir[File.dirname(__FILE__) + '/*query.rb'].each {|file| require file }

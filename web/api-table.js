@@ -65,7 +65,6 @@ function showUrl(url) {
     path = ('path' in pageparams) ? pageparams['path'] : 'path-na';
     key = ('key' in pageparams) ? pageparams['key'] : 'key-na';
     value = (key in localStorage) ? localStorage[key] : 'na';
-    pageparams = {};
     pageparams[key] = value;
     pageparams['path'] = path;
   } else {

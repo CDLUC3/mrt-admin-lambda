@@ -32,7 +32,9 @@
       <form action="index.html">
         <fieldset>
           <legend>Report</legend>
-          <input type="radio" name="path" value="locallist" checked>Object summary</input>
+          <input type="hidden" name="path" value="locallist"/>
+          <input type="radio" name="fields" value="summary" checked>Object summary</input>
+          <input type="radio" name="fields" value="metadata">Object metadata</input>
           <input type="hidden" name="method" value="post"/>
           <input type="hidden" name="key" value="locallist"/>
           <input type="submit"/>
