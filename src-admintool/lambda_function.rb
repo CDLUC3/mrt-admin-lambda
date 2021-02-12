@@ -17,8 +17,9 @@ end
 # Handle GET or POST event structures pass in via the ALB
 def get_params_from_event(event)
   data = event ? event : {}
+  method = data.fetch('httpMethod', 'GET')
 
-  return data.fetch('queryStringParameters', data) unless data.key?('body')
+  return data.fetch('queryStringParameters', data) if method == 'GET'
 
   if data['isBase64Encoded'] && data.key?('body')
     body = Base64.decode64(data['body'])
