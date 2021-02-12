@@ -97,7 +97,10 @@ class QueryFactory
       BigIngestQuery.new(self, path, myparams)
     elsif path == 'dash'
       DashQuery.new(self, path, myparams)
+    elsif path == 'arklist'
+      ArklistQuery.new(self, path, myparams)
     else
+      puts("path #{path} not matched")
       AdminQuery.new(self, path, myparams)
     end
   end

@@ -32,5 +32,7 @@ services:
     ports:
     - published: 8091
       target: 8091
+    stdin_open: true
+    tty: true
     depends_on:
     - lambda-container

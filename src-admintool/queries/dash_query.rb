@@ -1,6 +1,6 @@
 class DashQuery < AdminQuery
   def get_title
-    "Audit Status"
+    "Dash Query"
   end
 
   def get_sql
