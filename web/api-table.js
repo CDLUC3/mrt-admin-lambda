@@ -77,6 +77,9 @@ function showUrl(url) {
     data: pageparams,
     success: function(data) {
       processResult(data);
+      if (method == "POST") {
+        $("#exportJson").hide();
+      }
     },
     error: function( xhr, status ) {
       alert("An error has occurred.  Possibly a timeout.\n"+xhr.responseText)
