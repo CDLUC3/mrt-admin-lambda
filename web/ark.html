@@ -13,15 +13,22 @@
   <body>
     <h1>Merritt Ark Query</h1>
     <div id="arkform">
-      <fieldset>
-        <legend>Input containing arks</legend>
-        <p>Copy a text file containing a set of arks.  The arks will be parsed into a list.</p>
-        <textarea rows="10" cols="80" name="input" id="arkinput"></textarea>
-      </fieldset>
-      <fieldset>
-        <legend>Here are the <output name="count" id="arkcount">0</output> arks that will be processed.</legend>
-        <textarea rows="10" cols="80" name="list" id="arkoutput" readonly="Y"></textarea>
-      </fieldset>
+      <div>
+        <fieldset>
+          <legend>Input containing arks</legend>
+          <p>Copy a text file containing a set of arks.  The arks will be parsed into a list.</p>
+          <textarea rows="10" cols="80" name="input" id="arkinput"></textarea>
+          <div>
+            <input type="button" value="Parse Text"/>
+          </div>
+        </fieldset>
+      </div>
+      <div>
+        <fieldset>
+          <legend>Here are the <output name="count" id="arkcount">0</output> arks that will be processed.</legend>
+          <textarea rows="10" cols="80" name="list" id="arkoutput" readonly="Y"></textarea>
+        </fieldset>
+        </div>
       <form action="index.html">
         <fieldset>
           <legend>Report</legend>
