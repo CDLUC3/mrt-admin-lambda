@@ -46,6 +46,8 @@ module LambdaFunctions
         client = get_mysql
 
         data = event ? event : {}
+
+        puts(event)
         
         myparams = get_key_val(data, 'queryStringParameters', data)
         path = get_key_val(myparams, 'path', 'na')
