@@ -99,6 +99,8 @@ class QueryFactory
       DashQuery.new(self, path, myparams)
     elsif path == 'arklist'
       ArklistQuery.new(self, path, myparams)
+    elsif path == 'locallist'
+      LocalidListQuery.new(self, path, myparams)
     else
       puts("path #{path} not matched")
       AdminQuery.new(self, path, myparams)

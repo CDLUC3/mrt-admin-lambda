@@ -175,7 +175,7 @@ p.buttons {
   display: block;
 }
 
-#arkoutput {
+#arkoutput, #localoutput, #doioutput {
   background-color: lightgray;
 }
 
