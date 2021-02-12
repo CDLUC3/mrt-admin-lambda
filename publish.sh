@@ -46,7 +46,7 @@ do
   sed -i -e "s|lambda.base.js|lambda.base.js?${DATESTR}|" $file
   sed -i -e "s|api-table.js|api-table.js?${DATESTR}|" $file
   sed -i -e "s|api-table.css|api-table.css?${DATESTR}|" $file
-  sed -i -e "s|api-table.css|arkform.js?${DATESTR}|" $file
+  sed -i -e "s|arkform.js|arkform.js?${DATESTR}|" $file
 done
 
 # Copy static website assets to S3
