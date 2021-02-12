@@ -43,6 +43,15 @@ table.results td.name {
   width: 300px !important;
 }
 
+table.results th.localid,
+table.results td.localid,
+table.results th.doi,
+table.results td.doi,
+table.results th.ark,
+table.results td.ark {
+  width: 210px !important;
+}
+
 table.results th.datetime,
 table.results td.datetime {
   width: 150px !important;

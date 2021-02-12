@@ -45,7 +45,12 @@ select
     select sum(billable_size) 
     from inv.inv_files f 
     where f.inv_object_id=o.id and source='producer'
-  ) as psize
+  ) as psize,
+  (
+    select local_id 
+    from inv.inv_localids 
+    where inv_object_ark = o.ark
+  )
 from
   inv.inv_objects o
 where 
@@ -59,11 +64,11 @@ order by doi, created
 end
 
 def get_headers(results)
-  ['DOI', 'Ark', 'Created', 'Num Ver', 'Num File', 'Producer Files', 'File Size', 'Producer Size']
+  ['Parsed erc_where', 'Ark', 'Created', 'Num Ver', 'Num File', 'Producer Files', 'File Size', 'Producer Size', 'Local ID']
 end
 
 def get_types(results)
-  ['doi', 'ark', 'date', 'data', 'data', 'data', 'data', 'data']
+  ['localid', 'ark', 'date', 'data', 'data', 'data', 'data', 'data', 'localid']
 end
 
 end
