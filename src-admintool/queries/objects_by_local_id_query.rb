@@ -13,6 +13,15 @@ class ObjectsByLocalIdQuery < ObjectsQuery
   end
 
   def get_where
-    'where o.erc_where like ?'
+  %{
+    where o.ark = (
+      select 
+        inv_object_ark
+      from 
+        inv.inv_localids li
+      where 
+        li.local_id = ? 
+    ) 
+  }
   end
 end
