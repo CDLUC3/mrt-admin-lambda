@@ -18,12 +18,8 @@ def get_params_from_event(event)
   data = event ? event : {}
 
   puts(data)
-  return data.fetch('queryStringParameters', data) unless data.key?('requestContext')
+  return data.fetch('queryStringParameters', data) unless data.key?('body')
 
-  puts(1111)
-  data = data['requestContext']
-
-  puts(data)
   if data['isBase64Encoded'] && data.key?('body')
     puts(222)
     body = Base64.decode64(data['body'])
