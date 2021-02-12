@@ -18,18 +18,13 @@ end
 def get_params_from_event(event)
   data = event ? event : {}
 
-  puts(data)
   return data.fetch('queryStringParameters', data) unless data.key?('body')
 
   if data['isBase64Encoded'] && data.key?('body')
-    puts(222)
     body = Base64.decode64(data['body'])
-    puts(body)
     return CGI::parse(body).transform_values(&:first)
   end
-  puts(3333)
   body = data.fetch('body', '')
-  puts(body)
   return {} if body.empty?            
   CGI::parse(body).transform_values(&:first)
 end
