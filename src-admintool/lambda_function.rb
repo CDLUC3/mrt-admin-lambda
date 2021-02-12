@@ -47,7 +47,10 @@ module LambdaFunctions
 
         data = event ? event : {}
 
-        puts(event)
+        if (data.key?('requestContenxt'))
+          data = data['requestContext']
+          puts(data['body'])
+        end
         
         myparams = get_key_val(data, 'queryStringParameters', data)
         path = get_key_val(myparams, 'path', 'na')
