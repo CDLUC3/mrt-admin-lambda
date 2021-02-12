@@ -3,6 +3,7 @@ require 'yaml'
 require 'uc3-ssm'
 require 'mysql2'
 require "base64"
+require "cgi"
 require_relative 'queries/query'
 require_relative 'queries/query_factory'
 
@@ -24,13 +25,13 @@ def get_params_from_event(event)
     puts(222)
     body = Base64.decode64(data['body'])
     puts(body)
-    return JSON.parse(body)
+    return CGI::parse(body).transform_values(&:first)
   end
   puts(3333)
   body = data.fetch('body', '')
   puts(body)
   return {} if body.empty?            
-  JSON.parse(body)
+  CGI::parse(body).transform_values(&:first)
 end
 
 
