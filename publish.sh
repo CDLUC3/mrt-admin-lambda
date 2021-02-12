@@ -30,10 +30,10 @@ DATESTR=`date +%Y%m%d_%H%M%S`
 
 # Embed the api path into the javascript for ajax requests
 
-MFILES = "index.html ark.html doi.html localid.html lambda.base.js coll-lambda.base.js"
-HFILES = "index.html ark.html doi.html localid.html"
+MFILES="index.html ark.html doi.html localid.html lambda.base.js coll-lambda.base.js"
+HFILES="index.html ark.html doi.html localid.html"
 
-for file in $MFILES
+for file in ${MFILES}
 do
   git checkout -- $file
 done
@@ -41,7 +41,7 @@ done
 sed -i -e "s|/lambda|${ADMIN_ALB_URL}|" lambda.base.js
 sed -i -e "s|/lambda|${COLLADMIN_ALB_URL}|" coll-lambda.base.js
 
-for file in $HFILES
+for file in ${HFILES}
 do
   sed -i -e "s|lambda.base.js|lambda.base.js?${DATESTR}|" $file
   sed -i -e "s|api-table.js|api-table.js?${DATESTR}|" $file
@@ -55,7 +55,7 @@ do
   aws s3 cp $file s3://${S3WEB_BUCKET}${S3WEB_PATH}
 done
 
-for file in $MFILES
+for file in ${MFILES}
 do
   git checkout -- $file
 done
