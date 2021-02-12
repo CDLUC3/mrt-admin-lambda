@@ -49,7 +49,7 @@ module LambdaFunctions
 
         if (data.key?('requestContenxt'))
           data = data['requestContext']
-          puts(data['body'])
+          puts(data)
         end
         
         myparams = get_key_val(data, 'queryStringParameters', data)
