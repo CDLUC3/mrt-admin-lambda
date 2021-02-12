@@ -29,13 +29,19 @@ SITE_URL=${SITE_URL//dev/${DEPLOY_ENV}}
 DATESTR=`date +%Y%m%d_%H%M%S`
 
 # Embed the api path into the javascript for ajax requests
-git checkout -- lambda.base.js
-git checkout -- coll-lambda.base.js
-git checkout -- index.html
+
+MFILES = "index.html ark.html doi.html localid.html lambda.base.js coll-lambda.base.js"
+HFILES = "index.html ark.html doi.html localid.html"
+
+for file in $MFILES
+do
+  git checkout -- $file
+done
+
 sed -i -e "s|/lambda|${ADMIN_ALB_URL}|" lambda.base.js
 sed -i -e "s|/lambda|${COLLADMIN_ALB_URL}|" coll-lambda.base.js
 
-for file in index.html ark.html doi.html localid.html
+for file in $HFILES
 do
   sed -i -e "s|lambda.base.js|lambda.base.js?${DATESTR}|" $file
   sed -i -e "s|api-table.js|api-table.js?${DATESTR}|" $file
@@ -49,9 +55,10 @@ do
   aws s3 cp $file s3://${S3WEB_BUCKET}${S3WEB_PATH}
 done
 
-git checkout -- coll-lambda.base.js
-git checkout -- lambda.base.js
-git checkout -- index.html
+for file in $MFILES
+do
+  git checkout -- $file
+done
 
 # echo site url
 echo "Website Updated:"
