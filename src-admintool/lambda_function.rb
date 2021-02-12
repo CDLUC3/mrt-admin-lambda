@@ -2,6 +2,7 @@ require 'json'
 require 'yaml'
 require 'uc3-ssm'
 require 'mysql2'
+require "base64"
 require_relative 'queries/query'
 require_relative 'queries/query_factory'
 
@@ -10,6 +11,21 @@ def get_key_val(obj, key, defval='')
   return obj[key] if obj[key]
   return obj[key.to_sym] if obj[key.to_sym]
   defval
+end
+
+# Handle GET or POST event structures pass in via the ALB
+def get_params_from_event(event)
+  data = event ? event : {}
+  return data.fetch('queryStringParameters', data) unless data.key?('requestContext')
+
+  data = data['requestContext']
+  if data['isBase64Encoded'] && data.key?('body')
+    body = Base64.decode64(data['body'])
+    return JSON.parse(body)
+  end
+  body = data.fetch('body', '')
+  return {} if body.empty?            
+  JSON.parse(body)
 end
 
 
@@ -45,14 +61,8 @@ module LambdaFunctions
         @config = Uc3Ssm::ConfigResolver.new.resolve_file_values(file: config_file, resolve_key: config_block, return_key: config_block)
         client = get_mysql
 
-        data = event ? event : {}
+        myparams = get_params_from_event(event)
 
-        if (data.key?('requestContenxt'))
-          data = data['requestContext']
-          puts(data)
-        end
-        
-        myparams = get_key_val(data, 'queryStringParameters', data)
         path = get_key_val(myparams, 'path', 'na')
         query_factory = QueryFactory.new(client, @config['merritt_path'])
         query = query_factory.get_query_for_path(path, myparams)
