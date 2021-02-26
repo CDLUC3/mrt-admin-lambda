@@ -1,7 +1,7 @@
 default:
   dbconf:
     adapter: mysql2
-    encoding: utf8
+    encoding: utf8mb4
     host: "{!SSM: billing/db-host}"
     database: "{!SSM: billing/db-name}"
     port: 3306
@@ -17,7 +17,7 @@ default:
 development:
   dbconf:
     adapter: mysql2
-    encoding: utf8
+    encoding: utf8mb4
     host: "{!ENV: ADMIN_HOST}"
     database: "{!ENV: ADMIN_DATABASE}"
     port: 3306
