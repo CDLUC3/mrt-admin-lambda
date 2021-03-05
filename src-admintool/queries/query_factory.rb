@@ -96,6 +96,8 @@ class QueryFactory
       DoiConflictQuery.new(self, path, myparams)
     elsif path == 'big_ingest'
       BigIngestQuery.new(self, path, myparams)
+    elsif path == 'recent_ingests'
+      RecentIngestsQuery.new(self, path, myparams)
     elsif path == 'dash'
       DashQuery.new(self, path, myparams)
     elsif path == 'arklist'

@@ -369,6 +369,10 @@ function format(cell, v, type, merritt_path) {
     makeLink(cell, v, "index.html?path=collection_group_details&coll="+v);
   } else if (type == 'batch') {
     makeLink(cell, v, "index.html?path=objects_by_batch&batch="+v);
+  } else if (type == 'qbatch') {
+    makeLink(cell, v, "collIndex.html?path=batch&batch="+v);
+  } else if (type == 'qjob') {
+    makeLink(cell, v, "collIndex.html?path=job&job="+v);
   } else if (type == 'mnemonic'){
     makeLink(cell, v, merritt_path + "/m/" + v);
   } else if (type == 'ark'){
