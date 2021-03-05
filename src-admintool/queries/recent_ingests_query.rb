@@ -24,12 +24,12 @@ class RecentIngestsQuery < AdminQuery
         batch_id,
         job_id 
       order by 
-        date(submitted) desc;
+        max(submitted) desc;
     }
   end
 
   def get_params
-    [@days, @items]
+    []
   end
 
   def get_headers(results)
@@ -37,7 +37,7 @@ class RecentIngestsQuery < AdminQuery
   end
 
   def get_types(results)
-    ['', 'batch', '', 'dataint']
+    ['', 'batch', '', '', 'dataint']
   end
 
 end
