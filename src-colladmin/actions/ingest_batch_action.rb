@@ -25,7 +25,7 @@ class IngestBatchAction < ForwardToIngestAction
     ]
   end
 
-  {"fil:batchFileState":{"xmlns:fil":"http://uc3.cdlib.org/ontology/mrt/store/file","fil:batchManifest":"","fil:jobFile":{"fil:batchFile":{"fil:file":"jid-5c9542e8-eb95-4657-8066-f03b0509ab81"}}}}
+  # {"fil:batchFileState":{"xmlns:fil":"http://uc3.cdlib.org/ontology/mrt/store/file","fil:batchManifest":"","fil:jobFile":{"fil:batchFile":{"fil:file":"jid-5c9542e8-eb95-4657-8066-f03b0509ab81"}}}}
 
   def table_rows(body)
     puts(body)
