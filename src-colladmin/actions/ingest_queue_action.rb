@@ -1,4 +1,3 @@
-require 'httpclient'
 require_relative 'action'
 require_relative 'forward_to_ingest_action'
 
@@ -13,8 +12,8 @@ class IngestQueueAction < ForwardToIngestAction
 
   def table_headers
     [
-      'Job',
       'Batch',
+      'Job',
       'Profile',
       'Date',
       'User',
@@ -28,8 +27,8 @@ class IngestQueueAction < ForwardToIngestAction
 
   def table_types
     [
-      '',
-      '',
+      'qbatch',
+      'qjob',
       '',
       '',
       '',
@@ -54,8 +53,8 @@ class IngestQueueAction < ForwardToIngestAction
     data.each do |r|
       rows.append(
         [
-          r.fetch('que:jobID', ''),
           r.fetch('que:batchID', ''),
+          r.fetch('que:jobID', ''),
           r.fetch('que:profile', ''),
           r.fetch('que:date', ''),
           r.fetch('que:user', ''),
@@ -72,6 +71,15 @@ class IngestQueueAction < ForwardToIngestAction
 
   def hasTable
     true
+  end
+
+  def get_alternative_queries
+    [
+      {
+        label: 'Completed Ingests', 
+        url: 'index.html?path=recent_ingests'
+      }
+    ]
   end
 
 end

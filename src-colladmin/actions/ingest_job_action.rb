@@ -1,7 +1,7 @@
 require_relative 'action'
 require_relative 'forward_to_ingest_action'
 
-class IngestStateAction < ForwardToIngestAction
+class IngestJobAction < ForwardToIngestAction
   def initialize(config, path, myparams)
     super(config, path, myparams, 'state')
   end

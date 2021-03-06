@@ -23,8 +23,7 @@ class ForwardToIngestAction < AdminAction
       group_col: nil,
       show_grand_total: false,
       merritt_path: @merritt_path,
-      alternative_queries: [
-      ],
+      alternative_queries: get_alternative_queries,
       iterate: false
     }.to_json
   end
@@ -44,6 +43,9 @@ class ForwardToIngestAction < AdminAction
 
   def get_ingest_server
     @config.fetch('ingest-services', '').split(',').first
+  end
+  def get_alternative_queries
+    []
   end
 
 end

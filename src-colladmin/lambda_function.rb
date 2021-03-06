@@ -9,6 +9,8 @@ require_relative 'actions/forward_to_ingest_action'
 require_relative 'actions/ingest_queue_action'
 require_relative 'actions/ingest_state_action'
 require_relative 'actions/ingest_profile_action'
+require_relative 'actions/ingest_batch_action'
+require_relative 'actions/ingest_job_action'
 require_relative 'actions/ldap_action'
 
 def get_key_val(obj, key, defval='')
@@ -48,6 +50,10 @@ module LambdaFunctions
           result = IngestStateAction.new(@config, path, myparams).get_data
         elsif path == "queues" 
           result = IngestQueueAction.new(@config, path, myparams).get_data
+        elsif path == "batch" 
+          result = IngestBatchAction.new(@config, path, myparams).get_data
+        elsif path == "job" 
+          result = IngestJobAction.new(@config, path, myparams).get_data
         elsif path == "submissions/pause" 
           result = ForwardToIngestAction.new(@config, path, myparams, "admin/#{path}").get_data
         elsif path == "submissions/unpause" 

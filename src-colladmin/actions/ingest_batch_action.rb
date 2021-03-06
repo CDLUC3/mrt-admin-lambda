@@ -1,13 +1,14 @@
 require_relative 'action'
 require_relative 'forward_to_ingest_action'
 
-class IngestStateAction < ForwardToIngestAction
+class IngestBatchAction < ForwardToIngestAction
   def initialize(config, path, myparams)
-    super(config, path, myparams, 'state')
+    @batch = myparams.fetch('batch', '')
+    super(config, path, myparams, "admin/bid/#{@batch}")
   end
 
   def get_title
-    "Ingest State"
+    "Ingest Batch Detail"
   end
 
   def table_headers
@@ -24,9 +25,12 @@ class IngestStateAction < ForwardToIngestAction
     ]
   end
 
+  {"fil:batchFileState":{"xmlns:fil":"http://uc3.cdlib.org/ontology/mrt/store/file","fil:batchManifest":"","fil:jobFile":{"fil:batchFile":{"fil:file":"jid-5c9542e8-eb95-4657-8066-f03b0509ab81"}}}}
+
   def table_rows(body)
+    puts(body)
     data = JSON.parse(body)
-    data = data.fetch('ing:ingestServiceState', {})
+    data = data.fetch('fil:batchFileState', {})
     rows = []
     data.keys.each do |k|
       v = 

@@ -10,7 +10,7 @@
 | Get Queue Details (paginated) | GET /queues/queue-id | Ingest | GET /admin/queues/queue-id | (Yet to do) |
 | Get Submission (Batch?) Details | GET /queue/queue-id/submission-id | Ingest | GET /admin/queue/queue-id/submission-id | (Yet to do) |
 | Pause/Unpause submission | POST /queue/submission-status/<state> | Ingest | POST /admin/submission-status/<state> | (Yet to do) |
-| Batch detail | GET /bid/*bid* | Ingest | GET /bid/*bid* | List of jobs in batch.  Content of submission manifest |
+| Batch detail | GET /batch?batch=*bid* | Ingest | GET /bid/*bid* | List of jobs in batch.  Content of submission manifest |
 | Job detail | GET /jid-erc/*bid*/*jid* | Ingest | GET /bid/*bid*/*jid* | Job ERC data |
 | Restart submission | POST /queue/queue-id/submission-id | Ingest | POST /admin/queue/queue-id/submission-id | |
 | Generate Profile/Ownership Object | Javascript | Ezid | GET >> | User will copy/paste into Git |
