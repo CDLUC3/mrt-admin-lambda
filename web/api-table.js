@@ -372,7 +372,10 @@ function format(cell, v, type, merritt_path) {
   } else if (type == 'qbatch') {
     makeLink(cell, v, "collIndex.html?path=batch&batch="+v);
   } else if (type == 'qjob') {
-    makeLink(cell, v, "collIndex.html?path=job&job="+v);
+    var arr = v.split("/");
+    var b = arr[0];
+    var j = arr.length > 1 ? arr[1] : "";
+    makeLink(cell, j, "collIndex.html?path=job&batch="+b+"&job="+j);
   } else if (type == 'mnemonic'){
     makeLink(cell, v, merritt_path + "/m/" + v);
   } else if (type == 'ark'){

@@ -51,10 +51,12 @@ class IngestQueueAction < ForwardToIngestAction
     data = [data] if data.instance_of?(Hash)
     rows = []
     data.each do |r|
+      batch = r.fetch('que:batchID', '')
+      job = r.fetch('que:jobID', '')
       rows.append(
         [
-          r.fetch('que:batchID', ''),
-          r.fetch('que:jobID', ''),
+          batch,
+          "#{batch}/#{job}",
           r.fetch('que:profile', ''),
           r.fetch('que:date', ''),
           r.fetch('que:user', ''),

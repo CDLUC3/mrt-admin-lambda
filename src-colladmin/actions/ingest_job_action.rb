@@ -3,7 +3,9 @@ require_relative 'forward_to_ingest_action'
 
 class IngestJobAction < ForwardToIngestAction
   def initialize(config, path, myparams)
-    super(config, path, myparams, 'state')
+    @batch = myparams.fetch('batch', '')
+    @job = myparams.fetch('job', '')
+    super(config, path, myparams, "admin/jid-erc/#{@batch}/#{@job}")
   end
 
   def get_title
@@ -25,16 +27,13 @@ class IngestJobAction < ForwardToIngestAction
   end
 
   def table_rows(body)
+    puts(body)
     data = JSON.parse(body)
-    data = data.fetch('ing:ingestServiceState', {})
+    data = data.fetch('fil:jobFileState', {})
+    data = data.fetch('fil:jobFile', {})
     rows = []
     data.keys.each do |k|
-      v = 
-      if k == 'ing:storageInstances' 
-        rows.append([k, data.fetch("ing:storageInstances", {}).fetch("ing:storageURL", {}).fetch("ing:uRL", "")])
-      else
-        rows.append([k, data.fetch(k, "")])
-      end
+      rows.append([k, data.fetch(k, "")])
     end
     rows
   end

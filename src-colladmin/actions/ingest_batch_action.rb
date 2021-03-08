@@ -13,33 +13,30 @@ class IngestBatchAction < ForwardToIngestAction
 
   def table_headers
     [
-      'Key',
-      'Value'
+      'Batch Manifest',
+      'Job',
+      'Comment'
     ]
   end
 
   def table_types
     [
       '',
+      'qjob',
       ''
     ]
   end
 
-  # {"fil:batchFileState":{"xmlns:fil":"http://uc3.cdlib.org/ontology/mrt/store/file","fil:batchManifest":"","fil:jobFile":{"fil:batchFile":{"fil:file":"jid-5c9542e8-eb95-4657-8066-f03b0509ab81"}}}}
-
   def table_rows(body)
-    puts(body)
     data = JSON.parse(body)
     data = data.fetch('fil:batchFileState', {})
+    bm  = data.fetch("fil:batchManifest", "")
+    jf  = data.fetch("fil:jobFile", {})
+    jbf = jf.fetch("fil:batchFile", {})
+    jbff = jbf.fetch("fil:file", "")
+
     rows = []
-    data.keys.each do |k|
-      v = 
-      if k == 'ing:storageInstances' 
-        rows.append([k, data.fetch("ing:storageInstances", {}).fetch("ing:storageURL", {}).fetch("ing:uRL", "")])
-      else
-        rows.append([k, data.fetch(k, "")])
-      end
-    end
+    rows.append([bm, "#{@batch}/#{jbff}", "how do mult jobs get represented"])
     rows
   end
 
