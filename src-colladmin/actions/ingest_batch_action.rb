@@ -13,9 +13,9 @@ class IngestBatchAction < ForwardToIngestAction
 
   def table_headers
     [
-      'Batch Manifest',
+      'Key',
       'Job',
-      'Comment'
+      'Data'
     ]
   end
 
@@ -29,14 +29,34 @@ class IngestBatchAction < ForwardToIngestAction
 
   def table_rows(body)
     data = JSON.parse(body)
-    data = data.fetch('fil:batchFileState', {})
-    bm  = data.fetch("fil:batchManifest", "")
-    jf  = data.fetch("fil:jobFile", {})
-    jbf = jf.fetch("fil:batchFile", {})
-    jbff = jbf.fetch("fil:file", "")
-
     rows = []
-    rows.append([bm, "#{@batch}/#{jbff}", "how do mult jobs get represented"])
+    data = data.fetch('fil:batchFileState', {})
+    bm  = data.fetch("fil:batchManifest", {})
+    bmdata = bm.fetch("fil:manifest", "")
+    
+    rows.append(["Batch Manifest", "", bmdata]) unless bmdata.empty?
+    
+    bmdata = bm.fetch("fil:content", "")
+
+    if !bmdata.empty? 
+      arr = bmdata.split("&#10;")
+      arr.each do |r|
+        next if r[0] == '#'
+        carr = r.split("|")
+        rows.append(["Manifest File", "", carr[5]])
+      end  
+    end
+    
+    jf  = data.fetch("fil:jobFile", {})
+    jbf = jf.fetch("fil:batchFile", [])
+    jbf = [jbf] unless jbf.instance_of?(Array)
+
+    jbf.each do |jfobj|
+      jff = jfobj.fetch("fil:file", "")
+      puts(jff)
+
+      rows.append(["Job", "#{@batch}/#{jff}", ""])
+    end
     rows
   end
 
