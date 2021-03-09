@@ -1,63 +1,40 @@
 require_relative 'action'
 require_relative 'forward_to_ingest_action'
+require_relative '../lib/queue'
 
 class IngestBatchAction < ForwardToIngestAction
   def initialize(config, path, myparams)
     @batch = myparams.fetch('batch', '')
-    super(config, path, myparams, "admin/bid/#{@batch}")
+    super(config, path, myparams, "admin/queues")
   end
 
   def get_title
-    "Ingest Batch Detail"
+    "Ingest Batches #{@batch}"
   end
 
   def table_headers
-    [
-      'Key',
-      'Job',
-      'Data'
-    ]
+    if @batch.empty?
+      Batch.table_headers
+    else
+      QueueEntry.table_headers
+    end
   end
 
   def table_types
-    [
-      '',
-      'qjob',
-      ''
-    ]
+    if @batch.empty?
+      Batch.table_types
+    else
+      QueueEntry.table_types
+    end
   end
 
   def table_rows(body)
-    data = JSON.parse(body)
-    rows = []
-    data = data.fetch('fil:batchFileState', {})
-    bm  = data.fetch("fil:batchManifest", {})
-    bmdata = bm.fetch("fil:manifest", "")
-    
-    rows.append(["Batch Manifest", "", bmdata]) unless bmdata.empty?
-    
-    bmdata = bm.fetch("fil:content", "")
-
-    if !bmdata.empty? 
-      arr = bmdata.split("&#10;")
-      arr.each do |r|
-        next if r[0] == '#'
-        carr = r.split("|")
-        rows.append(["Manifest File", "", carr[5]])
-      end  
+    queueList = QueueList.new(body, @batch)
+    if @batch.empty?
+      queueList.to_table_batches
+    else
+      queueList.to_table_jobs
     end
-    
-    jf  = data.fetch("fil:jobFile", {})
-    jbf = jf.fetch("fil:batchFile", [])
-    jbf = [jbf] unless jbf.instance_of?(Array)
-
-    jbf.each do |jfobj|
-      jff = jfobj.fetch("fil:file", "")
-      puts(jff)
-
-      rows.append(["Job", "#{@batch}/#{jff}", ""])
-    end
-    rows
   end
 
   def hasTable
