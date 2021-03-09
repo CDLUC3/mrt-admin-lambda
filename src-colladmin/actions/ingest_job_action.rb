@@ -9,7 +9,7 @@ class IngestJobAction < ForwardToIngestAction
   end
 
   def get_title
-    "Ingest State"
+    "Ingest Job #{@job}"
   end
 
   def table_headers
@@ -27,7 +27,6 @@ class IngestJobAction < ForwardToIngestAction
   end
 
   def table_rows(body)
-    puts(body)
     data = JSON.parse(body)
     data = data.fetch('fil:jobFileState', {})
     data = data.fetch('fil:jobFile', {})

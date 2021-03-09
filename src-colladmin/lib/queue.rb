@@ -154,8 +154,6 @@ class QueueList < MerrittJson
       @batches[q.bid] = qlist
       @jobs.append(q)
     end
-
-
   end
 
   def to_table_batches
@@ -170,6 +168,27 @@ class QueueList < MerrittJson
     table = []
     @jobs.each do |q|
       table.append(q.to_table_row)
+    end
+    table
+  end
+end
+
+class JobList < MerrittJson
+  def initialize(body)
+    @jobs = []
+    data = JSON.parse(body)
+    data = fetchHashVal(data, 'fil:batchFileState')
+    data = fetchHashVal(data, 'fil:jobFile')
+    list = fetchArrayVal(data, 'fil:batchFile')
+    list.each do |obj|
+      @jobs.append(obj.fetch('fil:file', ''))
+    end
+  end
+
+  def to_table
+    table = []
+    @jobs.each do |q|
+      table.append(["JOB_ONLY/#{q}"])
     end
     table
   end
