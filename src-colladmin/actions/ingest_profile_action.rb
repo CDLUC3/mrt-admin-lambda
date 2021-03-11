@@ -36,10 +36,17 @@ class IngestProfileAction < ForwardToIngestAction
     end
   end
 
+  def get_template(profile)
+    return profile if profile.is_template?
+    resp = get_data_for_endpoint("admin/profile/TEMPLATE-PROFILE")
+    return nil unless resp.status == 200
+    SingleIngestProfileWrapper.new(resp.body).profile
+  end
+
   def table_rows(body)
     if specific_profile?
       sprofile = SingleIngestProfileWrapper.new(body).profile
-      sprofile.table_rows
+      sprofile.table_rows(get_template(sprofile))
     else
       profiles = ProfileList.new(body)
       profiles.table_rows

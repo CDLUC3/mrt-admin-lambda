@@ -1,6 +1,7 @@
 require_relative 'merritt_json'
 class QueueEntry < MerrittJson
   def initialize(obj)
+    super()
     @bid = obj.fetch('que:batchID', '')
     @job = obj.fetch('que:jobID', '')
     @profile = obj.fetch('que:profile', '')
@@ -77,6 +78,7 @@ end
 
 class Batch < MerrittJson
   def initialize(bid)
+    super()
     @bid = bid
     @jobs = []
     @statuses = {}
@@ -139,6 +141,7 @@ end
 
 class QueueList < MerrittJson
   def initialize(body, filter = "")
+    super()
     @batches = {}
     @jobs = []
     data = JSON.parse(body)
@@ -175,6 +178,7 @@ end
 
 class JobList < MerrittJson
   def initialize(body)
+    super()
     @jobs = []
     data = JSON.parse(body)
     data = fetchHashVal(data, 'fil:batchFileState')

@@ -1,5 +1,65 @@
+class MerrittJsonProperty
+  def initialize(symbol, label, namespace, jsonkey, defval, source = nil)
+    @symbol = symbol
+    @label = label
+    @jsonkey = namespace.empty? ? jsonkey : "#{namespace}:#{jsonkey}"
+    if source.nil?
+      @value = defval
+    else
+      @value = source.fetch(@jsonkey, defval)
+      if defval.instance_of?(Array) 
+        if !@value.instance_of?(Array)
+          @value = [@value]
+        end
+      elsif defval.instance_of?(Hash)
+        if @value == ""
+          @value = {}
+        end
+      end
+    end
+  end
+
+  def value
+    @value
+  end
+
+  def label
+    @label
+  end
+end
+
 class MerrittJson
+  def initialize
+    @propertyList = []
+    @propertyHash = {}
+  end
+
+  def addProperty(symbol, label, namespace, key, defval, source)
+    p = MerrittJsonProperty.new(symbol, label, namespace, key, defval, source)
+    @propertyList.append(symbol)
+    @propertyHash[symbol] = p
+  end
+
+  def addPropertyVal(symbol, label, defval)
+    p = MerrittJsonProperty.new(symbol, label, "", "", defval)
+    @propertyList.append(symbol)
+    @propertyHash[symbol] = p
+  end
+
+  def getValue(symbol, defval = "")
+    return defval unless @propertyHash.key?(symbol)
+    @propertyHash[symbol].value
+  end
    
+  def getLabel(symbol)
+    return "N/A" unless @propertyHash.key?(symbol)
+    @propertyHash[symbol].label
+  end
+
+  def getPropertyList
+    @propertyList
+  end
+
   # Handle issues with Merritt Core2 JSON calls
   # Address issue in which single values are not returned as a single value array
   def fetchArrayVal(obj, key)
@@ -17,15 +77,4 @@ class MerrittJson
     val
   end
 
-  def nsFetch(obj, ns, key, defval)
-    obj.fetch("#{ns}:#{key}", defval)
-  end
-
-  def nsFetchArrayVal(obj, ns, key)
-    fetchArrayVal(obj, "#{ns}:#{key}")
-  end
-
-  def nsFetchHashVal(obj, ns, key)
-    fetchHashVal(obj, "#{ns}:#{key}")
-  end
 end

@@ -28,11 +28,16 @@ class ForwardToIngestAction < AdminAction
     }.to_json
   end
 
-  def get_data
-    cli = HTTPClient.new
+  def get_data_for_endpoint(endpoint)
     url = "#{get_ingest_server}#{@endpoint}"
+    cli = HTTPClient.new
+    resp = cli.get(url, {}, {"Accept": "application/json"})
+    resp
+  end
+
+  def get_data
     begin
-      resp = cli.get(url, {}, {"Accept": "application/json"})
+      resp = get_data_for_endpoint(@endpoint)
       return { message: "Status #{resp.status} for #{@endpoint}" }.to_json unless resp.status == 200
       return convertJsonToTable(resp.body) unless resp.body.empty?
       { message: "No response for #{@endpoint}" }.to_json

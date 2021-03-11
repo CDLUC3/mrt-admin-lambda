@@ -395,6 +395,12 @@ function format(cell, v, type, merritt_path) {
       makeLi(ul, txt);
     });
     cell.addClass("hasdata");
+  } else if (type == 'vallist' && (""+v).match(/^list:/)){
+    var ul = makeUl(cell);
+    $.each(v.replace(/^list:/,'').split(","), function(i,txt){
+      makeLi(ul, txt);
+    });
+    cell.addClass("hasdata");
   } else if (type == 'list-doc' && v != ''){
     var ul = makeUl(cell);
     $.each(v.split(","), function(i,txt){

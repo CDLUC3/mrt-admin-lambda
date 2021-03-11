@@ -2,6 +2,7 @@ require_relative 'merritt_json'
 
 class ProfileList < MerrittJson
   def initialize(body)
+    super()
     @profiles = []
     data = JSON.parse(body)
     data = fetchHashVal(data, 'prosf:profilesFullState')
@@ -50,6 +51,7 @@ end
 
 class SingleIngestProfileWrapper < MerrittJson
   def initialize(json)
+    super()
     data = JSON.parse(json)
     @profile = IngestProfile.new(fetchHashVal(data, "pro:profileState"))
   end
@@ -60,40 +62,73 @@ class SingleIngestProfileWrapper < MerrittJson
 end
 
 class IngestProfile < MerrittJson
-  def initialize(json, namespace = 'pro')
-    @creationDate = nsFetch(json, namespace, "creationDate", "")
-    @modificationDate = nsFetch(json, namespace, "modificationDate", "")
-    @profileDescription = nsFetch(json, namespace, "profileDescription", "")
-    @objectMinterURL = nsFetch(json, namespace, "objectMinterURL", "")
-    @collection = nsFetch(json, namespace, "collection", "")
-    @identifierScheme = nsFetch(json, namespace, "identifierScheme", "")
-    @identifierNamespace = nsFetch(json, namespace, "identifierNamespace", "")
-    @notificationType = nsFetch(json, namespace, "notificationType", "")
-    @aggregateType = nsFetch(json, namespace, "aggregateType", "")
-    @profileID = nsFetch(json, namespace, "profileID", "")
-    @nodeID = nsFetch(nsFetchHashVal(json, namespace, "targetStorage"), namespace, "nodeID", "")
-    @objectType = nsFetch(json, namespace, "objectType", "")
-    @context = nsFetch(json, namespace, "context", "")
-    @owner = nsFetch(json, namespace, "owner", "")
 
-    @contactsEmail = nsFetchArrayVal(json, namespace, "contactsEmail")
-    @ingestHandlers = nsFetchArrayVal(nsFetchHashVal(json, namespace, "ingestHandlers"), namespace, "handlerState")
-    @queueHandlers = nsFetchArrayVal(nsFetchHashVal(json, namespace, "queueHandlers"), namespace, "handlerState")
+  def initialize(json, namespace = 'pro')
+    super()
+    addProperty(:creationDate, "Creation Date", namespace, "creationDate", "", json)
+    addProperty(:modificationDate, "Modification Date", namespace, "modificationDate", "", json)
+    addProperty(:profileDescription, "Profile Description", namespace, "profileDescription", "", json)
+    addProperty(:objectMinterURL, "Minter URL", namespace, "objectMinterURL", "", json)
+    addProperty(:collection, "Collection", namespace, "collection", "", json)
+    addProperty(:identifierScheme, "Identifier Scheme", namespace, "identifierScheme", "", json)
+    addProperty(:identifierNamespace, "Identifier Namespace", namespace, "identifierNamespace", "", json)
+    addProperty(:notificationType, "Notification Type", namespace, "notificationType", "", json)
+    addProperty(:aggregateType, "Aggregate Type", namespace, "aggregateType", "", json)
+    addProperty(:profileID, "Profile ID", namespace, "profileID", "", json)
+    addProperty(:nodeID, "Node ID", namespace, "nodeID", "", json.fetch("#{namespace}:targetStorage", {}))
+    addProperty(:objectType, "Object Type", namespace, "objectType", "", json)
+    addProperty(:context, "Context", namespace, "context", "", json)
+    addProperty(:owner, "Owner", namespace, "owner", "", json)
+
+    arr = []
+    fetchArrayVal(json, "#{namespace}:contactsEmail").each do |obj|
+      v = fetchHashVal(obj, "#{namespace}:notification").fetch("#{namespace}:contactEmail", "")
+      arr.append(v) unless v.empty?
+    end
+    addPropertyVal(:contactsEmail, "Contact Email", arr)
+    addPropertyVal(
+      :ingestHandlers, 
+      "Ingest Handlers", 
+      handler_list(
+        fetchArrayVal(
+          fetchHashVal(
+            json, 
+            "#{namespace}:ingestHandlers"
+          ),
+          "#{namespace}:handlerState"
+        ),
+        namespace
+      )
+    )
+    addPropertyVal(
+      :queueHandlers, 
+      "Queue Handlers", 
+      handler_list(
+        fetchArrayVal(
+          fetchHashVal(
+            json, 
+            "#{namespace}:queueHandlers"
+          ),
+          "#{namespace}:handlerState"
+        ),
+        namespace
+      )
+    )
   end
 
   def self.table_headers
     [
       'Key',
       'Value',
-      'List Value'
+      'Diff'
     ]
   end
 
   def self.table_types
     [
       '',
-      'name',
-      'list'
+      'vallist',
+      ''
     ]
   end
 
@@ -106,48 +141,44 @@ class IngestProfile < MerrittJson
     @profileID
   end
 
-  def handler_list(arr) 
+  def handler_list(arr, namespace = "pro") 
+    puts("hl")
+    puts(arr)
     a = []
     arr.each do |row|
-      v = row.fetch('pro:handlerName', '')
+      v = row.fetch("#{namespace}:handlerName", '')
       next if v.empty?
       a.append(v.gsub('org.cdlib.mrt.ingest.handlers.', ''))
     end
-    a.join(",")
+    a
+  end
+
+  def addRow(rows, label, val, templateval)
+    if val.instance_of?(Array)
+      rows.append([label, "list:#{val.join(",")}", 'n/a'])
+    else 
+      rows.append([label, val, val == templateval ? "" : templateval])
+    end
   end
   
-  def table_rows
+  def table_rows(template)
     rows = []
-    rows.append(["Profile Id", profileID, ""])
-    rows.append(["Profile Description", @profileDescription, ""])
-    rows.append(["Creation Date", @creationDate, ""])
-    rows.append(["Modification DAte", @modificationDate, ""])
-    rows.append(["Minter URL", @objectMinterURL, ""])
-    rows.append(["Identifier Scheme", @identifierScheme, ""])
-    rows.append(["Identifier Namespace", @identifierNamespace, ""])
-    rows.append(["Notification Type", @notificationType, ""])
-    rows.append(["Aggregate Type", @aggregateType, ""])
-    rows.append(["Node Id", @nodeID, ""])
-    rows.append(["Object Type", @objectType, ""])
-    rows.append(["Context", @context, ""])
-    rows.append(["Owner", @owner, ""])
-
-    rows.append(["Ingest Handlers", "", handler_list(@ingestHandlers)])
-    rows.append(["Queue Handlers", "", handler_list(@queueHandlers)])
-    rows.append(["Contacts", "", handler_list(@contactsEmail)])
+    getPropertyList.each do |prop|
+      addRow(rows, getLabel(prop), getValue(prop), template.getValue(prop))
+    end
     rows
   end
 
   def table_row_summary
     [
-      profileID,
-      @profileDescription,
-      @owner,
-      @context,
-      @objectType,
-      @objectMinterURL,
-      @identifierNamespace,
-      @nodeID
+      getValue(:profileID),
+      getValue(:profileDescription),
+      getValue(:owner),
+      getValue(:context),
+      getValue(:objectType),
+      getValue(:objectMinterURL),
+      getValue(:identifierNamespace),
+      getValue(:nodeID)
     ]
   end
 end
