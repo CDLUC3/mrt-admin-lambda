@@ -1,13 +1,14 @@
 require 'httpclient'
+require 'cgi'
 require_relative 'action'
 require_relative 'forward_to_ingest_action'
 require_relative '../lib/profile'
 
 class IngestProfileAction < ForwardToIngestAction
   def initialize(config, path, myparams)
-    @profile = myparams.fetch('profile', '')
+    @profile = CGI.unescape(myparams.fetch('profile', ''))
     endpoint = 'admin/profiles-full' 
-    endpoint = "admin/profile/#{@profile}" if specific_profile?
+    endpoint = "admin/profile/#{CGI.escape(@profile)}" if specific_profile?
     super(config, path, myparams, endpoint)
   end
 

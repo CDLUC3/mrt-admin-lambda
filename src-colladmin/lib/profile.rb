@@ -40,7 +40,7 @@ class ProfileList < MerrittJson
   def table_rows
     rows = []
     @profiles.each do |p|
-      next if p.is_template?
+      #next if p.is_template?
       rows.append(p.table_row_summary)
     end
     rows
@@ -101,6 +101,11 @@ class IngestProfile < MerrittJson
     @profileID == "${NAME}"
   end
 
+  def profileID
+    return "TEMPLATE-PROFILE" if is_template?
+    @profileID
+  end
+
   def handler_list(arr) 
     a = []
     arr.each do |row|
@@ -113,15 +118,29 @@ class IngestProfile < MerrittJson
   
   def table_rows
     rows = []
-    rows.append(["Profile Id", @profileID, ""])
+    rows.append(["Profile Id", profileID, ""])
     rows.append(["Profile Description", @profileDescription, ""])
+    rows.append(["Creation Date", @creationDate, ""])
+    rows.append(["Modification DAte", @modificationDate, ""])
+    rows.append(["Minter URL", @objectMinterURL, ""])
+    rows.append(["Identifier Scheme", @identifierScheme, ""])
+    rows.append(["Identifier Namespace", @identifierNamespace, ""])
+    rows.append(["Notification Type", @notificationType, ""])
+    rows.append(["Aggregate Type", @aggregateType, ""])
+    rows.append(["Node Id", @nodeID, ""])
+    rows.append(["Object Type", @objectType, ""])
+    rows.append(["Context", @context, ""])
+    rows.append(["Owner", @owner, ""])
+
     rows.append(["Ingest Handlers", "", handler_list(@ingestHandlers)])
+    rows.append(["Queue Handlers", "", handler_list(@queueHandlers)])
+    rows.append(["Contacts", "", handler_list(@contactsEmail)])
     rows
   end
 
   def table_row_summary
     [
-      @profileID,
+      profileID,
       @profileDescription,
       @owner,
       @context,
