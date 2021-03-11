@@ -98,8 +98,6 @@ class QueryFactory
       BigIngestQuery.new(self, path, myparams)
     elsif path == 'recent_ingests'
       RecentIngestsQuery.new(self, path, myparams)
-    elsif path == 'dash'
-      DashQuery.new(self, path, myparams)
     elsif path == 'arklist'
       ArklistQuery.new(self, path, myparams)
     elsif path == 'locallist'

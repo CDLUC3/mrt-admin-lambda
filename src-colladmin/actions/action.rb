@@ -1,5 +1,5 @@
 require 'cgi'
-require 'aws-sdk-s3'
+# require 'aws-sdk-s3'
 require 'zip'
 require 'mysql2'
 
@@ -10,10 +10,6 @@ class AdminAction
     @myparams = myparams
     @format = 'report'
     @merritt_path = config.fetch('merritt_path','na')
-  end
-
-  def skip_s3
-    ENV.fetch('USE_S3', '') == 'N'
   end
 
   def get_mysql
@@ -44,25 +40,6 @@ class AdminAction
 
   def get_title
     "Collection Admin Query"
-  end
-
-  def get_s3zip_profiles
-    s3 = Aws::S3::Client.new({region: 'us-west-2'})
-    bucket = @bucket
-    key = @profiles
-    resp = s3.get_object({bucket: bucket, key: key})
-    resp.body
-  end
-
-  def get_profile(pname)
-    return IngestProfile.create_from_file("/profiles/#{pname}", @template) if skip_s3
-    Zip::InputStream.open(get_s3zip_profiles) do |io|
-      while (entry = io.get_next_entry)
-        next unless pname == entry.name
-        return IngestProfile.create_from_stream(entry.name, io.read, @template)
-      end
-    end
-    return IngestProfile.create_from_stream("", StringIO.new(""), @template)
   end
 
 end

@@ -3,8 +3,6 @@ require 'yaml'
 require 'uc3-ssm'
 
 require_relative 'actions/action'
-require_relative 'actions/all_profiles'
-require_relative 'actions/compare_profiles'
 require_relative 'actions/forward_to_ingest_action'
 require_relative 'actions/ingest_queue_action'
 require_relative 'actions/ingest_state_action'

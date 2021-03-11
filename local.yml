@@ -8,5 +8,4 @@ services:
     environment:
       MERRITT_ADMIN_CONFIG: development
       USE_MYSQL: N
-      USE_S3: N
       INGEST_SERVICES: "${HOSTNAME}.cdlib.org:8080/ingest/"

@@ -17,4 +17,15 @@ class MerrittJson
     val
   end
 
+  def nsFetch(obj, ns, key, defval)
+    obj.fetch("#{ns}:#{key}", defval)
+  end
+
+  def nsFetchArrayVal(obj, ns, key)
+    fetchArrayVal(obj, "#{ns}:#{key}")
+  end
+
+  def nsFetchHashVal(obj, ns, key)
+    fetchHashVal(obj, "#{ns}:#{key}")
+  end
 end

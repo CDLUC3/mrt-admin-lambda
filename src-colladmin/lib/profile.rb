@@ -1,142 +1,134 @@
-class IngestProfile
-   
-  def self.get_fname(path)
-    path.split('/').last
+require_relative 'merritt_json'
+
+class ProfileList < MerrittJson
+  def initialize(body)
+    @profiles = []
+    data = JSON.parse(body)
+    data = fetchHashVal(data, 'prosf:profilesFullState')
+    data = fetchHashVal(data, 'prosf:profilesFull')
+    fetchArrayVal(data, 'prosf:profileState').each do |json|
+      @profiles.append(IngestProfile.new(json, 'prosf'))
+    end   
   end
 
-  def self.profile?(path)
-    return false if IngestProfile.get_fname(path) == 'TEMPLATE-PROFILE'
-    return false unless File.file?(path)
-    return false unless File.readable?(path)
-    true
-  end
-
-  def self.s3_profile?(path)
-    return false if IngestProfile.get_fname(path) == 'TEMPLATE-PROFILE'
-    return false if path.include?('/')
-    true
-  end
-
-  def self.get_single_labels
+  def self.table_headers
     [
-      'Identifier-scheme',
-      'Identifier-namespace',
-      'Type',
-      'Role',
-      'StorageService',
-      'StorageNode',
-      'ObjectMinterURL',
-      'NotificationType'
+      'Profile ID',
+      'Description',
+      'Owner',
+      'Context',
+      'Object Type',
+      'Minter',
+      'Ident Namespace',
+      'Node Id',
     ]
   end
 
-  def self.get_sorted_labels
+  def self.table_types
     [
-      'Collection',
-      'Notification',
-      'Handler',
-      'HandlerQueue'
+      'profile',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
     ]
   end
 
-  def self.skip_diff_labels
+  def table_rows
+    rows = []
+    @profiles.each do |p|
+      next if p.is_template?
+      rows.append(p.table_row_summary)
+    end
+    rows
+  end
+
+end
+
+class SingleIngestProfileWrapper < MerrittJson
+  def initialize(json)
+    data = JSON.parse(json)
+    @profile = IngestProfile.new(fetchHashVal(data, "pro:profileState"))
+  end
+
+  def profile
+    @profile
+  end
+end
+
+class IngestProfile < MerrittJson
+  def initialize(json, namespace = 'pro')
+    @creationDate = nsFetch(json, namespace, "creationDate", "")
+    @modificationDate = nsFetch(json, namespace, "modificationDate", "")
+    @profileDescription = nsFetch(json, namespace, "profileDescription", "")
+    @objectMinterURL = nsFetch(json, namespace, "objectMinterURL", "")
+    @collection = nsFetch(json, namespace, "collection", "")
+    @identifierScheme = nsFetch(json, namespace, "identifierScheme", "")
+    @identifierNamespace = nsFetch(json, namespace, "identifierNamespace", "")
+    @notificationType = nsFetch(json, namespace, "notificationType", "")
+    @aggregateType = nsFetch(json, namespace, "aggregateType", "")
+    @profileID = nsFetch(json, namespace, "profileID", "")
+    @nodeID = nsFetch(nsFetchHashVal(json, namespace, "targetStorage"), namespace, "nodeID", "")
+    @objectType = nsFetch(json, namespace, "objectType", "")
+    @context = nsFetch(json, namespace, "context", "")
+    @owner = nsFetch(json, namespace, "owner", "")
+
+    @contactsEmail = nsFetchArrayVal(json, namespace, "contactsEmail")
+    @ingestHandlers = nsFetchArrayVal(nsFetchHashVal(json, namespace, "ingestHandlers"), namespace, "handlerState")
+    @queueHandlers = nsFetchArrayVal(nsFetchHashVal(json, namespace, "queueHandlers"), namespace, "handlerState")
+  end
+
+  def self.table_headers
     [
-      'Collection',
+      'Key',
+      'Value',
+      'List Value'
     ]
   end
 
-  def self.create_from_file(path, template = nil)
-    IngestProfile.new(path, File.open(path, "r"), template)
+  def self.table_types
+    [
+      '',
+      'name',
+      'list'
+    ]
   end
 
-  def self.create_from_stream(path, stream, template = nil)
-    IngestProfile.new(path, stream, template)
+  def is_template?
+    @profileID == "${NAME}"
   end
 
-  def initialize(path, stream, template = nil)
-    @template = template
-    @fname = IngestProfile.get_fname(path)
-    @prop  = {}
-    stream.each_line do |line|
-      next if line.match(/^#/)
-      m = line.match(/^([^:\s]+)\s*:\s*(.*)$/)
-      if (m)
-        @prop[m[1]] = m[2]
-      end
+  def handler_list(arr) 
+    a = []
+    arr.each do |row|
+      v = row.fetch('pro:handlerName', '')
+      next if v.empty?
+      a.append(v.gsub('org.cdlib.mrt.ingest.handlers.', ''))
     end
+    a.join(",")
+  end
+  
+  def table_rows
+    rows = []
+    rows.append(["Profile Id", @profileID, ""])
+    rows.append(["Profile Description", @profileDescription, ""])
+    rows.append(["Ingest Handlers", "", handler_list(@ingestHandlers)])
+    rows
   end
 
-  def fname
-    @fname
+  def table_row_summary
+    [
+      @profileID,
+      @profileDescription,
+      @owner,
+      @context,
+      @objectType,
+      @objectMinterURL,
+      @identifierNamespace,
+      @nodeID
+    ]
   end
-
-  def profile_id
-    @prop.fetch('ProfileID', 'na')
-  end
-
-  def profile_name
-    @prop.fetch('ProfileDescription', 'na')
-  end
-
-  def valid?
-    profile_id != 'na'
-  end
-
-  def get_sorted_value(label)
-    v = ''
-    i = 1
-    ilabel = "#{label}.#{i}"
-    while(@prop.key?(ilabel))
-      v = "#{v}, " if i > 1  
-      v = "#{v}#{@prop.fetch(ilabel, '')}"
-      i = i + 1
-      ilabel = "#{label}.#{i}"
-    end
-    if v == ''
-      v = @prop.fetch(label, 'N/A')
-    end
-    v
-  end
-
-  def value(label)
-    return get_sorted_value(label) if IngestProfile.get_sorted_labels.include?(label)
-    @prop.fetch(label, 'N/A')
-  end
-
-  # if value is nil, compare to template
-  # if value is '', do not compare
-  # if value does not match expected value, add an "!" which will trigger the javascript to flag the cell
-  def get_value(label, cmpval = nil)
-    cmp_value(label, value(label), cmpval)
-  end
-
-  def has_diff(label, cmpval = nil)
-    check_diff(label, value(label), cmpval)
-  end
-
-  def check_diff(label, v, cmpval = nil)
-    if (cmpval == nil)
-      cmpval = @template == nil ? '' : @template.value(label)
-    end
-    cmpval != '' && v != cmpval
-  end
-
-  def cmp_value(label, v, cmpval = nil)
-    return "#{v}!" if check_diff(label, v, cmpval = nil)
-    v
-  end
-
-  def get_diffs
-    diffs = []
-    IngestProfile.get_single_labels.each do |label|
-      next if IngestProfile.skip_diff_labels.include?(label)
-      diffs.push(label) if has_diff(label)
-    end
-    IngestProfile.get_sorted_labels.each do |label|
-      next if IngestProfile.skip_diff_labels.include?(label)
-      diffs.push(label) if has_diff(label)
-    end
-    diffs.join(",")
-  end
-
 end

@@ -1,14 +1,14 @@
 require 'httpclient'
 require_relative 'action'
 require_relative 'forward_to_ingest_action'
+require_relative '../lib/profile'
 
 class IngestProfileAction < ForwardToIngestAction
   def initialize(config, path, myparams)
-    super(config, path, myparams, 'admin/profiles-full')
     @profile = myparams.fetch('profile', '')
-    if specific_profile?
-      @endpoint = "admin/profile/#{@profile}" 
-    end
+    endpoint = 'admin/profiles-full' 
+    endpoint = "admin/profile/#{@profile}" if specific_profile?
+    super(config, path, myparams, endpoint)
   end
 
   def specific_profile?
@@ -21,103 +21,28 @@ class IngestProfileAction < ForwardToIngestAction
 
   def table_headers
     if specific_profile?
-      [
-        'Key',
-        'Value',
-        'List Value'
-      ]
-  
+      IngestProfile.table_headers
     else
-      [
-        'Profile ID',
-        'Description',
-        'Owner',
-        'Context',
-        'Object Type',
-        'Minter',
-        'Ident Namespace',
-        'Node Id',
-      ]
+      ProfileList.table_headers
     end
   end
 
   def table_types
     if specific_profile?
-      [
-        '',
-        'name',
-        'list'
-      ]
-  
+      IngestProfile.table_types
     else
-      [
-        'profile',
-        '',
-        '',
-        '',
-        '',
-        '',
-        '',
-        '',
-      ]
+      ProfileList.table_types
     end
-  end
-
-  def handler_list(arr) 
-    a = []
-    arr.each do |row|
-      v = row.fetch('pro:handlerName', '')
-      next if v.empty?
-      a.append(v.gsub('org.cdlib.mrt.ingest.handlers.', ''))
-    end
-    a.join(",")
   end
 
   def table_rows(body)
-    rows = []
-    data = JSON.parse(body)
     if specific_profile?
-      data = data.fetch('pro:profileState', {})
-      data.keys.each do |k|
-        if k == 'pro:targetStorage'
-          n = data.fetch(k, {})
-          rows.append(["pro:storageLink", n.fetch('pro:storageLink', ''), '']) 
-          rows.append(["pro:nodeID", n.fetch('pro:nodeID', ''), '']) 
-        elsif k == 'xmlns:pro'
-          next
-        elsif k == 'pro:contactsEmail'
-          v = data.fetch(k, {}).fetch('pro:notification', {}).fetch('pro:contactEmail', '')
-          rows.append([k.gsub('pro:', ''), v, '']) 
-        elsif k == 'pro:ingestHandlers'
-          v = handler_list(data.fetch(k, {}).fetch('pro:handlerState', []))
-          rows.append([k.gsub('pro:', ''), '', v]) 
-        elsif k == 'pro:queueHandlers'
-          v = handler_list(data.fetch(k, {}).fetch('pro:handlerState', []))
-          rows.append([k.gsub('pro:', ''), '', v]) 
-        else
-          rows.append([k.gsub('pro:', ''), data.fetch(k, ''), ''])
-        end
-      end  
+      sprofile = SingleIngestProfileWrapper.new(body).profile
+      sprofile.table_rows
     else
-      data = data.fetch('prosf:profilesFullState', {})
-      data = data.fetch('prosf:profilesFull', {})
-      data = data.fetch('prosf:profileState', [])
-      data.each do |r|
-        rows.append(
-          [
-            r.fetch('prosf:profileID', ''),
-            r.fetch('prosf:profileDescription', ''),
-            r.fetch('prosf:owner', ''),
-            r.fetch('prosf:context', ''),
-            r.fetch('prosf:objectType', ''),
-            r.fetch('prosf:objectMinterURL', ''),
-            r.fetch('prosf:identifierNamespace', ''),
-            r.fetch('prosf:targetStorage', {}).fetch('prosf:nodeID', ''),
-          ]
-        )
-      end
+      profiles = ProfileList.new(body)
+      profiles.table_rows
     end
-    rows
   end
 
   def hasTable
