@@ -4,7 +4,7 @@ class AuditProcessedQuery < AdminQuery
   end
 
   def get_iterative_sql
-    %{
+    sql = %{
       select
         'Last Minute',
         date_add(now(), interval -1 minute),
@@ -19,11 +19,23 @@ class AuditProcessedQuery < AdminQuery
         'Last Hour',
         date_add(now(), interval -1 hour),
         now()
-      union
-      select
-        'Since midnight',
-        date(now()),
-        now()
+    }
+
+    for i in 0..23
+      sql = sql + %{
+        union
+        select
+          concat(
+            date_format(date_add(now(), interval -#{i+1} hour), '%H:00:00'),
+            ' - ',
+            date_format(date_add(now(), interval -#{i} hour), '%H:00:00')
+          ),
+          date_format(date_add(now(), interval -#{i+1} hour), '%Y-%m-%d %H:00:00'),
+          date_format(date_add(now(), interval -#{i} hour), '%Y-%m-%d %H:00:00')
+      }
+    end
+
+    sql = sql + %{
       union
       select
         'Yesterday',
@@ -36,6 +48,7 @@ class AuditProcessedQuery < AdminQuery
         date_add(date(now()), INTERVAL -1 DAY)
       ;
     }
+    sql
   end
 
   def get_sql
