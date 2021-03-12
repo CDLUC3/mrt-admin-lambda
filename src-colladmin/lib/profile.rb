@@ -74,62 +74,119 @@ class IngestProfile < MerrittJson
   def initialize(json, namespace = 'pro')
     super()
     @score = 0
-    v = json.fetch("#{namespace}:profileID", v)
-    v = MerrittJson.TEMPLATE_KEY if v == "${NAME}"
-    addPropertyVal(:profileID, "Profile ID", v)
+    addProperty(
+      :profileID, 
+      MerrittJsonProperty.new(
+        "Profile ID", 
+        json.fetch("#{namespace}:profileID", "").gsub("${NAME}", MerrittJson.TEMPLATE_KEY)
+      )
+    )
+    addProperty(
+      :creationDate, 
+      MerrittJsonProperty.new("Creation Date").lookupValue(json, namespace, "creationDate")
+    )
+    addProperty(
+      :modificationDate, 
+      MerrittJsonProperty.new("Modification Date").lookupValue(json, namespace, "modificationDate")
+    )
+    addProperty(
+      :profileDescription, 
+      MerrittJsonProperty.new("Profile Description").lookupValue(json, namespace, "profileDescription")
+    )
+    addProperty(
+      :objectMinterURL, 
+      MerrittJsonProperty.new("Minter URL").lookupValue(json, namespace, "objectMinterURL")
+    )
+    addProperty(
+      :collection, 
+      MerrittJsonProperty.new("Collection").lookupValue(json, namespace, "collection")
+    )
+    addProperty(
+      :identifierScheme, 
+      MerrittJsonProperty.new("Identifier Scheme").lookupValue(json, namespace, "identifierScheme")
+    )
+    addProperty(
+      :identifierNamespace, 
+      MerrittJsonProperty.new("Identifier Namespace").lookupValue(json, namespace, "identifierNamespace")
+    )
+    addProperty(
+      :notificationType, 
+      MerrittJsonProperty.new("Notification Type").lookupValue(json, namespace, "notificationType")
+    )
+    addProperty(
+      :aggregateType, 
+      MerrittJsonProperty.new("Aggregate Type").lookupValue(json, namespace, "aggregateType")
+    )
+    addProperty(
+      :nodeID, 
+      MerrittJsonProperty.new(
+        "Node ID", 
+        json.fetch("#{namespace}:targetStorage", {}).fetch("#{namespace}:nodeID", "")
+      )
+    )
+    addProperty(
+      :objectType, 
+      MerrittJsonProperty.new("Object Type").lookupValue(json, namespace, "objectType")
+    )
+    addProperty(
+      :context, 
+      MerrittJsonProperty.new("Context").lookupValue(json, namespace, "context")
+    )
+    addProperty(
+      :owner, 
+      MerrittJsonProperty.new("Owner").lookupValue(json, namespace, "owner")
+    )
 
-    addProperty(:creationDate, "Creation Date", namespace, "creationDate", "", json)
-    addProperty(:modificationDate, "Modification Date", namespace, "modificationDate", "", json)
-    addProperty(:profileDescription, "Profile Description", namespace, "profileDescription", "", json)
-    addProperty(:objectMinterURL, "Minter URL", namespace, "objectMinterURL", "", json)
-    addProperty(:collection, "Collection", namespace, "collection", "", json)
-    addProperty(:identifierScheme, "Identifier Scheme", namespace, "identifierScheme", "", json)
-    addProperty(:identifierNamespace, "Identifier Namespace", namespace, "identifierNamespace", "", json)
-    addProperty(:notificationType, "Notification Type", namespace, "notificationType", "", json)
-    addProperty(:aggregateType, "Aggregate Type", namespace, "aggregateType", "", json)
-    addProperty(:nodeID, "Node ID", namespace, "nodeID", "", json.fetch("#{namespace}:targetStorage", {}))
-    addProperty(:objectType, "Object Type", namespace, "objectType", "", json)
-    addProperty(:context, "Context", namespace, "context", "", json)
-    addProperty(:owner, "Owner", namespace, "owner", "", json)
+    addProperty(
+      :contactsEmail, 
+      MerrittJsonProperty.new("Contact Email", contactEmails(json, namespace))
+    )
+    addProperty(
+      :ingestHandlers, 
+      MerrittJsonProperty.new(
+        "Ingest Handlers", 
+        handler_list(json, namespace, "ingestHandlers")
+      )
+    )
+    addProperty(
+      :queueHandlers, 
+      MerrittJsonProperty.new(
+        "Queue Handlers", 
+        handler_list(json, namespace, "queueHandlers")
+      )
+    )
+  end
 
+  def contactEmails(json, namespace)
     arr = []
     fetchArrayVal(json, "#{namespace}:contactsEmail").each do |obj|
       v = fetchHashVal(obj, "#{namespace}:notification").fetch("#{namespace}:contactEmail", "")
       arr.append(v) unless v.empty?
     end
-    addPropertyVal(:contactsEmail, "Contact Email", arr)
-    addPropertyVal(
-      :ingestHandlers, 
-      "Ingest Handlers", 
-      handler_list(
-        fetchArrayVal(
-          fetchHashVal(
-            json, 
-            "#{namespace}:ingestHandlers"
-          ),
-          "#{namespace}:handlerState"
-        ),
-        namespace
-      )
-    )
-    addPropertyVal(
-      :queueHandlers, 
-      "Queue Handlers", 
-      handler_list(
-        fetchArrayVal(
-          fetchHashVal(
-            json, 
-            "#{namespace}:queueHandlers"
-          ),
-          "#{namespace}:handlerState"
-        ),
-        namespace
-      )
-    )
+    arr
   end
 
   def scoreDiff(template)
     @score = 0
+    return if is_template? || template.nil?
+    [
+      :objectMinterURL, 
+      :notificationType, 
+      :notificationType, 
+      :objectType
+    ].each do |sym|
+      @score = @score + 5 if getValue(sym) == template.getValue(sym)
+    end
+    [
+      :ingestHandlers, 
+      :queueHandlers
+    ].each do |sym|
+      val = getValue(sym) 
+      templateval = template.getValue(sym)
+      for i in 0..[val.length, templateval.length].max - 1
+        @score = @score + 1 if val[i] != templateval[i]
+      end
+    end
   end
 
   def score
@@ -156,14 +213,20 @@ class IngestProfile < MerrittJson
     getValue(:profileID) == MerrittJson.TEMPLATE_KEY
   end
 
-  def handler_list(arr, namespace = "pro") 
-    a = []
-    arr.each do |row|
+  def handler_list(json, namespace, key) 
+    arr = []
+    fetchArrayVal(
+      fetchHashVal(
+        json, 
+        "#{namespace}:#{key}"
+      ),
+      "#{namespace}:handlerState"
+    ).each do |row|
       v = row.fetch("#{namespace}:handlerName", '')
       next if v.empty?
-      a.append(v.gsub('org.cdlib.mrt.ingest.handlers.', ''))
+      arr.append(v.gsub('org.cdlib.mrt.ingest.handlers.', ''))
     end
-    a
+    arr
   end
 
   def addRow(rows, label, val, templateval)

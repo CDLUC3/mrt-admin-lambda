@@ -1,22 +1,25 @@
 class MerrittJsonProperty
-  def initialize(symbol, label, namespace, jsonkey, defval, source = nil)
-    @symbol = symbol
+  # Define property
+  # Optionally set the value
+  def initialize(label, val = "")
     @label = label
-    @jsonkey = namespace.empty? ? jsonkey : "#{namespace}:#{jsonkey}"
-    if source.nil?
-      @value = defval
-    else
-      @value = source.fetch(@jsonkey, defval)
-      if defval.instance_of?(Array) 
-        if !@value.instance_of?(Array)
-          @value = [@value]
-        end
-      elsif defval.instance_of?(Hash)
-        if @value == ""
-          @value = {}
-        end
+    @value = val
+  end
+
+  def lookupValue(source, namespace, jsonkey, defval = nil)
+    defval = @value if defval.nil?
+    jsonkey = namespace.empty? ? jsonkey : "#{namespace}:#{jsonkey}"
+    @value = source.fetch(jsonkey, defval)
+    if defval.instance_of?(Array) 
+      if !@value.instance_of?(Array)
+        @value = [@value]
+      end
+    elsif defval.instance_of?(Hash)
+      if @value == ""
+        @value = {}
       end
     end
+    self
   end
 
   def value
@@ -38,14 +41,7 @@ class MerrittJson
     @propertyHash = {}
   end
 
-  def addProperty(symbol, label, namespace, key, defval, source)
-    p = MerrittJsonProperty.new(symbol, label, namespace, key, defval, source)
-    @propertyList.append(symbol)
-    @propertyHash[symbol] = p
-  end
-
-  def addPropertyVal(symbol, label, defval)
-    p = MerrittJsonProperty.new(symbol, label, "", "", defval)
+  def addProperty(symbol, p)
     @propertyList.append(symbol)
     @propertyHash[symbol] = p
   end
