@@ -19,7 +19,7 @@ class FilesizeQuery < AdminQuery
         sum(if(billable_size >= 10000000000 and billable_size < 100000000000, 1, 0)) num_10g_to_100g,
         sum(if(billable_size >= 100000000000, 1, 0)) num_100g_plus
       from
-        inv_files
+        inv.inv_files
       where
         source='producer'
       ;
