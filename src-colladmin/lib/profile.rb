@@ -42,6 +42,12 @@ class SingleIngestProfileWrapper < MerrittJson
 end
 
 class IngestProfile < MerrittJson
+  @@placeholder = nil 
+
+  def self.placeholder
+    @@placeholder = IngestProfile.new({}) if @@placeholder.nil?
+    @@placeholder
+  end
 
   def initialize(json, namespace = 'pro')
     super()

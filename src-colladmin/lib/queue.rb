@@ -1,83 +1,102 @@
 require_relative 'merritt_json'
 class QueueEntry < MerrittJson
-  def initialize(obj)
+  @@placeholder = nil
+  def self.placeholder
+    @@placeholder = QueueEntry.new({}) if @@placeholder.nil?
+    @@placeholder
+  end
+
+  def initialize(json)
     super()
     addProperty(
-      :creationDate, 
-      MerrittJsonProperty.new("Creation Date").lookupValue(json, namespace, "creationDate")
+      :queueNode, 
+      MerrittJsonProperty.new("Queue Node").lookupValue(json, "que", "queueNode")
     )
-
-    @bid = obj.fetch('que:batchID', '')
-    @job = obj.fetch('que:jobID', '')
-    @profile = obj.fetch('que:profile', '')
-    @date = obj.fetch('que:date', '')
-    @user = obj.fetch('que:user', '')
-    @title = obj.fetch('que:objectTitle', '')
-    @fileType = obj.fetch('que:fileType', '')
-    @status = obj.fetch('que:status', '')
-    @queue = obj.fetch('que:name', '')
-    @queueId = obj.fetch('que:iD', '')
+    addProperty(
+      :bid, 
+      MerrittJsonProperty.new("Creation Date").lookupValue(json, "que", "batchID")
+    )
+    addProperty(
+      :job, 
+      MerrittJsonProperty.new("Job").lookupValue(json, "que", "jobID")
+    )
+    addProperty(
+      :profile, 
+      MerrittJsonProperty.new("Profile").lookupValue(json, "que", "profile")
+    )
+    addProperty(
+      :date, 
+      MerrittJsonProperty.new("Date").lookupValue(json, "que", "date")
+    )
+    addProperty(
+      :user, 
+      MerrittJsonProperty.new("Creation Date").lookupValue(json, "que", "user")
+    )
+    addProperty(
+      :tilte, 
+      MerrittJsonProperty.new("Title").lookupValue(json, "que", "title")
+    )
+    addProperty(
+      :fileType, 
+      MerrittJsonProperty.new("File Type").lookupValue(json, "que", "fileType")
+    )
+    addProperty(
+      :status, 
+      MerrittJsonProperty.new("Status").lookupValue(json, "que", "status")
+    )
+    addProperty(
+      :queue, 
+      MerrittJsonProperty.new("Name").lookupValue(json, "que", "name")
+    )
+    addProperty(
+      :queueId, 
+      MerrittJsonProperty.new("Queue ID").lookupValue(json, "que", "iD")
+    )
   end
 
   def checkFilter(filter)
-    filter.empty? || @bid == filter
+    filter.empty? || bid == filter
   end
 
   def self.table_headers
-    [
-      'Batch',
-      'Job',
-      'Profile',
-      'Date',
-      'User',
-      'Title',
-      'Type',
-      'Status',
-      'Name',
-      'Queue Id'
-    ]
+    arr = []
+    QueueEntry.placeholder.getPropertyList.each do |sym|
+      arr.append(QueueEntry.placeholder.getLabel(sym))
+    end
+    arr
   end
 
   def self.table_types
-    [
-      'qbatch',
-      'qjob',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      ''
-    ]
+    arr = []
+    QueueEntry.placeholder.getPropertyList.each do |sym|
+      type = ''
+      type = 'qbatch' if sym == :bid
+      type = 'qjob' if sym == :job
+      arr.append(type)
+    end
+    arr
   end
 
   def to_table_row
-    [
-      @bid,
-      "#{@bid}/#{@job}",
-      @profile,
-      @date,
-      @user,
-      @title,
-      @fileType,
-      @status,
-      @queue,
-      @queueId
-    ]
+    arr = []
+    QueueEntry.placeholder.getPropertyList.each do |sym|
+      v = getValue(sym)
+      v = "#{bid}/#{v}" if sym == :job
+      arr.append(v)
+    end
+    arr
   end
 
   def bid
-    @bid
+    getValue(:bid)
   end
 
   def job
-    @job
+    getValue(:job)
   end
 
   def status
-    @status
+    getValue(:status)
   end
 end
 
@@ -141,23 +160,47 @@ class Batch < MerrittJson
   end
 end
 
-class QueueList < MerrittJson
-  def initialize(body, filter = "")
-    super()
-    @batches = {}
-    @jobs = []
+class IngestQueue < MerrittJson
+  def initialize(queueList, body)
     data = JSON.parse(body)
     data = fetchHashVal(data, 'que:queueState')
     data = fetchHashVal(data, 'que:queueEntries')
     list = fetchArrayVal(data, 'que:queueEntryState')
     list.each do |obj|
       q = QueueEntry.new(obj)
-      next unless q.checkFilter(filter)
-      qlist = @batches.fetch(q.bid, Batch.new(q.bid))
-      qlist.addJob(q)
-      @batches[q.bid] = qlist
-      @jobs.append(q)
+      next unless q.checkFilter(queueList.filter)
+      puts(q)
+      qenrtylist = queueList.batches.fetch(q.bid, Batch.new(q.bid))
+      qenrtylist.addJob(q)
+      queueList.batches[q.bid] = qenrtylist
+      queueList.jobs.append(q)
     end
+  end
+end
+
+class QueueList < MerrittJson
+  def initialize(body, filter = "")
+    super()
+    @body = body
+    @batches = {}
+    @jobs = []
+    @filter = filter
+  end
+
+  def filter
+    @filter
+  end
+
+  def body
+    @body
+  end
+
+  def batches
+    @batches
+  end
+
+  def jobs
+    @jobs
   end
 
   def to_table_batches

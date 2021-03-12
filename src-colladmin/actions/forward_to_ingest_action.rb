@@ -1,5 +1,7 @@
 require 'httpclient'
 require_relative 'action'
+require_relative '../lib/queue'
+
 
 class ForwardToIngestAction < AdminAction
   def initialize(config, path, myparams, endpoint)
@@ -30,9 +32,23 @@ class ForwardToIngestAction < AdminAction
 
   def get_data_for_endpoint(endpoint)
     url = "#{get_ingest_server}#{endpoint}"
+    puts(url)
     cli = HTTPClient.new
     resp = cli.get(url, {}, {"Accept": "application/json"})
+    puts(resp.status)
     resp
+  end
+
+  def retrieveQueues(queueList)
+    data = JSON.parse(queueList.body)
+    queueList.fetchArrayVal(data, 'ingq:ingestQueueNameState').each do |qjson|
+      qjson = queueList.fetchHashVal(qjson, 'ingq:ingestQueueName')
+      qjson = queueList.fetchHashVal(qjson, 'ingq:ingestQueue')
+      node = queueList.fetchHashVal(qjson, 'ingq:node')
+      resp = get_data_for_endpoint("admin/queue/#{node}")
+      next unless resp.status == 200
+      IngestQueue.new(queueList, resp.body)
+    end
   end
 
   def get_data

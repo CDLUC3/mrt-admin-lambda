@@ -21,6 +21,7 @@ class IngestQueueAction < ForwardToIngestAction
 
   def table_rows(body)
     queueList = QueueList.new(body)
+    retrieveQueues(queueList)
     queueList.to_table_jobs
   end
 

@@ -30,6 +30,7 @@ class IngestBatchAction < ForwardToIngestAction
 
   def table_rows(body)
     queueList = QueueList.new(body, @batch)
+    retrieveQueues(queueList)
     if @batch.empty?
       queueList.to_table_batches
     else
