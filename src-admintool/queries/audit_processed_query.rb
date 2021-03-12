@@ -35,19 +35,15 @@ class AuditProcessedQuery < AdminQuery
       }
     end
 
-    sql = sql + %{
-      union
-      select
-        'Yesterday',
-        date_add(date(now()), INTERVAL -1 DAY),
-        date(now())
-      union
-      select
-        '2 Days Ago',
-        date_add(date(now()), INTERVAL -2 DAY),
-        date_add(date(now()), INTERVAL -1 DAY)
-      ;
-    }
+    for i in 0..5
+      sql = sql + %{
+        union
+        select
+          date(date_add(now(), INTERVAL -#{i+1} DAY)),
+          date(date_add(now(), INTERVAL -#{i+1} DAY)),
+          date(date_add(now(), INTERVAL -#{i} DAY))
+      }
+    end
     sql
   end
 
