@@ -6,6 +6,7 @@ require_relative '../lib/profile'
 
 class IngestProfileAction < ForwardToIngestAction
   def initialize(config, path, myparams)
+    @placeholder = IngestProfile.new({})
     @profile = CGI.unescape(myparams.fetch('profile', ''))
     endpoint = 'admin/profiles-full' 
     endpoint = "admin/profile/#{CGI.escape(@profile)}" if specific_profile?
@@ -24,7 +25,7 @@ class IngestProfileAction < ForwardToIngestAction
     if specific_profile?
       IngestProfile.table_headers
     else
-      ProfileList.table_headers
+      @placeholder.summary_headers
     end
   end
 
@@ -32,7 +33,7 @@ class IngestProfileAction < ForwardToIngestAction
     if specific_profile?
       IngestProfile.table_types
     else
-      ProfileList.table_types
+      @placeholder.summary_types
     end
   end
 

@@ -2,6 +2,11 @@ require_relative 'merritt_json'
 class QueueEntry < MerrittJson
   def initialize(obj)
     super()
+    addProperty(
+      :creationDate, 
+      MerrittJsonProperty.new("Creation Date").lookupValue(json, namespace, "creationDate")
+    )
+
     @bid = obj.fetch('que:batchID', '')
     @job = obj.fetch('que:jobID', '')
     @profile = obj.fetch('que:profile', '')

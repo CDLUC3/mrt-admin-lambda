@@ -18,39 +18,11 @@ class ProfileList < MerrittJson
     end
   end
 
-  def self.table_headers
-    [
-      'Profile ID',
-      'Description',
-      'Owner',
-      'Context',
-      'Object Type',
-      'Minter',
-      'Ident Namespace',
-      'Node Id',
-      'Diff Level'
-    ]
-  end
-
-  def self.table_types
-    [
-      'profile',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      ''
-    ]
-  end
-
   def table_rows
     rows = []
     @profiles.each do |p|
       #next if p.is_template?
-      rows.append(p.table_row_summary)
+      rows.append(p.summary_values)
     end
     rows
   end
@@ -266,17 +238,43 @@ class IngestProfile < MerrittJson
     rows
   end
 
-  def table_row_summary
+  def summary_symbols
     [
-      getValue(:profileID),
-      getValue(:profileDescription),
-      getValue(:owner),
-      getValue(:context),
-      getValue(:objectType),
-      getValue(:objectMinterURL),
-      getValue(:identifierNamespace),
-      getValue(:nodeID),
-      score
+      :profileID,
+      :profileDescription,
+      :owner,
+      :context,
+      :objectType,
+      :objectMinterURL,
+      :identifierNamespace,
+      :nodeID
     ]
+  end
+
+  def summary_types
+    arr = []
+    summary_symbols.each do |sym|
+      arr.append(sym == :profileID ? "profile" : "")
+    end
+    arr.append("")
+    arr
+  end
+
+  def summary_headers
+    arr = []
+    summary_symbols.each do |sym|
+      arr.append(getLabel(sym))
+    end
+    arr.append("Score")
+    arr
+  end
+
+  def summary_values
+    arr = []
+    summary_symbols.each do |sym|
+      arr.append(getValue(sym))
+    end
+    arr.append(score)
+    arr
   end
 end
