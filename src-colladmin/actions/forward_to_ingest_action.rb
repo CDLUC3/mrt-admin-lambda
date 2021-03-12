@@ -29,7 +29,7 @@ class ForwardToIngestAction < AdminAction
   end
 
   def get_data_for_endpoint(endpoint)
-    url = "#{get_ingest_server}#{@endpoint}"
+    url = "#{get_ingest_server}#{endpoint}"
     cli = HTTPClient.new
     resp = cli.get(url, {}, {"Accept": "application/json"})
     resp

@@ -65,6 +65,11 @@ class IngestProfile < MerrittJson
 
   def initialize(json, namespace = 'pro')
     super()
+
+    v = json.fetch("#{namespace}:profileID", v)
+    v = "TEMPLATE-PROFILE" if v == "${NAME}"
+    addPropertyVal(:profileID, "Profile ID", v)
+
     addProperty(:creationDate, "Creation Date", namespace, "creationDate", "", json)
     addProperty(:modificationDate, "Modification Date", namespace, "modificationDate", "", json)
     addProperty(:profileDescription, "Profile Description", namespace, "profileDescription", "", json)
@@ -74,7 +79,6 @@ class IngestProfile < MerrittJson
     addProperty(:identifierNamespace, "Identifier Namespace", namespace, "identifierNamespace", "", json)
     addProperty(:notificationType, "Notification Type", namespace, "notificationType", "", json)
     addProperty(:aggregateType, "Aggregate Type", namespace, "aggregateType", "", json)
-    addProperty(:profileID, "Profile ID", namespace, "profileID", "", json)
     addProperty(:nodeID, "Node ID", namespace, "nodeID", "", json.fetch("#{namespace}:targetStorage", {}))
     addProperty(:objectType, "Object Type", namespace, "objectType", "", json)
     addProperty(:context, "Context", namespace, "context", "", json)
@@ -128,22 +132,15 @@ class IngestProfile < MerrittJson
     [
       '',
       'vallist',
-      ''
+      'vallist'
     ]
   end
 
   def is_template?
-    @profileID == "${NAME}"
-  end
-
-  def profileID
-    return "TEMPLATE-PROFILE" if is_template?
-    @profileID
+    getValue(:profileID) == "TEMPLATE-PROFILE"
   end
 
   def handler_list(arr, namespace = "pro") 
-    puts("hl")
-    puts(arr)
     a = []
     arr.each do |row|
       v = row.fetch("#{namespace}:handlerName", '')
@@ -155,7 +152,28 @@ class IngestProfile < MerrittJson
 
   def addRow(rows, label, val, templateval)
     if val.instance_of?(Array)
-      rows.append([label, "list:#{val.join(",")}", 'n/a'])
+      diff = []
+      hasDiff = false
+      for i in 0..[val.length, templateval.length].max - 1
+        if val[i] == templateval[i]
+          diff.append("")
+        elsif val[i].nil?
+          diff.append("- #{templateval[i]}")
+          hasDiff = true
+        elsif templateval[i].nil?
+          diff.append("+ #{val[i]}")
+          hasDiff = true
+        else
+          diff.append("~ #{templateval[i]}")
+          hasDiff = true
+        end
+      end
+      diff = [] unless hasDiff
+      rows.append([
+        label, 
+        val.empty? ? "" : "list:#{val.join(",")}", 
+        diff.empty? ? "" : "list:#{diff.join(",")}"
+      ])
     else 
       rows.append([label, val, val == templateval ? "" : templateval])
     end

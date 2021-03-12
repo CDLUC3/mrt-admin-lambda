@@ -87,9 +87,6 @@ class Batch < MerrittJson
   def addJob(job)
     @jobs.append(job)
     @statuses[job.status] = @statuses.fetch(job.status, 0) + 1
-    puts(job.status)
-    puts(@statuses.fetch(job.status, 0))
-    puts(@jobs.length)
   end
 
   def num_jobs
@@ -150,7 +147,6 @@ class QueueList < MerrittJson
     list = fetchArrayVal(data, 'que:queueEntryState')
     list.each do |obj|
       q = QueueEntry.new(obj)
-      puts("#{q.bid} #{q.checkFilter(filter)}")
       next unless q.checkFilter(filter)
       qlist = @batches.fetch(q.bid, Batch.new(q.bid))
       qlist.addJob(q)
