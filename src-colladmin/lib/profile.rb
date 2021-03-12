@@ -7,9 +7,15 @@ class ProfileList < MerrittJson
     data = JSON.parse(body)
     data = fetchHashVal(data, 'prosf:profilesFullState')
     data = fetchHashVal(data, 'prosf:profilesFull')
+    template = nil
     fetchArrayVal(data, 'prosf:profileState').each do |json|
-      @profiles.append(IngestProfile.new(json, 'prosf'))
+      p = IngestProfile.new(json, 'prosf')
+      @profiles.append(p)
+      template = p if p.is_template?
     end   
+    @profiles.each do |p|
+      p.scoreDiff(template)
+    end
   end
 
   def self.table_headers
@@ -22,6 +28,7 @@ class ProfileList < MerrittJson
       'Minter',
       'Ident Namespace',
       'Node Id',
+      'Diff Level'
     ]
   end
 
@@ -35,6 +42,7 @@ class ProfileList < MerrittJson
       '',
       '',
       '',
+      ''
     ]
   end
 
@@ -65,9 +73,9 @@ class IngestProfile < MerrittJson
 
   def initialize(json, namespace = 'pro')
     super()
-
+    @score = 0
     v = json.fetch("#{namespace}:profileID", v)
-    v = "TEMPLATE-PROFILE" if v == "${NAME}"
+    v = MerrittJson.TEMPLATE_KEY if v == "${NAME}"
     addPropertyVal(:profileID, "Profile ID", v)
 
     addProperty(:creationDate, "Creation Date", namespace, "creationDate", "", json)
@@ -120,6 +128,14 @@ class IngestProfile < MerrittJson
     )
   end
 
+  def scoreDiff(template)
+    @score = 0
+  end
+
+  def score
+    @score
+  end
+
   def self.table_headers
     [
       'Key',
@@ -137,7 +153,7 @@ class IngestProfile < MerrittJson
   end
 
   def is_template?
-    getValue(:profileID) == "TEMPLATE-PROFILE"
+    getValue(:profileID) == MerrittJson.TEMPLATE_KEY
   end
 
   def handler_list(arr, namespace = "pro") 
@@ -196,7 +212,8 @@ class IngestProfile < MerrittJson
       getValue(:objectType),
       getValue(:objectMinterURL),
       getValue(:identifierNamespace),
-      getValue(:nodeID)
+      getValue(:nodeID),
+      score
     ]
   end
 end

@@ -29,6 +29,10 @@ class MerrittJsonProperty
 end
 
 class MerrittJson
+  def self.TEMPLATE_KEY
+    "TEMPLATE-PROFILE"
+  end
+
   def initialize
     @propertyList = []
     @propertyHash = {}

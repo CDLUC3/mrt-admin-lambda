@@ -54,6 +54,8 @@ class QueryFactory
       ObjectsByBatchQuery.new(self, path, myparams)
     elsif path == 'files_by_name_coll'
       FilesByNameCollQuery.new(self, path, myparams)
+    elsif path == 'filesize'
+      FilesizeQuery.new(self, path, myparams)
     elsif path == 'count_objects'
       CountObjectsQuery.new(self, path, myparams)
     elsif path == 'collections_by_node'
