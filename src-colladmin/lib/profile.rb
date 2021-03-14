@@ -137,8 +137,8 @@ class IngestProfile < MerrittJson
 
   def contactEmails(json, namespace)
     arr = []
-    fetchArrayVal(json, "#{namespace}:contactsEmail").each do |obj|
-      v = fetchHashVal(obj, "#{namespace}:notification").fetch("#{namespace}:contactEmail", "")
+    fetchArrayVal(fetchHashVal(json, "#{namespace}:contactsEmail"), "#{namespace}:notification").each do |obj|
+      v = obj.fetch("#{namespace}:contactEmail", "")
       arr.append(v) unless v.empty?
     end
     arr

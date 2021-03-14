@@ -41,9 +41,9 @@ class ForwardToIngestAction < AdminAction
 
   def retrieveQueues(queueList)
     data = JSON.parse(queueList.body)
-    queueList.fetchArrayVal(data, 'ingq:ingestQueueNameState').each do |qjson|
-      qjson = queueList.fetchHashVal(qjson, 'ingq:ingestQueueName')
-      qjson = queueList.fetchHashVal(qjson, 'ingq:ingestQueue')
+    data = queueList.fetchHashVal(data, 'ingq:ingestQueueNameState')
+    data = queueList.fetchHashVal(data, 'ingq:ingestQueueName')
+    queueList.fetchArrayVal(data, 'ingq:ingestQueue').each do |qjson|
       node = queueList.fetchHashVal(qjson, 'ingq:node')
       resp = get_data_for_endpoint("admin/queue/#{node}")
       next unless resp.status == 200
