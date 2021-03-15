@@ -146,7 +146,7 @@ function createTable(headers, types, data, filter_col, group_col, show_grand_tot
     .show();
   $('#alternative ul').empty().hide();
   $.each(alternative_queries, function(i, q){
-    url = '';
+    var url = '';
     if (q['url'].substr(0,1) == '/'){
       var arr = document.location.pathname.split('/');
       arr[arr.length - 1] = q['url'];
