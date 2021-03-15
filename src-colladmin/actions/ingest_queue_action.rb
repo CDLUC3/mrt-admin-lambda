@@ -33,7 +33,7 @@ class IngestQueueAction < ForwardToIngestAction
     [
       {
         label: 'Completed Ingests', 
-        url: '/web/index.html?path=recent_ingests'
+        url: '/index.html?path=recent_ingests'
       }
     ]
   end
