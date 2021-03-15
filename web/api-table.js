@@ -148,7 +148,7 @@ function createTable(headers, types, data, filter_col, group_col, show_grand_tot
   $.each(alternative_queries, function(i, q){
     var url = '';
     if (q['url'].substr(0,1) == '/'){
-      url = document.location.pathname.replace(/\/[^\/]*$/, '/') + q['url'];
+      url = document.location.pathname.replace(/\/[^\/]*$/, '') + q['url'];
     } else {
       url = document.location.pathname + "?" + q['url'];
     }
