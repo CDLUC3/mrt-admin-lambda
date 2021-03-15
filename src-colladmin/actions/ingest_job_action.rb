@@ -41,4 +41,13 @@ class IngestJobAction < ForwardToIngestAction
     true
   end
 
+  def get_alternative_queries
+    [
+      {
+        label: 'Job Manifest', 
+        url: "path=manifest&batch=#{@batch}&job=#{@job}"
+      }
+    ]
+  end
+
 end
