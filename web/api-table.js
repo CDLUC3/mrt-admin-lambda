@@ -150,7 +150,7 @@ function createTable(headers, types, data, filter_col, group_col, show_grand_tot
     if (q['url'].substr(0,1) == '/'){
       var arr = document.location.pathname.split('/');
       arr[arr.length - 1] = q['url'];
-      url = arr.join('/');
+      url = arr.join("/");
     } else {
       url = document.location.pathname + "?" + q['url'];
     }
