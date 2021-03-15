@@ -146,9 +146,10 @@ function createTable(headers, types, data, filter_col, group_col, show_grand_tot
     .show();
   $('#alternative ul').empty().hide();
   $.each(alternative_queries, function(i, q){
+    url = q['url'].substr(0,1) == '/' ? q['url'] : document.location.pathname + "?" + q['url'];
     $('#alternative ul').show().append(
       $("<li/>").append(
-        $("<a/>").text(q['label']).attr('href', document.location.pathname + "?" + q['url'])
+        $("<a/>").text(q['label']).attr('href', url)
       )
     );
   });
