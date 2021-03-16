@@ -13,19 +13,20 @@ class IngestSwordJobsAction < ForwardToIngestAction
 
   def table_headers
     [
-      'Job'
+      'Job', 
+      'Date'
     ]
   end
 
   def table_types
     [
-      'qjob'
+      'qjob',
+      ''
     ]
   end
 
   def table_rows(body)
-    queueList = JobList.new(body)
-    queueList.to_table
+    JobList.new(body).to_table
   end
 
   def hasTable

@@ -220,6 +220,21 @@ class QueueList < MerrittJson
   end
 end
 
+class Job < MerrittJson
+  def initialize(jid, dtime)
+    super()
+    @jid = jid;
+    @dtime = dtime
+  end
+
+  def table_row
+    [
+      "JOB_ONLY/#{@jid}",
+      @dtime
+    ]
+  end
+end
+
 class JobList < MerrittJson
   def initialize(body)
     super()
@@ -229,14 +244,19 @@ class JobList < MerrittJson
     data = fetchHashVal(data, 'fil:jobFile')
     list = fetchArrayVal(data, 'fil:batchFile')
     list.each do |obj|
-      @jobs.append(obj.fetch('fil:file', ''))
+      @jobs.append(
+        Job.new(
+          obj.fetch('fil:file', ''),
+          obj.fetch('fil:fileDate', '')
+        )
+      )
     end
   end
 
   def to_table
     table = []
-    @jobs.each do |q|
-      table.append(["JOB_ONLY/#{q}"])
+    @jobs.each do |job|
+      table.append(job.table_row)
     end
     table
   end
