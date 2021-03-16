@@ -32,12 +32,6 @@ table.results td.bytes {
   text-align: right;
 }
 
-table.results th.bytes,
-table.results td.bytes {
-  color: red;
-}
-
-
 table.results th.cell,
 table.results td.cell {
   width: 100px;

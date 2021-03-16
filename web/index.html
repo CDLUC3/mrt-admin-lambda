@@ -18,6 +18,12 @@
       <button onclick="$('tr.noflag').toggle()">Flagged Data</button>
       <button onclick="$('tr.total').toggle()">Totals On/Off</button>
       <button id="exportTable">Export CSV</button>
+      <select id="bytes">
+        <option value="1">Bytes</option>
+        <option value="1000000">MB</option>
+        <option value="1000000000">GB</option>
+        <option value="1000000000000">TB</option>
+      </select>
       <a id="exportJson" target="_blank">Download Json</a>
     </p>
     <div id="menu">

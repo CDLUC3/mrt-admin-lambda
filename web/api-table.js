@@ -3,6 +3,7 @@ var urlbase = "";
 var pageparams = {};
 
 $(document).ready(function(){
+  $("#bytes").on("change", function(){updateBytesUnits();});
   $("p.buttons")
     .hide();
   $("#exportTable").on('click', function(){
@@ -20,6 +21,26 @@ $(document).ready(function(){
     $("#menu").show();
   }
 });
+
+function updateBytesUnits() {
+  var factor = $("#bytes").val();
+  $("td.bytes").each(function(){
+    var v = $(this).attr('data');
+    if (v) {
+      var n  = Number(v) / factor;
+      var dig = factor == 1 ? 0 : 2;
+      v = n.toLocaleString(undefined, {minimumFractionDigits: dig, maximumFractionDigits:dig});
+      if (factor == 1000000) {
+        v += " MB";
+      } else if (factor == 1000000000) {
+        v += " GB";
+      } else if (factor == 1000000000000) {
+        v += " TB";
+      }
+      $(this).text(v);
+    }
+  });
+}
 
 function iterateParams(parr) {
   params = pageparams;
