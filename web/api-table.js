@@ -28,14 +28,14 @@ function updateBytesUnits() {
     var v = $(this).attr('data');
     if (v) {
       var n  = Number(v) / factor;
-      var dig = factor == 1 ? 0 : 2;
+      var dig = factor == 1 || factor == 1000000 ? 0 : 2;
       v = n.toLocaleString(undefined, {minimumFractionDigits: dig, maximumFractionDigits:dig});
       if (factor == 1000000) {
-        v += " MB";
+        v += " M";
       } else if (factor == 1000000000) {
-        v += " GB";
+        v += " G";
       } else if (factor == 1000000000000) {
-        v += " TB";
+        v += " T";
       }
       $(this).text(v);
     }
@@ -227,6 +227,7 @@ function updateTotalRow(totr, types, totdata) {
       data = n.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits:2});
     } 
     totr.find(".c" + c).text(data);
+    totr.find(".c" + c).attr('data', n);
   }
 }
 
