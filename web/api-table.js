@@ -184,7 +184,7 @@ function createTotalRow(classname, group_col, filter_col, types, key) {
       data = (classname == "total") ? "-- Total --" : "-- Grand Total --";
     } else if (c == group_col) {
       data = key;
-    } else if (types[c] == "money" || types[c] == "dataint") {
+    } else if (types[c] == "money" || types[c] == "dataint" || types[c] == "bytes") {
       data = "";
     }
     totr.append(createCell(data, types[c], false, "").addClass("c"+c));
@@ -212,7 +212,7 @@ function updateTotalRow(totr, types, totdata) {
 function createTotalData(types) {
   var data = [];
   for(var c=0; c<types.length; c++) {
-    if (types[c] == "money" || types[c] == "dataint") {
+    if (types[c] == "money" || types[c] == "dataint" || types[c] == "bytes") {
       data.push(0);
     } else {
       data.push(null);
@@ -351,12 +351,19 @@ function format(cell, v, type, merritt_path) {
   } else if (type == 'money'){
     cell.text(Number(v).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits:2}));
     cell.addClass("hasdata");
+    cell.attr('data', Number(v));
   } else if (type == 'dataint'){
     cell.text(Number(v).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits:0}));
     cell.addClass("hasdata");
+    cell.attr('data', Number(v));
+  } else if (type == 'bytes'){
+    cell.text(Number(v).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits:0}));
+    cell.addClass("hasdata");
+    cell.attr('data', Number(v));
   } else if (type == 'data'){
     cell.text(Number(v).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits:0}));
     cell.addClass("hasdata");
+    cell.attr('data', Number(v));
   } else if (type == 'datetime'){
     cell.text(v.replace(/ [-\+]\d+$/,''));
   } else if (type == 'node' && Number(v) > 0){
