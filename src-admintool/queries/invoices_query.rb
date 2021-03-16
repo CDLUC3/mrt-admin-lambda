@@ -360,18 +360,18 @@ class InvoicesQuery < AdminQuery
       'na',
       '', 'name', 'name',
 
-      'dataint', #fy start
-      @fypast ? 'na' : 'dataint', #ytd
-      @fypast ? 'dataint' : 'na', #fy end
+      'bytes', #fy start
+      @fypast ? 'na' : 'bytes', #ytd
+      @fypast ? 'bytes' : 'na', #fy end
 
-      'dataint', #difference
+      'bytes', #difference
       'dataint', #days
       @fypast ? 'na' : 'dataint', #days projected
-      'dataint', #average - particularly useful for partial year collections
+      'bytes', #average - particularly useful for partial year collections
 
-      'dataint', #projected average
-      @dstart < '2019-07-01' ? 'dataint' : 'na', # exempt bytes
-      @dstart < '2019-07-01' ? 'dataint' : 'na', #unexempt average
+      'bytes', #projected average
+      @dstart < '2019-07-01' ? 'bytes' : 'na', # exempt bytes
+      @dstart < '2019-07-01' ? 'bytes' : 'na', #unexempt average
 
       'money', #cost
       'money' #adj cost

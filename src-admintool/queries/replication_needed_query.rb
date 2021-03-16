@@ -34,7 +34,7 @@ class ReplicationNeededQuery < AdminQuery
   end
 
   def get_types(results)
-    ['dataint', 'dataint']
+    ['dataint', 'bytes']
   end
 
 end

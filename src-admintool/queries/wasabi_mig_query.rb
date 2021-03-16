@@ -112,7 +112,7 @@ class WasabiMigrationQuery < AdminQuery
   end
 
   def get_types(results)
-    ['', 'dataint', 'money', 'dataint', 'money']
+    ['', 'dataint', 'money', 'bytes', 'money']
   end
 
   def get_filter_col

@@ -46,7 +46,7 @@ class MimeQuery < AdminQuery
   end
 
   def get_types(results)
-    ['gmime', 'mime', 'dataint', 'dataint']
+    ['gmime', 'mime', 'dataint', 'bytes']
   end
 
 end

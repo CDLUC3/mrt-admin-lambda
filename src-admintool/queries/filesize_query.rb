@@ -45,8 +45,8 @@ class FilesizeQuery < AdminQuery
 
   def get_types(results)
     [
-      'dataint', 
-      'dataint', 
+      'bytes', 
+      'bytes', 
       'dataint', 
       'dataint', 
       'dataint', 

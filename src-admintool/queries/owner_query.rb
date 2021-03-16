@@ -36,7 +36,7 @@ class OwnerQuery < AdminQuery
   end
 
   def get_types(results)
-    ['ogroup', 'own', 'name', 'dataint', 'dataint']
+    ['ogroup', 'own', 'name', 'dataint', 'bytes']
   end
 
 end

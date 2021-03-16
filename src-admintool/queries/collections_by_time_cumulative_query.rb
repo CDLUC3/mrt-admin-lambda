@@ -3,6 +3,7 @@ class CollectionsByTimeCumulativeQuery < AdminQuery
   def initialize(query_factory, path, myparams, col, source)
     super(query_factory, path, myparams)
     @col = (col == 'count_files' || col == 'billable_size') ? col : 'count_files'
+    @colclass = (@col == 'billable_size') ? 'bytes' : 'dataint'
     @source_clause = (source == 'producer') ? " and source='producer'" : ""
     @ranges = []
 
@@ -18,10 +19,10 @@ class CollectionsByTimeCumulativeQuery < AdminQuery
     @types = ['ogroup', 'coll', 'name']
     @ranges.each do |range|
       @headers.push(range[1])
-      @types.push('dataint')
+      @types.push(@colclass)
     end
     @headers.push('Actual Total')
-    @types.push('dataint')
+    @types.push(@colclass)
 end
 
   def get_headers(results)

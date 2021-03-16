@@ -52,7 +52,7 @@ class FilesQuery < AdminQuery
   end
 
   def get_types(results)
-    ['', 'ark', '', '', 'coll', 'mnemonic', 'dataint', 'dataint']
+    ['', 'ark', '', '', 'coll', 'mnemonic', 'dataint', 'bytes']
   end
 
 end

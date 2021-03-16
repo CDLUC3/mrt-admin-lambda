@@ -64,7 +64,7 @@ class ObjectsQuery < AdminQuery
   end
 
   def get_types(results)
-    ['', 'ark', 'name', '', '', '', 'coll', 'mnemonic', 'dataint', 'dataint', 'datetime']
+    ['', 'ark', 'name', '', '', '', 'coll', 'mnemonic', 'dataint', 'bytes', 'datetime']
   end
 
   def get_limit

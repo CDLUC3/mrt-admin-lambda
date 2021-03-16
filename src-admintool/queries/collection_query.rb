@@ -32,7 +32,7 @@ class CollectionQuery < AdminQuery
   end
 
   def get_types(results)
-    ['ogroup', 'coll', 'mnemonic', 'name', 'dataint', 'dataint']
+    ['ogroup', 'coll', 'mnemonic', 'name', 'dataint', 'bytes']
   end
 
 end

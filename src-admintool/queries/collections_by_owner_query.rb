@@ -40,7 +40,7 @@ class CollectionsByOwnerQuery < AdminQuery
   end
 
   def get_types(results)
-    ['coll', 'mnemonic', '', 'dataint', 'dataint']
+    ['coll', 'mnemonic', '', 'dataint', 'bytes']
   end
 
 end

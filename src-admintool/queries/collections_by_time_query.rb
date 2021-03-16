@@ -3,6 +3,7 @@ class CollectionsByTimeQuery < AdminQuery
   def initialize(query_factory, path, myparams, col, source)
     super(query_factory, path, myparams)
     @col = (col == 'count_files' || col == 'billable_size') ? col : 'count_files'
+    @colclass = (@col == 'billable_size') ? 'bytes' : 'dataint'
     @source_clause = (source == 'producer') ? " and source='producer'" : ""
     @interval = get_param('interval', '')
     @interval = (@interval == 'years' || @interval == 'days' || @interval == 'weeks') ? @interval : 'years'
@@ -37,10 +38,10 @@ class CollectionsByTimeQuery < AdminQuery
     @types = ['ogroup', 'coll', 'name']
     @ranges.each do |range|
       @headers.push(range[0])
-      @types.push('dataint')
+      @types.push(@colclass)
     end
     @headers.push('Total')
-    @types.push('dataint')
+    @types.push(@colclass)
   end
 
   def get_headers(results)
