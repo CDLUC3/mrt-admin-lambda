@@ -29,6 +29,8 @@
     - GET /admin/bid/JOB_ONLY
       - Get Sword deposit job
       - TODO: Add date time 
+    - GET /admin/bids/*Age in Days*
+      - Get list of batches on disk
 - Display Job Detail (job metadata)
   - Colladmin
     - GET job?bid=*BID*&job=*JID*
@@ -43,8 +45,6 @@
 
 
 ## Not yet implemented
-- Get batch folders (in order to detect batches never added to the queue)
-  - read the file system and return batch folder names + create date
 - Get batch folder details
   - Read file system vs queue
 - Update database properties for templates
