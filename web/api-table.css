@@ -12,7 +12,8 @@ div.results {
 
 table.results {
   border-collapse: collapse;
-  width: 80%;
+  width: 90%;
+  margin: auto;
 }
 
 table.results th,
@@ -121,6 +122,8 @@ table.results tr td.flag {
 
 p.buttons {
   display: none;
+  width: 100%;
+  text-align: center;
 }
 
 #exportJson {
