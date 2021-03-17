@@ -28,6 +28,9 @@ function updateBytesUnits() {
     var v = $(this).attr('data');
     if (v) {
       var n  = Number(v) / factor;
+      if (n == 0) {
+        return;
+      }
       var dig = factor == 1 || factor == 1000000 ? 0 : 2;
       v = n.toLocaleString(undefined, {minimumFractionDigits: dig, maximumFractionDigits:dig});
       if (factor == 1000000) {
