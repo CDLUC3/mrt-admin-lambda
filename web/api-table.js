@@ -33,12 +33,17 @@ function updateBytesUnits() {
       }
       var dig = factor == 1 || factor == 1000000 ? 0 : 2;
       v = n.toLocaleString(undefined, {minimumFractionDigits: dig, maximumFractionDigits:dig});
+      if (v == '0' || v == '0.00') {
+        v += "*";
+      } else {
+        v += " ";
+      }
       if (factor == 1000000) {
-        v += " M";
+        v += "M";
       } else if (factor == 1000000000) {
-        v += " G";
+        v += "G";
       } else if (factor == 1000000000000) {
-        v += " T";
+        v += "T";
       }
       $(this).text(v);
     }
@@ -230,6 +235,7 @@ function updateTotalRow(totr, types, totdata) {
       data = n.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits:2});
     } 
     totr.find(".c" + c).text(data);
+    totr.find(".c" + c).attr('title', data);
     totr.find(".c" + c).attr('data', n);
   }
 }
@@ -374,19 +380,24 @@ function format(cell, v, type, merritt_path) {
   } else if (type == 'foo') {
     $("<a href='?json=foo'/>").text(v).appendTo(cell);
   } else if (type == 'money'){
-    cell.text(Number(v).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits:2}));
+    var vf = Number(v).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits:2});
+    cell.text(vf);
     cell.addClass("hasdata");
     cell.attr('data', Number(v));
   } else if (type == 'dataint'){
-    cell.text(Number(v).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits:0}));
+    var vf = Number(v).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits:0});
+    cell.text(vf);
     cell.addClass("hasdata");
     cell.attr('data', Number(v));
   } else if (type == 'bytes'){
-    cell.text(Number(v).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits:0}));
+    var vf = Number(v).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits:0});
+    cell.text(vf);
+    cell.attr('title', vf);
     cell.addClass("hasdata");
     cell.attr('data', Number(v));
   } else if (type == 'data'){
-    cell.text(Number(v).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits:0}));
+    var vf = Number(v).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits:0});
+    cell.text(vf);
     cell.addClass("hasdata");
     cell.attr('data', Number(v));
   } else if (type == 'datetime'){
