@@ -11,6 +11,7 @@ require_relative 'actions/ingest_batch_action'
 require_relative 'actions/ingest_job_action'
 require_relative 'actions/ingest_job_manifest_action'
 require_relative 'actions/ingest_sword_jobs_action'
+require_relative 'actions/ingest_batch_folders_action'
 require_relative 'actions/ldap_action'
 
 def get_key_val(obj, key, defval='')
@@ -56,6 +57,8 @@ module LambdaFunctions
           result = IngestJobAction.new(@config, path, myparams).get_data
         elsif path == "manifest" 
           result = IngestJobManifestAction.new(@config, path, myparams).get_data
+        elsif path == "batchFolders" 
+          result = IngestBatchFoldersAction.new(@config, path, myparams).get_data
         elsif path == "sword" 
           result = IngestSwordJobsAction.new(@config, path, myparams).get_data
         elsif path == "submissions/pause" 

@@ -129,13 +129,15 @@ class Batch < MerrittJson
       'Num Jobs',
       'Num Compeleted',
       'Num Consumed',
-      'Num Failed'
+      'Num Failed',
+      'Num Pending'
     ]
   end
 
   def self.table_types
     [
       'qbatch',
+      '',
       '',
       '',
       '',
@@ -151,7 +153,8 @@ class Batch < MerrittJson
       num_jobs,
       num_jobs_by_status("Completed"),
       num_jobs_by_status("Consumed"),
-      num_jobs_by_status("Failed")
+      num_jobs_by_status("Failed"),
+      num_jobs_by_status("Pending")
     ]
   end
 
@@ -236,6 +239,10 @@ class Job < MerrittJson
       @dtime
     ]
   end
+
+  def dtime
+    @dtime
+  end
 end
 
 class JobList < MerrittJson
@@ -258,7 +265,10 @@ class JobList < MerrittJson
 
   def to_table
     table = []
-    @jobs.each do |job|
+    @jobs.sort {
+      # reverse sort on date
+      |a,b| b.dtime <=> a.dtime
+    }.each do |job|
       table.append(job.table_row)
     end
     table
