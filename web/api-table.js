@@ -424,7 +424,7 @@ function format(cell, v, type, merritt_path) {
     var arr = v.split("/");
     var b = arr[0];
     var j = arr.length > 1 ? arr[1] : "";
-    makeLink(cell, j, "collIndex.html?path=job&batch="+b+"&job="+j);
+    makeLink(cell, j, "collIndex.html?path=manifest&batch="+b+"&job="+j);
   } else if (type == 'mnemonic'){
     makeLink(cell, v, merritt_path + "/m/" + v);
   } else if (type == 'ark'){

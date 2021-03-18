@@ -189,3 +189,8 @@ p.buttons {
 fieldset {
   display: inline;
 }
+
+output { 
+  background-color: #EEEEEE;
+  font-style: italic;
+}

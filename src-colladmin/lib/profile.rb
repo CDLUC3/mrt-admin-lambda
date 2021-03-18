@@ -250,17 +250,20 @@ class IngestProfile < MerrittJson
       :profileDescription,
       :owner,
       :context,
-      :objectType,
       :objectMinterURL,
       :identifierNamespace,
-      :nodeID
+      :nodeID,
+      :contactsEmail
     ]
   end
 
   def summary_types
     arr = []
     summary_symbols.each do |sym|
-      arr.append(sym == :profileID ? "profile" : "")
+      type = ""
+      type = "profile" if sym == :profileID
+      type = "list" if sym == :contactsEmail
+      arr.append(type)
     end
     arr.append("")
     arr
@@ -278,7 +281,9 @@ class IngestProfile < MerrittJson
   def summary_values
     arr = []
     summary_symbols.each do |sym|
-      arr.append(getValue(sym))
+      v = getValue(sym)
+      v = v.join(",") if sym == :contactsEmail
+      arr.append(v)
     end
     arr.append(score)
     arr

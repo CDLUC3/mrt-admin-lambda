@@ -41,12 +41,15 @@
     - GET manifest?bid=*BID*&job=*JID*
   - Ingest
     - GET /admin/jid-manifest/*BID*/*JID*
-  
+- Get Batch Folder Details
+  - Colladmin
+    - TBD
+  - Ingest
+    - GET /admin/bids/<age in days>  
 
 
 ## Not yet implemented
-- Get batch folder details
-  - Read file system vs queue
+
 - Update database properties for templates
   - Elminiate any ad-hoc database updates to support collection creation/configuration
   - Ingest

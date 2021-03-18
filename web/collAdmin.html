@@ -59,18 +59,20 @@
       </p>
       <p>
         <label for="collection-ark">Collection ARK</label>
-        <input id="collection-ark" type="input" size="20">
+        <output id="collection-ark" type="input" size="20">Comes from EZID</output>
       </p>
       <p>
         <label for="owner-ark">Owner ARK</label>
-        <input id="owner-ark" type="input" size="60">
+        <select id="owner-ark">
+          <option>Pull existing values</option>
+        </select>
       </p>
       <div class="adminNotifications">
         <p>
           <label for="admin-notifications">Admin Notifications (comma-separated list of email addresses):</label>
         </p>
         <p>
-          <input id="admin-notifications" type="input" size="140">
+          <output id="admin-notifications" type="input" size="140">configured in SSM</output>
         </p>
       </div>
       <div class="endUserNotifications">

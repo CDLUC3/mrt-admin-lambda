@@ -14,7 +14,7 @@ class QueueEntry < MerrittJson
     )
     addProperty(
       :bid, 
-      MerrittJsonProperty.new("Creation Date").lookupValue(json, "que", "batchID")
+      MerrittJsonProperty.new("Batch").lookupValue(json, "que", "batchID")
     )
     addProperty(
       :job, 
@@ -30,11 +30,11 @@ class QueueEntry < MerrittJson
     )
     addProperty(
       :user, 
-      MerrittJsonProperty.new("Creation Date").lookupValue(json, "que", "user")
+      MerrittJsonProperty.new("User").lookupValue(json, "que", "user")
     )
     addProperty(
       :tilte, 
-      MerrittJsonProperty.new("Title").lookupValue(json, "que", "title")
+      MerrittJsonProperty.new("Title").lookupValue(json, "que", "objectTitle")
     )
     addProperty(
       :fileType, 
@@ -305,6 +305,7 @@ class JobManifestEntry < MerrittJson
     arr = []
     JobManifestEntry.placeholder.getPropertyList.each do |sym|
       type = ''
+      type = 'bytes' if sym == :fileSize
       arr.append(type)
     end
     arr
