@@ -101,9 +101,10 @@ class QueueEntry < MerrittJson
 end
 
 class Batch < MerrittJson
-  def initialize(bid)
+  def initialize(bid, submitter)
     super()
     @bid = bid
+    @submitter = submitter
     @jobs = []
     @statuses = {}
   end
@@ -124,6 +125,7 @@ class Batch < MerrittJson
   def self.table_headers
     [
       'Batch Id',
+      'Submitter',
       'Num Jobs',
       'Num Compeleted',
       'Num Consumed',
@@ -137,6 +139,7 @@ class Batch < MerrittJson
       '',
       '',
       '',
+      '',
       ''
     ]
   end
@@ -144,6 +147,7 @@ class Batch < MerrittJson
   def to_table_row
     [
       @bid,
+      @submitter,
       num_jobs,
       num_jobs_by_status("Completed"),
       num_jobs_by_status("Consumed"),
@@ -169,8 +173,7 @@ class IngestQueue < MerrittJson
     list.each do |obj|
       q = QueueEntry.new(obj)
       next unless q.checkFilter(queueList.filter)
-      puts(q)
-      qenrtylist = queueList.batches.fetch(q.bid, Batch.new(q.bid))
+      qenrtylist = queueList.batches.fetch(q.bid, Batch.new(q.bid, q.getValue(:user)))
       qenrtylist.addJob(q)
       queueList.batches[q.bid] = qenrtylist
       queueList.jobs.append(q)
