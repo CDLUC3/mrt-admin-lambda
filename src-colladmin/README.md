@@ -41,6 +41,8 @@
     - GET manifest?bid=*BID*&job=*JID*
   - Ingest
     - GET /admin/jid-manifest/*BID*/*JID*
+  - Ingest File View
+    - GET /admin/jid-file/*BID*/*JID*
 - Get Batch Folder Details
   - Colladmin
     - TBD
