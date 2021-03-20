@@ -31,26 +31,22 @@ def get_params_from_event(event)
 end
 
 
-def get_mysql
-  raise Exception.new "The configuration yaml must contain config['dbconf']" unless @config['dbconf']
-  dbconf = @config['dbconf']
+def get_mysql(dbconf)
   raise Exception.new "Configuration username not found" unless dbconf['username']
-  db_user = dbconf['username']
   raise Exception.new "Configuration password not found" unless dbconf['password']
-  db_password = dbconf['password']
   raise Exception.new "Configuration database not found" unless dbconf['database']
-  db_name = dbconf['database']
   raise Exception.new "Configuration host not found" unless dbconf['host']
-  db_host = dbconf['host']
   raise Exception.new "Configuration port not found" unless dbconf['port']
-  db_port = dbconf['port']
 
   Mysql2::Client.new(
-    :host => db_host,
-    :username => db_user,
-    :database=> db_name,
-    :password=> db_password,
-    :port => db_port)
+    :host => dbconf['host'],
+    :username => dbconf['username'],
+    :database=> dbconf['database'],
+    :password=> dbconf['password'],
+    :port => dbconf['port'],
+    :encoding => dbconf.fetch('encoding', 'utf8mb4'),
+    :collation => dbconf.fetch('collation', 'utf8mb4_unicode_ci'),
+  )
 end
 
 module LambdaFunctions
@@ -61,7 +57,8 @@ module LambdaFunctions
         config_file = "../src/#{config_file}" unless File.file?(config_file)
         config_block = ENV.key?('MERRITT_ADMIN_CONFIG') ? ENV['MERRITT_ADMIN_CONFIG'] : 'default'
         @config = Uc3Ssm::ConfigResolver.new.resolve_file_values(file: config_file, resolve_key: config_block, return_key: config_block)
-        client = get_mysql
+        dbconf = @config.fetch('dbconf', {})
+        client = get_mysql(dbconf)
 
         myparams = get_params_from_event(event)
         puts(myparams)
@@ -74,7 +71,7 @@ module LambdaFunctions
         {
           headers: {
             'Access-Control-Allow-Origin': '*',
-            'Content-Type': 'application/json; charset=utf-8'
+            'Content-Type': 'application/json; charset=UTF-8'
           },
           statusCode: 200,
           body: result.to_json
@@ -83,7 +80,7 @@ module LambdaFunctions
         {
           headers: {
             'Access-Control-Allow-Origin': '*',
-            'Content-Type': 'application/json; charset=utf-8'
+            'Content-Type': 'application/json; charset=UTF-8'
           },
           statusCode: 500,
           body: { error: e.message }.to_json

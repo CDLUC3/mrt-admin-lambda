@@ -52,6 +52,8 @@ class QueryFactory
       ObjectsRecentCollQuery.new(self, path, myparams)
     elsif path == 'objects_by_batch'
       ObjectsByBatchQuery.new(self, path, myparams)
+    elsif path == 'objects_by_job'
+      ObjectsByJobQuery.new(self, path, myparams)
     elsif path == 'files_by_name_coll'
       FilesByNameCollQuery.new(self, path, myparams)
     elsif path == 'filesize'
