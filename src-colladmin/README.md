@@ -24,8 +24,7 @@
     - GET batch?bid=*BID*
   - Ingest
     - GET /admin/bid/*BID*
-      - NOTE: Collection admin does not generally use this.  Collection admin filters the queue listing for batch info.
-      - TODO: Mark and Terry should discuss this to see if more info could be added to return json
+      - [ ] TODO - Terry will use this to provide info for a folder with no jobs 
     - GET /admin/bid/JOB_ONLY
       - Get Sword deposit job
       - TODO: Add date time 
