@@ -419,7 +419,8 @@ function format(cell, v, type, merritt_path) {
   } else if (type == 'batch') {
     makeLink(cell, v, "index.html?path=objects_by_batch&batch="+v);
   } else if (type == 'job') {
-    makeLink(cell, v, "index.html?path=objects_by_job&job="+v);
+    //todo... pass batch as well, job is not indexed
+    makeLink(cell, v, "index.html?path=objects_by_job&job="+v+"&batch=x");
   } else if (type == 'qbatch') {
     makeLink(cell, v, "collIndex.html?path=batch&batch="+v);
   } else if (type == 'qjob') {

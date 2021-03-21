@@ -3,12 +3,14 @@ require 'cgi'
 require_relative 'action'
 require_relative 'forward_to_ingest_action'
 require_relative '../lib/profile'
+require_relative '../lib/merritt_query'
 
 class IngestProfileAction < ForwardToIngestAction
   def initialize(config, path, myparams)
     @profile = CGI.unescape(myparams.fetch('profile', ''))
     endpoint = 'admin/profiles-full' 
     endpoint = "admin/profile/#{CGI.escape(@profile)}" if specific_profile?
+    @collections = Collections.new(config)
     super(config, path, myparams, endpoint)
   end
 
@@ -48,7 +50,7 @@ class IngestProfileAction < ForwardToIngestAction
       sprofile = SingleIngestProfileWrapper.new(body).profile
       sprofile.table_rows(get_template(sprofile))
     else
-      profiles = ProfileList.new(body)
+      profiles = ProfileList.new(body, @collections)
       profiles.table_rows
     end
   end

@@ -77,6 +77,8 @@ module LambdaFunctions
           body: result.to_json
         }
       rescue => e
+        puts(e.message)
+        puts(e.backtrace)
         {
           headers: {
             'Access-Control-Allow-Origin': '*',

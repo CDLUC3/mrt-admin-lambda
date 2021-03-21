@@ -80,6 +80,8 @@ module LambdaFunctions
           body: result
         }
       rescue => e
+        puts(e.message)
+        puts(e.backtrace)
         {
           headers: {
             'Access-Control-Allow-Origin': '*',

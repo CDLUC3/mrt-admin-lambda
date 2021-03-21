@@ -11,9 +11,6 @@ services:
       dockerfile: Dockerfile
     environment:
       SSM_ROOT_PATH: /uc3/mrt/dev/
-      BUCKET: uc3-s3-dev
-    volumes:
-    - "../mrt-ingest-profile:/profiles"
   alb-simulate:
     volumes:
     - "./web/:/web/"
