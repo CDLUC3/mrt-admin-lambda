@@ -46,7 +46,11 @@ class IngestJobAction < ForwardToIngestAction
       {
         label: 'Job Manifest', 
         url: "path=manifest&batch=#{@batch}&job=#{@job}"
-      }
+      },
+      {
+        label: 'Job Files', 
+        url: "path=files&batch=#{@batch}&job=#{@job}"
+      },
     ]
   end
 

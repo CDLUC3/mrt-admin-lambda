@@ -275,6 +275,55 @@ class JobList < MerrittJson
   end
 end
 
+class BatchFolder < MerrittJson
+  def initialize(bid, dtime)
+    super()
+    @bid = bid;
+    @dtime = dtime
+  end
+
+  def table_row
+    [
+      @bid,
+      @dtime
+    ]
+  end
+
+  def dtime
+    @dtime
+  end
+end
+
+class BatchFolderList < MerrittJson
+  def initialize(body)
+    super()
+    @batchFolders = []
+    data = JSON.parse(body)
+    data = fetchHashVal(data, 'fil:batchFileState')
+    data = fetchHashVal(data, 'fil:jobFile')
+    list = fetchArrayVal(data, 'fil:batchFile')
+    list.each do |obj|
+      @batchFolders.append(
+        BatchFolder.new(
+          obj.fetch('fil:file', ''),
+          obj.fetch('fil:fileDate', '')
+        )
+      )
+    end
+  end
+
+  def to_table
+    table = []
+    @batchFolders.sort {
+      # reverse sort on date
+      |a,b| b.dtime <=> a.dtime
+    }.each do |bf|
+      table.append(bf.table_row)
+    end
+    table
+  end
+end
+
 class JobManifestEntry < MerrittJson
   @@placeholder = nil
   def self.placeholder

@@ -1,15 +1,15 @@
 require_relative 'action'
 require_relative 'forward_to_ingest_action'
 
-class IngestJobManifestAction < ForwardToIngestAction
+class IngestJobFilesAction < ForwardToIngestAction
   def initialize(config, path, myparams)
     @batch = myparams.fetch('batch', '')
     @job = myparams.fetch('job', '')
-    super(config, path, myparams, "admin/jid-manifest/#{@batch}/#{@job}")
+    super(config, path, myparams, "admin/jid-file/#{@batch}/#{@job}")
   end
 
   def get_title
-    "Ingest Job Manifest #{@job}"
+    "Ingest Job Files #{@job}"
   end
 
   def table_headers
@@ -35,8 +35,8 @@ class IngestJobManifestAction < ForwardToIngestAction
         url: "path=job&batch=#{@batch}&job=#{@job}"
       },
       {
-        label: 'Job Files', 
-        url: "path=files&batch=#{@batch}&job=#{@job}"
+        label: 'Job Manifest', 
+        url: "path=manifest&batch=#{@batch}&job=#{@job}"
       },
     ]
   end
