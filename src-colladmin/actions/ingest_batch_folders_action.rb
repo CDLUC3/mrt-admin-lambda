@@ -15,19 +15,23 @@ class IngestBatchFoldersAction < ForwardToIngestAction
   def table_headers
     [
       'Batch', 
-      'Date'
+      'Date',
+      'Queue'
     ]
   end
 
   def table_types
     [
-      'qbatch', 
-      ''
+      '', 
+      '',
+      'qbatchnote'
     ]
   end
 
   def table_rows(body)
-    BatchFolderList.new(body).to_table
+    bflist = BatchFolderList.new(body)
+    bflist.apply_queue_list(QueueList.get_queue_list(get_ingest_server))
+    bflist.to_table
   end
 
   def hasTable

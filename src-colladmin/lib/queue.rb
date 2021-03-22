@@ -114,6 +114,14 @@ class Batch < MerrittJson
     @statuses[job.status] = @statuses.fetch(job.status, 0) + 1
   end
 
+  def bid
+    @bid
+  end
+
+  def submitter
+    @submitter
+  end
+
   def num_jobs
     @jobs.length
   end
@@ -185,12 +193,36 @@ class IngestQueue < MerrittJson
 end
 
 class QueueList < MerrittJson
-  def initialize(body, filter = "")
+  def initialize(ingest_server, body, filter = "")
     super()
+    @ingest_server = ingest_server
     @body = body
     @batches = {}
     @jobs = []
     @filter = filter
+    retrieveQueues
+  end
+
+  def self.get_queue_list(ingest_server)
+    qjson = HttpGetJson.new(ingest_server, "admin/queues")
+    QueueList.new(ingest_server, qjson.body)
+  end
+
+  def retrieveQueues
+    data = JSON.parse(@body)
+    data = fetchHashVal(data, 'ingq:ingestQueueNameState')
+    data = fetchHashVal(data, 'ingq:ingestQueueName')
+    fetchArrayVal(data, 'ingq:ingestQueue').each do |qjson|
+      node = fetchHashVal(qjson, 'ingq:node')
+      begin
+        qjson = HttpGetJson.new(@ingest_server, "admin/queue/#{node}")
+        next unless qjson.status == 200
+        IngestQueue.new(self, qjson.body)
+      rescue => e
+        puts(e.message)
+        puts(e.backtrace)
+      end
+    end
   end
 
   def filter
@@ -280,17 +312,27 @@ class BatchFolder < MerrittJson
     super()
     @bid = bid;
     @dtime = dtime
+    @qbid = ""
   end
 
   def table_row
     [
       @bid,
-      @dtime
+      @dtime,
+      @qbid
     ]
   end
 
   def dtime
     @dtime
+  end
+
+  def bid
+    @bid
+  end
+
+  def setQueueItem(batch)
+    @qbid = "#{batch.bid}; #{batch.num_jobs} Jobs - Submitter: #{batch.submitter}"
   end
 end
 
@@ -298,17 +340,20 @@ class BatchFolderList < MerrittJson
   def initialize(body)
     super()
     @batchFolders = []
+    @batchFolderHash = {}
     data = JSON.parse(body)
     data = fetchHashVal(data, 'fil:batchFileState')
     data = fetchHashVal(data, 'fil:jobFile')
     list = fetchArrayVal(data, 'fil:batchFile')
     list.each do |obj|
-      @batchFolders.append(
-        BatchFolder.new(
-          obj.fetch('fil:file', ''),
-          obj.fetch('fil:fileDate', '')
-        )
+      bf = BatchFolder.new(
+        obj.fetch('fil:file', ''),
+        obj.fetch('fil:fileDate', '')
       )
+      @batchFolders.append(
+        bf
+      )
+      @batchFolderHash[bf.bid] = bf
     end
   end
 
@@ -321,6 +366,14 @@ class BatchFolderList < MerrittJson
       table.append(bf.table_row)
     end
     table
+  end
+
+  def apply_queue_list(queue_list)
+    queue_list.batches.each do |bid, qbatch|
+      if @batchFolderHash.key?(bid)
+        @batchFolderHash[bid].setQueueItem(qbatch)
+      end
+    end
   end
 end
 

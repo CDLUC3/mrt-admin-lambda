@@ -423,6 +423,13 @@ function format(cell, v, type, merritt_path) {
     makeLink(cell, v, "index.html?path=objects_by_job&job="+v+"&batch=x");
   } else if (type == 'qbatch') {
     makeLink(cell, v, "collIndex.html?path=batch&batch="+v);
+  } else if (type == 'qbatchnote') {
+    var arr = v.split(";")
+    if (arr.length == 2) {
+      makeLink(cell, arr[1], "collIndex.html?path=batch&batch="+arr[0]);
+    } else {
+      cell.text(v)
+    }
   } else if (type == 'qjob') {
     var arr = v.split("/");
     var b = arr[0];

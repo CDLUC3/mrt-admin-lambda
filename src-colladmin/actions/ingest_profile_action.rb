@@ -40,9 +40,14 @@ class IngestProfileAction < ForwardToIngestAction
 
   def get_template(profile)
     return profile if profile.is_template?
-    resp = get_data_for_endpoint("admin/profile/#{MerrittJson.TEMPLATE_KEY}")
-    return nil unless resp.status == 200
-    SingleIngestProfileWrapper.new(resp.body).profile
+    begin
+      qjson = HttpGetJson.new(get_ingest_server, "admin/profile/#{MerrittJson.TEMPLATE_KEY}")
+      return nil unless qjson.status == 200
+      SingleIngestProfileWrapper.new(qjson.body).profile
+    rescue => e
+      puts(e.message)
+      puts(e.backtrace)
+    end
   end
 
   def table_rows(body)

@@ -29,8 +29,7 @@ class IngestBatchAction < ForwardToIngestAction
   end
 
   def table_rows(body)
-    queueList = QueueList.new(body, @batch)
-    retrieveQueues(queueList)
+    queueList = QueueList.new(get_ingest_server, body, @batch)
     if @batch.empty?
       queueList.to_table_batches
     else
