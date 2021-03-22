@@ -3,6 +3,8 @@ require_relative '../lib/queue'
 
 class IngestSwordJobsAction < ForwardToIngestAction
   def initialize(config, path, myparams)
+    @days = myparams.fetch("days", "7").to_i 
+    @days = 7 if @days > 7
     super(config, path, myparams, "admin/bid/JOB_ONLY")
   end
 
@@ -11,21 +13,17 @@ class IngestSwordJobsAction < ForwardToIngestAction
   end
 
   def table_headers
-    [
-      'Job', 
-      'Date'
-    ]
+    Job.table_headers
   end
 
   def table_types
-    [
-      'qjob',
-      ''
-    ]
+    Job.table_types
   end
 
   def table_rows(body)
-    JobList.new(body).to_table
+    jlist = JobList.new(body)
+    jlist.apply_recent_ingests(RecentSwordIngests.new(@config, @days))
+    jlist.to_table
   end
 
   def hasTable

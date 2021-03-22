@@ -13,21 +13,11 @@ class IngestBatchFoldersAction < ForwardToIngestAction
   end
 
   def table_headers
-    [
-      'Batch', 
-      'Date',
-      'Queue',
-      'Recent Ingest'
-    ]
+    BatchFolder.table_headers
   end
 
   def table_types
-    [
-      '', 
-      '',
-      'qbatchnote',
-      'batchnote'
-    ]
+    BatchFolder.table_types
   end
 
   def table_rows(body)

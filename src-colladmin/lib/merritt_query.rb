@@ -128,7 +128,7 @@ class RecentIngests < MerrittQuery
                 from 
                     inv_ingests 
                 where 
-                    date(submitted) > date_add(now(), INTERVAL -? DAY)
+                    date(submitted) > date_add(date(now()), INTERVAL -? DAY)
                 group by 
                     batch_id
                 ;
@@ -142,5 +142,72 @@ class RecentIngests < MerrittQuery
 
     def batches
         @batches
+    end
+end
+
+class RecentSwordIngest < QueryObject
+    def initialize(row)
+        @bid = row[0]
+        @jid = row[1]
+        @profile = row[2]
+        @submitted = row[3]
+        @object_cnt = row[4]
+    end
+
+    def bid
+        @bid
+    end
+
+    def jid
+        @jid
+    end
+
+    def profile
+        @profile
+    end
+    
+    def submitted
+        @submitted
+    end
+
+    def object_cnt
+        @object_cnt
+    end
+
+    def note
+        "#{@bid}/#{@jid}; #{@object_cnt} obj, #{@profile}"
+    end
+end
+
+class RecentSwordIngests < MerrittQuery
+    def initialize(config, days = 14)
+        super(config)
+        @jobs = {}
+        run_query(
+            %{
+                select 
+                    batch_id,
+                    job_id, 
+                    max(profile), 
+                    max(submitted), 
+                    count(*) 
+                from 
+                    inv_ingests 
+                where 
+                    date(submitted) > date_add(date(now()), INTERVAL -? DAY)
+                group by 
+                    batch_id,
+                    job_id
+                ;
+            },
+            [days]
+        ).each do |r|
+            ri = RecentSwordIngest.new(r)
+            @jobs[ri.jid] = ri
+        end
+    end
+
+    def jobs
+        @jobs
     end
 end

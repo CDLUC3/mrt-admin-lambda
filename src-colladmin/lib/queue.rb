@@ -261,19 +261,45 @@ end
 class Job < MerrittJson
   def initialize(jid, dtime)
     super()
-    @jid = jid;
+    @jid = jid
     @dtime = dtime
+    @recentnote = ""
   end
 
   def table_row
     [
       "JOB_ONLY/#{@jid}",
-      @dtime
+      @dtime,
+      @recentnote
+    ]
+  end
+
+  def self.table_headers
+    [
+      'Job', 
+      'Date',
+      'Recent Ingest'
+    ]
+  end
+
+  def self.table_types
+    [
+      'qjob',
+      '',
+      'jobnote',
     ]
   end
 
   def dtime
     @dtime
+  end
+
+  def jid
+    @jid
+  end
+
+  def setRecentItem(recentjob)
+    @recentnote = recentjob.note
   end
 end
 
@@ -281,17 +307,18 @@ class JobList < MerrittJson
   def initialize(body)
     super()
     @jobs = []
+    @jobHash = {}
     data = JSON.parse(body)
     data = fetchHashVal(data, 'fil:batchFileState')
     data = fetchHashVal(data, 'fil:jobFile')
     list = fetchArrayVal(data, 'fil:batchFile')
     list.each do |obj|
-      @jobs.append(
-        Job.new(
-          obj.fetch('fil:file', ''),
-          obj.fetch('fil:fileDate', '')
-        )
+      j = Job.new(
+        obj.fetch('fil:file', ''),
+        obj.fetch('fil:fileDate', '')
       )
+      @jobs.append(j)
+      @jobHash[j.jid] = j
     end
   end
 
@@ -304,6 +331,14 @@ class JobList < MerrittJson
       table.append(job.table_row)
     end
     table
+  end
+
+  def apply_recent_ingests(recentitems)
+    recentitems.jobs.each do |jid, recentjob|
+      if @jobHash.key?(jid)
+        @jobHash[jid].setRecentItem(recentjob)
+      end
+    end
   end
 end
 
@@ -322,6 +357,24 @@ class BatchFolder < MerrittJson
       @dtime,
       @qbid,
       @recentnote
+    ]
+  end
+
+  def self.table_headers
+    [
+      'Batch', 
+      'Date',
+      'Queue',
+      'Recent Ingest'
+    ]
+  end
+
+  def self.table_types
+    [
+      '', 
+      '',
+      'qbatchnote',
+      'batchnote'
     ]
   end
 
