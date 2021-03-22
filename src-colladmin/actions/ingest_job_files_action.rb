@@ -13,15 +13,15 @@ class IngestJobFilesAction < ForwardToIngestAction
   end
 
   def table_headers
-    JobManifestEntry.table_headers
+    JobFile.table_headers
   end
 
   def table_types
-    JobManifestEntry.table_types
+    JobFile.table_types
   end
 
   def table_rows(body)
-    JobManifest.new(body).to_table
+    JobFiles.new(body).to_table
   end
 
   def hasTable
