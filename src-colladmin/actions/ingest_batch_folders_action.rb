@@ -16,7 +16,8 @@ class IngestBatchFoldersAction < ForwardToIngestAction
     [
       'Batch', 
       'Date',
-      'Queue'
+      'Queue',
+      'Recent Ingest'
     ]
   end
 
@@ -24,13 +25,15 @@ class IngestBatchFoldersAction < ForwardToIngestAction
     [
       '', 
       '',
-      'qbatchnote'
+      'qbatchnote',
+      'batchnote'
     ]
   end
 
   def table_rows(body)
     bflist = BatchFolderList.new(body)
     bflist.apply_queue_list(QueueList.get_queue_list(get_ingest_server))
+    bflist.apply_recent_ingests(RecentIngests.new(@config, @days))
     bflist.to_table
   end
 

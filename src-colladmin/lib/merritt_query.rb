@@ -81,4 +81,66 @@ class Collections < MerrittQuery
         return "" if c.nil?
         c.id
     end
+
+end
+
+class RecentIngest < QueryObject
+    def initialize(row)
+        @bid = row[0]
+        @profile = row[1]
+        @submitted = row[2]
+        @object_cnt = row[3]
+    end
+
+    def bid
+        @id
+    end
+
+    def profile
+        @profile
+    end
+    
+    def submitted
+        @submitted
+    end
+
+    def object_cnt
+        @object_cnt
+    end
+
+    def note
+        "#{@bid}, #{@object_cnt} obj, #{@submitted}, #{@profile}"
+    end
+end
+
+
+class RecentIngests < MerrittQuery
+    def initialize(config, days = 14)
+        super(config)
+        @batches = {}
+        run_query(
+            %{
+                select 
+                    batch_id, 
+                    max(profile), 
+                    max(submitted), 
+                    count(*) 
+                from 
+                    inv_ingests 
+                where 
+                    date(submitted) > date_add(now(), INTERVAL -? DAY)
+                group by 
+                    batch_id
+                ;
+            },
+            [days]
+        ).each do |r|
+            ri = RecentIngest.new(r)
+            @batches[ri.bid] = ri
+        end
+    end
+
+    def batches
+        @batches
+    end
 end

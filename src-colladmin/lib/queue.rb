@@ -313,13 +313,15 @@ class BatchFolder < MerrittJson
     @bid = bid;
     @dtime = dtime
     @qbid = ""
+    @recentnote = ""
   end
 
   def table_row
     [
       @bid,
       @dtime,
-      @qbid
+      @qbid,
+      @recentnote
     ]
   end
 
@@ -333,6 +335,10 @@ class BatchFolder < MerrittJson
 
   def setQueueItem(batch)
     @qbid = "#{batch.bid}; #{batch.num_jobs} Jobs - Submitter: #{batch.submitter}"
+  end
+
+  def setRecentItem(recentbatch)
+    @recentnote = recentbatch.note
   end
 end
 
@@ -372,6 +378,14 @@ class BatchFolderList < MerrittJson
     queue_list.batches.each do |bid, qbatch|
       if @batchFolderHash.key?(bid)
         @batchFolderHash[bid].setQueueItem(qbatch)
+      end
+    end
+  end
+
+  def apply_recent_ingests(recentitems)
+    recentitems.batches.each do |bid, recentbatch|
+      if @batchFolderHash.key?(bid)
+        @batchFolderHash[bid].setRecentItem(recentbatch)
       end
     end
   end

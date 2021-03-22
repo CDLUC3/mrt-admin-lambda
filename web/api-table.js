@@ -418,6 +418,13 @@ function format(cell, v, type, merritt_path) {
     makeLink(cell, v, "index.html?path=collection_group_details&coll="+v);
   } else if (type == 'batch') {
     makeLink(cell, v, "index.html?path=objects_by_batch&batch="+v);
+  } else if (type == 'batchnote') {
+    var arr = v.split(";")
+    if (arr.length == 2) {
+      makeLink(cell, arr[1], "index.html?path=objects_by_batch&batch="+arr[0]);
+    } else {
+      cell.text(v)
+    }
   } else if (type == 'job') {
     //todo... pass batch as well, job is not indexed
     makeLink(cell, v, "index.html?path=objects_by_job&job="+v+"&batch=x");
