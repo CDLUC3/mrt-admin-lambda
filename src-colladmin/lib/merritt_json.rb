@@ -68,7 +68,7 @@ class MerrittJson
     val
   end
 
- # Handle issues with Merritt Core2 JSON calls
+  # Handle issues with Merritt Core2 JSON calls
   # Address issue in which an empty object is returned as an empty string
   def fetchHashVal(obj, key)
     val = obj.fetch(key, {})

@@ -42,3 +42,64 @@ class IngestJobFilesAction < ForwardToIngestAction
   end
 
 end
+
+class JobFile < MerrittJson
+  def initialize(obj)
+    super()
+    @dtime = obj.fetch("fil:fileDate", "")
+    @path = obj.fetch("fil:file", "")
+  end
+  
+  def table_row
+    [
+      @dtime,
+      @path
+    ]
+  end
+
+  def self.table_headers
+    [
+      'Date',
+      'Path'
+    ]
+  end
+
+  def self.table_types
+    [
+      '',
+      ''
+    ]
+  end
+  
+  def dtime
+    @dtime
+  end
+  
+  def path
+    @path
+  end
+  
+end
+  
+class JobFiles < MerrittJson
+  def initialize(body)
+    super()
+    @entries = []
+    data = JSON.parse(body)
+    data = fetchHashVal(data, 'fil:batchFileState')
+    data = fetchHashVal(data, 'fil:jobFile')
+    list = fetchArrayVal(data, 'fil:batchFile')
+    list.each do |obj|
+      @entries.append(JobFile.new(obj))
+    end
+  end
+  
+  def to_table
+    table = []
+    @entries.each_with_index do |jf, i|
+      break if (i >= 5000) 
+      table.append(jf.table_row)
+    end
+    table
+  end
+end

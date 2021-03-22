@@ -1,6 +1,4 @@
-require_relative 'action'
 require_relative 'forward_to_ingest_action'
-require_relative '../lib/queue'
 
 class IngestQueueAction < ForwardToIngestAction
   def initialize(config, path, myparams)
@@ -8,7 +6,7 @@ class IngestQueueAction < ForwardToIngestAction
   end
 
   def get_title
-    "List Ingest Queues"
+    "List Ingest Queues #{@batch}"
   end
 
   def table_headers

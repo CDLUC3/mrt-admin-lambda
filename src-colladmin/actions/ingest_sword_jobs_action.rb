@@ -1,5 +1,4 @@
-require_relative 'action'
-require_relative '../lib/queue'
+require_relative 'forward_to_ingest_action'
 
 class IngestSwordJobsAction < ForwardToIngestAction
   def initialize(config, path, myparams)
@@ -30,4 +29,155 @@ class IngestSwordJobsAction < ForwardToIngestAction
     true
   end
 
+end
+
+class Job < MerrittJson
+  def initialize(jid, dtime)
+    super()
+    @jid = jid
+    @dtime = dtime
+    @recentnote = ""
+  end
+
+  def table_row
+    [
+      "JOB_ONLY/#{@jid}",
+      @dtime,
+      @recentnote
+    ]
+  end
+
+  def self.table_headers
+    [
+      'Job', 
+      'Date',
+      'Recent Ingest'
+    ]
+  end
+
+  def self.table_types
+    [
+      'qjob',
+      '',
+      'jobnote',
+    ]
+  end
+
+  def dtime
+    @dtime
+  end
+
+  def jid
+    @jid
+  end
+
+  def setRecentItem(recentjob)
+    @recentnote = recentjob.note
+  end
+end
+
+class JobList < MerrittJson
+  def initialize(body)
+    super()
+    @jobs = []
+    @jobHash = {}
+    data = JSON.parse(body)
+    data = fetchHashVal(data, 'fil:batchFileState')
+    data = fetchHashVal(data, 'fil:jobFile')
+    list = fetchArrayVal(data, 'fil:batchFile')
+    list.each do |obj|
+      j = Job.new(
+        obj.fetch('fil:file', ''),
+        obj.fetch('fil:fileDate', '')
+      )
+      @jobs.append(j)
+      @jobHash[j.jid] = j
+    end
+  end
+
+  def to_table
+    table = []
+    @jobs.sort {
+      # reverse sort on date
+      |a,b| b.dtime <=> a.dtime
+    }.each do |job|
+      table.append(job.table_row)
+    end
+    table
+  end
+
+  def apply_recent_ingests(recentitems)
+    recentitems.jobs.each do |jid, recentjob|
+      if @jobHash.key?(jid)
+        @jobHash[jid].setRecentItem(recentjob)
+      end
+    end
+  end
+end
+
+class RecentSwordIngest < QueryObject
+  def initialize(row)
+      @bid = row[0]
+      @jid = row[1]
+      @profile = row[2]
+      @submitted = row[3]
+      @object_cnt = row[4]
+  end
+
+  def bid
+      @bid
+  end
+
+  def jid
+      @jid
+  end
+
+  def profile
+      @profile
+  end
+  
+  def submitted
+      @submitted
+  end
+
+  def object_cnt
+      @object_cnt
+  end
+
+  def note
+      "#{@bid}/#{@jid}; #{@object_cnt} obj, #{@profile}"
+  end
+end
+
+class RecentSwordIngests < MerrittQuery
+  def initialize(config, days = 14)
+      super(config)
+      @jobs = {}
+      run_query(
+          %{
+              select 
+                  batch_id,
+                  job_id, 
+                  max(profile), 
+                  max(submitted), 
+                  count(*) 
+              from 
+                  inv_ingests 
+              where 
+                  date(submitted) > date_add(date(now()), INTERVAL -? DAY)
+              group by 
+                  batch_id,
+                  job_id
+              ;
+          },
+          [days]
+      ).each do |r|
+          ri = RecentSwordIngest.new(r)
+          @jobs[ri.jid] = ri
+      end
+  end
+
+  def jobs
+      @jobs
+  end
 end

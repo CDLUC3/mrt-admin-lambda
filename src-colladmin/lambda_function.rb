@@ -8,7 +8,7 @@ require_relative 'actions/ingest_queue_action'
 require_relative 'actions/ingest_state_action'
 require_relative 'actions/ingest_profile_action'
 require_relative 'actions/ingest_batch_action'
-require_relative 'actions/ingest_job_action'
+require_relative 'actions/ingest_job_metadata_action'
 require_relative 'actions/ingest_job_manifest_action'
 require_relative 'actions/ingest_job_files_action'
 require_relative 'actions/ingest_sword_jobs_action'
@@ -55,7 +55,7 @@ module LambdaFunctions
         elsif path == "batch" 
           result = IngestBatchAction.new(@config, path, myparams).get_data
         elsif path == "job" 
-          result = IngestJobAction.new(@config, path, myparams).get_data
+          result = IngestJobMetadataAction.new(@config, path, myparams).get_data
         elsif path == "manifest" 
           result = IngestJobManifestAction.new(@config, path, myparams).get_data
         elsif path == "files" 
