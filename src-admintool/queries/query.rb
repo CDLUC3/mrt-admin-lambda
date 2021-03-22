@@ -91,7 +91,7 @@ class AdminQuery
     sql = get_sql
     stmt = @client.prepare(sql)
     query_params = resolve_params
-   results = stmt.execute(*query_params)
+    results = stmt.execute(*query_params)
     get_result_json(results)
   rescue => e
     puts(e)

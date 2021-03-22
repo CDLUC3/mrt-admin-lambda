@@ -2,28 +2,26 @@ default:
   dbconf:
     adapter: mysql2
     encoding: utf8mb4
-    host: "{!SSM: billing/db-host}"
-    database: "{!SSM: billing/db-name}"
+    collation: utf8mb4_unicode_ci
+    host: "{!SSM: inv/db-host}"
+    database: "{!SSM: inv/db-name}"
     port: 3306
-    username: "{!SSM: billing/readonly/db-user}"
-    password: "{!SSM: billing/readonly/db-password}"
+    username: "{!SSM: inv/readonly/db-user}"
+    password: "{!SSM: inv/readonly/db-password}"
   merritt_path: "{!ENV: MERRITT_PATH !DEFAULT: https://merritt.cdlib.org}"
-  bucket: "{!SSM: colladmin/profile-bucket}"
-  profiles: "mrt/colladmin/profiles.zip"
   ingest-services: "{!SSM: colladmin/ingest-services}"
 
 # use personal credentials when configuring a local environment
 # set up a script to set these variables
-development:
+docker:
   dbconf:
     adapter: mysql2
     encoding: utf8mb4
-    host: "{!ENV: ADMIN_HOST}"
-    database: "{!ENV: ADMIN_DATABASE}"
+    collation: utf8mb4_unicode_ci
+    host: db-container
+    database: db-name
+    username: user
+    password: password
     port: 3306
-    username: "{!ENV: ADMIN_USER}"
-    password: "{!ENV: ADMIN_PASSWORD}"
   merritt_path: "{!ENV: MERRITT_PATH !DEFAULT: https://merritt.cdlib.org}"
-  bucket: "{!ENV: BUCKET}"
-  profiles: "mrt/colladmin/profiles.zip"
   ingest-services: "{!ENV: INGEST_SERVICES}"

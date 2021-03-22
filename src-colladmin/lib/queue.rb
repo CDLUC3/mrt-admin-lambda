@@ -114,6 +114,14 @@ class Batch < MerrittJson
     @statuses[job.status] = @statuses.fetch(job.status, 0) + 1
   end
 
+  def bid
+    @bid
+  end
+
+  def submitter
+    @submitter
+  end
+
   def num_jobs
     @jobs.length
   end
@@ -185,12 +193,36 @@ class IngestQueue < MerrittJson
 end
 
 class QueueList < MerrittJson
-  def initialize(body, filter = "")
+  def initialize(ingest_server, body, filter = "")
     super()
+    @ingest_server = ingest_server
     @body = body
     @batches = {}
     @jobs = []
     @filter = filter
+    retrieveQueues
+  end
+
+  def self.get_queue_list(ingest_server)
+    qjson = HttpGetJson.new(ingest_server, "admin/queues")
+    QueueList.new(ingest_server, qjson.body)
+  end
+
+  def retrieveQueues
+    data = JSON.parse(@body)
+    data = fetchHashVal(data, 'ingq:ingestQueueNameState')
+    data = fetchHashVal(data, 'ingq:ingestQueueName')
+    fetchArrayVal(data, 'ingq:ingestQueue').each do |qjson|
+      node = fetchHashVal(qjson, 'ingq:node')
+      begin
+        qjson = HttpGetJson.new(@ingest_server, "admin/queue/#{node}")
+        next unless qjson.status == 200
+        IngestQueue.new(self, qjson.body)
+      rescue => e
+        puts(e.message)
+        puts(e.backtrace)
+      end
+    end
   end
 
   def filter
@@ -229,19 +261,45 @@ end
 class Job < MerrittJson
   def initialize(jid, dtime)
     super()
-    @jid = jid;
+    @jid = jid
     @dtime = dtime
+    @recentnote = ""
   end
 
   def table_row
     [
       "JOB_ONLY/#{@jid}",
-      @dtime
+      @dtime,
+      @recentnote
+    ]
+  end
+
+  def self.table_headers
+    [
+      'Job', 
+      'Date',
+      'Recent Ingest'
+    ]
+  end
+
+  def self.table_types
+    [
+      'qjob',
+      '',
+      'jobnote',
     ]
   end
 
   def dtime
     @dtime
+  end
+
+  def jid
+    @jid
+  end
+
+  def setRecentItem(recentjob)
+    @recentnote = recentjob.note
   end
 end
 
@@ -249,17 +307,18 @@ class JobList < MerrittJson
   def initialize(body)
     super()
     @jobs = []
+    @jobHash = {}
     data = JSON.parse(body)
     data = fetchHashVal(data, 'fil:batchFileState')
     data = fetchHashVal(data, 'fil:jobFile')
     list = fetchArrayVal(data, 'fil:batchFile')
     list.each do |obj|
-      @jobs.append(
-        Job.new(
-          obj.fetch('fil:file', ''),
-          obj.fetch('fil:fileDate', '')
-        )
+      j = Job.new(
+        obj.fetch('fil:file', ''),
+        obj.fetch('fil:fileDate', '')
       )
+      @jobs.append(j)
+      @jobHash[j.jid] = j
     end
   end
 
@@ -272,6 +331,116 @@ class JobList < MerrittJson
       table.append(job.table_row)
     end
     table
+  end
+
+  def apply_recent_ingests(recentitems)
+    recentitems.jobs.each do |jid, recentjob|
+      if @jobHash.key?(jid)
+        @jobHash[jid].setRecentItem(recentjob)
+      end
+    end
+  end
+end
+
+class BatchFolder < MerrittJson
+  def initialize(bid, dtime)
+    super()
+    @bid = bid;
+    @dtime = dtime
+    @qbid = ""
+    @recentnote = ""
+  end
+
+  def table_row
+    [
+      @bid,
+      @dtime,
+      @qbid,
+      @recentnote
+    ]
+  end
+
+  def self.table_headers
+    [
+      'Batch', 
+      'Date',
+      'Queue',
+      'Recent Ingest'
+    ]
+  end
+
+  def self.table_types
+    [
+      '', 
+      '',
+      'qbatchnote',
+      'batchnote'
+    ]
+  end
+
+  def dtime
+    @dtime
+  end
+
+  def bid
+    @bid
+  end
+
+  def setQueueItem(batch)
+    @qbid = "#{batch.bid}; #{batch.num_jobs} Jobs - Submitter: #{batch.submitter}"
+  end
+
+  def setRecentItem(recentbatch)
+    @recentnote = recentbatch.note
+  end
+end
+
+class BatchFolderList < MerrittJson
+  def initialize(body)
+    super()
+    @batchFolders = []
+    @batchFolderHash = {}
+    data = JSON.parse(body)
+    data = fetchHashVal(data, 'fil:batchFileState')
+    data = fetchHashVal(data, 'fil:jobFile')
+    list = fetchArrayVal(data, 'fil:batchFile')
+    list.each do |obj|
+      bf = BatchFolder.new(
+        obj.fetch('fil:file', ''),
+        obj.fetch('fil:fileDate', '')
+      )
+      @batchFolders.append(
+        bf
+      )
+      @batchFolderHash[bf.bid] = bf
+    end
+  end
+
+  def to_table
+    table = []
+    @batchFolders.sort {
+      # reverse sort on date
+      |a,b| b.dtime <=> a.dtime
+    }.each do |bf|
+      table.append(bf.table_row)
+    end
+    table
+  end
+
+  def apply_queue_list(queue_list)
+    queue_list.batches.each do |bid, qbatch|
+      if @batchFolderHash.key?(bid)
+        @batchFolderHash[bid].setQueueItem(qbatch)
+      end
+    end
+  end
+
+  def apply_recent_ingests(recentitems)
+    recentitems.batches.each do |bid, recentbatch|
+      if @batchFolderHash.key?(bid)
+        @batchFolderHash[bid].setRecentItem(recentbatch)
+      end
+    end
   end
 end
 
@@ -353,6 +522,67 @@ class JobManifest < MerrittJson
     @entries.each_with_index do |jme, i|
       break if (i >= 5000) 
       table.append(jme.to_table_row)
+    end
+    table
+  end
+end
+
+class JobFile < MerrittJson
+  def initialize(obj)
+    super()
+    @dtime = obj.fetch("fil:fileDate", "")
+    @path = obj.fetch("fil:file", "")
+  end
+  
+  def table_row
+    [
+      @dtime,
+      @path
+    ]
+  end
+
+  def self.table_headers
+    [
+      'Date',
+      'Path'
+    ]
+  end
+
+  def self.table_types
+    [
+      '',
+      ''
+    ]
+  end
+  
+  def dtime
+    @dtime
+  end
+  
+  def path
+    @path
+  end
+  
+end
+  
+class JobFiles < MerrittJson
+  def initialize(body)
+    super()
+    @entries = []
+    data = JSON.parse(body)
+    data = fetchHashVal(data, 'fil:batchFileState')
+    data = fetchHashVal(data, 'fil:jobFile')
+    list = fetchArrayVal(data, 'fil:batchFile')
+    list.each do |obj|
+      @entries.append(JobFile.new(obj))
+    end
+  end
+  
+  def to_table
+    table = []
+    @entries.each_with_index do |jf, i|
+      break if (i >= 5000) 
+      table.append(jf.table_row)
     end
     table
   end

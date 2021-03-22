@@ -7,5 +7,4 @@ services:
   lambda-container:
     environment:
       MERRITT_ADMIN_CONFIG: development
-      USE_MYSQL: N
       INGEST_SERVICES: "${HOSTNAME}.cdlib.org:8080/ingest/"

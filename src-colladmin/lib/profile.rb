@@ -1,8 +1,10 @@
 require_relative 'merritt_json'
+require_relative 'merritt_query'
 
 class ProfileList < MerrittJson
-  def initialize(body)
+  def initialize(body, collections)
     super()
+    @collections = collections
     @profiles = []
     data = JSON.parse(body)
     data = fetchHashVal(data, 'prosf:profilesFullState')
@@ -10,6 +12,7 @@ class ProfileList < MerrittJson
     template = nil
     fetchArrayVal(data, 'prosf:profileState').each do |json|
       p = IngestProfile.new(json, 'prosf')
+      p.set_collection(@collections)
       @profiles.append(p)
       template = p if p.is_template?
     end   
@@ -52,6 +55,7 @@ class IngestProfile < MerrittJson
   def initialize(json, namespace = 'pro')
     super()
     @score = 0
+    @collection = nil
     addProperty(
       :profileID, 
       MerrittJsonProperty.new(
@@ -134,6 +138,12 @@ class IngestProfile < MerrittJson
       )
     )
   end
+
+  def set_collection(collections)
+    # ark = getValue(:collection)
+    ark = getValue(:context)
+    @collection = collections.get_by_ark(ark)
+  end  
 
   def contactEmails(json, namespace)
     arr = []
@@ -266,6 +276,7 @@ class IngestProfile < MerrittJson
       arr.append(type)
     end
     arr.append("")
+    arr.append("coll")
     arr
   end
 
@@ -275,7 +286,12 @@ class IngestProfile < MerrittJson
       arr.append(getLabel(sym))
     end
     arr.append("Score")
+    arr.append("Collection")
     arr
+  end
+
+  def collection_id
+    @collection.nil? ? '' : @collection.id
   end
 
   def summary_values
@@ -286,6 +302,7 @@ class IngestProfile < MerrittJson
       arr.append(v)
     end
     arr.append(score)
+    arr.append(collection_id)
     arr
   end
 end

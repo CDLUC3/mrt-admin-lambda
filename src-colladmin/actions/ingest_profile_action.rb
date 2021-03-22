@@ -3,12 +3,14 @@ require 'cgi'
 require_relative 'action'
 require_relative 'forward_to_ingest_action'
 require_relative '../lib/profile'
+require_relative '../lib/merritt_query'
 
 class IngestProfileAction < ForwardToIngestAction
   def initialize(config, path, myparams)
     @profile = CGI.unescape(myparams.fetch('profile', ''))
     endpoint = 'admin/profiles-full' 
     endpoint = "admin/profile/#{CGI.escape(@profile)}" if specific_profile?
+    @collections = Collections.new(config)
     super(config, path, myparams, endpoint)
   end
 
@@ -38,9 +40,14 @@ class IngestProfileAction < ForwardToIngestAction
 
   def get_template(profile)
     return profile if profile.is_template?
-    resp = get_data_for_endpoint("admin/profile/#{MerrittJson.TEMPLATE_KEY}")
-    return nil unless resp.status == 200
-    SingleIngestProfileWrapper.new(resp.body).profile
+    begin
+      qjson = HttpGetJson.new(get_ingest_server, "admin/profile/#{MerrittJson.TEMPLATE_KEY}")
+      return nil unless qjson.status == 200
+      SingleIngestProfileWrapper.new(qjson.body).profile
+    rescue => e
+      puts(e.message)
+      puts(e.backtrace)
+    end
   end
 
   def table_rows(body)
@@ -48,7 +55,7 @@ class IngestProfileAction < ForwardToIngestAction
       sprofile = SingleIngestProfileWrapper.new(body).profile
       sprofile.table_rows(get_template(sprofile))
     else
-      profiles = ProfileList.new(body)
+      profiles = ProfileList.new(body, @collections)
       profiles.table_rows
     end
   end

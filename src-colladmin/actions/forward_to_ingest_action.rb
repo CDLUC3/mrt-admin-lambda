@@ -1,7 +1,6 @@
-require 'httpclient'
 require_relative 'action'
 require_relative '../lib/queue'
-
+require_relative '../lib/http_get_json'
 
 class ForwardToIngestAction < AdminAction
   def initialize(config, path, myparams, endpoint)
@@ -30,32 +29,11 @@ class ForwardToIngestAction < AdminAction
     }.to_json
   end
 
-  def get_data_for_endpoint(endpoint)
-    url = "#{get_ingest_server}#{endpoint}"
-    puts(url)
-    cli = HTTPClient.new
-    resp = cli.get(url, {}, {"Accept": "application/json"})
-    puts(resp.status)
-    resp
-  end
-
-  def retrieveQueues(queueList)
-    data = JSON.parse(queueList.body)
-    data = queueList.fetchHashVal(data, 'ingq:ingestQueueNameState')
-    data = queueList.fetchHashVal(data, 'ingq:ingestQueueName')
-    queueList.fetchArrayVal(data, 'ingq:ingestQueue').each do |qjson|
-      node = queueList.fetchHashVal(qjson, 'ingq:node')
-      resp = get_data_for_endpoint("admin/queue/#{node}")
-      next unless resp.status == 200
-      IngestQueue.new(queueList, resp.body)
-    end
-  end
-
   def get_data
     begin
-      resp = get_data_for_endpoint(@endpoint)
-      return { message: "Status #{resp.status} for #{@endpoint}" }.to_json unless resp.status == 200
-      return convertJsonToTable(resp.body) unless resp.body.empty?
+      qjson = HttpGetJson.new(get_ingest_server, @endpoint)
+      return { message: "Status #{qjson.status} for #{@endpoint}" }.to_json unless qjson.status == 200
+      return convertJsonToTable(qjson.body) unless qjson.body.empty?
       { message: "No response for #{@endpoint}" }.to_json
     rescue => e
       puts(e.message)
@@ -67,6 +45,7 @@ class ForwardToIngestAction < AdminAction
   def get_ingest_server
     @config.fetch('ingest-services', '').split(',').first
   end
+
   def get_alternative_queries
     []
   end

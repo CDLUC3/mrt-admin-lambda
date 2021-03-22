@@ -10,6 +10,7 @@ require_relative 'actions/ingest_profile_action'
 require_relative 'actions/ingest_batch_action'
 require_relative 'actions/ingest_job_action'
 require_relative 'actions/ingest_job_manifest_action'
+require_relative 'actions/ingest_job_files_action'
 require_relative 'actions/ingest_sword_jobs_action'
 require_relative 'actions/ingest_batch_folders_action'
 require_relative 'actions/ldap_action'
@@ -57,6 +58,8 @@ module LambdaFunctions
           result = IngestJobAction.new(@config, path, myparams).get_data
         elsif path == "manifest" 
           result = IngestJobManifestAction.new(@config, path, myparams).get_data
+        elsif path == "files" 
+          result = IngestJobFilesAction.new(@config, path, myparams).get_data
         elsif path == "batchFolders" 
           result = IngestBatchFoldersAction.new(@config, path, myparams).get_data
         elsif path == "sword" 
@@ -80,6 +83,8 @@ module LambdaFunctions
           body: result
         }
       rescue => e
+        puts(e.message)
+        puts(e.backtrace)
         {
           headers: {
             'Access-Control-Allow-Origin': '*',

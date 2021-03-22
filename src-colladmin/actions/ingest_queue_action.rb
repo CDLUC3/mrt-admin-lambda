@@ -20,8 +20,7 @@ class IngestQueueAction < ForwardToIngestAction
   end
 
   def table_rows(body)
-    queueList = QueueList.new(body)
-    retrieveQueues(queueList)
+    queueList = QueueList.new(get_ingest_server, body)
     queueList.to_table_jobs
   end
 
