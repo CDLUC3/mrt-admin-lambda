@@ -93,7 +93,7 @@ class RecentIngest < QueryObject
     end
 
     def bid
-        @id
+        @bid
     end
 
     def profile
@@ -109,7 +109,7 @@ class RecentIngest < QueryObject
     end
 
     def note
-        "#{@bid}, #{@object_cnt} obj, #{@submitted}, #{@profile}"
+        "#{@bid}; #{@object_cnt} obj, #{@profile}"
     end
 end
 
