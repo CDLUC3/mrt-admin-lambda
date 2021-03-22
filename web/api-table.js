@@ -425,6 +425,18 @@ function format(cell, v, type, merritt_path) {
     } else {
       cell.text(v)
     }
+  } else if (type == 'jobnote') {
+    var arr = v.split(";")
+    if (arr.length == 2) {
+      batj = arr[0].split(/\//);
+      if (batj.length == 2) {
+        makeLink(cell, arr[1], "index.html?path=objects_by_job&batch="+batj[0]+"&job="+batj[1]);
+      } else {
+        cell.text(v)
+      }
+    } else {
+      cell.text(v)
+    }
   } else if (type == 'job') {
     //todo... pass batch as well, job is not indexed
     makeLink(cell, v, "index.html?path=objects_by_job&job="+v+"&batch=x");
