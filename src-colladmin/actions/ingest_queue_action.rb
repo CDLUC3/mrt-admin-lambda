@@ -6,7 +6,7 @@ class IngestQueueAction < ForwardToIngestAction
   end
 
   def get_title
-    "List Ingest Queues #{@batch}"
+    "List Ingest Queues"
   end
 
   def table_headers
@@ -19,7 +19,7 @@ class IngestQueueAction < ForwardToIngestAction
 
   def table_rows(body)
     queueList = QueueList.new(get_ingest_server, body)
-    queueList.to_table_jobs
+    queueList.to_table
   end
 
   def hasTable

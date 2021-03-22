@@ -33,7 +33,7 @@ class QueueEntry < MerrittJson
       MerrittJsonProperty.new("User").lookupValue(json, "que", "user")
     )
     addProperty(
-      :tilte, 
+      :title, 
       MerrittJsonProperty.new("Title").lookupValue(json, "que", "objectTitle")
     )
     addProperty(
@@ -91,12 +91,56 @@ class QueueEntry < MerrittJson
     getValue(:bid)
   end
 
-  def job
+  def jid
     getValue(:job)
+  end
+
+  def profile
+    getValue(:profile)
   end
 
   def status
     getValue(:status)
+  end
+
+  def user
+    getValue(:user)
+  end
+
+  def title
+    getValue(:title)
+  end
+
+  def fileType
+    getValue(:fileType)
+  end
+  
+  def date
+    getValue(:date)
+  end
+end
+
+class QueueBatch < MerrittJson
+  def initialize(bid, submitter)
+    @bid = bid
+    @submitter = submitter
+    @jobs = []
+  end
+
+  def addJob(qj)
+    @jobs.append(qj)
+  end
+
+  def bid
+    @bid
+  end
+
+  def submitter
+    @submitter
+  end
+
+  def num_jobs
+    @jobs.length
   end
 end
 
@@ -109,7 +153,7 @@ class IngestQueue < MerrittJson
     list.each do |obj|
       q = QueueEntry.new(obj)
       next unless q.checkFilter(queueList.filter)
-      qenrtylist = queueList.batches.fetch(q.bid, Batch.new(q.bid, q.getValue(:user)))
+      qenrtylist = queueList.batches.fetch(q.bid, QueueBatch.new(q.bid, q.user))
       qenrtylist.addJob(q)
       queueList.batches[q.bid] = qenrtylist
       queueList.jobs.append(q)
@@ -166,15 +210,7 @@ class QueueList < MerrittJson
     @jobs
   end
 
-  def to_table_batches
-    table = []
-    @batches.each do |bid,b|
-      table.append(b.to_table_row)
-    end
-    table
-  end
-
-  def to_table_jobs
+  def to_table
     table = []
     @jobs.each do |q|
       table.append(q.to_table_row)

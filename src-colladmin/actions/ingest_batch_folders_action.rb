@@ -61,7 +61,7 @@ class BatchFolder < MerrittJson
 
   def self.table_types
     [
-      '', 
+      'qbatch', 
       '',
       'qbatchnote',
       'batchnote'
