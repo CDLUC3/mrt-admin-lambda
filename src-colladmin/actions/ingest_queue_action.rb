@@ -1,6 +1,4 @@
-require_relative 'action'
 require_relative 'forward_to_ingest_action'
-require_relative '../lib/queue'
 
 class IngestQueueAction < ForwardToIngestAction
   def initialize(config, path, myparams)
@@ -21,7 +19,7 @@ class IngestQueueAction < ForwardToIngestAction
 
   def table_rows(body)
     queueList = QueueList.new(get_ingest_server, body)
-    queueList.to_table_jobs
+    queueList.to_table
   end
 
   def hasTable
