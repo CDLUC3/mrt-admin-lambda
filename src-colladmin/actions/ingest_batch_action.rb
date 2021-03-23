@@ -63,6 +63,9 @@ class BatchJob < MerrittJson
     @obj_cnt = dj.obj_cnt
     @date = dj.date
     @profile = dj.profile
+    @submitter = dj.user
+    @fileType = dj.fileType
+
   end
 
   def self.table_headers
@@ -152,7 +155,9 @@ class RecentBatchIngest < QueryObject
       @jid = row[1]
       @profile = row[2]
       @date = row[3]
-      @obj_cnt = row[4]
+      @user = row[4]
+      @fileType = row[5]
+      @obj_cnt = row[6]
   end
 
   def bid
@@ -169,6 +174,14 @@ class RecentBatchIngest < QueryObject
   
   def date
       @date
+  end
+
+  def user
+      @user
+  end
+
+  def fileType
+    @fileType
   end
 
   def obj_cnt
@@ -191,7 +204,9 @@ class RecentBatchIngests < MerrittQuery
                   batch_id,
                   job_id, 
                   max(profile), 
-                  max(submitted), 
+                  max(submitted),
+                  max(user_agent), 
+                  max(ingest_type),
                   count(*) 
               from 
                   inv_ingests 
