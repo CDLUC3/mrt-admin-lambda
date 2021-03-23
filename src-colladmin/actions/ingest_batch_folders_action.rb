@@ -38,7 +38,9 @@ class BatchFolder < MerrittJson
     @bid = bid;
     @dtime = dtime
     @qbid = ""
-    @recentnote = ""
+    @qsubmitter = ''
+    @dbobj = ""
+    @dbprofile = ""
   end
 
   def table_row
@@ -46,7 +48,9 @@ class BatchFolder < MerrittJson
       @bid,
       @dtime,
       @qbid,
-      @recentnote
+      @qsubmitter,
+      @dbobj,
+      @dbprofile
     ]
   end
 
@@ -54,8 +58,10 @@ class BatchFolder < MerrittJson
     [
       'Batch', 
       'Date',
-      'Queue',
-      'Recent Ingest'
+      'Queue Jobs',
+      'Queue Submitter',
+      'DB Obj Cnt',
+      'DB Profile'
     ]
   end
 
@@ -64,7 +70,9 @@ class BatchFolder < MerrittJson
       'qbatch', 
       '',
       'qbatchnote',
-      'batchnote'
+      '',
+      'batchnote',
+      ''
     ]
   end
 
@@ -77,11 +85,13 @@ class BatchFolder < MerrittJson
   end
 
   def setQueueItem(batch)
-    @qbid = "#{batch.bid}; #{batch.num_jobs} Jobs - Submitter: #{batch.submitter}"
+    @qbid = "#{batch.bid}; #{batch.num_jobs}"
+    @qsubmitter = batch.submitter
   end
 
   def setRecentItem(recentbatch)
-    @recentnote = recentbatch.note
+    @dbobj = recentbatch.dbobj
+    @dbprofile = recentbatch.dbprofile
   end
 end
 
@@ -158,8 +168,12 @@ class RecentIngest < QueryObject
       @object_cnt
   end
 
-  def note
-      "#{@bid}; #{@object_cnt} obj, #{@profile}"
+  def dbobj
+      "#{@bid}; #{@object_cnt}"
+  end
+
+  def dbprofile
+    @profile
   end
 end
 

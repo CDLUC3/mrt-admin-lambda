@@ -36,14 +36,18 @@ class Job < MerrittJson
     super()
     @jid = jid
     @dtime = dtime
-    @recentnote = ""
+    @dbobj = ""
+    @dbprofile = ""
   end
 
   def table_row
     [
       "JOB_ONLY/#{@jid}",
       @dtime,
-      @recentnote
+      @dbobj,
+      @dbprofile,
+      '--',
+      '--'
     ]
   end
 
@@ -51,7 +55,10 @@ class Job < MerrittJson
     [
       'Job', 
       'Date',
-      'Recent Ingest'
+      'DB Obj Cnt',
+      'DB Profile',
+      'DOI',
+      'ARK'
     ]
   end
 
@@ -60,6 +67,9 @@ class Job < MerrittJson
       'qjob',
       '',
       'jobnote',
+      '',
+      'ajaxdoi',
+      'ajaxark'
     ]
   end
 
@@ -72,7 +82,8 @@ class Job < MerrittJson
   end
 
   def setRecentItem(recentjob)
-    @recentnote = recentjob.note
+    @dbobj = recentjob.dbobj
+    @dbprofile = recentjob.profile
   end
 end
 
@@ -144,8 +155,8 @@ class RecentSwordIngest < QueryObject
       @object_cnt
   end
 
-  def note
-      "#{@bid}/#{@jid}; #{@object_cnt} obj, #{@profile}"
+  def dbobj
+      "#{@bid}/#{@jid}; #{@object_cnt}"
   end
 end
 

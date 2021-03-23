@@ -77,7 +77,7 @@ class BatchJob < MerrittJson
       'Date',
       'File Type',
       'Profile',
-      'Num Objects in Database'
+      'DB Obj Cnt'
     ]
   end
 
