@@ -2,7 +2,7 @@ require_relative 'forward_to_ingest_action'
 
 class IngestBatchAction < ForwardToIngestAction
   def initialize(config, path, myparams)
-    @batch = myparams.fetch('batch', '')
+    @batch = myparams.fetch('batch', 'no-batch-provided')
     @batch_obj = Batch.new(@batch)
     super(config, path, myparams, "admin/queues")
   end
