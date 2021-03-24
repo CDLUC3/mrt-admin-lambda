@@ -138,12 +138,43 @@ function processResult(data) {
   }
 }
 
+function postLoad() {
+  $("tr:has('td.ajaxdoi'):first").each(function(){
+    var tr = $(this);
+    var job =  tr.find("td.qjob").text();
+    var url = urlbase + "?path=job&batch=JOB_ONLY&job=" + job;
+    $.ajax({
+      dataType: "json",
+      url: url,
+      success: function(data) {
+        var mdata = data.data;
+        var ark = "";
+        var doi = "";
+        for(var i=0; i< mdata.length; i++) {
+          var r = mdata[i];
+          if (r.length == 2) {
+            if (r[0] == "fil:where-primary") {
+              ark = r[1];
+            }
+            if (r[0] == "fil:where-local") {
+              doi = r[1];
+            }
+          }
+        }
+        tr.find("td.ajaxdoi").text(doi).removeClass("ajaxdoi");
+        tr.find("td.ajaxark").text(ark).removeClass("ajaxark");
+        postLoad();
+      }
+    });
+  });
+}
 
 function query_iterate(){
   if (iterativeParams.length == 0) {
     sorttable.makeSortable($("#data-table")[0]);
     $("#in-progress").dialog("close");
     $("#iprogress").text("");
+    postLoad();
   } else {
     var itparam = iterativeParams.shift();
     $("#iprogress").text("Queries Remaining: "+iterativeParams.length);

@@ -203,7 +203,7 @@ class RecentIngests < MerrittQuery
               from 
                   inv_ingests 
               where 
-                  date(submitted) > date_add(date(now()), INTERVAL -? DAY)
+                  submitted > date_add(date(now()), INTERVAL -? DAY)
               group by 
                   batch_id
               ;
