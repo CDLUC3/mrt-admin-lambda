@@ -147,6 +147,9 @@ function postLoad() {
       dataType: "json",
       url: url,
       success: function(data) {
+        if (!mdata) {
+          return;
+        }
         var mdata = data.data;
         var ark = "";
         var doi = "";
