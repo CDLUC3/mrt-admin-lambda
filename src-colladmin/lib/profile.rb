@@ -278,6 +278,11 @@ class IngestProfile < MerrittJson
     arr.append("")
     arr.append("coll")
     arr.append("")
+    arr.append("")
+    arr.append("")
+    arr.append("")
+    arr.append("")
+    arr.append("")
     arr
   end
 
@@ -288,16 +293,13 @@ class IngestProfile < MerrittJson
     end
     arr.append("Score")
     arr.append("Collection")
-    arr.append("Read/Write/Download/Tier/Harvest")
+    arr.append("Read")
+    arr.append("Write")
+    arr.append("Download")
+    arr.append("Tier")
+    arr.append("Harvest")
+    arr.append("DB Desc (if diff)")
     arr
-  end
-
-  def collection_id
-    @collection.nil? ? '' : @collection.id
-  end
-
-  def collection_note
-    @collection.nil? ? '' : @collection.note
   end
 
   def summary_values
@@ -308,8 +310,15 @@ class IngestProfile < MerrittJson
       arr.append(v)
     end
     arr.append(score)
-    arr.append(collection_id)
-    arr.append(collection_note)
+    arr.append(@collection.nil? ? '' : @collection.id)
+    arr.append(@collection.nil? ? '' : @collection.pread)
+    arr.append(@collection.nil? ? '' : @collection.pwrite)
+    arr.append(@collection.nil? ? '' : @collection.pdownload)
+    arr.append(@collection.nil? ? '' : @collection.tier)
+    arr.append(@collection.nil? ? '' : @collection.harvest)
+    dbdescription = @collection.nil? ? '' : @collection.dbdescription
+    dbdescription = dbdescription == getValue(:profileDescription) ? "-" : dbdescription
+    arr.append(dbdescription)
     arr
   end
 end
@@ -319,12 +328,12 @@ class Collection < QueryObject
       @id = row[0]
       @ark = row[1]
       @mnemonic = row[2]
-      read = row[3].nil? ? "-" : row[3]
-      write = row[4].nil? ? "-" : row[4]
-      download = row[5].nil? ? "-" : row[5]
-      tier = row[6].nil? ? "-" : row[6]
-      harvest = row[7].nil? ? "-" : row[7]
-      @note = "#{read}/#{write}/#{download}/#{tier}/#{harvest}"
+      @pread = row[3].nil? ? "-" : row[3]
+      @pwrite = row[4].nil? ? "-" : row[4]
+      @pdownload = row[5].nil? ? "-" : row[5]
+      @tier = row[6].nil? ? "-" : row[6]
+      @harvest = row[7].nil? ? "-" : row[7]
+      @dbdescription = row[8]
   end
 
   def id
@@ -336,9 +345,30 @@ class Collection < QueryObject
       @mnemonic
   end
 
-  def note
-      @note
+  def pread
+      @pread
   end
+
+  def pwrite
+    @pwrite
+  end
+
+  def pdownload
+    @pdownload
+  end
+
+  def tier
+    @tier
+  end
+
+  def harvest
+    @harvest
+  end
+
+  def dbdescription
+    @dbdescription
+  end
+
 end
 
 
@@ -356,7 +386,8 @@ class Collections < MerrittQuery
                 write_privilege,
                 download_privilege,
                 storage_tier,
-                harvest_privilege 
+                harvest_privilege, 
+                name
               from 
                 inv_collections
           }

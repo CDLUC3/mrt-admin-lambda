@@ -187,10 +187,6 @@ class RecentBatchIngest < QueryObject
   def obj_cnt
       @obj_cnt
   end
-
-  def note
-      "#{@bid}/#{@jid}; #{@obj_cnt} obj, #{@profile}"
-  end
 end
 
 class RecentBatchIngests < MerrittQuery
