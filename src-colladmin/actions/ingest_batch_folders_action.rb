@@ -41,6 +41,7 @@ class BatchFolder < MerrittJson
     @qsubmitter = ''
     @dbobj = ""
     @dbprofile = ""
+    @dbuser = ""
   end
 
   def table_row
@@ -50,7 +51,8 @@ class BatchFolder < MerrittJson
       @qbid,
       @qsubmitter,
       @dbobj,
-      @dbprofile
+      @dbprofile,
+      @dbuser
     ]
   end
 
@@ -61,7 +63,8 @@ class BatchFolder < MerrittJson
       'Queue Jobs',
       'Queue Submitter',
       'DB Obj Cnt',
-      'DB Profile'
+      'DB Profile',
+      'DB User'
     ]
   end
 
@@ -72,6 +75,7 @@ class BatchFolder < MerrittJson
       'qbatchnote',
       '',
       'batchnote',
+      '',
       ''
     ]
   end
@@ -92,6 +96,7 @@ class BatchFolder < MerrittJson
   def setRecentItem(recentbatch)
     @dbobj = recentbatch.dbobj
     @dbprofile = recentbatch.dbprofile
+    @dbuser = recentbatch.dbuser
   end
 end
 
@@ -149,7 +154,8 @@ class RecentIngest < QueryObject
       @bid = row[0]
       @profile = row[1]
       @submitted = row[2]
-      @object_cnt = row[3]
+      @dbuser = row[3]
+      @object_cnt = row[4]
   end
 
   def bid
@@ -175,6 +181,10 @@ class RecentIngest < QueryObject
   def dbprofile
     @profile
   end
+
+  def dbuser
+    @dbuser
+  end
 end
 
 
@@ -188,6 +198,7 @@ class RecentIngests < MerrittQuery
                   batch_id, 
                   max(profile), 
                   max(submitted), 
+                  max(user_agent),
                   count(*) 
               from 
                   inv_ingests 

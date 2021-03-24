@@ -277,6 +277,7 @@ class IngestProfile < MerrittJson
     end
     arr.append("")
     arr.append("coll")
+    arr.append("")
     arr
   end
 
@@ -287,11 +288,16 @@ class IngestProfile < MerrittJson
     end
     arr.append("Score")
     arr.append("Collection")
+    arr.append("Read/Write/Download/Tier/Harvest")
     arr
   end
 
   def collection_id
     @collection.nil? ? '' : @collection.id
+  end
+
+  def collection_note
+    @collection.nil? ? '' : @collection.note
   end
 
   def summary_values
@@ -303,6 +309,65 @@ class IngestProfile < MerrittJson
     end
     arr.append(score)
     arr.append(collection_id)
+    arr.append(collection_note)
     arr
   end
+end
+
+class Collection < QueryObject
+  def initialize(row)
+      @id = row[0]
+      @ark = row[1]
+      @mnemonic = row[2]
+      read = row[3].nil? ? "-" : row[3]
+      write = row[4].nil? ? "-" : row[4]
+      download = row[5].nil? ? "-" : row[5]
+      tier = row[6].nil? ? "-" : row[6]
+      harvest = row[7].nil? ? "-" : row[7]
+      @note = "#{read}/#{write}/#{download}/#{tier}/#{harvest}"
+  end
+
+  def id
+      @id
+  end
+
+  def ark
+      #@ark - currently not populating
+      @mnemonic
+  end
+
+  def note
+      @note
+  end
+end
+
+
+class Collections < MerrittQuery
+  def initialize(config)
+      super(config)
+      @collections = {}
+      run_query(
+          %{
+              select 
+                id, 
+                ark,
+                mnemonic,
+                read_privilege,
+                write_privilege,
+                download_privilege,
+                storage_tier,
+                harvest_privilege 
+              from 
+                inv_collections
+          }
+      ).each do |r|
+          c = Collection.new(r)
+          @collections[c.ark] = c
+      end
+  end
+
+  def get_by_ark(ark)
+      @collections[ark]
+  end
+
 end

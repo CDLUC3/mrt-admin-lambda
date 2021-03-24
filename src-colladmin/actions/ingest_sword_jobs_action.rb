@@ -21,7 +21,8 @@ class IngestSwordJobsAction < ForwardToIngestAction
 
   def table_rows(body)
     jlist = JobList.new(body)
-    jlist.apply_recent_ingests(RecentSwordIngests.new(@config, @days))
+    recent = RecentSwordIngests.new(@config, @days)
+    jlist.apply_recent_ingests(recent)
     jlist.to_table
   end
 
@@ -34,7 +35,7 @@ end
 class Job < MerrittJson
   def initialize(jid, dtime)
     super()
-    @jid = jid
+    @jid = jid.strip
     @dtime = dtime
     @dbobj = ""
     @dbprofile = ""
@@ -117,6 +118,10 @@ class JobList < MerrittJson
     table
   end
 
+  def jobs
+    @jobs
+  end
+
   def apply_recent_ingests(recentitems)
     recentitems.jobs.each do |jid, recentjob|
       if @jobHash.key?(jid)
@@ -128,9 +133,9 @@ end
 
 class RecentSwordIngest < QueryObject
   def initialize(row)
-      @bid = row[0]
-      @jid = row[1]
-      @profile = row[2]
+      @bid = row[0].strip
+      @jid = row[1].strip
+      @profile = row[2].strip
       @submitted = row[3]
       @object_cnt = row[4]
   end
@@ -175,7 +180,9 @@ class RecentSwordIngests < MerrittQuery
               from 
                   inv_ingests 
               where 
-                  date(submitted) > date_add(date(now()), INTERVAL -? DAY)
+                  submitted >= date_add(date(now()), INTERVAL -? DAY)
+              and
+                  batch_id = 'JOB_ONLY'
               group by 
                   batch_id,
                   job_id
