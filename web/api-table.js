@@ -147,10 +147,10 @@ function postLoad() {
       dataType: "json",
       url: url,
       success: function(data) {
+        var mdata = data.data;
         if (!mdata) {
           return;
         }
-        var mdata = data.data;
         var ark = "";
         var doi = "";
         for(var i=0; i< mdata.length; i++) {
