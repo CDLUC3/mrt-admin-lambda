@@ -130,6 +130,10 @@ class AdminQuery
     true if Integer(string) rescue false
   end
 
+  def bytes_unit
+    "1"
+  end
+
   def format_result_json(types, data, headers)
     if @format == 'report'
       {
@@ -143,7 +147,8 @@ class AdminQuery
         show_grand_total: show_grand_total,
         merritt_path: @merritt_path,
         alternative_queries: get_alternative_queries,
-        iterate: @iterate
+        iterate: @iterate,
+        bytes_unit: bytes_unit
       }
     else
       results = []
