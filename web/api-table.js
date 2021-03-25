@@ -105,6 +105,9 @@ function showUrl(url) {
     url: url,
     data: pageparams,
     success: function(data) {
+      if ("bytes_unit" in data) {
+        $("#bytes_unit").val(data["bytes_unit"])
+      }
       processResult(data);
       if (method == "POST") {
         $("#exportJson").hide();
@@ -139,6 +142,7 @@ function processResult(data) {
 }
 
 function postLoad() {
+  $("#bytes").val($("bytes_unit").val());
   $("tr:has('td.ajaxdoi'):first").each(function(){
     var tr = $(this);
     var job =  tr.find("td.qjob").text();
