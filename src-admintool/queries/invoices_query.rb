@@ -12,6 +12,8 @@ class InvoicesQuery < AdminQuery
 
     # As of allows you to test the pro-rating logic by using only a portion of data for a FY
     @as_of = get_param('as_of', @dend)
+    @campus = get_param('campus', '')
+    @campusfilt = "#{@campus}%"
 
     # Compute the last day in a FY (at or before the as_of date) for which records exist
     sql = %{
@@ -45,7 +47,7 @@ class InvoicesQuery < AdminQuery
   end
 
   def get_title
-    "Invoice by Collection for FY#{@fy}"
+    "#{@campus} Invoice by Collection for FY#{@fy}"
   end
 
   def get_filter_col
@@ -58,9 +60,9 @@ class InvoicesQuery < AdminQuery
 
   def get_params
     [
-      @dstart, @dend, @dytd, @rate,
-      @dstart, @dend, @dytd, @rate,
-      @dstart, @dend, @dytd, @rate
+      @dstart, @dend, @dytd, @rate, @campusfilt,
+      @dstart, @dend, @dytd, @rate, @campusfilt,
+      @dstart, @dend, @dytd, @rate, @campusfilt
     ]
   end
 
@@ -180,6 +182,8 @@ class InvoicesQuery < AdminQuery
         ) as owner_exempt_bytes                  /* If before FY19, compute storage exemption per owner */
       from
         owner_collections c
+      where 
+        ogroup like ?
     }
 
     %{
@@ -378,4 +382,22 @@ class InvoicesQuery < AdminQuery
     ]
   end
 
+  def get_alternative_queries
+    return [] unless @campus.empty?
+    queries = []
+    params = @myparams
+    ['UCB', 'UCD', 'UCI', 'UCLA', 'UCM', 'UCR', 'UCSB', 'UCSC', 'UCSD', 'UCSF'].each do |campus|
+      params['campus'] = campus
+      pstr = ""
+      params.each do |k,v|
+        pstr = "#{pstr}&" unless pstr.empty? 
+        pstr = "#{pstr}#{k}=#{v}"
+      end 
+      queries.append({
+        label: campus, 
+        url: pstr
+      })
+    end
+    queries
+  end
 end
