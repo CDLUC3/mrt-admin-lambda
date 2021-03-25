@@ -5,6 +5,8 @@ class AdminQuery
     @merritt_path = query_factory.merritt_path
     @path = path
     @myparams = myparams
+    @limit = @myparams.fetch("limit", get_default_limit.to_s).to_i
+    @limit = @limit > get_max_limit ? get_max_limit : @limit
     @iterate = myparams.key?('iterate')
     @itparam1 = get_param('itparam1', '')
     @itparam2 = get_param('itparam2', '')
@@ -193,6 +195,45 @@ class AdminQuery
     return unit if unit == 'MONTH'
     return unit if unit == 'YEAR'
     'DAY'
+  end
+
+  def get_limit
+    @limit
+  end
+
+  def get_default_limit
+    50
+  end
+
+  def get_max_limit
+    500
+  end
+
+  def params_to_str(params)
+    pstr = ""
+    params.each do |k,v|
+      pstr = "#{pstr}&" unless pstr.empty? 
+      v = CGI.unescape(v) if v.instance_of?(String)
+      pstr = "#{pstr}#{k}=#{v}"
+    end 
+    pstr
+  end
+
+  def get_alternative_limit_queries
+    queries = []
+    limits = []
+    [10, 20, 50, 100, 200, 500, 1000].each do |limit|
+      limits.append(limit) if limit <= get_max_limit
+    end
+    limits.each do |limit|
+      params = @myparams
+      params['limit'] = limit
+      queries.append({
+        label: "Limit #{limit}", 
+        url: params_to_str(params)
+      })
+    end
+    queries
   end
 
 end

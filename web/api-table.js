@@ -142,7 +142,10 @@ function processResult(data) {
 }
 
 function postLoad() {
-  if ($("#bytes").val() != "1") {
+  var rcount = $("#data-table tbody tr").length;
+  $("<caption/>").text(rcount + " Rows").prependTo($("#data-table"));
+  $("#data-table title").append();
+ if ($("#bytes").val() != "1") {
     updateBytesUnits();
   }
   $("tr:has('td.ajaxdoi'):first").each(function(){

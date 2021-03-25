@@ -386,15 +386,6 @@ class InvoicesQuery < AdminQuery
     "1000000"
   end
 
-  def params_to_str(params)
-    pstr = ""
-    params.each do |k,v|
-      pstr = "#{pstr}&" unless pstr.empty? 
-      pstr = "#{pstr}#{k}=#{v}"
-    end 
-    pstr
-  end
-
   def campus_params(campus)
     params = @myparams
     params["campus"] = campus

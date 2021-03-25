@@ -67,7 +67,8 @@ class ObjectsQuery < AdminQuery
     ['', 'ark', 'name', '', '', '', 'coll', 'mnemonic', 'dataint', 'bytes', 'datetime']
   end
 
-  def get_limit
-    50
+  def get_alternative_queries
+    get_alternative_limit_queries
   end
+
 end

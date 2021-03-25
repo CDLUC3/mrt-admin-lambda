@@ -43,7 +43,7 @@ class FilesQuery < AdminQuery
     } + get_where +
     %{
       order by o.id asc
-      limit 50;
+      limit #{get_limit};
     }
   end
 
@@ -53,6 +53,10 @@ class FilesQuery < AdminQuery
 
   def get_types(results)
     ['', 'ark', '', '', 'coll', 'mnemonic', 'dataint', 'bytes']
+  end
+
+  def get_alternative_queries
+    get_alternative_limit_queries
   end
 
 end

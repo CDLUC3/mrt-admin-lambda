@@ -10,7 +10,7 @@ class ObjectsLargeQuery < ObjectsQuery
         f.inv_object_id
       having
         sum(f.billable_size) > 1073741824
-      limit 50;
+      limit #{get_limit};
     }
     stmt = @client.prepare(subsql)
     results = stmt.execute()
@@ -33,4 +33,9 @@ class ObjectsLargeQuery < ObjectsQuery
   def get_where
     "where o.id in (#{@qs.join(',')})"
   end
+
+  def get_max_limit
+    50
+  end
+
 end

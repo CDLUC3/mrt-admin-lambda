@@ -16,7 +16,4 @@ class ObjectsRecentCollQuery < ObjectsQuery
     'where c.id = ?'
   end
 
-  def get_limit
-    10
-  end
 end
