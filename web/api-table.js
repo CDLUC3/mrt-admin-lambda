@@ -142,7 +142,7 @@ function processResult(data) {
 }
 
 function postLoad() {
-  $("#bytes").val($("bytes_unit").val());
+  $("#bytes").val($("#bytes_unit").val());
   $("tr:has('td.ajaxdoi'):first").each(function(){
     var tr = $(this);
     var job =  tr.find("td.qjob").text();
