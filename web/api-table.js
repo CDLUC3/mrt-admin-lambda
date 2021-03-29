@@ -142,7 +142,7 @@ function processResult(data) {
 }
 
 function postLoad() {
-  if ($("#data-table capiton").length == 0) {
+  if ($("#data-table caption").length == 0) {
     var rcount = $("#data-table tbody tr").length;
     $("<caption/>").text(rcount + " Rows").prependTo($("#data-table"));  
   }
