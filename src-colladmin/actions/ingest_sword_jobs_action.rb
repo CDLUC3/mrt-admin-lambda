@@ -1,9 +1,10 @@
+require 'date'
 require_relative 'forward_to_ingest_action'
 
 class IngestSwordJobsAction < ForwardToIngestAction
   def initialize(config, path, myparams)
     @days = myparams.fetch("days", "7").to_i 
-    @days = 7 if @days > 7
+    @days = 21 if @days > 21
     super(config, path, myparams, "admin/bid/JOB_ONLY")
   end
 
@@ -20,7 +21,7 @@ class IngestSwordJobsAction < ForwardToIngestAction
   end
 
   def table_rows(body)
-    jlist = JobList.new(body)
+    jlist = JobList.new(body, @days)
     recent = RecentSwordIngests.new(@config, @days)
     jlist.apply_recent_ingests(recent)
     jlist.to_table
@@ -28,6 +29,23 @@ class IngestSwordJobsAction < ForwardToIngestAction
 
   def hasTable
     true
+  end
+
+  def get_alternative_queries
+    [
+      {
+        label: 'Sword Jobs Last 7 days', 
+        url: "path=sword&days=7"
+      },
+      {
+        label: 'Sword Jobs Last 14 days', 
+        url: "path=sword&days=14"
+      },
+      {
+        label: 'Sword Jobs Last 21 days', 
+        url: "path=sword&days=21"
+      }
+    ]
   end
 
 end
@@ -78,6 +96,10 @@ class Job < MerrittJson
     @dtime
   end
 
+  def to_date 
+    Date.parse(@dtime)
+  end
+
   def jid
     @jid
   end
@@ -89,7 +111,7 @@ class Job < MerrittJson
 end
 
 class JobList < MerrittJson
-  def initialize(body)
+  def initialize(body, days)
     super()
     @jobs = []
     @jobHash = {}
@@ -102,6 +124,9 @@ class JobList < MerrittJson
         obj.fetch('fil:file', ''),
         obj.fetch('fil:fileDate', '')
       )
+      puts j.to_date
+      puts Date.today - days
+      next if j.to_date < (Date.today - days)
       @jobs.append(j)
       @jobHash[j.jid] = j
     end
