@@ -142,10 +142,11 @@ function processResult(data) {
 }
 
 function postLoad() {
-  var rcount = $("#data-table tbody tr").length;
-  $("<caption/>").text(rcount + " Rows").prependTo($("#data-table"));
-  $("#data-table title").append();
- if ($("#bytes").val() != "1") {
+  if ($("#data-table capiton").length == 0) {
+    var rcount = $("#data-table tbody tr").length;
+    $("<caption/>").text(rcount + " Rows").prependTo($("#data-table"));  
+  }
+  if ($("#bytes").val() != "1") {
     updateBytesUnits();
   }
   $("tr:has('td.ajaxdoi'):first").each(function(){
