@@ -30,6 +30,23 @@ class IngestBatchFoldersAction < ForwardToIngestAction
     true
   end
 
+  def get_alternative_queries
+    [
+      {
+        label: 'Batch Folders Last 7 days', 
+        url: "path=batchFolders&days=7"
+      },
+      {
+        label: 'Batch Folders Last 14 days', 
+        url: "path=batchFolders&days=14"
+      },
+      {
+        label: 'Batch Folders Last 21 days', 
+        url: "path=batchFolders&days=21"
+      }
+    ]
+  end
+
 end
 
 class BatchFolder < MerrittJson
