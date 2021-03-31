@@ -30,6 +30,8 @@
       - TODO: Add date time 
     - GET /admin/bids/*Age in Days*
       - Get list of batches on disk
+    - GET /admin/bid/*BID*/<age in days>
+      - Get batch info in days (Useful for Dryad: JOB_ONLY)
 - Display Job Detail (job metadata)
   - Colladmin
     - GET job?bid=*BID*&job=*JID*
@@ -46,7 +48,9 @@
   - Colladmin
     - TBD
   - Ingest
-    - GET /admin/bids/<age in days>  
+    - GET /admin/bids/<age in days> 
+- Alter submission state
+    - POST /admin/submissions/<freeze|thaw> 
 
 ## Issues/Questions
 - [ ] The "Collection" array is not populating for profile objects - it is returning as an empty string
@@ -56,9 +60,6 @@
 
 - Update database properties for templates
   - Elminiate any ad-hoc database updates to support collection creation/configuration
-  - Ingest
-    - POST ??
-- Pause/Unpause submission jobs
   - Ingest
     - POST ??
 - Restart submssion
