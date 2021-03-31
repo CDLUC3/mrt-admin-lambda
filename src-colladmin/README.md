@@ -53,7 +53,8 @@
     - POST /admin/submissions/<freeze|thaw> 
 
 ## Issues/Questions
-- [ ] The "Collection" array is not populating for profile objects - it is returning as an empty string
+- [X ] The "Collection" array is not populating for profile objects - it is returning as an empty string
+  - *Now populated as collectionName field*
   - This field will be used to connect the profile object to the database object 
 
 ## Not yet implemented
