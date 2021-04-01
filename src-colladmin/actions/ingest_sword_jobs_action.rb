@@ -5,7 +5,7 @@ class IngestSwordJobsAction < ForwardToIngestAction
   def initialize(config, path, myparams)
     @days = myparams.fetch("days", "7").to_i 
     @days = 21 if @days > 21
-    super(config, path, myparams, "admin/bid/JOB_ONLY")
+    super(config, path, myparams, "admin/bid/JOB_ONLY/#{@days}")
   end
 
   def get_title
