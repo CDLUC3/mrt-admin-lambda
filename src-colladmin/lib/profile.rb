@@ -81,7 +81,7 @@ class IngestProfile < MerrittJson
     )
     addProperty(
       :collection, 
-      MerrittJsonProperty.new("Collection").lookupValue(json, namespace, "collection")
+      MerrittJsonProperty.new("Collection").lookupValue(json, namespace, "collectionName")
     )
     addProperty(
       :identifierScheme, 
@@ -140,8 +140,7 @@ class IngestProfile < MerrittJson
   end
 
   def set_collection(collections)
-    # ark = getValue(:collection)
-    ark = getValue(:context)
+    ark = getValue(:collection)
     @collection = collections.get_by_ark(ark)
   end  
 
@@ -341,8 +340,7 @@ class Collection < QueryObject
   end
 
   def ark
-      #@ark - currently not populating
-      @mnemonic
+      @ark
   end
 
   def pread
