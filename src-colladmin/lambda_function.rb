@@ -14,6 +14,7 @@ require_relative 'actions/ingest_job_files_action'
 require_relative 'actions/ingest_sword_jobs_action'
 require_relative 'actions/ingest_batch_folders_action'
 require_relative 'actions/ldap_action'
+require_relative 'actions/post_to_ingest_action'
 
 def get_key_val(obj, key, defval='')
   return "" unless obj
@@ -65,9 +66,9 @@ module LambdaFunctions
         elsif path == "sword" 
           result = IngestSwordJobsAction.new(@config, path, myparams).get_data
         elsif path == "submissions/pause" 
-          result = ForwardToIngestAction.new(@config, path, myparams, "admin/#{path}").get_data
+          result = PostToIngestAction.new(@config, path, myparams, "admin/submissions/freeze").get_data
         elsif path == "submissions/unpause" 
-          result = ForwardToIngestAction.new(@config, path, myparams, "admin/#{path}").get_data
+          result = PostToIngestAction.new(@config, path, myparams, "admin/submissions/thaw").get_data
         elsif path == "ldap/users" 
           result = LDAPAction.new(@config, path, myparams).get_data
         elsif path == "ldap/roles" 

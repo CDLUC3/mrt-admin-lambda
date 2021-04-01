@@ -1,9 +1,23 @@
 require_relative 'action'
 require_relative 'forward_to_ingest_action'
+require_relative '../lib/http_post_json'
 
-class IngestStateAction < ForwardToIngestAction
-  def initialize(config, path, myparams)
-    super(config, path, myparams, 'state')
+class PostToIngestAction < ForwardToIngestAction
+  def initialize(config, path, myparams, endpoint)
+    super(config, path, myparams, endpoint)
+  end
+
+  def get_data
+    begin
+      qjson = HttpPostJson.new(get_ingest_server, @endpoint)
+      return { message: "Status #{qjson.status} for #{@endpoint}" }.to_json unless qjson.status == 200
+      return convertJsonToTable(qjson.body) unless qjson.body.empty?
+      { message: "No response for #{@endpoint}" }.to_json
+    rescue => e
+      puts(e.message)
+      puts(e.backtrace)
+      { error: "#{e.message} for #{@endpoint}" }.to_json
+    end
   end
 
   def get_title
