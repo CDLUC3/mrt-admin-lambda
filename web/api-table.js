@@ -177,6 +177,11 @@ function postLoad() {
         tr.find("td.ajaxdoi").text(doi).removeClass("ajaxdoi");
         tr.find("td.ajaxark").text(ark).removeClass("ajaxark");
         postLoad();
+      },
+      error: function( xhr, status ) {
+        tr.find("td.ajaxdoi").text("n/a").removeClass("ajaxdoi");
+        tr.find("td.ajaxark").text("n/a").removeClass("ajaxark");
+        postLoad();
       }
     });
   });
