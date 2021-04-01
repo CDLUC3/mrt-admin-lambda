@@ -158,19 +158,18 @@ function postLoad() {
       url: url,
       success: function(data) {
         var mdata = data.data;
-        if (!mdata) {
-          return;
-        }
         var ark = "";
         var doi = "";
-        for(var i=0; i< mdata.length; i++) {
-          var r = mdata[i];
-          if (r.length == 2) {
-            if (r[0] == "fil:where-primary") {
-              ark = r[1];
-            }
-            if (r[0] == "fil:where-local") {
-              doi = r[1];
+        if (mdata) {
+          for(var i=0; i< mdata.length; i++) {
+            var r = mdata[i];
+            if (r.length == 2) {
+              if (r[0] == "fil:where-primary") {
+                ark = r[1];
+              }
+              if (r[0] == "fil:where-local") {
+                doi = r[1];
+              }
             }
           }
         }
@@ -179,8 +178,8 @@ function postLoad() {
         postLoad();
       },
       error: function( xhr, status ) {
-        tr.find("td.ajaxdoi").text("n/a").removeClass("ajaxdoi");
-        tr.find("td.ajaxark").text("n/a").removeClass("ajaxark");
+        tr.find("td.ajaxdoi").text("").removeClass("ajaxdoi");
+        tr.find("td.ajaxark").text("").removeClass("ajaxark");
         postLoad();
       }
     });
