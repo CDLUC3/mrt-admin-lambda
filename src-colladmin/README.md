@@ -55,26 +55,57 @@
 ## Issues/Questions
 - [X ] The "Collection" array is not populating for profile objects - it is returning as an empty string
   - *Now populated as collectionName field*
-  - This field will be used to connect the profile object to the database object 
+  - This field will be used to connect the profile object to the database object
+- [ ] Pause/unpause sumbissions in Colladmin is GET.  Should it be POST? 
+- [ ] Review Colladmin endpoint details above
+- [ ] Colladmin frontend/backend - which parts should Mark and Terry develop 
 
 ## Not yet implemented
 
-- Update database properties for templates
-  - Elminiate any ad-hoc database updates to support collection creation/configuration
-  - Ingest
-    - POST ??
+- Update database properties for collections (inv_collections)
+  - Colladmin
+    - POST
 - Restart submssion
+  - Does restart happen for a job or a batch.  I presume job. 
+  - Colladmin
+    - POST 
+  - Ingest
+    - POST /admin/restart/bid/jid
 - Generate Profile Object
+  - User will manually commit to git
+  - Colladmin
+    - POST 
+  - Steps
+    - Get EZID
+    - ?? 
 - Generate Ownership Objct
   - User will manually commit to git
-- Generate ARK
+  - Colladmin
+    - POST 
+  - Steps
+    - Get EZID
+    - ?? 
 - Query LDAP User
+  - Colladmin
+    - GET
 - Generate LDAP User
+  - Colladmin
+    - POST
 - Update LDAP User
+  - Perhaps this should be done in LDAP client 
 - Query LDAP Roles
+  - Colladmin
+    - GET
 - Generate LDAP Role
+  - Colladmin
+    - POST
 - Update LDAP Role
+  - Perhaps this should be done in LDAP client 
+- Other actions
+  - decommission collections/owners/arks 
+
 
 ## Discussion items
-- [ ] Discuss profile refactoring with Mark
+- [ ] Discuss profile refactoring with Mark (nomalize values)
+- [ ] Discuss profile refactoring into Yaml
 
