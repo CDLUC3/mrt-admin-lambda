@@ -52,6 +52,27 @@
 - Alter submission state
     - POST /admin/submissions/<freeze|thaw> 
 
+## Cheat Sheet
+Ingest Admin APIs
+------------------
+- GET /admin/profiles             - profile names
+- GET /admin/profiles-full        - profiles, detailed
+- GET /admin/profile/<profile>    - profile, detailed
+
+- GET /admin/queues               - list ingest queues
+- GET /admin/queue                - query ingest worker's queue
+- GET /admin/queue/<queue>        - query specific ingest queue
+
+- GET /admin/bid/<bid>            - batch listing (dryad will be "JOB_ONLY")
+- GET /admin/bid/<bid>/<age in days>      - batch listing, with age (dryad will be "JOB_ONLY")
+- GET /admin/bids/<age in days>   - batch listing
+
+- GET /admin/jid-erc/<bid>/<jid>  - Job ERC data
+- GET /admin/jid-manifest/<bid>/<jid>     - Job manifest data
+- GET /admin/jid-file/<bid>/<jid> - Job file view
+
+- POST /admin/submissions/<freeze|thaw>   - Freeze/Thaw processing of submissions
+
 ## Issues/Questions
 - [X ] The "Collection" array is not populating for profile objects - it is returning as an empty string
   - *Now populated as collectionName field*
@@ -62,9 +83,16 @@
 
 ## Not yet implemented
 
+- Queue error handling
+  - Colladmin
+  - Ingest
+- Ingest Error handling
+  - Colladmin
+  - Ingest
 - Update database properties for collections (inv_collections)
   - Colladmin
     - POST
+  - SQL 
 - Restart submssion
   - Does restart happen for a job or a batch.  I presume job. 
   - Colladmin
@@ -88,6 +116,9 @@
 - Query LDAP User
   - Colladmin
     - GET
+  - List users
+  - List users with access to a collection
+  - List permissions for a user 
 - Generate LDAP User
   - Colladmin
     - POST
