@@ -2,6 +2,8 @@
 
 ![Admin Tool Flow Chart](MerrittAdminTool/Slide1.jpeg)
 
+![Colladmin Tool Flow Chart](MerrittColladminTool/Slide1.jpeg)
+
 This code contains a generalized query tool for the Merritt team.
 
 This code will be deployed as an AWS Lambda that is accessible to staff from a static website deployed to S3.
