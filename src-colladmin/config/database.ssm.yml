@@ -10,6 +10,18 @@ default:
     password: "{!SSM: inv/readonly/db-password}"
   merritt_path: "{!ENV: MERRITT_PATH !DEFAULT: https://merritt.cdlib.org}"
   ingest-services: "{!SSM: colladmin/ingest-services}"
+  ldap:
+    admin_password: "{!SSM: ldap/accounts/admin/password}"
+    admin_user:     "{!SSM: ldap/accounts/admin/user}"
+    group_base:     "{!SSM: ldap/group_base}"
+    host:           "{!SSM: ldap/host}"
+    port:           "{!SSM: ldap/port}"
+    user_base:      "{!SSM: ldap/user-base}"
+    inst_base:      "{!SSM: ldap/inst-base}"
+    ark_minter_url: "{!SSM: ldap/ark_minter_url}"
+    guest_password: "{!SSM: ldap/accounts/guest/password}"
+    guest_user:     "{!SSM: ldap/accounts/guest/user}"
+    connect_timeout: 60
 
 # use personal credentials when configuring a local environment
 # set up a script to set these variables
@@ -25,3 +37,15 @@ docker:
     port: 3306
   merritt_path: "{!ENV: MERRITT_PATH !DEFAULT: https://merritt.cdlib.org}"
   ingest-services: "{!ENV: INGEST_SERVICES}"
+  ldap: 
+    admin_password: password
+    admin_user:     cn=Directory Manager
+    group_base:     ou=mrt-classes,ou=uc3,dc=cdlib,dc=org
+    host:           ldap
+    port:           1389
+    user_base:      ou=People,ou=uc3,dc=cdlib,dc=org
+    inst_base:      o=institutions,ou=uc3,dc=cdlib,dc=org
+    ark_minter_url: http://noid.cdlib.org/nd/noidu_p9
+    guest_password: guest
+    guest_user:     anonymous
+    connect_timeout: 60
