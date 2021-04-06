@@ -3,13 +3,13 @@ require_relative 'forward_to_ingest_action'
 
 class IngestSwordJobsAction < ForwardToIngestAction
   def initialize(config, path, myparams)
-    @days = myparams.fetch("days", "7").to_i 
+    @days = myparams.fetch("days", "3").to_i 
     @days = 21 if @days > 21
     super(config, path, myparams, "admin/bid/JOB_ONLY/#{@days}")
   end
 
   def get_title
-    "Sword Jobs"
+    "Sword Jobs: Last #{@days} days; (Note: the ark/doi loading code needs a bug fix)"
   end
 
   def table_headers
@@ -33,6 +33,10 @@ class IngestSwordJobsAction < ForwardToIngestAction
 
   def get_alternative_queries
     [
+      {
+        label: 'Sword Jobs Last 3 days', 
+        url: "path=sword&days=3"
+      },
       {
         label: 'Sword Jobs Last 7 days', 
         url: "path=sword&days=7"
