@@ -1,23 +1,14 @@
 require_relative 'action'
-require 'net/ldap'
+require_relative '../lib/merritt_ldap'
 
 class LDAPAction < AdminAction
   def initialize(config, path, myparams)
     super(config, path, myparams)
-    @ldap_connect = {
-      host: "ldap",
-      port: 1389,
-      auth: { 
-        method: :simple, 
-        username: "cn=Directory Manager", 
-        password: "password" 
-      },
-      connect_timeout: 60
-    }
-  end
-
-  def get_data
-    { message: "Not yet implemented" }.to_json 
+    @merritt_ldap = MerrittLdap.new(@config)
+    @treebase = ""
+    @treebase = @merritt_ldap.user_base if path == "ldap/users"
+    @treebase = @merritt_ldap.group_base if path == "ldap/roles"
+    @treebase = @merritt_ldap.inst_base if path == "ldap/inst"
   end
 
   def get_title
@@ -56,20 +47,7 @@ class LDAPAction < AdminAction
   end
 
   def get_table_rows
-    rows = []
-    ldap = Net::LDAP.new(@ldap_connect)
-    treebase = ""
-
-    ldap.search( :base => treebase) do |entry|
-      rows.append(
-        [
-          entry.dn,
-          entry['uid'],
-          #entry['displayname']
-        ]
-      )
-    end
-    rows
+    @merritt_ldap.search(@treebase)
   end
 
   def hasTable
