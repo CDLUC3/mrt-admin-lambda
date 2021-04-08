@@ -6,9 +6,21 @@ class LDAPAction < AdminAction
     super(config, path, myparams)
     @merritt_ldap = MerrittLdap.new(@config)
     @treebase = ""
-    @treebase = @merritt_ldap.user_base if path == "ldap/users"
-    @treebase = @merritt_ldap.group_base if path == "ldap/roles"
-    @treebase = @merritt_ldap.inst_base if path == "ldap/inst"
+    @ldapattrs = []
+    @ldaptypes = []
+    if path == "ldap/users"
+      @treebase = @merritt_ldap.user_base if path == "ldap/users"
+      @ldapattrs = ["uid","mail","sn","tzregion","cn","arkid","givenname","telephonenumber","displayname"]
+      @ldaptypes = ["","","","","","","","",""]
+    elsif path == "ldap/roles"
+      @treebase = @merritt_ldap.group_base if path == "ldap/roles"
+      @ldapattrs = ["cn","dn","uniquemember"]
+      @ldaptypes = ["","","list"]
+    elsif path == "ldap/inst"
+      @treebase = @merritt_ldap.inst_base if path == "ldap/inst"
+      @ldapattrs = ["dn"]
+      @ldaptypes = [""]
+    end
   end
 
   def get_title
@@ -16,17 +28,11 @@ class LDAPAction < AdminAction
   end
 
   def table_headers
-    [
-      'Key',
-      'Value'
-    ]
+    @ldapattrs
   end
 
   def table_types
-    [
-      '',
-      ''
-    ]
+    @ldaptypes
   end
 
   def get_data
@@ -47,7 +53,7 @@ class LDAPAction < AdminAction
   end
 
   def get_table_rows
-    @merritt_ldap.search(@treebase)
+    @merritt_ldap.search(@treebase, @ldapattrs)
   end
 
   def hasTable

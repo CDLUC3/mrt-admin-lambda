@@ -21,6 +21,7 @@ default:
     ark_minter_url: "{!SSM: ldap/ark_minter_url}"
     guest_password: "{!SSM: ldap/accounts/guest/password}"
     guest_user:     "{!SSM: ldap/accounts/guest/user}"
+    encryption:     "simple_tls"
     connect_timeout: 60
 
 # use personal credentials when configuring a local environment

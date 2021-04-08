@@ -13,6 +13,14 @@ class MerrittLdap
       },
       connect_timeout: @ldapconf.fetch("connect_timeout", "60").to_i
     }
+    if @ldapconf.fetch("encryption", "") == "simple_tls" 
+      @ldap_connect[:encryption] = { 
+        method: :simple_tls, 
+        tls_options: { 
+          ssl_version: 'TLSv1_1' 
+        } 
+      }
+    end
   end
 
   def user_base
@@ -27,20 +35,41 @@ class MerrittLdap
     @ldapconf.fetch("inst_base", "") 
   end
 
-  def search(treebase)
+  # https://github.com/CDLUC3/mrt-dashboard/blob/master/app/lib/group_ldap.rb
+  # https://github.com/CDLUC3/mrt-dashboard/blob/master/app/lib/institution_ldap.rb
+  # https://github.com/CDLUC3/mrt-dashboard/blob/master/app/lib/user_ldap.rb
+  # roles: cn,dn,objectclass,uniquemember
+  # users: dn,objectclass,mail,sn,tzregion,cn,arkid,givenname,telephonenumber,userpassword,displayname,uid
+  def search(treebase, ldapattrs)
     rows = []
     ldap = Net::LDAP.new(@ldap_connect)
  
     ldap.search( :base => treebase, filter: Net::LDAP::Filter.eq('cn', '*')) do |entry|
-      rows.append(
-        [
-          entry.dn,
-          entry['uid'],
-          #entry['displayname']
-        ]
-      )
+      row = []
+      ldapattrs.each do |attr|
+        v = format(attr, entry[attr])
+        row.append(v)
+      end
+      rows.append(row)
     end
     rows
+  end
+
+  def normalize_dn(s)
+    s.gsub(/,/,'/').gsub(/cn=/,'').gsub(/ou=/,'').gsub(/dc=/,'').gsub(/uid=/,'')
+  end
+
+  def format(attr, v)
+    if attr == "uniquemember"
+      str = ""
+      v.entries.each do |entry|
+        str = "#{str}," unless str.empty?
+        str = "#{str}#{normalize_dn(entry)}"
+      end
+      return str
+    end
+    v = normalize_dn(v.to_s) if attr == "uniquemember" || attr == "dn"
+    v
   end
 end  
 
