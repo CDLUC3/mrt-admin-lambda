@@ -21,6 +21,25 @@ class MerrittLdap
         } 
       }
     end
+    @ldap = Net::LDAP.new(@ldap_connect)
+
+    @users = {}
+    @roles = {}
+    @collections = {}
+
+    load
+  end
+
+  def users
+    @users 
+  end
+
+  def roles
+    @roles 
+  end
+
+  def collections
+    @collections 
   end
 
   def user_base
@@ -31,8 +50,34 @@ class MerrittLdap
     @ldapconf.fetch("group_base", "") 
   end
 
-  def inst_base
-    @ldapconf.fetch("inst_base", "") 
+  def load
+    load_users
+    load_collections
+    load_roles
+  end
+
+  def load_users
+    @ldap.search(:base => user_base) do |entry|
+      puts("User #{entry.dn}")
+      user = LdapUser.new(entry)
+      @users[user.uid] = user
+    end
+  end
+
+  def load_collections
+    @ldap.search(:base => group_base, filter: Net::LDAP::Filter.eq('arkId', '*')) do |entry|
+      puts("Coll #{entry.dn}")
+      coll = LdapCollection.new(entry)
+      @collections[coll.ark] = coll
+    end
+  end
+
+  def load_roles
+    @ldap.search(:base => group_base, filter: Net::LDAP::Filter.eq('uniquemember', '*')) do |entry|
+      puts("Role #{entry.dn}")
+      role = LdapRole.new(entry)
+      @roles[role.dn] = role
+    end
   end
 
   # https://github.com/CDLUC3/mrt-dashboard/blob/master/app/lib/group_ldap.rb
@@ -42,9 +87,8 @@ class MerrittLdap
   # users: dn,objectclass,mail,sn,tzregion,cn,arkid,givenname,telephonenumber,userpassword,displayname,uid
   def search(treebase, ldapattrs)
     rows = []
-    ldap = Net::LDAP.new(@ldap_connect)
  
-    ldap.search( :base => treebase, filter: Net::LDAP::Filter.eq('cn', '*')) do |entry|
+    @ldap.search( :base => treebase) do |entry|
       row = []
       ldapattrs.each do |attr|
         v = format(attr, entry[attr])
@@ -73,3 +117,130 @@ class MerrittLdap
   end
 end  
 
+class LdapUser
+  def initialize(entry)
+    @uid = entry["uid"]
+    @email = entry["mail"]
+    @displayname = entry["displayname"]
+    @arkid = entry["arkid"]
+  end
+
+  def ark
+    @arkid
+  end
+
+  def uid
+    @uid
+  end
+
+  def table_row 
+    [
+      @uid,
+      @email,
+      @displayname,
+      @arkid
+    ]
+  end
+
+  def self.get_headers
+    [
+      "User Id",
+      "Email",
+      "Display Name",
+      "Ark"
+    ]
+  end
+
+  def self.get_types
+    [
+      "",
+      "",
+      "",
+      ""
+    ]
+  end
+end
+
+class LdapCollection
+  def initialize(entry)
+    @arkId = entry["arkId"]
+    @description = entry["description"]
+    @mnemonic = entry["ou"]
+    @profile = entry["submissionprofile"]
+  end
+
+  def ark
+    @arkId
+  end
+
+  def description
+    @description
+  end
+
+  def table_row 
+    [
+      @arkId,
+      @description,
+      @mnemonic,
+      @profile
+    ]
+  end
+
+  def self.get_headers
+    [
+      "Ark",
+      "Description",
+      "Mnemonic",
+      "Profile"
+    ]
+  end
+
+  def self.get_types
+    [
+      "",
+      "",
+      "",
+      ""
+    ]
+  end
+end
+
+class LdapRole
+  def initialize(entry)
+    @dn = entry.dn
+    @cn = entry["cn"]
+    @uniquemember = entry["uniquemember"]
+  end
+
+  def cn
+    @cn
+  end
+
+  def dn
+    @dn
+  end
+
+  def table_row 
+    [
+      @cn,
+      @dn,
+      @uniquemember
+    ]
+  end
+
+  def self.get_headers
+    [
+      "CN",
+      "DN",
+      "Members"
+    ]
+  end
+
+  def self.get_types
+    [
+      "",
+      "",
+      ""
+    ]
+  end
+end

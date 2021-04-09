@@ -73,7 +73,7 @@ module LambdaFunctions
           result = LDAPAction.new(@config, path, myparams).get_data
         elsif path == "ldap/roles" 
           result = LDAPAction.new(@config, path, myparams).get_data
-        elsif path == "ldap/inst" 
+        elsif path == "ldap/coll" 
           result = LDAPAction.new(@config, path, myparams).get_data
         end
      
