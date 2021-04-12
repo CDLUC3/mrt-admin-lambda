@@ -24,6 +24,8 @@ class DoiConflictQuery < AdminQuery
         doi
       having
         c > 1
+      and 
+        min(inv_owner_id) = max(inv_owner_id)
       order by
         min(created)
       ; 
