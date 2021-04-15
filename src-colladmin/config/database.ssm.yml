@@ -14,7 +14,8 @@ default:
     admin_password: "{!SSM: ldap/accounts/admin/password}"
     admin_user:     "{!SSM: ldap/accounts/admin/user}"
     group_base:     "{!SSM: ldap/group_base}"
-    host:           "{!SSM: ldap/host}"
+    # The lambda must go to a dedicated host rather than to a load balancer
+    host:           "{!SSM: collad-ldap/host}"
     port:           "{!SSM: ldap/port}"
     user_base:      "{!SSM: ldap/user-base}"
     inst_base:      "{!SSM: ldap/inst-base}"
