@@ -1,12 +1,18 @@
-# Admin Lambda
+# Merritt Admin Tool
 
-![Admin Tool Flow Chart](MerrittAdminTool/Slide1.jpeg)
+## Admin Tool Web Interface - Single Page App
+This code is deployed as an AWS Lambda that is accessible to staff from a static website deployed to S3.
 
-![Colladmin Tool Flow Chart](MerrittColladminTool/Slide1.jpeg)
+![Admin Tool Web App (SPA)](https://github.com/CDLUC3/mrt-doc/raw/master/diagrams/admin-spa.mmd.svg)
 
+## Admin Tool Lambda
 This code contains a generalized query tool for the Merritt team.
 
-This code will be deployed as an AWS Lambda that is accessible to staff from a static website deployed to S3.
+![Admin Tool Flow Chart](https://github.com/CDLUC3/mrt-doc/raw/master/diagrams/admin-lambda.mmd.svg)
+
+## Collection Admin Tool
+
+![Colladmin Tool Flow Chart](https://github.com/CDLUC3/mrt-doc/raw/master/diagrams/colladmin.mmd.svg)
 
 The Lambda deployment will pull database credentials from AWS SSM.  SSM Parameters will be explicitly granted to the Lambda.  The lambda will be packaged as a docker image built from [cdluce3/mysql-ruby-lambda](mysql-ruby-lambda).
 
