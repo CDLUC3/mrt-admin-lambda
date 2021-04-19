@@ -1,5 +1,7 @@
 # Merritt Admin Tool
 
+This library is part of the [Merritt Preservation System](https://github.com/CDLUC3/mrt-doc).
+
 ## Admin Tool Web Interface - Single Page App
 This code is deployed as an AWS Lambda that is accessible to staff from a static website deployed to S3.
 
