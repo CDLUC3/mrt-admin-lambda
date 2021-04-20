@@ -58,17 +58,17 @@ class MerrittLdap
 
   def load_users
     @ldap.search(:base => user_base) do |entry|
-      puts("User #{entry.dn}")
       user = LdapUser.new(entry)
+      puts("User #{entry.dn} #{user.uid}")
       @users[user.uid] = user
     end
   end
 
   def load_collections
     @ldap.search(:base => group_base, filter: Net::LDAP::Filter.eq('arkId', '*')) do |entry|
-      puts("Coll #{entry.dn}")
       coll = LdapCollection.new(entry)
-      @collections[coll.ark] = coll
+      puts("Coll #{entry.dn} #{coll.mnemonic}")
+      @collections[coll.mnemonic] = coll
     end
   end
 
@@ -76,6 +76,20 @@ class MerrittLdap
     @ldap.search(:base => group_base, filter: Net::LDAP::Filter.eq('uniquemember', '*')) do |entry|
       puts("Role #{entry.dn}")
       role = LdapRole.new(entry)
+      if @collections.key?(role.coll)
+        coll = @collections[role.coll]
+        role.set_collection(coll)
+        coll.add_role(role)
+      else
+        puts("Not found: [#{role.coll}]")
+      end
+      role.users.each do |u|
+        puts("Not found: [#{u}]") unless @users.key?(u)
+        next unless @users.key?(u)
+        user = @users[u]
+        role.add_user(user)
+        user.add_role(role)
+      end
       @roles[role.dn] = role
     end
   end
@@ -117,12 +131,28 @@ class MerrittLdap
   end
 end  
 
-class LdapUser
+class LdapRecord
+  def find_part(entry, part, defval) 
+    part = "#{part}="
+    entry.to_s.split(",").each do |s|
+      return s[part.length, s.length] if s.start_with?(part)
+    end
+    puts("Part not found in [#{entry.to_s}], Part[#{part}]")
+    return defval
+  end
+end
+
+class LdapUser < LdapRecord
   def initialize(entry)
-    @uid = entry["uid"]
+    @uid = entry["uid"].first
     @email = entry["mail"]
-    @displayname = entry["displayname"]
+    @displayname = entry["displayname"].first
     @arkid = entry["arkid"]
+    @roles = []
+  end
+
+  def displayname
+    @displayname
   end
 
   def ark
@@ -133,11 +163,15 @@ class LdapUser
     @uid
   end
 
+  def add_role(role)
+    @roles.append(role)
+  end
+
   def table_row 
     [
       @uid,
       @email,
-      @displayname,
+      displayname,
       @arkid
     ]
   end
@@ -161,20 +195,29 @@ class LdapUser
   end
 end
 
-class LdapCollection
+class LdapCollection < LdapRecord
   def initialize(entry)
     @arkId = entry["arkId"]
     @description = entry["description"]
     @mnemonic = entry["ou"]
     @profile = entry["submissionprofile"]
+    @roles = []
+  end
+
+  def add_role(role)
+    @roles.append(role)
   end
 
   def ark
     @arkId
   end
 
+  def mnemonic
+    @mnemonic.first
+  end
+
   def description
-    @description
+    @description.first
   end
 
   def table_row 
@@ -205,33 +248,68 @@ class LdapCollection
   end
 end
 
-class LdapRole
+class LdapRole < LdapRecord
   def initialize(entry)
     @dn = entry.dn
-    @cn = entry["cn"]
-    @uniquemember = entry["uniquemember"]
+    @perm = entry['cn']
+    @coll = find_part(entry.dn, "ou", "")
+    @users = []
+    entry["uniquemember"].each do |role|
+      u = find_part(role, "uid", "")
+      @users.append(u) unless u.empty?
+    end
+    @user_rec = []
+    @collection_rec = nil
   end
 
-  def cn
-    @cn
+  def set_collection(coll)
+    @collection_rec = coll
+  end
+
+  def collection_name
+    @collection_rec.nil? ? "" : "#{@collection_rec.description} (#{@collection_rec.mnemonic})"
+  end
+
+  def users
+    @users
+  end
+
+  def add_user(user)
+    @user_rec.append(user)
+  end
+
+  def user_names
+    @names = []
+    @user_rec.each do |user| 
+      @names.append("#{user.displayname} (#{user.uid})")
+    end
+    @names.join(",")
   end
 
   def dn
     @dn
   end
 
+  def coll
+    @coll
+  end
+
+  def perm
+    @perm
+  end
+
   def table_row 
     [
-      @cn,
-      @dn,
-      @uniquemember
+      @perm,
+      collection_name,
+      user_names
     ]
   end
 
   def self.get_headers
     [
-      "CN",
-      "DN",
+      "Permission",
+      "Collection",
       "Members"
     ]
   end
@@ -240,7 +318,7 @@ class LdapRole
     [
       "",
       "",
-      ""
+      "list"
     ]
   end
 end
