@@ -97,7 +97,7 @@ class MerrittLdap
       if @collections.key?(role.coll)
         coll = @collections[role.coll]
         role.set_collection(coll)
-        coll.add_role(role)
+        coll.add_role(role, role.users.length)
       else
         puts("Not found: [#{role.coll}]")
       end
@@ -106,7 +106,7 @@ class MerrittLdap
         next unless @users.key?(u)
         user = @users[u]
         role.add_user(user)
-        user.add_role(role)
+        user.add_role(role, 1)
       end
       @roles[role.dn] = role
     end
@@ -160,14 +160,38 @@ class LdapRecord
   end
 end
 
+class LdapLinkedRecord < LdapRecord
+  def initialize(entry)
+    @roles = []
+    @perms = {}
+  end
 
-class LdapUser < LdapRecord
+  def add_role(role, inc)
+    @roles.append(role)
+    @perms[role.perm] = perm_count(role.perm) + inc
+  end
+
+  def perm_count(perm)
+    @perms.fetch(perm, 0)
+  end
+
+  def find_part(entry, part, defval) 
+    part = "#{part}="
+    entry.to_s.split(",").each do |s|
+      return s[part.length, s.length] if s.start_with?(part)
+    end
+    puts("Part not found in [#{entry.to_s}], Part[#{part}]")
+    return defval
+  end
+end
+
+class LdapUser < LdapLinkedRecord
   def initialize(entry)
     @uid = entry["uid"].first
     @email = entry["mail"]
     @displayname = entry["displayname"].first
     @arkid = entry["arkid"]
-    @roles = []
+    super(entry)
   end
 
   def displayname
@@ -182,10 +206,6 @@ class LdapUser < LdapRecord
     @uid.nil? ? "" : @uid
   end
 
-  def add_role(role)
-    @roles.append(role)
-  end
-
   def detail_records
     LdapUserDetailed.load(self, @roles)
   end
@@ -195,7 +215,11 @@ class LdapUser < LdapRecord
       @uid,
       @email,
       displayname,
-      @arkid
+      @arkid,
+      perm_count("read"),
+      perm_count("write"),
+      perm_count("download"),
+      perm_count("admin")
     ]
   end
 
@@ -204,7 +228,11 @@ class LdapUser < LdapRecord
       "User Id",
       "Email",
       "Display Name",
-      "Ark"
+      "Ark",
+      "Read",
+      "Write",
+      "Download",
+      "Admin"
     ]
   end
 
@@ -213,22 +241,22 @@ class LdapUser < LdapRecord
       "ldapuid",
       "",
       "",
+      "",
+      "",
+      "",
+      "",
       ""
     ]
   end
 end
 
-class LdapCollection < LdapRecord
+class LdapCollection < LdapLinkedRecord
   def initialize(entry)
     @arkId = entry["arkId"].first
     @description = entry["description"].first
     @mnemonic = entry["ou"].first
     @profile = entry["submissionprofile"].first
-    @roles = []
-  end
-
-  def add_role(role)
-    @roles.append(role)
+    super(entry)
   end
 
   def ark
@@ -253,7 +281,11 @@ class LdapCollection < LdapRecord
       @arkId,
       @description,
       @mnemonic,
-      @profile
+      @profile,
+      perm_count("read"),
+      perm_count("write"),
+      perm_count("download"),
+      perm_count("admin")
     ]
   end
 
@@ -262,7 +294,11 @@ class LdapCollection < LdapRecord
       "Ark",
       "Description",
       "Mnemonic",
-      "Profile"
+      "Profile",
+      "Read",
+      "Write",
+      "Download",
+      "Admin"
     ]
   end
 
@@ -271,6 +307,10 @@ class LdapCollection < LdapRecord
       "",
       "",
       "ldapcoll",
+      "",
+      "",
+      "",
+      "",
       ""
     ]
   end
