@@ -490,6 +490,12 @@ function format(cell, v, type, merritt_path) {
     makeLink(cell, v, "index.html?path=objects_by_job&job="+v+"&batch=x");
   } else if (type == 'qbatch') {
     makeLink(cell, v, "collIndex.html?path=batch&batch="+v);
+  } else if (type == 'ldapuid') {
+    makeLink(cell, v, "collIndex.html?path=ldap/user&uid="+v.replace(/^.*\(/,'').replace(/\)/,''));
+  } else if (type == 'ldapcoll') {
+    makeLink(cell, v, "collIndex.html?path=ldap/coll&coll="+v.replace(/^.*\(/,'').replace(/\)/,''));
+  } else if (type == 'ldapark') {
+    makeLink(cell, v, "collIndex.html?path=ldap/coll&ark="+v);
   } else if (type == 'qbatchnote') {
     var arr = v.split(";")
     if (arr.length == 2) {
@@ -536,6 +542,12 @@ function format(cell, v, type, merritt_path) {
     var ul = makeUl(cell);
     $.each(v.split(","), function(i,txt){
       makeLiLink(ul, txt, "index.html?path=yaml&datatype=hosts&host=" + txt);
+    });
+    cell.addClass("hasdata");
+  } else if (type == 'ldapuidlist' && v != ''){
+    var ul = makeUl(cell);
+    $.each(v.split(","), function(i,txt){
+      makeLiLink(ul, txt, "collIndex.html?path=ldap/user&uid=" + txt.replace(/^.*\(/,'').replace(/\)/,''));
     });
     cell.addClass("hasdata");
   } else {

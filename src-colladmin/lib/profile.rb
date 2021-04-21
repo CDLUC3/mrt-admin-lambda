@@ -258,6 +258,7 @@ class IngestProfile < MerrittJson
       :profileID,
       :profileDescription,
       :owner,
+      :collection,
       :context,
       :objectMinterURL,
       :identifierNamespace,
@@ -272,6 +273,7 @@ class IngestProfile < MerrittJson
       type = ""
       type = "profile" if sym == :profileID
       type = "list" if sym == :contactsEmail
+      type = "ldapark" if sym == :collection
       arr.append(type)
     end
     arr.append("")

@@ -26,6 +26,7 @@ class MerrittLdap
     @users = {}
     @roles = {}
     @collections = {}
+    @collection_arks = {}
 
     load
   end
@@ -34,12 +35,27 @@ class MerrittLdap
     @users 
   end
 
+  def user_detail_records(uid)
+    return [] unless @users.key?(uid)
+    @users.fetch(uid).detail_records 
+  end
+
   def roles
     @roles 
   end
 
   def collections
     @collections 
+  end
+
+  def collection_detail_records(coll)
+    return [] unless @collections.key?(coll)
+    @collections.fetch(coll).detail_records 
+  end
+
+  def collection_detail_records_for_ark(ark)
+    return [] unless @collection_arks.key?(ark)
+    @collection_arks.fetch(ark).detail_records 
   end
 
   def user_base
@@ -59,6 +75,7 @@ class MerrittLdap
   def load_users
     @ldap.search(:base => user_base) do |entry|
       user = LdapUser.new(entry)
+      next if user.uid.empty?
       puts("User #{entry.dn} #{user.uid}")
       @users[user.uid] = user
     end
@@ -69,6 +86,7 @@ class MerrittLdap
       coll = LdapCollection.new(entry)
       puts("Coll #{entry.dn} #{coll.mnemonic}")
       @collections[coll.mnemonic] = coll
+      @collection_arks[coll.ark] = coll
     end
   end
 
@@ -142,6 +160,7 @@ class LdapRecord
   end
 end
 
+
 class LdapUser < LdapRecord
   def initialize(entry)
     @uid = entry["uid"].first
@@ -152,19 +171,23 @@ class LdapUser < LdapRecord
   end
 
   def displayname
-    @displayname
+    "#{@displayname.nil? ? "" : @displayname.gsub(/,/,'')} (#{uid})"
   end
 
   def ark
-    @arkid
+    @arkid.nil? ? "" : @arkid
   end
 
   def uid
-    @uid
+    @uid.nil? ? "" : @uid
   end
 
   def add_role(role)
     @roles.append(role)
+  end
+
+  def detail_records
+    LdapUserDetailed.load(self, @roles)
   end
 
   def table_row 
@@ -187,7 +210,7 @@ class LdapUser < LdapRecord
 
   def self.get_types
     [
-      "",
+      "ldapuid",
       "",
       "",
       ""
@@ -197,10 +220,10 @@ end
 
 class LdapCollection < LdapRecord
   def initialize(entry)
-    @arkId = entry["arkId"]
-    @description = entry["description"]
-    @mnemonic = entry["ou"]
-    @profile = entry["submissionprofile"]
+    @arkId = entry["arkId"].first
+    @description = entry["description"].first
+    @mnemonic = entry["ou"].first
+    @profile = entry["submissionprofile"].first
     @roles = []
   end
 
@@ -209,16 +232,21 @@ class LdapCollection < LdapRecord
   end
 
   def ark
-    @arkId
+    @arkId.nil? ? "" : @arkId
   end
 
   def mnemonic
-    @mnemonic.first
+    @mnemonic.nil? ? "" : @mnemonic
   end
 
   def description
-    @description.first
+    @description.nil? ? "" : @description
   end
+
+  def detail_records
+    LdapCollectionDetailed.load(self, @roles)
+  end
+
 
   def table_row 
     [
@@ -242,7 +270,7 @@ class LdapCollection < LdapRecord
     [
       "",
       "",
-      "",
+      "ldapcoll",
       ""
     ]
   end
@@ -251,7 +279,7 @@ end
 class LdapRole < LdapRecord
   def initialize(entry)
     @dn = entry.dn
-    @perm = entry['cn']
+    @perm = entry['cn'].first
     @coll = find_part(entry.dn, "ou", "")
     @users = []
     entry["uniquemember"].each do |role|
@@ -274,6 +302,10 @@ class LdapRole < LdapRecord
     @users
   end
 
+  def user_rec
+    @user_rec
+  end
+
   def add_user(user)
     @user_rec.append(user)
   end
@@ -281,9 +313,13 @@ class LdapRole < LdapRecord
   def user_names
     @names = []
     @user_rec.each do |user| 
-      @names.append("#{user.displayname} (#{user.uid})")
+      @names.append("#{user.displayname}")
     end
-    @names.join(",")
+    @names.sort.join(",")
+  end
+
+  def role_description
+    "#{@perm} - #{collection_name}"
   end
 
   def dn
@@ -317,8 +353,130 @@ class LdapRole < LdapRecord
   def self.get_types
     [
       "",
-      "",
-      "list"
+      "ldapcoll",
+      "ldapuidlist"
     ]
   end
+end
+
+class LdapUserDetailed < LdapRecord
+  def self.load(user, roles)
+    colls = {}
+    roles.each do |role|
+      colls[role.coll]={} unless colls.key?(role.coll)
+      colls[role.coll][role.perm] = true
+    end
+    recs = {}
+    data = colls.each do |coll, perms|
+      recs[coll] = LdapUserDetailed.new(
+        coll,
+        perms.fetch("read", false), 
+        perms.fetch("write", false), 
+        perms.fetch("download", false), 
+        perms.fetch("admin", false)
+      )
+    end
+    recs
+  end
+
+  def initialize(collection, read, write, download, admin)
+    @collection = collection
+    @read = read
+    @write = write
+    @download = download
+    @admin = admin
+  end
+
+  def table_row 
+    [
+      @collection,
+      @read ? "Y" : "",
+      @write ? "Y" : "",
+      @download ? "Y" : "",
+      @admin ? "Y" : ""
+    ]
+  end
+
+  def self.get_headers
+    [
+      "Collection",
+      "Read",
+      "Write",
+      "Download",
+      "Admin",
+    ]
+  end
+
+  def self.get_types
+    [
+      "ldapcoll",
+      "",
+      "",
+      "",
+      ""
+    ]
+  end
+
+end
+
+class LdapCollectionDetailed < LdapRecord
+  def self.load(collection, roles)
+    users = {}
+    roles.each do |role|
+      role.users.sort.each do |user|
+        users[user]={} unless users.key?(user)
+        users[user][role.perm] = true
+      end
+    end
+    recs = {}
+    data = users.each do |user, perms|
+      recs[user] = LdapCollectionDetailed.new(
+        user,
+        perms.fetch("read", false), 
+        perms.fetch("write", false), 
+        perms.fetch("download", false), 
+        perms.fetch("admin", false)
+      )
+    end
+    recs
+  end
+
+  def initialize(user, read, write, download, admin)
+    @user = user
+    @read = read
+    @write = write
+    @download = download
+    @admin = admin
+  end
+
+  def table_row 
+    [
+      @user,
+      @read ? "Y" : "",
+      @write ? "Y" : "",
+      @download ? "Y" : "",
+      @admin ? "Y" : ""
+    ]
+  end
+
+  def self.get_headers
+    [
+      "User",
+      "Read",
+      "Write",
+      "Download",
+      "Admin",
+    ]
+  end
+
+  def self.get_types
+    [
+      "ldapuid",
+      "",
+      "",
+      "",
+      ""
+    ]
+  end
+
 end
