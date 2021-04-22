@@ -94,17 +94,26 @@ class MerrittLdap
     @ldap.search(:base => group_base, filter: Net::LDAP::Filter.eq('uniquemember', '*')) do |entry|
       puts("Role #{entry.dn}")
       role = LdapRole.new(entry)
+      coll = nil
       if @collections.key?(role.coll)
         coll = @collections[role.coll]
-        role.set_collection(coll)
         coll.add_role(role, role.users.length)
       else
+        coll = LdapCollection.new(nil, role.coll)
+        @collections[role.coll] = coll
         puts("Not found: [#{role.coll}]")
       end
+      role.set_collection(coll)
+
       role.users.each do |u|
-        puts("Not found: [#{u}]") unless @users.key?(u)
-        next unless @users.key?(u)
-        user = @users[u]
+        user = nil
+        if @users.key?(u)
+          user = @users[u]
+        else
+          puts("Not found: [#{u}]")
+          user = LdapUser.new(nil, u)
+          @users[u] = user
+        end
         role.add_user(user)
         user.add_role(role, 1)
       end
@@ -161,9 +170,14 @@ class LdapRecord
 end
 
 class LdapLinkedRecord < LdapRecord
-  def initialize(entry)
+  def initialize(islinked)
+    @islinked = islinked
     @roles = []
     @perms = {}
+  end
+
+  def unlinked
+    @islinked ? "" : "unlinked"
   end
 
   def add_role(role, inc)
@@ -186,12 +200,20 @@ class LdapLinkedRecord < LdapRecord
 end
 
 class LdapUser < LdapLinkedRecord
-  def initialize(entry)
-    @uid = entry["uid"].first
-    @email = entry["mail"]
-    @displayname = entry["displayname"].first
-    @arkid = entry["arkid"]
-    super(entry)
+  def initialize(entry, uid = "")
+    if entry.nil?
+      @uid = uid
+      @email = ""
+      @displayname = ""
+      @arkid = ""
+      super(false)
+    else
+      @uid = entry["uid"].first
+      @email = entry["mail"]
+      @displayname = entry["displayname"].first
+      @arkid = entry["arkid"]
+      super(true)
+    end
   end
 
   def displayname
@@ -213,6 +235,7 @@ class LdapUser < LdapLinkedRecord
   def table_row 
     [
       @uid,
+      unlinked,
       @email,
       displayname,
       @arkid,
@@ -226,6 +249,7 @@ class LdapUser < LdapLinkedRecord
   def self.get_headers
     [
       "User Id",
+      "Unlinked",
       "Email",
       "Display Name",
       "Ark",
@@ -245,18 +269,27 @@ class LdapUser < LdapLinkedRecord
       "",
       "",
       "",
+      "",
       ""
     ]
   end
 end
 
 class LdapCollection < LdapLinkedRecord
-  def initialize(entry)
-    @arkId = entry["arkId"].first
-    @description = entry["description"].first
-    @mnemonic = entry["ou"].first
-    @profile = entry["submissionprofile"].first
-    super(entry)
+  def initialize(entry, mnemonic = "")
+    if entry.nil?
+      @arkId = ""
+      @description = ""
+      @mnemonic = mnemonic
+      @profile = ""
+      super(false)
+    else
+      @arkId = entry["arkId"].first
+      @description = entry["description"].first
+      @mnemonic = entry["ou"].first
+      @profile = entry["submissionprofile"].first
+      super(true)
+    end
   end
 
   def ark
@@ -278,9 +311,10 @@ class LdapCollection < LdapLinkedRecord
 
   def table_row 
     [
+      @mnemonic,
+      unlinked,
       @arkId,
       @description,
-      @mnemonic,
       @profile,
       perm_count("read"),
       perm_count("write"),
@@ -291,9 +325,10 @@ class LdapCollection < LdapLinkedRecord
 
   def self.get_headers
     [
+      "Mnemonic",
+      "Unlinked",
       "Ark",
       "Description",
-      "Mnemonic",
       "Profile",
       "Read",
       "Write",
@@ -304,9 +339,10 @@ class LdapCollection < LdapLinkedRecord
 
   def self.get_types
     [
-      "",
-      "",
       "ldapcoll",
+      "",
+      "",
+      "",
       "",
       "",
       "",
