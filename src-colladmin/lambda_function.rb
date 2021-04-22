@@ -70,7 +70,7 @@ module LambdaFunctions
         elsif path == "submissions/unpause" 
           result = PostToIngestAction.new(@config, path, myparams, "admin/submissions/thaw").get_data
         elsif path =~ /ldap\/.*/ 
-          result = LDAPAction.new(@config, path, myparams).get_data
+          result = LDAPAction.make_action(@config, path, myparams).get_data
         end
      
         {

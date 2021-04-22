@@ -2,34 +2,29 @@ require_relative 'action'
 require_relative '../lib/merritt_ldap'
 
 class LDAPAction < AdminAction
+  def self.make_action(config, path, myparams)
+    if path == "ldap/users"
+      LDAPActionUsers.new(config, path, myparams)
+    elsif path == "ldap/user"
+      LDAPActionUserDetailed.new(config, path, myparams)
+    elsif path == "ldap/roles"
+      LDAPActionRoles.new(config, path, myparams)
+    elsif path == "ldap/colls"
+      LDAPActionColls.new(config, path, myparams)
+    elsif path == "ldap/coll" && myparams.key?("ark")
+      LDAPActionCollArk.new(config, path, myparams)
+    elsif path == "ldap/coll"
+      LDAPActionCollDetailed.new(config, path, myparams)
+    else
+      LDAPAction.new(config, path, myparams)
+    end
+  end
+
   def initialize(config, path, myparams)
     super(config, path, myparams)
     @merritt_ldap = MerrittLdap.new(@config)
     @data = {}
     @title = "LDAP Queries"
-    if @path == "ldap/users"
-      @data = @merritt_ldap.users
-      @title = "LDAP Users"
-    elsif @path == "ldap/user"
-      uid = myparams.fetch("uid", "")
-      @data = @merritt_ldap.user_detail_records(uid)
-      @title = "Role Details for LDAP User #{uid}"
-    elsif @path == "ldap/roles"
-      @data = @merritt_ldap.roles
-      @title = "LDAP Roles"
-    elsif @path == "ldap/colls"
-      @data = @merritt_ldap.collections
-      @title = "LDAP Collections"
-    elsif @path == "ldap/coll" && myparams.key?("ark")
-      ark = CGI.unescape(myparams.fetch("ark", ""))
-      @data = @merritt_ldap.collection_detail_records_for_ark(ark)
-      @title = "Role Details for Collection #{ark}"
-    elsif @path == "ldap/coll"
-      coll = myparams.fetch("coll", "")
-      @data = @merritt_ldap.collection_detail_records(coll)
-      @title = "Role Details for Collection #{coll}"
-    end
-
   end
 
   def get_title
@@ -37,31 +32,11 @@ class LDAPAction < AdminAction
   end
 
   def table_headers
-    if @path == "ldap/users"
-      LdapUser.get_headers
-    elsif @path == "ldap/user"
-      LdapUserDetailed.get_headers
-    elsif @path == "ldap/roles"
-      LdapRole.get_headers
-    elsif @path == "ldap/colls"
-      LdapCollection.get_headers
-    elsif @path == "ldap/coll"
-      LdapCollectionDetailed.get_headers
-    end
+    []
   end
 
   def table_types
-    if @path == "ldap/users"
-      LdapUser.get_types
-    elsif @path == "ldap/user"
-      LdapUserDetailed.get_types
-    elsif @path == "ldap/roles"
-      LdapRole.get_types
-    elsif @path == "ldap/colls"
-      LdapCollection.get_types
-    elsif @path == "ldap/coll"
-      LdapCollectionDetailed.get_types
-    end
+    []
   end
 
   def get_data
@@ -95,6 +70,109 @@ class LDAPAction < AdminAction
 
   def get_alternative_queries
     []
+  end
+
+end
+
+class LDAPActionUsers < LDAPAction
+
+  def initialize(config, path, myparams)
+    super(config, path, myparams)
+    @data = @merritt_ldap.users
+    @title = "LDAP Users"
+  end
+
+  def table_headers
+    LdapUser.get_headers
+  end
+
+  def table_types
+    LdapUser.get_types
+  end
+
+end
+
+class LDAPActionUserDetailed < LDAPAction
+
+  def initialize(config, path, myparams)
+    super(config, path, myparams)
+    uid = myparams.fetch("uid", "")
+    @data = @merritt_ldap.user_detail_records(uid)
+    @title = "Role Details for LDAP User #{uid}"
+  end
+
+  def table_headers
+    LdapUserDetailed.get_headers
+  end
+
+  def table_types
+    LdapUserDetailed.get_types
+  end
+
+end
+
+class LDAPActionRoles < LDAPAction
+
+  def initialize(config, path, myparams)
+    super(config, path, myparams)
+    @data = @merritt_ldap.roles
+    @title = "LDAP Roles"
+  end
+
+  def table_headers
+    LdapRole.get_headers
+  end
+
+  def table_types
+    LdapRole.get_types
+  end
+
+end
+
+class LDAPActionColls < LDAPAction
+
+  def initialize(config, path, myparams)
+    super(config, path, myparams)
+    @data = @merritt_ldap.collections
+    @title = "LDAP Collections"
+  end
+
+  def table_headers
+    LdapCollection.get_headers
+  end
+
+  def table_types
+    LdapCollection.get_types
+  end
+
+end
+
+class LDAPActionCollDetailed < LDAPAction
+
+  def initialize(config, path, myparams)
+    super(config, path, myparams)
+    coll = myparams.fetch("coll", "")
+    @data = @merritt_ldap.collection_detail_records(coll)
+    @title = "Role Details for Collection #{coll}"
+  end
+
+  def table_headers
+    LdapCollectionDetailed.get_headers
+  end
+
+  def table_types
+    LdapCollectionDetailed.get_types
+  end
+
+end
+
+class LDAPActionCollArk < LDAPActionCollDetailed
+
+  def initialize(config, path, myparams)
+    super(config, path, myparams)
+    ark = CGI.unescape(myparams.fetch("ark", ""))
+    @data = @merritt_ldap.collection_detail_records_for_ark(ark)
+    @title = "Role Details for Collection #{ark}"
   end
 
 end
