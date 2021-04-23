@@ -32,7 +32,7 @@ class IdlistCompareQuery < AdminQuery
   def get_sql
     sql = %{
 select 
-  ifnull(l.local_id, trim(substring_index(o.erc_where, ';', -1))) as compareid,
+  trim(substring_index(o.erc_where, ';', -1)) as compareid,
   v.number,
   f.pathname,
   f.digest_value,
@@ -45,8 +45,6 @@ left join inv.inv_versions v
 left join inv.inv_files f
   on o.id = f.inv_object_id
   and v.id = f.inv_version_id
-left join inv.inv_localids l
-  on o.ark = l.inv_owner_ark
 } + get_where +
 %{
 order by 
