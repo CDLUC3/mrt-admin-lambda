@@ -32,9 +32,14 @@
       <form action="index.html">
         <fieldset>
           <legend>Report</legend>
-          <input type="hidden" name="path" value="arklist"/>
-          <input type="radio" name="fields" value="summary" checked>Object summary</input>
-          <input type="radio" name="fields" value="metadata">Object metadata</input>
+          <fieldset>
+            <input type="radio" name="path" value="arklist" checked>Listing</input>
+            <input type="radio" name="path" value="arkcompare">Compare Rpt</input>
+          </fieldset>
+          <fieldset>
+            <input type="radio" name="fields" value="summary" checked>Object summary</input>
+            <input type="radio" name="fields" value="metadata">Object metadata</input>
+          </fieldset>
           <input type="hidden" name="method" value="post"/>
           <input type="hidden" name="key" value="arklist"/>
           <input type="submit"/>
