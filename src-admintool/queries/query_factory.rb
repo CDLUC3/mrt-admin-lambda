@@ -3,6 +3,7 @@ require_relative 'query'
 require_relative 'objects_query'
 require_relative 'files_query'
 require_relative 'idlist_query'
+require_relative 'idlist_compare_query'
 
 # Include all Query classes
 Dir[File.dirname(__FILE__) + '/*query.rb'].each {|file| require file }
@@ -106,6 +107,10 @@ class QueryFactory
       ArklistQuery.new(self, path, myparams)
     elsif path == 'locallist'
       LocalidListQuery.new(self, path, myparams)
+    elsif path == 'arkcompare'
+      ArklistCompareQuery.new(self, path, myparams)
+    elsif path == 'localcompare'
+      LocalidListCompareQuery.new(self, path, myparams)
     else
       puts("path #{path} not matched")
       AdminQuery.new(self, path, myparams)
