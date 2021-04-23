@@ -76,7 +76,6 @@ class MerrittLdap
     @ldap.search(:base => user_base) do |entry|
       user = LdapUser.new(entry)
       next if user.uid.empty?
-      puts("User #{entry.dn} #{user.uid}")
       @users[user.uid] = user
     end
   end
@@ -84,7 +83,6 @@ class MerrittLdap
   def load_collections
     @ldap.search(:base => group_base, filter: Net::LDAP::Filter.eq('arkId', '*')) do |entry|
       coll = LdapCollection.new(entry)
-      puts("Coll #{entry.dn} #{coll.mnemonic}")
       @collections[coll.mnemonic] = coll
       @collection_arks[coll.ark] = coll
     end
@@ -92,7 +90,6 @@ class MerrittLdap
 
   def load_roles
     @ldap.search(:base => group_base, filter: Net::LDAP::Filter.eq('uniquemember', '*')) do |entry|
-      puts("Role #{entry.dn}")
       role = LdapRole.new(entry)
       coll = nil
       if @collections.key?(role.coll)
