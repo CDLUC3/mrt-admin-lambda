@@ -89,6 +89,8 @@ class QueryFactory
       AuditStatusTimeQuery.new(self, path, myparams)
     elsif path == 'audit_oldest'
       AuditOldestQuery.new(self, path, myparams)
+    elsif path == 'audit_size'
+      AuditQueueSizeQuery.new(self, path, myparams)
     elsif path == 'audit_processed'
       AuditProcessedQuery.new(self, path, myparams)
     elsif path == 'replication_needed'
