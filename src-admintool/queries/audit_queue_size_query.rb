@@ -25,7 +25,11 @@ class AuditQueueSizeQuery < AdminQuery
   end
 
   def get_types(results)
-    ['dataint','dataint']
+    ['bytes', 'dataint']
+  end
+
+  def bytes_unit
+    "1000000000"
   end
 
 end
