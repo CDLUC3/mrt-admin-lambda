@@ -9,8 +9,8 @@ class AuditQueueSizeQuery < AdminQuery
         ifnull(sum(billable_size), 0),
         count(f.id) 
       from   
-        inv_files f 
-      inner join inv_audits a
+        inv.inv_files f 
+      inner join inv.inv_audits a
         on f.id = a.inv_file_id 
       where   
         status='processing'
