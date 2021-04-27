@@ -6,7 +6,7 @@ class AuditQueueSizeQuery < AdminQuery
   def get_sql
     %{
       select
-        sum(billable_size),
+        ifnull(sum(billable_size), 0),
         count(f.id) 
       from   
         inv_files f 
@@ -15,7 +15,7 @@ class AuditQueueSizeQuery < AdminQuery
       where   
         status='processing'
       and
-        verified > date_add(now(), INTERVAL -1 DAY);
+        verified > date_add(now(), INTERVAL -1 DAY)
       ;
     }
   end
