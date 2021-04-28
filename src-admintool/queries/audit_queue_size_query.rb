@@ -11,7 +11,12 @@ class AuditQueueSizeQuery < AdminQuery
       from   
         inv.inv_files f 
       inner join inv.inv_audits a
-        on f.id = a.inv_file_id 
+        on 
+          f.id = a.inv_file_id 
+        and 
+          f.inv_object_id = a.inv_object_id
+        and
+          f.inv_version_id = a.inv_version_id
       where   
         status='processing'
       and

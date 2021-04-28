@@ -42,27 +42,22 @@ class AuditProcessedSizeQuery < AdminQuery
     %{
       select
         ? as title,
-        (
-          select
-            count(*),
-            (
-              select 
-                sum(full_size) 
-              from 
-                inv.inv_files f 
-              where 
-                f.id = a.inv_file_id
-            )
-          from
-            inv.inv_audits a
-          where
-            verified >= ?
-          and
-            verified < ?
-          and
-            status = 'verified'
-         ) as pcount
-        ;
+        count(f.id) as pcount,
+        sum(f.full_size) as pbytes 
+      from
+        inv.inv_audits a
+      inner join inv.inv_files f
+        on 
+          f.id = a.inv_file_id
+        and 
+          f.inv_object_id = a.inv_object_id
+        and
+          f.inv_version_id = a.inv_version_id
+      where
+        verified >= ?
+      and
+        verified < ?
+      ;
     }
   end
 
@@ -71,7 +66,11 @@ class AuditProcessedSizeQuery < AdminQuery
   end
 
   def get_types(results)
-    ['', 'dataint', 'Bytes']
+    ['', 'dataint', 'bytes']
+  end
+
+  def bytes_unit
+    "1000000000"
   end
 
 end
