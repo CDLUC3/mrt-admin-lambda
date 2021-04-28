@@ -6,7 +6,7 @@ class AuditQueueSizeQuery < AdminQuery
   def get_sql
     %{
       select
-        ifnull(sum(billable_size), 0),
+        ifnull(sum(full_size), 0),
         count(f.id) 
       from   
         inv.inv_files f 
