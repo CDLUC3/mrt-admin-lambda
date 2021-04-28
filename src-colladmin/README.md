@@ -51,6 +51,32 @@
     - GET /admin/bids/<age in days> 
 - Alter submission state
     - POST /admin/submissions/<freeze|thaw> 
+- Generate Profile Object
+  - POST /admin/submissions/profile/profile
+  - Steps
+    - Mint EZID identifier
+    - Generate profile
+    - Manually commit to git
+- Generate Ownership Object
+  - POST /admin/submissions/profile/owner
+  - Steps
+    - Mint EZID identifier
+    - Generate profile
+    - Manually commit to git
+- Generate Collection Object
+  - POST /admin/submissions/profile/collection
+  - Steps
+    - Mint EZID identifier
+    - Generate profile
+    - Manually commit to git
+- Generate SLA Object
+  - POST /admin/submissions/profile/sla
+  - Steps
+    - Mint EZID identifier
+    - Generate profile
+    - Manually commit to git
+
+
 
 ## Cheat Sheet
 Ingest Admin APIs
@@ -72,6 +98,8 @@ Ingest Admin APIs
 - GET /admin/jid-file/<bid>/<jid> - Job file view
 
 - POST /admin/submissions/<freeze|thaw>   - Freeze/Thaw processing of submissions
+
+- POST /admin/submissions/profile/<profile|collection|owner|sla> - Create Ingest submission profiles
 
 ## Issues/Questions
 - [X ] The "Collection" array is not populating for profile objects - it is returning as an empty string
@@ -99,20 +127,6 @@ Ingest Admin APIs
     - POST 
   - Ingest
     - POST /admin/restart/bid/jid
-- Generate Profile Object
-  - User will manually commit to git
-  - Colladmin
-    - POST 
-  - Steps
-    - Get EZID
-    - ?? 
-- Generate Ownership Objct
-  - User will manually commit to git
-  - Colladmin
-    - POST 
-  - Steps
-    - Get EZID
-    - ?? 
 - Query LDAP User
   - Colladmin
     - GET
