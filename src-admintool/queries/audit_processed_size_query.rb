@@ -21,7 +21,7 @@ class AuditProcessedSizeQuery < AdminQuery
         now()
     }
 
-    for i in 0..3
+    for i in 0..8
       sql = sql + %{
         union
         select
@@ -52,7 +52,7 @@ class AuditProcessedSizeQuery < AdminQuery
             end
           ), 
           0
-        ) as online_bytes,
+        ) as online_bytes
       from
         inv.inv_audits a
       inner join inv.inv_files f
@@ -71,7 +71,7 @@ class AuditProcessedSizeQuery < AdminQuery
   end
 
   def get_headers(results)
-    ['Time Frame', 'Files Processed', 'Bytes Processed']
+    ['Time Frame', 'Files Processed', 'On-line Bytes Processed']
   end
 
   def get_types(results)
