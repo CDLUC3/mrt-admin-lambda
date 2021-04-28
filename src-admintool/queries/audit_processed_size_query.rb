@@ -42,8 +42,17 @@ class AuditProcessedSizeQuery < AdminQuery
     %{
       select
         ? as title,
-        count(f.id) as pcount,
-        sum(f.full_size) as pbytes 
+        count(a.id) as pcount,
+        ifnull(
+          sum(
+            case 
+              when a.inv_node_id in (select id from inv.inv_nodes where access_mode != 'on-line') 
+                then 0
+              else full_size
+            end
+          ), 
+          0
+        ) as online_bytes,
       from
         inv.inv_audits a
       inner join inv.inv_files f

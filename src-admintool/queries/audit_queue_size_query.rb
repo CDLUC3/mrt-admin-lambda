@@ -6,8 +6,17 @@ class AuditQueueSizeQuery < AdminQuery
   def get_sql
     %{
       select
-        ifnull(sum(full_size), 0),
-        count(f.id) 
+        ifnull(
+          sum(
+            case 
+              when a.inv_node_id in (select id from inv.inv_nodes where access_mode != 'on-line') 
+                then 0
+              else full_size
+            end
+          ), 
+          0
+        ) as online_bytes,
+        count(a.id) as file_count 
       from   
         inv.inv_files f 
       inner join inv.inv_audits a
