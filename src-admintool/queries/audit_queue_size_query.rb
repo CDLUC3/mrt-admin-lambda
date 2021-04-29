@@ -6,6 +6,8 @@ class AuditQueueSizeQuery < AdminQuery
   def get_sql
     %{
       select
+        verified,
+        count(a.id) as file_count, 
         ifnull(
           sum(
             case 
@@ -15,8 +17,7 @@ class AuditQueueSizeQuery < AdminQuery
             end
           ), 
           0
-        ) as online_bytes,
-        count(a.id) as file_count 
+        ) as online_bytes
       from   
         inv.inv_files f 
       inner join inv.inv_audits a
@@ -28,18 +29,18 @@ class AuditQueueSizeQuery < AdminQuery
           f.inv_version_id = a.inv_version_id
       where   
         status='processing'
-      and
-        verified > date_add(now(), INTERVAL -1 DAY)
+      group by
+        verified
       ;
     }
   end
 
   def get_headers(results)
-    ['Size of Processing Queue', 'Count in Processing Queue']
+    ['Batch Time', 'Count in Processing Queue', 'On-line bytes in processing Queue']
   end
 
   def get_types(results)
-    ['bytes', 'dataint']
+    ['', 'dataint', 'bytes']
   end
 
   def bytes_unit
