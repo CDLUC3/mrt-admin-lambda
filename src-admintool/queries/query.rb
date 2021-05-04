@@ -30,6 +30,10 @@ class AdminQuery
     nil
   end
 
+  def show_iterative_total
+    false
+  end
+
   def show_grand_total
     get_filter_col != nil || get_group_col != nil
   end
@@ -147,6 +151,7 @@ class AdminQuery
         filter_col: get_filter_col,
         group_col: get_group_col,
         show_grand_total: show_grand_total,
+        show_iterative_total: show_iterative_total,
         merritt_path: @merritt_path,
         alternative_queries: get_alternative_queries,
         iterate: @iterate,

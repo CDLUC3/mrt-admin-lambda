@@ -63,7 +63,7 @@ then
     --function-name ${LAMBDA_ARN} \
     --region us-west-2 \
     --output text \
-    --timeout 60 \
+    --timeout 120 \
     --memory-size 128 \
     --no-cli-pager \
     --environment "Variables={SSM_ROOT_PATH=${SSM_DEPLOY_PATH},MERRITT_PATH=${MERRITT_PATH}}" 

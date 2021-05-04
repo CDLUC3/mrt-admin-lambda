@@ -2,7 +2,7 @@ class AuditStatusTimeQuery < AdminQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
     @count = CGI.unescape(get_param('count', '-1')).to_i
-    @unit = verify_interval_unit(CGI.unescape(get_param('unit', 'DAYS')))
+    @unit = verify_interval_unit(CGI.unescape(get_param('unit', 'HOUR')))
   end
 
 
@@ -58,15 +58,6 @@ class AuditStatusTimeQuery < AdminQuery
         label: 'Last 3 Hours', 
         url: 'path=audit_status_time&unit=HOUR&count=-3'
       },
-      {
-        label: 'Last Day', 
-        url: 'path=audit_status_time&unit=DAY&count=-1'
-      },
-      {
-        label: 'Last 2 Days', 
-        url: 'path=audit_status_time&unit=DAY&count=-2'
-      }
-
     ]
   end
 

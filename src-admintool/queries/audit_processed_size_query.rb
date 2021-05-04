@@ -1,37 +1,27 @@
 class AuditProcessedSizeQuery < AdminQuery
+  def initialize(query_factory, path, myparams)
+    super(query_factory, path, myparams)
+    @day = get_param('day', Time.new.strftime('%Y-%m-%d'))
+  end
+
   def get_title
-    "Audit Files Processed With Bytes"
+    "Audit Files Processed on #{@day}"
   end
 
   def get_iterative_sql
-    sql = %{
-      select
-        'Last Minute',
-        date_add(now(), interval -1 minute),
-        now()
-      union
-      select
-        'Last 5 Minutes',
-        date_add(now(), interval -5 minute),
-        now()
-      union
-      select
-        'Last Hour',
-        date_add(now(), interval -1 hour),
-        now()
-    }
+    sql = ""
 
-    for i in 0..8
+    for i in 0..23
+      sql = sql + %{ union } unless i == 0
       sql = sql + %{
-        union
         select
           concat(
-            date_format(date_add(now(), interval -#{i+1} hour), '%H:00:00'),
+            date_format(date_add('#{@day}', interval #{i} HOUR), '%H:00:00'),
             ' - ',
-            date_format(date_add(now(), interval -#{i} hour), '%H:00:00')
+            date_format(date_add('#{@day}', interval #{i+1} HOUR), '%H:00:00')
           ),
-          date_format(date_add(now(), interval -#{i+1} hour), '%Y-%m-%d %H:00:00'),
-          date_format(date_add(now(), interval -#{i} hour), '%Y-%m-%d %H:00:00')
+          date_format(date_add('#{@day}', interval #{i} HOUR), '%Y-%m-%d %H:00:00'),
+          date_format(date_add('#{@day}', interval #{i+1} HOUR), '%Y-%m-%d %H:00:00')
       }
     end
 
@@ -80,6 +70,23 @@ class AuditProcessedSizeQuery < AdminQuery
 
   def bytes_unit
     "1000000000"
+  end
+
+  def get_alternative_queries
+    [
+      {
+        label: 'Prior Day', 
+        url: 'path=audit_processed_size&iterate=1&day=' + (Time.parse(@day) - 24*60*60).strftime('%Y-%m-%d')
+      },
+      {
+        label: 'Next Day', 
+        url: 'path=audit_processed_size&iterate=1&day=' + (Time.parse(@day) + 24*60*60).strftime('%Y-%m-%d')
+      }
+    ]
+  end
+
+  def show_iterative_total
+    true
   end
 
 end

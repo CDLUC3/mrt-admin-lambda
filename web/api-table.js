@@ -187,12 +187,19 @@ function postLoad() {
   });
 }
 
-function query_iterate(show_iterative_total, types){
+function query_iterate(show_iterative_total, types, data){
+  for(var r=0; r<data.length; r++) {
+    alldata.push(data[r]);
+  }
   if (iterativeParams.length == 0) {
     sorttable.makeSortable($("#data-table")[0]);
     if (show_iterative_total) {
       totr = createTotalRow("grandtotal", null, null, types, "")
         .appendTo("#data-table tbody");
+      var gtotdata = createTotalData(types);
+      for(var r=0; r<alldata.length; r++) {
+        updateTotalData(gtotdata, types, alldata[r]);
+      }
       updateTotalRow(totr, types, gtotdata);
     }
     $("#in-progress").dialog("close");
@@ -225,6 +232,7 @@ function query_iterate(show_iterative_total, types){
   }
 }
 
+var alldata = [];
 function createTable(headers, types, data, filter_col, group_col, show_grand_total, show_iterative_total, merritt_path, alternative_queries, iterate) {
   $("p.buttons")
     .show();
@@ -250,7 +258,7 @@ function createTable(headers, types, data, filter_col, group_col, show_grand_tot
   if (iterate) {
     $("#exportJson").hide();
     iterativeParams = data;
-    query_iterate(show_iterative_total, types);
+    query_iterate(show_iterative_total, types, data);
   } else {
     $("#exportJson").show();
     appendTable(headers, types, data, filter_col, group_col, show_grand_total, show_iterative_total, merritt_path);
@@ -380,7 +388,6 @@ function appendTable(headers, types, data, filter_col, group_col, show_grand_tot
   if (show_grand_total) {
     totr = createTotalRow("grandtotal", group_col, filter_col, types, "")
       .appendTo("#data-table tbody");
-    var gtotdata = createTotalData(types);
     updateTotalRow(totr, types, gtotdata);
   }
 
@@ -392,7 +399,7 @@ function appendTable(headers, types, data, filter_col, group_col, show_grand_tot
       collision: "none"
     }
   });
-  query_iterate(show_iterative_total, types);
+  query_iterate(show_iterative_total, types, data);
 }
 
 function createCell(v, type, isHeader, merritt_path) {
