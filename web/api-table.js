@@ -132,6 +132,7 @@ function processResult(data) {
       data.filter_col,
       data.group_col,
       data.show_grand_total,
+      data.show_iterative_total,
       data.merritt_path,
       data.alternative_queries,
       data.iterate
@@ -186,9 +187,14 @@ function postLoad() {
   });
 }
 
-function query_iterate(){
+function query_iterate(show_iterative_total, types){
   if (iterativeParams.length == 0) {
     sorttable.makeSortable($("#data-table")[0]);
+    if (show_iterative_total) {
+      totr = createTotalRow("grandtotal", null, null, types, "")
+        .appendTo("#data-table tbody");
+      updateTotalRow(totr, types, gtotdata);
+    }
     $("#in-progress").dialog("close");
     $("#iprogress").text("");
     postLoad();
@@ -207,6 +213,7 @@ function query_iterate(){
           data.filter_col,
           data.group_col,
           data.show_grand_total,
+          data.show_iterative_total,
           data.merritt_path
         )
       },
@@ -218,7 +225,7 @@ function query_iterate(){
   }
 }
 
-function createTable(headers, types, data, filter_col, group_col, show_grand_total, merritt_path, alternative_queries, iterate) {
+function createTable(headers, types, data, filter_col, group_col, show_grand_total, show_iterative_total, merritt_path, alternative_queries, iterate) {
   $("p.buttons")
     .show();
   $('#alternative ul').empty().hide();
@@ -243,10 +250,10 @@ function createTable(headers, types, data, filter_col, group_col, show_grand_tot
   if (iterate) {
     $("#exportJson").hide();
     iterativeParams = data;
-    query_iterate();
+    query_iterate(show_iterative_total, types);
   } else {
     $("#exportJson").show();
-    appendTable(headers, types, data, filter_col, group_col, show_grand_total, merritt_path);
+    appendTable(headers, types, data, filter_col, group_col, show_grand_total, show_iterative_total, merritt_path);
   }
 }
 
@@ -312,7 +319,7 @@ function updateTotalData(totdata, types, row) {
   return totdata;
 }
 
-function appendTable(headers, types, data, filter_col, group_col, show_grand_total, merritt_path) {
+function appendTable(headers, types, data, filter_col, group_col, show_grand_total, show_iterative_total, merritt_path) {
   if ($("#data-table tr.header").length == 0) {
     var tr = $("<tr/>").appendTo("#data-table thead");
     tr.addClass("header");
@@ -373,6 +380,7 @@ function appendTable(headers, types, data, filter_col, group_col, show_grand_tot
   if (show_grand_total) {
     totr = createTotalRow("grandtotal", group_col, filter_col, types, "")
       .appendTo("#data-table tbody");
+    var gtotdata = createTotalData(types);
     updateTotalRow(totr, types, gtotdata);
   }
 
@@ -384,7 +392,7 @@ function appendTable(headers, types, data, filter_col, group_col, show_grand_tot
       collision: "none"
     }
   });
-  query_iterate();
+  query_iterate(show_iterative_total, types);
 }
 
 function createCell(v, type, isHeader, merritt_path) {
