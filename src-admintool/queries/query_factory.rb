@@ -113,6 +113,8 @@ class QueryFactory
       ArklistCompareQuery.new(self, path, myparams)
     elsif path == 'localcompare'
       LocalidListCompareQuery.new(self, path, myparams)
+    elsif path == 'con_primary'
+      ConsistencyPrimaryNodeQuery.new(self, path, myparams)
     else
       puts("path #{path} not matched")
       AdminQuery.new(self, path, myparams)
