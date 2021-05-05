@@ -1,17 +1,11 @@
-class ReplicationNeededQuery < AdminQuery
-  def get_title
-    "Replication Needed"
-  end
-
-  def get_sql
-    %{
+class ReplicationNeededQuery < ObjectsQuery
+  def initialize(query_factory, path, myparams)
+    super(query_factory, path, myparams)
+    subsql = %{
       select
-        count(distinct p.inv_object_id) as obj,
-        sum(os.billable_size) as fbytes
+        p.inv_object_id
       from
         inv.inv_nodes_inv_objects p
-      inner join object_size os
-        on os.inv_object_id = p.inv_object_id
       where
         p.role='primary'
       and
@@ -25,20 +19,32 @@ class ReplicationNeededQuery < AdminQuery
           and
             p.inv_object_id = s.inv_object_id
         )
-      ;
+      limit #{get_limit};
     }
+    stmt = @client.prepare(subsql)
+    results = stmt.execute()
+    @ids = []
+    @qs = []
+    results.each do |r|
+      @ids.push(r.values[0])
+      @qs.push('?')
+    end
   end
 
-  def get_headers(results)
-    ['Object Count', 'Byte Count']
+  def get_title
+    "Objects - Replication Needed"
   end
 
-  def get_types(results)
-    ['dataint', 'bytes']
+  def get_params
+    @ids
   end
 
-  def bytes_unit
-    "1000000000"
+  def get_where
+    "where o.id in (#{@qs.join(',')})"
+  end
+
+  def get_max_limit
+    500
   end
 
 end
