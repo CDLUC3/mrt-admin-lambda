@@ -13,7 +13,18 @@ class ConsistencyPrimaryNodeQuery < AdminQuery
         n.number as nodenum,
         n.description as nodename,
         c.name as collection,
-        count(inio.inv_object_id) as count
+        (
+          select 
+            group_concat(nn.number order by nn.number)
+          from
+            inv.inv_collections_inv_nodes icin
+          inner join
+            inv.inv_nodes nn
+          on 
+            icin.inv_node_id = nn.id
+          where
+            icin.inv_collection_id = c.id
+        )
       from
         inv.inv_nodes n
       inner join
@@ -41,11 +52,11 @@ class ConsistencyPrimaryNodeQuery < AdminQuery
   end
 
   def get_headers(results)
-    ['Primary Node Num', 'Node Desc', 'Collection', 'Object Count']
+    ['Primary Node Num', 'Node Desc', 'Collection', 'Secondary Node List']
   end
 
   def get_types(results)
-    ['', 'name', 'name', 'dataint']
+    ['', 'name', 'name', '']
   end
 
   def get_group_col
