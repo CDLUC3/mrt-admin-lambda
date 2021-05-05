@@ -119,8 +119,12 @@ class QueryFactory
       ConsistencySecondaryNodeQuery.new(self, path, myparams)
     elsif path == 'con_files'
       ConsistencyFilesQuery.new(self, path, myparams)
+    elsif path == 'con_no_audit'
+      ConsistencyFilesNoAuditQuery.new(self, path, myparams)
     elsif path == 'con_objects'
       ConsistencyObjectsQuery.new(self, path, myparams)
+    elsif path == 'con_replic'
+      ConsistencyReplicationReqQuery.new(self, path, myparams)    
     else
       puts("path #{path} not matched")
       AdminQuery.new(self, path, myparams)
