@@ -57,6 +57,10 @@ class ConsistencyReplicationReqQuery < AdminQuery
   def get_alternative_queries
     [
       {
+        label: "Object List - Replication Needed", 
+        url: "path=replication_needed&days=#{@days}&limit=500"
+      },
+      {
         label: "Replication Required", 
         url: "path=con_replic&days=0"
       },
