@@ -5,27 +5,7 @@ class ReplicationNeededQuery < ObjectsQuery
     subsql = %{
       select
         p.inv_object_id
-      from
-        inv.inv_nodes_inv_objects p
-      inner join
-        inv.inv_objects o
-      on 
-        o.id = p.inv_object_id
-      and
-        o.created < date_add(now(), INTERVAL -#{@days} DAY)
-      where
-        p.role='primary'
-      and
-        not exists(
-          select
-            1
-          from
-            inv.inv_nodes_inv_objects s
-          where
-            s.role='secondary'
-          and
-            p.inv_object_id = s.inv_object_id
-        )
+      #{sqlfrag_replic_needed(@days)}
       limit #{get_limit};
     }
     stmt = @client.prepare(subsql)
@@ -39,7 +19,7 @@ class ReplicationNeededQuery < ObjectsQuery
   end
 
   def get_title
-    "Objects - Replication Needed - Older than #{@days} days"
+    "Objects - Replication Needed - Older than #{@days} days (Limit #{get_limit})"
   end
 
   def get_params

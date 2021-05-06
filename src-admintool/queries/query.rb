@@ -241,4 +241,61 @@ class AdminQuery
     queries
   end
 
+  # Re-usable query fragments
+
+  def sqlfrag_replic_needed(days)
+    %{
+      from
+      inv.inv_nodes_inv_objects p
+    inner join
+      inv.inv_objects o
+    on 
+      o.id = p.inv_object_id
+    and
+      o.created < date_add(now(), INTERVAL -#{days} DAY)
+    where
+      p.role='primary'
+    and
+      not exists(
+        select
+          1
+        from
+          inv.inv_nodes_inv_objects s
+        where
+          s.role='secondary'
+        and
+          p.inv_object_id = s.inv_object_id
+      )  
+    }
+  end
+
+  def sqlfrag_audit_files_copies(copies, days)
+    %{
+      from (
+        select 
+          a.inv_object_id,
+          a.inv_file_id,
+          min(created) as init_created
+        from
+          inv.inv_audits a
+        inner join (
+          select 
+            inv_file_id, 
+            count(*) 
+          from 
+            inv.inv_audits 
+          group by 
+            inv_file_id 
+          having 
+            count(*) = #{copies}
+        ) as copies
+          on copies.inv_file_id = a.inv_file_id
+        group by 
+          inv_object_id,
+          inv_file_id 
+        having
+          min(created) < date_add(now(), INTERVAL -#{days} DAY)
+      ) as age
+    }
+  end
 end

@@ -11,35 +11,18 @@ class ConsistencyReplicationReqQuery < AdminQuery
   def get_sql
     %{
       select
-        count(distinct p.inv_object_id) as obj,
-        sum(os.billable_size) as fbytes
-      from
-        inv.inv_nodes_inv_objects p
-      inner join object_size os
-        on os.inv_object_id = p.inv_object_id
-      where
-        p.role='primary'
-      and
-        created < date_add(now(), INTERVAL -? DAY)
-      and
-        not exists(
-          select
-            1
-          from
-            inv.inv_nodes_inv_objects s
-          where
-            s.role='secondary'
-          and
-            p.inv_object_id = s.inv_object_id
-        )
+      count(distinct p.inv_object_id) as obj,
+      (
+        select 
+          sum(os.billable_size)
+        from 
+          object_size os
+        where
+          os.inv_object_id = p.inv_object_id
+      ) as fbytes
+    #{sqlfrag_replic_needed(@days)}
       ;
     }
-  end
-
-  def get_params
-    [ 
-      @days
-    ]
   end
 
   def get_headers(results)

@@ -13,38 +13,9 @@ class ConsistencyFilesQuery < AdminQuery
     %{
       select 
         count(*)
-      from (
-        select 
-          a.inv_file_id,
-          min(created) as init_created
-        from
-          inv.inv_audits a
-        inner join (
-          select 
-            inv_file_id, 
-            count(*) 
-          from 
-            inv.inv_audits 
-          group by 
-            inv_file_id 
-          having 
-            count(*) = ?
-        ) as copies
-          on copies.inv_file_id = a.inv_file_id
-        group by 
-          inv_file_id 
-        having
-          min(created) < date_add(now(), INTERVAL -? DAY)
-      ) as age
+      #{sqlfrag_audit_files_copies(@copies, @days)}
       ; 
     }
-  end
-
-  def get_params
-    [ 
-      @copies,
-      @days
-    ]
   end
 
   def get_headers(results)
@@ -57,6 +28,10 @@ class ConsistencyFilesQuery < AdminQuery
 
   def get_alternative_queries
     [
+      {
+        label: "Object List - File Copies Needed", 
+        url: "path=file_copies_needed&days=#{@days}&limit=500"
+      },
       {
         label: "#{@copies} copies of a file", 
         url: "path=con_files&copies=#{@copies}&days=0"
