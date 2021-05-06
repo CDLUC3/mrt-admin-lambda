@@ -53,7 +53,7 @@ class ObjectsQuery < AdminQuery
       inner join inv.inv_collections c
         on icio.inv_collection_id = c.id
     } + get_where +
-    %{
+    %{  
       order by #{@sort}
       limit #{get_limit};
     }
