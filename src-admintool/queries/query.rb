@@ -298,4 +298,42 @@ class AdminQuery
       ) as age
     }
   end
+
+  def sqlfrag_object_copies(copies, days)
+    %{
+      from (
+        select 
+          inio.inv_object_id,
+          min(created) as init_created
+        from
+          inv.inv_nodes_inv_objects inio
+        inner join (
+          select 
+            inv_object_id, 
+            count(*) 
+          from 
+            inv.inv_nodes_inv_objects 
+          group by 
+            inv_object_id 
+          having 
+            count(*) = #{copies}
+        ) as copies
+          on copies.inv_object_id = inio.inv_object_id
+        group by 
+          inv_object_id 
+        having
+          min(created) < date_add(now(), INTERVAL -#{days} DAY)
+      ) as age
+    }
+  end
+
 end
+
+select
+  inv_object_id,
+  count(*)
+from 
+  inv_collections_inv_objects
+group by
+  inv_object_id
+having count(*) > 1;

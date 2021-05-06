@@ -13,38 +13,9 @@ class ConsistencyObjectsQuery < AdminQuery
     %{
       select 
         count(*)
-      from (
-        select 
-          inio.inv_object_id,
-          min(created) as init_created
-        from
-          inv.inv_nodes_inv_objects inio
-        inner join (
-          select 
-            inv_object_id, 
-            count(*) 
-          from 
-            inv.inv_nodes_inv_objects 
-          group by 
-            inv_object_id 
-          having 
-            count(*) = ?
-        ) as copies
-          on copies.inv_object_id = inio.inv_object_id
-        group by 
-          inv_object_id 
-        having
-          min(created) < date_add(now(), INTERVAL -? DAY)
-      ) as age
+      #{sqlfrag_object_copies(@copies, @days)}
       ; 
     }
-  end
-
-  def get_params
-    [ 
-      @copies,
-      @days
-    ]
   end
 
   def get_headers(results)
@@ -57,6 +28,10 @@ class ConsistencyObjectsQuery < AdminQuery
 
   def get_alternative_queries
     [
+      {
+        label: "Object List - #{@copies} copies of an object", 
+        url: "path=object_copies_needed&days=#{@days}&limit=500"
+      },
       {
         label: "#{@copies} copies of an object", 
         url: "path=con_objects&copies=#{@copies}&days=0"

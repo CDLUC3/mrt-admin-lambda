@@ -127,6 +127,10 @@ class QueryFactory
       ConsistencyReplicationReqQuery.new(self, path, myparams)    
     elsif path == 'file_copies_needed'
       ObjectsFileCopiesNeededQuery.new(self, path, myparams)    
+    elsif path == 'object_copies_needed'
+      ObjectsObjectCopiesNeededQuery.new(self, path, myparams)    
+    elsif path == 'object_mult_coll'
+      ObjectsMultipleCollQuery.new(self, path, myparams)    
     else
       puts("path #{path} not matched")
       AdminQuery.new(self, path, myparams)
