@@ -328,12 +328,3 @@ class AdminQuery
   end
 
 end
-
-select
-  inv_object_id,
-  count(*)
-from 
-  inv_collections_inv_objects
-group by
-  inv_object_id
-having count(*) > 1;
