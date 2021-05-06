@@ -13,11 +13,11 @@ class ObjectsMultipleCollQuery < ObjectsQuery
         select
           inv_object_id
         from 
-          inv_collections_inv_objects
+          inv.inv_collections_inv_objects
         group by
           inv_object_id
         having 
-          count(*) > 1;
+          count(*) > 1
       )
     }
   end
