@@ -4,7 +4,7 @@ class ConsistencyPrimaryNodeQuery < AdminQuery
   end
 
   def get_title
-    "Primary Node Consistency"
+    "Collections with Non-standard Primary Nodes (Not SDSC or Dryad S3)"
   end
 
   def get_sql

@@ -4,7 +4,7 @@ class ConsistencySecondaryNodeQuery < AdminQuery
   end
 
   def get_title
-    "Inconsistent Secondary Node Configuration"
+    "Collections with Non-standard Secondary Nodes (Not Glacier+Wasabi or SDSC+Wasabi)"
   end
 
   def get_sql
