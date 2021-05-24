@@ -1,8 +1,12 @@
 require 'cgi'
+require 'aws-sdk-s3'
 class AdminQuery
   def initialize(query_factory, path, myparams)
     @client = query_factory.client
     @merritt_path = query_factory.merritt_path
+    @s3_client = Aws::S3::Client.new
+    @s3bucket = query_factory.s3bucket
+    @s3consistency = query_factory.s3consistency
     @path = path
     @myparams = myparams
     @limit = @myparams.fetch("limit", get_default_limit.to_s).to_i
@@ -140,9 +144,38 @@ class AdminQuery
     "1"
   end
 
+  def is_saveable?
+    report_status != "SKIP" && !@s3bucket.empty?
+  end
+
+  def report_name
+    @path
+  end
+
+  def report_status
+    "SKIP"
+  end
+
+  def report_date
+    Time.new.strftime('%Y-%m-%d')
+  end
+
+  def report_path
+    "#{@s3bucket}:#{@s3consistency}#{report_date}/#{report_name}.#{report_status}"
+  end
+
+  def save_report(path, report)
+    return unless is_saveable?
+    @s3_client.put_object({
+      body: report.to_json,
+      bucket: @s3bucket,
+      key: report_path
+    })
+  end
+
   def format_result_json(types, data, headers)
     if @format == 'report'
-      {
+      report = {
         format: 'report',
         title: get_title,
         headers: headers,
@@ -155,8 +188,12 @@ class AdminQuery
         merritt_path: @merritt_path,
         alternative_queries: get_alternative_queries,
         iterate: @iterate,
-        bytes_unit: bytes_unit
+        bytes_unit: bytes_unit,
+        saveable: is_saveable?,
+        report_path: report_path
       }
+      save_report(report_path, report) if is_saveable?
+      report
     else
       results = []
       data.each do |r|
