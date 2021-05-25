@@ -80,5 +80,9 @@ class ObjectsMultipleCollQuery < ObjectsQuery
     }
   end
 
-
+  def evaluate_status(types, data)
+    if data.length > 0
+      @report_status = :WARN
+    end
+  end
 end
