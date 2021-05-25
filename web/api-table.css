@@ -56,6 +56,11 @@ table.results td.name {
   width: 300px !important;
 }
 
+table.results th.status,
+table.results td.status {
+  width: 50px !important;
+}
+
 table.results th.localid,
 table.results td.localid,
 table.results th.doi,
