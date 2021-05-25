@@ -1,5 +1,7 @@
 require 'cgi'
 require 'aws-sdk-s3'
+require 'time'
+
 class AdminQuery
   def initialize(query_factory, path, myparams)
     @client = query_factory.client
@@ -16,6 +18,7 @@ class AdminQuery
     @itparam2 = get_param('itparam2', '')
     @itparam3 = get_param('itparam3', '')
     @format = myparams.key?('format') ? myparams['format'] : 'report'
+    @result_status = init_status
   end
 
   def get_param(key, defval)
@@ -152,7 +155,30 @@ class AdminQuery
     @path
   end
 
+  def init_status
+    :SKIP
+  end
+
+  def evaluate_status(data)
+    return if @report_status == :SKIP
+    return if @report_status == :FAIL
+    data.each do |row|
+      status = evaluate_row_status(row)
+      next if status == :PASS
+      @report_status = status
+      return if @report_status == :FAIL
+    end
+  end
+
+  def evaluate_row_status(row)
+    :PASS
+  end
+
   def report_status
+    return "FAIL" if @report_status == :FAIL
+    return "WARN" if @report_status == :WARN
+    return "PASS" if @report_status == :PASS
+    return "SKIP" if @report_status == :SKIP
     "SKIP"
   end
 
@@ -175,6 +201,7 @@ class AdminQuery
 
   def format_result_json(types, data, headers)
     if @format == 'report'
+      evaluate_status(data)
       report = {
         format: 'report',
         title: get_title,
@@ -364,4 +391,7 @@ class AdminQuery
     }
   end
 
+  def datestr_to_date(str)
+    DateTime.parse(str.to_s).to_time
+  end
 end
