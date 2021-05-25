@@ -11,7 +11,14 @@ class ConsistencyFilesNoAuditQuery < AdminQuery
   def get_sql
     %{
       select 
-        count(*)
+        count(*),
+        case
+          when count(*) = 0 then 'PASS'
+          when #{@days} = 0 then 'SKIP'
+          when #{@days} = 1 then 'WARN'
+          when #{@days} >= 2 then 'FAIL'
+          else 'SKIP'
+        end as status
       from 
         inv.inv_files f
       where
@@ -37,11 +44,11 @@ class ConsistencyFilesNoAuditQuery < AdminQuery
   end
 
   def get_headers(results)
-    ['File Count']
+    ['File Count', 'Status']
   end
 
   def get_types(results)
-    ['dataint']
+    ['dataint', 'status']
   end
 
   def get_alternative_queries

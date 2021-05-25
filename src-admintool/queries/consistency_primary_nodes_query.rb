@@ -24,7 +24,12 @@ class ConsistencyPrimaryNodeQuery < AdminQuery
             icin.inv_node_id = nn.id
           where
             icin.inv_collection_id = c.id
-        )
+        ),
+        case
+          when n.number = 4001 then 'WARN'
+          when n.number = 5001 then 'WARN'
+          else 'FAIL'
+        end as status
       from
         inv.inv_nodes n
       inner join
@@ -52,11 +57,11 @@ class ConsistencyPrimaryNodeQuery < AdminQuery
   end
 
   def get_headers(results)
-    ['Primary Node Num', 'Node Desc', 'Collection', 'Secondary Node List']
+    ['Primary Node Num', 'Node Desc', 'Collection', 'Secondary Node List', 'Status']
   end
 
   def get_types(results)
-    ['', 'name', 'name', '']
+    ['', 'name', 'name', '', 'status']
   end
 
   def get_group_col

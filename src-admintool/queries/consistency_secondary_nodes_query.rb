@@ -12,7 +12,13 @@ class ConsistencySecondaryNodeQuery < AdminQuery
       select
         c.name as collection,
         count(icin.inv_node_id) as ncount,
-        group_concat(number order by number) as nodes
+        group_concat(number order by number) as nodes,
+        case
+          when c.name like '%SLA' then 'WARN'
+          when c.name like '%Service Level Agreement' then 'WARN'
+          when c.name like 'Merritt %' then 'WARN'
+          else 'FAIL'
+        end as status
       from
         inv.inv_collections_inv_nodes icin
       inner join
@@ -32,11 +38,11 @@ class ConsistencySecondaryNodeQuery < AdminQuery
   end
 
   def get_headers(results)
-    ['Collection', 'Sec Node Count', 'Sec Node List']
+    ['Collection', 'Sec Node Count', 'Sec Node List', 'Status']
   end
 
   def get_types(results)
-    ['name', 'dataint', 'name']
+    ['name', 'dataint', 'name','status']
   end
 
 end

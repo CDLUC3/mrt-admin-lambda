@@ -19,18 +19,25 @@ class ConsistencyReplicationReqQuery < AdminQuery
           object_size os
         where
           os.inv_object_id = p.inv_object_id
-      ) as fbytes
+      ) as fbytes,
+      case
+        when count(distinct p.inv_object_id) = 0 then 'PASS'
+        when #{@days} = 0 then 'SKIP'
+        when #{@days} = 1 then 'WARN'
+        when #{@days} >= 2 then 'FAIL'
+        else 'SKIP'
+      end as status
     #{sqlfrag_replic_needed(@days)}
       ;
     }
   end
 
   def get_headers(results)
-    ['Object Count', 'Byte Count']
+    ['Object Count', 'Byte Count', 'Status']
   end
 
   def get_types(results)
-    ['dataint', 'bytes']
+    ['dataint', 'bytes', 'status']
   end
 
   def bytes_unit
