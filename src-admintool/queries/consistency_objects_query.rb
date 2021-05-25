@@ -5,6 +5,10 @@ class ConsistencyObjectsQuery < AdminQuery
     @days = CGI.unescape(get_param('days', '0')).to_i
   end
 
+  def report_name
+    "#{@path}.#{@copies}copies.#{@days}days"
+  end
+
   def get_title
     "Objects with only #{@copies} copies, older than #{@days} days"
   end

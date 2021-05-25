@@ -4,6 +4,10 @@ class ConsistencyReplicationReqQuery < AdminQuery
     @days = CGI.unescape(get_param('days', '0')).to_i
   end
 
+  def report_name
+    "#{@path}.#{@days}days"
+  end
+
   def get_title
     "Replication Required, older than #{@days} days"
   end

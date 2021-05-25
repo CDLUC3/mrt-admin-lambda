@@ -4,6 +4,10 @@ class ConsistencyFilesNoAuditQuery < AdminQuery
     @days = CGI.unescape(get_param('days', '0')).to_i
   end
 
+  def report_name
+    "#{@path}.#{@days}days"
+  end
+
   def get_title
     "Files missing from the audit table, older than #{@days} days"
   end
@@ -24,7 +28,7 @@ class ConsistencyFilesNoAuditQuery < AdminQuery
       where
         billable_size > 0
       and
-        created < date_add(now(), INTERVAL -0 DAY)
+        created < date_add(now(), INTERVAL -#{@days} DAY)
       and not exists (
         select 
           1
@@ -35,12 +39,6 @@ class ConsistencyFilesNoAuditQuery < AdminQuery
       )
       ; 
     }
-  end
-
-  def get_params
-    [ 
-      @days
-    ]
   end
 
   def get_headers(results)
