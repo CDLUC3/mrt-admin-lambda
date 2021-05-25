@@ -567,6 +567,7 @@ function format(cell, v, type, merritt_path) {
     cell.addClass("hasdata");
   } else if (type == 'status'){
     cell.addClass("status-"+v);
+    cell.text(v);
   } else {
     cell.text(v);
   }

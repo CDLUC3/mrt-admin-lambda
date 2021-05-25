@@ -22,6 +22,16 @@ table.results td {
   padding: 4px;
 }
 
+table.results td.status-PASS {
+  color: green;
+}
+table.results td.status-FAIL {
+  color: red;
+}
+table.results td.status-WARN {
+  color: orange;
+}
+
 table.results th.money,
 table.results td.money,
 table.results th.data,

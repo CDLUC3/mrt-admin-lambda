@@ -159,18 +159,28 @@ class AdminQuery
     :SKIP
   end
 
-  def evaluate_status(data)
+  def evaluate_status(types, data)
+    stat_col = -1
+    types.each_with_index do |s, i|
+      next unless s == 'status'
+      stat_col = i
+      break
+    end
     return if @report_status == :SKIP
     return if @report_status == :FAIL
     data.each do |row|
-      status = evaluate_row_status(row)
+      status = evaluate_row_status(row, stat_col)
       next if status == :PASS
       @report_status = status
       return if @report_status == :FAIL
     end
   end
 
-  def evaluate_row_status(row)
+  def evaluate_row_status(row, stat_col)
+    return :PASS if stat_col == -1
+    v = row[stat_col]
+    return :FAIL if v == "FAIL"
+    return :WARN if v == "WARN"
     :PASS
   end
 
@@ -201,7 +211,7 @@ class AdminQuery
 
   def format_result_json(types, data, headers)
     if @format == 'report'
-      evaluate_status(data)
+      evaluate_status(types, data)
       report = {
         format: 'report',
         title: get_title,
