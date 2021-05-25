@@ -336,15 +336,6 @@ function appendTable(headers, types, data, filter_col, group_col, show_grand_tot
       if (types[c] != 'na') {
         var cell = createCell(headers[c], types[c], true, merritt_path);
         tr.append(cell);
-        if (types[c] == 'status') {
-          if (cell.hasClass('status-FAIL')) {
-            tr.addClass('status-FAIL');
-          } else if (cell.hasClass('status-WARN')) {
-            tr.addClass('status-WARN');
-          } else if (cell.hasClass('status-PASS')) {
-            tr.addClass('status-PASS');
-          }
-        }
       }
     }
   }
@@ -383,6 +374,15 @@ function appendTable(headers, types, data, filter_col, group_col, show_grand_tot
     for(var c=0; c<data[r].length; c++) {
       if (types[c] != 'na') {
         tr.append(createCell(data[r][c], types[c], false, merritt_path));
+        if (types[c] == 'status') {
+          if (cell.hasClass('status-FAIL')) {
+            tr.addClass('status-FAIL');
+          } else if (cell.hasClass('status-WARN')) {
+            tr.addClass('status-WARN');
+          } else if (cell.hasClass('status-PASS')) {
+            tr.addClass('status-PASS');
+          }
+        }
       }
     }
     if (totr != null) {
