@@ -565,6 +565,8 @@ function format(cell, v, type, merritt_path) {
       makeLiLink(ul, txt, "collIndex.html?path=ldap/user&uid=" + txt.replace(/^.*\(/,'').replace(/\)/,''));
     });
     cell.addClass("hasdata");
+  } else if (type == 'status'){
+    cell.addClass("status-"+v);
   } else {
     cell.text(v);
   }
