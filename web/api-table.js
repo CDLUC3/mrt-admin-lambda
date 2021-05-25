@@ -373,7 +373,8 @@ function appendTable(headers, types, data, filter_col, group_col, show_grand_tot
 
     for(var c=0; c<data[r].length; c++) {
       if (types[c] != 'na') {
-        tr.append(createCell(data[r][c], types[c], false, merritt_path));
+        var cell = createCell(data[r][c], types[c], false, merritt_path);
+        tr.append(cell);
         if (types[c] == 'status') {
           if (cell.hasClass('status-FAIL')) {
             tr.addClass('status-FAIL');
