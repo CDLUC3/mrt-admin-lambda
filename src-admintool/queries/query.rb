@@ -229,7 +229,7 @@ class AdminQuery
         saveable: is_saveable?,
         report_path: report_path
       }
-      save_report(report_path, report) if is_saveable?
+      #save_report(report_path, report) if is_saveable?
       report
     else
       results = []

@@ -123,6 +123,7 @@ function showUrl(url) {
 
 function processResult(data) {
   $("h1").text(data.title);
+  $("h2.report_path").text(data.report_path);
 
   if (data.format == 'report'){
     createTable(
@@ -567,6 +568,7 @@ function format(cell, v, type, merritt_path) {
     cell.addClass("hasdata");
   } else if (type == 'status'){
     cell.addClass("status-"+v);
+    cell.parent("tr").addClass("status-"+v);
     cell.text(v);
   } else {
     cell.text(v);
