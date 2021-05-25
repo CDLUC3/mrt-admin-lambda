@@ -123,6 +123,7 @@ function showUrl(url) {
 
 function processResult(data) {
   $("h1").text(data.title);
+  $(".report_path").text(data.report_path);
 
   if (data.format == 'report'){
     createTable(
@@ -333,7 +334,8 @@ function appendTable(headers, types, data, filter_col, group_col, show_grand_tot
     tr.addClass("header");
     for(var c=0; c<headers.length; c++) {
       if (types[c] != 'na') {
-        tr.append(createCell(headers[c], types[c], true, merritt_path));
+        var cell = createCell(headers[c], types[c], true, merritt_path);
+        tr.append(cell);
       }
     }
   }
@@ -371,7 +373,17 @@ function appendTable(headers, types, data, filter_col, group_col, show_grand_tot
 
     for(var c=0; c<data[r].length; c++) {
       if (types[c] != 'na') {
-        tr.append(createCell(data[r][c], types[c], false, merritt_path));
+        var cell = createCell(data[r][c], types[c], false, merritt_path);
+        tr.append(cell);
+        if (types[c] == 'status') {
+          if (cell.hasClass('status-FAIL')) {
+            tr.addClass('status-FAIL');
+          } else if (cell.hasClass('status-WARN')) {
+            tr.addClass('status-WARN');
+          } else if (cell.hasClass('status-PASS')) {
+            tr.addClass('status-PASS');
+          }
+        }
       }
     }
     if (totr != null) {
@@ -565,6 +577,9 @@ function format(cell, v, type, merritt_path) {
       makeLiLink(ul, txt, "collIndex.html?path=ldap/user&uid=" + txt.replace(/^.*\(/,'').replace(/\)/,''));
     });
     cell.addClass("hasdata");
+  } else if (type == 'status'){
+    cell.addClass("status-"+v);
+    cell.text(v);
   } else {
     cell.text(v);
   }
