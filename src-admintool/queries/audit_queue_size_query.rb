@@ -17,7 +17,13 @@ class AuditQueueSizeQuery < AdminQuery
             end
           ), 
           0
-        ) as online_bytes
+        ) as online_bytes,
+        case
+          when verified is null then 'FAIL'
+          when verified < date_add(now(), INTERVAL -1 DAY) then 'FAIL'
+          when verified < date_add(now(), INTERVAL -1 HOUR) then 'WARN'
+          else 'PASS'
+        end as status
       from   
         inv.inv_files f 
       inner join inv.inv_audits a
@@ -36,11 +42,11 @@ class AuditQueueSizeQuery < AdminQuery
   end
 
   def get_headers(results)
-    ['Batch Time', 'Count in Processing Queue', 'On-line bytes in processing Queue']
+    ['Batch Time', 'Count in Processing Queue', 'On-line bytes in processing Queue', 'Status']
   end
 
   def get_types(results)
-    ['', 'dataint', 'bytes']
+    ['', 'dataint', 'bytes', 'status']
   end
 
   def bytes_unit
