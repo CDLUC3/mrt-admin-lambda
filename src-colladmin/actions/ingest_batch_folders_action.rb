@@ -19,6 +19,10 @@ class IngestBatchFoldersAction < ForwardToIngestAction
     BatchFolder.table_types
   end
 
+  def init_status
+    :PASS
+  end
+
   def table_rows(body)
     bflist = BatchFolderList.new(body)
     bflist.apply_queue_list(QueueList.get_queue_list(get_ingest_server))
@@ -100,10 +104,6 @@ class BatchFolder < MerrittJson
     ]
   end
   
-  def init_status
-    :PASS
-  end
-
   def status
     return 'PASS' unless @dbobj.empty?
     return 'FAIL' if DateTime.parse(@dtime) < DateTime.now.next_day(-1) 

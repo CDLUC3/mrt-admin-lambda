@@ -26,6 +26,10 @@ class IngestQueueAction < ForwardToIngestAction
     true
   end
 
+  def init_status
+    :PASS
+  end
+
   def get_alternative_queries
     [
       {

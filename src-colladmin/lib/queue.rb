@@ -223,9 +223,5 @@ class QueueList < MerrittJson
     table
   end
 
-  def init_status
-    :PASS
-  end
-
 end
 
