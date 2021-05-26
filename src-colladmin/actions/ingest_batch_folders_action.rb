@@ -108,7 +108,7 @@ class BatchFolder < MerrittJson
     return 'PASS' unless @dbobj.empty?
     return 'FAIL' if DateTime.parse(@dtime) < DateTime.now.next_day(-1) 
     return 'WARN' if DateTime.parse(@dtime).to_time < (Time.now - 3600) 
-    return 'SKIP'
+    return 'PASS'
   end
 
   def dtime
