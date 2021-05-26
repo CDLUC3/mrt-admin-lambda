@@ -52,5 +52,9 @@ class AuditQueueSizeQuery < AdminQuery
   def bytes_unit
     "1000000000"
   end
+  
+  def init_status
+    :PASS
+  end
 
 end

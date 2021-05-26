@@ -65,5 +65,9 @@ class ConsistencyFilesNoAuditQuery < AdminQuery
       },
     ]
   end
+  
+  def init_status
+    :PASS
+  end
 
 end

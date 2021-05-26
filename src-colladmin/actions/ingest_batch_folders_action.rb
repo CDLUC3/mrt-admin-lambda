@@ -69,7 +69,8 @@ class BatchFolder < MerrittJson
       @qsubmitter,
       @dbobj,
       @dbprofile,
-      @dbuser
+      @dbuser,
+      status
     ]
   end
 
@@ -81,7 +82,8 @@ class BatchFolder < MerrittJson
       'Queue Submitter',
       'DB Obj Cnt',
       'DB Profile',
-      'DB User'
+      'DB User',
+      'Status'
     ]
   end
 
@@ -93,8 +95,20 @@ class BatchFolder < MerrittJson
       '',
       'batchnote',
       '',
-      ''
+      '',
+      'status'
     ]
+  end
+  
+  def init_status
+    :PASS
+  end
+
+  def status
+    return 'PASS' unless @dbobj.empty?
+    return 'FAIL' if DateTime.parse(@dtime) < DateTime.now.next_day(-1) 
+    return 'WARN' if DateTime.parse(@dtime).to_time < (Time.now - 3600) 
+    return 'SKIP'
   end
 
   def dtime

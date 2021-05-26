@@ -11,13 +11,15 @@
   </head>
   <body>
     <h1>Merritt Collection Admin Tool</h1>
+    <h4 class="report_path"></h4>
     <p><a href="index.html">Admin Tool Home</a> / <a href="collAdmin.html">CollAdmin Tool Home</a></p>
     <p class="buttons">
       <button onclick="$('tr.row').toggle()">Filter Totals/Details</button>
       <button onclick="$('tr.nodata').toggle()">Filter Data</button>
       <button onclick="$('tr.noflag').toggle()">Flagged Data</button>
       <button onclick="$('tr.total').toggle()">Totals On/Off</button>
-      <button id="exportTable">Export CSV</button>
+      <button onclick="$('tr.status-PASS').toggle()">PASS Rec On/Off</button>
+      <button onclick="$('tr.status-WARN').toggle()">WARN Rec On/Off</button>
       <button id="exportTable">Export CSV</button>
       <select id="bytes">
         <option value="1">Bytes</option>

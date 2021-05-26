@@ -18,7 +18,7 @@ class AdminQuery
     @itparam2 = get_param('itparam2', '')
     @itparam3 = get_param('itparam3', '')
     @format = myparams.key?('format') ? myparams['format'] : 'report'
-    @result_status = init_status
+    @report_status = init_status
   end
 
   def get_param(key, defval)

@@ -38,6 +38,10 @@ class ConsistencyObjectsQuery < AdminQuery
   def get_types(results)
     ['dataint', 'status']
   end
+  
+  def init_status
+    :PASS
+  end
 
   def get_alternative_queries
     [

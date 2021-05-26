@@ -44,5 +44,9 @@ class ConsistencySecondaryNodeQuery < AdminQuery
   def get_types(results)
     ['name', 'dataint', 'name','status']
   end
+  
+  def init_status
+    :PASS
+  end
 
 end

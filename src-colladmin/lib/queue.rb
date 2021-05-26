@@ -41,8 +41,8 @@ class QueueEntry < MerrittJson
       MerrittJsonProperty.new("File Type").lookupValue(json, "que", "fileType")
     )
     addProperty(
-      :status, 
-      MerrittJsonProperty.new("Status").lookupValue(json, "que", "status")
+      :qstatus, 
+      MerrittJsonProperty.new("QStatus").lookupValue(json, "que", "status")
     )
     addProperty(
       :queue, 
@@ -51,6 +51,10 @@ class QueueEntry < MerrittJson
     addProperty(
       :queueId, 
       MerrittJsonProperty.new("Queue ID").lookupValue(json, "que", "iD")
+    )
+    addProperty(
+      :status, 
+      MerrittJsonProperty.new("Status", getValue(:qstatus, "") == "Failed" ? 'FAIL' : 'PASS')
     )
   end
 
@@ -72,6 +76,7 @@ class QueueEntry < MerrittJson
       type = ''
       type = 'qbatch' if sym == :bid
       type = 'qjob' if sym == :job
+      type = 'status' if sym == :status
       arr.append(type)
     end
     arr
@@ -217,5 +222,10 @@ class QueueList < MerrittJson
     end
     table
   end
+
+  def init_status
+    :PASS
+  end
+
 end
 

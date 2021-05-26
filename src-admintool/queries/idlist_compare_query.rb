@@ -185,4 +185,8 @@ def get_types(results)
   ]
 end
 
+def init_status
+  :PASS
+end
+
 end

@@ -8,27 +8,6 @@ class ForwardToIngestAction < AdminAction
     @endpoint = endpoint
   end
 
-  def hasTable
-    false
-  end
-
-  def convertJsonToTable(body)
-    return body unless hasTable
-    {
-      format: 'report',
-      title: get_title,
-      headers: table_headers,
-      types: table_types,
-      data: table_rows(body),
-      filter_col: nil,
-      group_col: nil,
-      show_grand_total: false,
-      merritt_path: @merritt_path,
-      alternative_queries: get_alternative_queries,
-      iterate: false
-    }.to_json
-  end
-
   def get_data
     begin
       qjson = HttpGetJson.new(get_ingest_server, @endpoint)
@@ -48,8 +27,5 @@ class ForwardToIngestAction < AdminAction
     @config.fetch('ingest-services', '').split(',').first
   end
 
-  def get_alternative_queries
-    []
-  end
-
+ 
 end

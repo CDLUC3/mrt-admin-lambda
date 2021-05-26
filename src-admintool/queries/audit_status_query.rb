@@ -112,4 +112,8 @@ class AuditStatusQuery < AdminQuery
     ['', 'dataint', 'status']
   end
 
+  def init_status
+    :PASS
+  end
+
 end

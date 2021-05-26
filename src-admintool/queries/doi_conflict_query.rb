@@ -15,7 +15,8 @@ class DoiConflictQuery < AdminQuery
         min(ark),
         min(created),
         max(ark),
-        max(created)
+        max(created),
+        'FAIL' as status
       from
         inv.inv_objects
       where
@@ -33,11 +34,15 @@ class DoiConflictQuery < AdminQuery
   end
 
   def get_headers(results)
-    ['DOI', 'Num Arks', 'Min Ark', 'First Update', 'Max Ark', 'Last Update']
+    ['DOI', 'Num Arks', 'Min Ark', 'First Update', 'Max Ark', 'Last Update', 'Status']
   end
 
   def get_types(results)
-    ['', '', 'ark', 'datetime', 'ark', 'datetime']
+    ['', '', 'ark', 'datetime', 'ark', 'datetime', 'status']
+  end
+  
+  def init_status
+    :PASS
   end
 
 end

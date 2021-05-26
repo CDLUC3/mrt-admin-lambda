@@ -67,4 +67,8 @@ class ConsistencyPrimaryNodeQuery < AdminQuery
   def get_group_col
     1
   end
+  
+  def init_status
+    :PASS
+  end
 end

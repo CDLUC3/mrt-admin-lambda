@@ -47,6 +47,10 @@ class ConsistencyReplicationReqQuery < AdminQuery
   def bytes_unit
     "1000000000"
   end
+  
+  def init_status
+    :PASS
+  end
 
   def get_alternative_queries
     [
