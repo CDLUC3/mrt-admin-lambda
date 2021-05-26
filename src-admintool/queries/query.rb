@@ -148,7 +148,8 @@ class AdminQuery
   end
 
   def is_saveable?
-    report_status != "SKIP" && !@s3bucket.empty?
+    #report_status != "SKIP" && !@s3bucket.empty?
+    report_status != "SKIP" 
   end
 
   def report_name
