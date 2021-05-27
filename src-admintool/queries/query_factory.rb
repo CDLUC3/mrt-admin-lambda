@@ -12,9 +12,6 @@ class QueryFactory
   def initialize(client, config)
     @client = client
     @config = config
-    @merritt_path = config['merritt_path']
-    @s3bucket = config['s3-bucket']
-    @s3consistency = config['s3-consistency-reports']
   end
 
   def client
@@ -23,18 +20,6 @@ class QueryFactory
 
   def config
     @config
-  end
-
-  def merritt_path
-    @merritt_path
-  end
-
-  def s3bucket
-    @s3bucket
-  end
-
-  def s3consistency
-    @s3consistency
   end
 
   def get_query_for_path(path, myparams)

@@ -33,6 +33,7 @@ elif [ $DEPLOY_ENV == 'prd' ]
 then
   MERRITT_PATH=http://merritt.cdlib.org
 fi
+docker build -t cdluc3/uc3-mrt-admin-common src-common || die "Image build failure"
 docker build -t ${ECR_IMAGE_TAG} src-colladmin || die "Image build failure"
 
 # To test: 

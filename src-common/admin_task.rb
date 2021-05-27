@@ -5,10 +5,10 @@ require 'time'
 class AdminTask
   def initialize(config, path, myparams)
     @config = config
-    @merritt_path = query_factory.merritt_path
-    @s3_client = Aws::S3::Client.new
-    @s3bucket = query_factory.s3bucket
-    @s3consistency = query_factory.s3consistency
+    @s3_client = Aws::S3::Client.new(region: 'us-west-2')
+    @merritt_path = config['merritt_path']
+    @s3bucket = config['s3-bucket']
+    @s3consistency = config['s3-consistency-reports']
     @path = path
     @myparams = myparams
     @format = myparams.key?('format') ? myparams['format'] : 'report'
@@ -36,7 +36,9 @@ class AdminTask
   end
 
   def is_saveable?
-    report_status != "SKIP" && !@s3bucket.empty?
+    return false if @s3bucket.nil?
+    return false if @s3bucket.empty?
+    report_status != "SKIP" 
   end
 
   def report_name
@@ -85,7 +87,7 @@ class AdminTask
   end
 
   def report_path
-    "#{@s3bucket}:#{@s3consistency}#{report_date}/#{report_name}.#{report_status}"
+    "#{@s3consistency}#{report_date}/#{report_name}.#{report_status}"
   end
 
   def save_report(path, report)
@@ -97,7 +99,7 @@ class AdminTask
     })
   end
 
-  def data_table_to_json(data, headers) {
+  def data_table_to_json(data, headers) 
     results = []
     data.each do |r|
       row = {}
@@ -116,7 +118,7 @@ class AdminTask
     {
       data: results
     }
-  }
+  end
 
   def get_result_json(results)
     types = get_types(results)

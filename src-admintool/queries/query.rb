@@ -1,4 +1,4 @@
-require_relative 'src-common-link/admin_task'
+require_relative '../admin_task'
 
 class AdminQuery < AdminTask
   def initialize(query_factory, path, myparams)
@@ -143,7 +143,7 @@ class AdminQuery < AdminTask
         saveable: is_saveable?,
         report_path: report_path
       }
-      #save_report(report_path, report) if is_saveable?
+      save_report(report_path, report) if is_saveable?
       report
     else
       data_table_to_json(data, headers)

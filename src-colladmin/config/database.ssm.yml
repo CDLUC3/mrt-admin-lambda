@@ -24,6 +24,8 @@ default:
     guest_user:     "{!SSM: ldap/accounts/guest/user}"
     encryption:     "simple_tls"
     connect_timeout: 60
+  s3-bucket: "{!SSM: admintool/s3-bucket}"
+  s3-consistency-reports: "{!SSM: admintool/s3-consistency-reports}"
 
 # use personal credentials when configuring a local environment
 # set up a script to set these variables
@@ -51,3 +53,5 @@ docker:
     guest_password: guest
     guest_user:     anonymous
     connect_timeout: 60
+  s3-bucket: ""
+  s3-consistency-reports: "consistency-reports"

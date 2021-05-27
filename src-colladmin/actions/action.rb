@@ -1,4 +1,4 @@
-require_relative 'src-common-link/admin_task'
+require_relative '../admin_task'
 require 'cgi'
 require 'zip'
 require 'mysql2'
@@ -16,7 +16,7 @@ class AdminAction < AdminTask
   def convertJsonToTable(body)
     return body unless hasTable
     evaluate_status(table_types, table_rows(body))
-    {
+    report = {
       format: 'report',
       title: get_title,
       headers: table_headers,
@@ -31,7 +31,9 @@ class AdminAction < AdminTask
       bytes_unit: bytes_unit,
       saveable: is_saveable?,
       report_path: report_path
-    }.to_json
+    }
+    save_report(report_path, report) if is_saveable?
+    report.to_json
   end
 
   def table_headers
