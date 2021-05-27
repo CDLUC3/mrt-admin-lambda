@@ -1,20 +1,12 @@
+require_relative 'src-common-link/admin_task'
 require 'cgi'
-# require 'aws-sdk-s3'
 require 'zip'
 require 'mysql2'
-require 'aws-sdk-s3'
-require 'time'
 
-class AdminAction
+class AdminAction < AdminTask
   def initialize(config, path, myparams)
-    @config = config
-    @s3bucket = ""
-    @s3consistency = ""
-    @path = path
-    @myparams = myparams
+    super(config, path, myparams)
     @format = 'report'
-    @merritt_path = config.fetch('merritt_path','na')
-    @report_status = init_status
   end
 
   def hasTable
@@ -54,82 +46,8 @@ class AdminAction
     []
   end
 
-  def get_param(key, defval)
-    @myparams.key?(key) ? CGI.unescape(@myparams[key].strip) : defval
-  end
-
   def get_title
     "Collection Admin Query"
-  end
-
-  def get_alternative_queries
-    []
-  end
-
-  def bytes_unit
-    "1"
-  end
-
-  def is_saveable?
-    report_status != "SKIP" && !@s3bucket.empty?
-  end
-
-  def report_name
-    @path
-  end
-
-  def init_status
-    :SKIP
-  end
-
-  def evaluate_status(types, data)
-    stat_col = -1
-    types.each_with_index do |s, i|
-      next unless s == 'status'
-      stat_col = i
-      break
-    end
-    return if @report_status == :SKIP
-    return if @report_status == :FAIL
-    data.each do |row|
-      status = evaluate_row_status(row, stat_col)
-      next if status == :PASS
-      @report_status = status
-      return if @report_status == :FAIL
-    end
-  end
-
-  def evaluate_row_status(row, stat_col)
-    return :PASS if stat_col == -1
-    v = row[stat_col]
-    return :FAIL if v == "FAIL"
-    return :WARN if v == "WARN"
-    :PASS
-  end
-
-  def report_status
-    return "FAIL" if @report_status == :FAIL
-    return "WARN" if @report_status == :WARN
-    return "PASS" if @report_status == :PASS
-    return "SKIP" if @report_status == :SKIP
-    "SKIP"
-  end
-
-  def report_date
-    Time.new.strftime('%Y-%m-%d')
-  end
-
-  def report_path
-    "#{@s3bucket}:#{@s3consistency}#{report_date}/#{report_name}.#{report_status}"
-  end
-
-  def save_report(path, report)
-    return unless is_saveable?
-    #@s3_client.put_object({
-    #  body: report.to_json,
-    #  bucket: @s3bucket,
-    #  key: report_path
-    #})
   end
 
 end
