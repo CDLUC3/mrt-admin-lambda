@@ -22,6 +22,19 @@ $(document).ready(function(){
   }
 });
 
+function consistencyStatus() {
+  $.ajax({
+    dataType: "json",
+    method: method,
+    url: lambda_base,
+    data: {path: 'report'},
+    success: function(data) {
+      $("#consistency").text(data.report_path);
+    }
+  });
+
+}
+
 function updateBytesUnits() {
   var factor = $("#bytes").val();
   $("td.bytes").each(function(){
