@@ -1,0 +1,2 @@
+gem 'json'
+gem 'uc3-ssm', git: 'https://github.com/CDLUC3/uc3-ssm.git', branch: 'main'

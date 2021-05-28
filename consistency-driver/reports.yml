@@ -55,4 +55,6 @@ colladmin:
   by-date:
   daily:
   - path: queues
+  - path: batchFolders
+    days: 7
 
