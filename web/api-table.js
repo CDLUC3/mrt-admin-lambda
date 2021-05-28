@@ -32,7 +32,7 @@ function consistencyStatus() {
     data: {path: 'report'},
     success: function(data) {
       var m = data.report_path.match(/(SKIP|PASS|WARN|FAIL)$/);
-      $("#consistency").text(m.group(1)).addClass(m.group(1));
+      $("#consistency").text(m[1]).addClass(m[1]);
     }
   });
 

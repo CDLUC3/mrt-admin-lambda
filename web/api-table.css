@@ -22,13 +22,13 @@ table.results td {
   padding: 4px;
 }
 
-table.results td.status-PASS {
+#consistency.PASS, table.results td.status-PASS {
   color: green;
 }
-table.results td.status-FAIL {
+#consistency.FAIL, table.results td.status-FAIL {
   color: red;
 }
-table.results td.status-WARN {
+#consistency.WARN, table.results td.status-WARN {
   color: orange;
 }
 
