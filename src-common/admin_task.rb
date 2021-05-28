@@ -139,7 +139,7 @@ class AdminTask
 
     return_data(
       data, 
-      ['', 'status'],
+      ['report', 'status'],
       ['Report', 'Status']
     )
   end
