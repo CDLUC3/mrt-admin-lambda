@@ -27,11 +27,12 @@ $(document).ready(function(){
 function consistencyStatus() {
   $.ajax({
     dataType: "json",
-    method: method,
+    method: 'GET',
     url: lambda_base,
     data: {path: 'report'},
     success: function(data) {
-      $("#consistency").text(data.report_path);
+      var m = data.report_path.match(/(SKIP|PASS|WARN|FAIL)$/);
+      $("#consistency").text(m.group(1)).addClass(m.group(1));
     }
   });
 
