@@ -14,6 +14,8 @@ $(document).ready(function(){
   urlbase = path == '' ? '' : lambda_base + "/" + path;
   var url = path == '' ? '' : urlbase; // + document.location.search;
 
+  consistencyStatus();
+
   if (url != '') {
     showUrl(url);
     $("#menu").hide();
