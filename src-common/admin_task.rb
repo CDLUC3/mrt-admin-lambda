@@ -99,6 +99,70 @@ class AdminTask
     })
   end
 
+  def return_data(data, types, headers)
+    evaluate_status(types, data)
+    {
+      format: 'report',
+      title: get_title,
+      headers: headers,
+      types: types,
+      data: data,
+      filter_col: nil,
+      group_col: nil,
+      show_grand_total: false,
+      merritt_path: @merritt_path,
+      alternative_queries: get_alternative_queries,
+      iterate: false,
+      bytes_unit: bytes_unit,
+      saveable: is_saveable?,
+      report_path: report_path
+    }
+  end
+
+  def no_data 
+    return_data(
+      [[
+        "No data"
+      ]],
+      [''],
+      ['Message']
+    )
+  end
+
+  def report_list(path, contents) 
+    data = []
+    contents.each do |c|
+      m = c.key.match(/\.(SKIP|PASS|FAIL|WARN)$/)
+      stat = m.nil? ? "SKIP" : m[1]
+      data.append([c.key, stat])
+    end
+
+    return_data(
+      data, 
+      ['', 'status'],
+      ['Report', 'Status']
+    )
+  end
+
+  def get_report(path)
+    return no_data unless path =~ /^#{@s3consistency}/
+    resp = @s3_client.list_objects_v2({
+      bucket: @s3bucket,
+      prefix: path
+    })
+
+    return no_data if resp.contents.length == 0
+    return report_list(path, resp.contents) if resp.contents.length > 1
+    return report_list(path, resp.contents) if (resp.contents[0].key != path) 
+
+    resp = @s3_client.get_object({
+      bucket: @s3bucket,
+      key: path
+    })
+    result = resp.body.read
+    JSON.parse(result)
+  end
+
   def data_table_to_json(data, headers) 
     results = []
     data.each do |r|
