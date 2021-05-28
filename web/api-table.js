@@ -580,6 +580,8 @@ function format(cell, v, type, merritt_path) {
   } else if (type == 'status'){
     cell.addClass("status-"+v);
     cell.text(v);
+  } else if (type == 'report'){
+    makeLink(cell, v, "index.html?path=report&report=" + encodeURIComponent(v));
   } else {
     cell.text(v);
   }
