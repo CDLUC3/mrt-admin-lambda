@@ -131,8 +131,6 @@ class QueryFactory
       ObjectsObjectCopiesNeededQuery.new(self, path, myparams)    
     elsif path == 'object_mult_coll'
       ObjectsMultipleCollQuery.new(self, path, myparams)    
-    elsif path == 'object_mult_coll'
-      ObjectsMultipleCollQuery.new(self, path, myparams)    
     elsif path == 'report'
       ReportRetrieve.new(self, path, myparams)    
     else
