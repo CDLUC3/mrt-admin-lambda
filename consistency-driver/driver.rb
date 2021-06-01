@@ -44,5 +44,6 @@ class ConsistencyDriver
     end
 end
 
-driver = ConsistencyDriver.new('dev')
+puts ARGV
+driver = ConsistencyDriver.new(ARGV.length > 0 ? ARGV[0] : 'dev')
 driver.run
