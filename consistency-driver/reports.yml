@@ -1,58 +1,58 @@
 admintool:
-  by-date:
   daily:
   - path: con_primary
   - path: con_secondary
   - path: con_objects
-    copies: 1
-    days: 1
+    copies: '1'
+    days: '1'
   - path: con_objects
-    copies: 2
-    days: 1
+    copies: '2'
+    days: '1'
   - path: con_objects
-    copies: 4
-    days: 1
+    copies: '4'
+    days: '1'
   - path: con_objects
-    copies: 1
-    days: 2
+    copies: '1'
+    days: '2'
   - path: con_objects
-    copies: 2
-    days: 2
+    copies: '2'
+    days: '2'
   - path: con_objects
-    copies: 4
-    days: 2
+    copies: '4'
+    days: '2'
   - path: con_files
-    copies: 1
-    days: 1
+    copies: '1'
+    days: '1'
   - path: con_files
-    copies: 2
-    days: 1
+    copies: '2'
+    days: '1'
   - path: con_files
-    copies: 4
-    days: 1
+    copies: '4'
+    days: '1'
   - path: con_files
-    copies: 1
-    days: 2
+    copies: '1'
+    days: '2'
   - path: con_files
-    copies: 2
-    days: 2
+    copies: '2'
+    days: '2'
   - path: con_files
-    copies: 4
-    days: 2
+    copies: '4'
+    days: '2'
   - path: con_no_audit
-    days: 1
+    days: '1'
   - path: con_no_audit
-    days: 2
+    days: '2'
   - path: con_replic
-    days: 1
+    days: '1'
   - path: con_replic
-    days: 2
+    days: '2'
   - path: object_mult_coll
   - path: audit_status
   - path: audit_oldest
   - path: audit_size
 colladmin:
-  by-date:
   daily:
   - path: queues
+  - path: batchFolders
+    days: '7'
 
