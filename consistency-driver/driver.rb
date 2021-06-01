@@ -8,6 +8,7 @@ class ConsistencyDriver
         region = ENV['AWS_REGION'] || 'us-west-2'
         @ssm_root_path = ENV['SSM_ROOT_PATH'] || ''
         @mode = mode
+        @tmpfile = "/tmp/adminrpt.#{@mode}.txt"
 
         @client = Aws::SSM::Client.new(region: region)
         @admintool = get_parameter("admintool/lambda-arn-base", mode)
@@ -15,29 +16,29 @@ class ConsistencyDriver
     end
 
     def get_parameter(key, suffix)
-        key = "#{@ssm_root_path}admintool/lambda-arn-base"
-        val = @client.get_parameter(name: key)[:parameter][:value]
+        fullkey = "#{@ssm_root_path}#{key}"
+        val = @client.get_parameter(name: fullkey)[:parameter][:value]
         "#{val}-#{suffix}"
     end
 
     def invoke_lambda(arn, params)
         payload = Base64.encode64(params.to_json)
-        cmd = "aws lambda invoke --function #{arn} --payload '#{payload}' /dev/null"
-        puts cmd
-        %x( #{cmd} )
+        cmd = "aws lambda invoke --function #{arn} --payload '#{payload}' #{@tmpfile} | jq .StatusCode"
+        cmdstat = %x( #{cmd} ).strip!
+        cmdout = %x( jq '.body' #{@tmpfile} | jq -r . | jq .report_path )
+        puts "\t#{cmdstat}: #{cmdout}"
+        sleep 2
     end
 
     def run 
         puts @admintool
         puts @colladmin
         @config.fetch("admintool", {}).fetch("daily", []).each do |query|
-            puts @admintool
-            puts "\t#{query}"
+            puts "#{query}"
             invoke_lambda(@admintool, query)
         end
         @config.fetch("colladmin", {}).fetch("daily", []).each do |query|
-            puts @colladmin
-            puts "\t#{query}"
+            puts "#{query}"
             invoke_lambda(@colladmin, query)
         end
     end
