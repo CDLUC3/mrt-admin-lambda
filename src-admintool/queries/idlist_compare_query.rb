@@ -116,7 +116,8 @@ def run_query_sql
     elsif rec[:arks][0].nil?
       cmpstatus = "Right Only"
       if rec[:fpath] == "producer/mrt-provenance.xml" || 
-         rec[:fpath] == "system/mrt-submission-manifest.txt"
+         rec[:fpath] == "system/mrt-submission-manifest.txt" ||
+         rec[:fpath] == "system/mrt-delete.txt"
         status = "WARN"
       else
         status = "FAIL"
@@ -138,7 +139,8 @@ def run_query_sql
          rec[:fpath] == "system/mrt-mom.txt" ||
          rec[:fpath] == "system/mrt-object-map.ttl" ||
          rec[:fpath] == "system/mrt-dc.xml" ||
-         rec[:fpath] == "system/mrt-owner.txt" 
+         rec[:fpath] == "system/mrt-owner.txt" ||
+         rec[:fpath] == "system/mrt-delete.txt"
         status = "WARN"
       else
         status = "FAIL"

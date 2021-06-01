@@ -27,4 +27,7 @@ class LocalidListCompareQuery < IdlistCompareQuery
     }
   end
 
+  def is_saveable?
+    false
+  end
 end
