@@ -3,8 +3,9 @@ require 'aws-sdk-ssm'
 require "base64"
 
 class ConsistencyDriver
-    def initialize(mode)
+    def initialize(mode, awscli_ver)
         @config = YAML.load_file('reports.yml')
+        @awscli_ver = awscli_ver
         region = ENV['AWS_REGION'] || 'us-west-2'
         @ssm_root_path = ENV['SSM_ROOT_PATH'] || ''
         @mode = mode
@@ -22,7 +23,7 @@ class ConsistencyDriver
     end
 
     def invoke_lambda(arn, params)
-        payload = Base64.encode64(params.to_json)
+        payload = @awscli_ver == 'v2' ? Base64.encode64(params.to_json) : params.to_json
         cmd = "aws lambda invoke --function #{arn} --payload '#{payload}' #{@tmpfile} | jq .StatusCode"
         cmdstat = %x( #{cmd} ).strip!
         cmdout = %x( jq '.body' #{@tmpfile} | jq -r . | jq .report_path )
@@ -45,5 +46,8 @@ class ConsistencyDriver
 end
 
 puts ARGV
-driver = ConsistencyDriver.new(ARGV.length > 0 ? ARGV[0] : 'dev')
+driver = ConsistencyDriver.new(
+    ARGV.length > 0 ? ARGV[0] : 'dev',
+    ARGV.length > 1 ? ARGV[1] : 'v2',
+)
 driver.run
