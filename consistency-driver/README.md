@@ -4,4 +4,5 @@
 - `cd consistency-driver`
 - `bundle install`
 - Set SSM_ROOT_PATH for the DEV environment
-- `SSM_ROOT_PATH=... ruby driver.rb [dev|stg|prd]`
+- `SSM_ROOT_PATH=... ruby driver.rb [dev|stg|prd] [v1|v2]`
+  - v1|v2: aws cli ver for host
