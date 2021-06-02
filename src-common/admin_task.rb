@@ -58,7 +58,9 @@ class AdminTask
     end
     return if @report_status == :SKIP
     return if @report_status == :FAIL
+    return if data.nil?
     data.each do |row|
+      next if row.nil?
       status = evaluate_row_status(row, stat_col)
       next if status == :PASS
       @report_status = status

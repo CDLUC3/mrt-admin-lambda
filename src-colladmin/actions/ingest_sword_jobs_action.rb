@@ -128,8 +128,8 @@ class JobList < MerrittJson
         obj.fetch('fil:file', ''),
         obj.fetch('fil:fileDate', '')
       )
-      puts j.to_date
-      puts Date.today - days
+      # puts j.to_date
+      # puts Date.today - days
       next if j.to_date < (Date.today - days)
       @jobs.append(j)
       @jobHash[j.jid] = j

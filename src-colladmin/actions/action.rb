@@ -15,13 +15,14 @@ class AdminAction < AdminTask
 
   def convertJsonToTable(body)
     return body unless hasTable
-    evaluate_status(table_types, table_rows(body))
+    data = table_rows(body)
+    evaluate_status(table_types, data)
     report = {
       format: 'report',
       title: get_title,
       headers: table_headers,
       types: table_types,
-      data: table_rows(body),
+      data: data,
       filter_col: nil,
       group_col: nil,
       show_grand_total: false,

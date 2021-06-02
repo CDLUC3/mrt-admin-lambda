@@ -152,6 +152,10 @@ class BatchFolderList < MerrittJson
     end
   end
 
+  def empty?
+    @batchFolders.length == 0
+  end
+
   def to_table
     table = []
     @batchFolders.sort {
@@ -164,6 +168,7 @@ class BatchFolderList < MerrittJson
   end
 
   def apply_queue_list(queue_list)
+    return if @batchFolderHash.empty?
     queue_list.batches.each do |bid, qbatch|
       if @batchFolderHash.key?(bid)
         @batchFolderHash[bid].setQueueItem(qbatch)
@@ -172,6 +177,7 @@ class BatchFolderList < MerrittJson
   end
 
   def apply_recent_ingests(recentitems)
+    return if @batchFolderHash.empty?
     recentitems.batches.each do |bid, recentbatch|
       if @batchFolderHash.key?(bid)
         @batchFolderHash[bid].setRecentItem(recentbatch)
