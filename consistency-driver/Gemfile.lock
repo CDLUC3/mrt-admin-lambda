@@ -9,6 +9,7 @@ GIT
       yaml (~> 0.1)
 
 GEM
+  remote: https://rubygems.org/
   specs:
     aws-eventstream (1.1.1)
     aws-partitions (1.434.0)
