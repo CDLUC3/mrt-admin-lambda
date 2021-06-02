@@ -1,6 +1,6 @@
 # Merritt Billing
 
-![](https://github.com/CDLUC3/mrt-doc/raw/main/diagrams/billing.mmd.svg)
+[![](https://github.com/CDLUC3/mrt-doc/raw/main/diagrams/billing.mmd.svg)](https://cdluc3.github.io/mrt-doc/diagrams/admin-billing)
 
 The Merritt Billing database has 2 purposes.
 - Support Merritt Invoice generation
