@@ -141,46 +141,63 @@
 
       <h2>Operational Information</h2>
       <ul>
-        <li><a href="index.html?path=audit_status">Audit - Irregular Status</a></li>
-        <li><a href="index.html?path=audit_status_time&unit=HOUR&count=-1">Audit Status - Last Hour</a></li>
-        <li><a href="index.html?path=audit_oldest">Audit - Oldest Unprocessed Item</a></li>
-        <li><a href="index.html?path=audit_size">Audit - Size of Queue</a></li>
-        <li><a href="index.html?path=audit_processed_size">Historical Audits processed + bytes over time</a></li>
-        <li><a href="index.html?path=audit_processed_hours&iterate=1">Hourly Audits processed + bytes over time</a></li>
-        <li><a href="index.html?path=nodes">Storage Nodes</a></li>
-        <li><a href="index.html?path=collnodes">Storage Nodes by Collection</a></li>
-        <li><a href="index.html?path=wasabi">Wasabi Migration</a></li>
-        <li><a href="index.html?path=replication_needed">Objects - Replication needed</a></li>
-        <li><a href="index.html?path=replic_processed&iterate=1">Replic processed over time</a></li>
+        <li>
+          <a href="https://github.com/CDLUC3/mrt-admin-lambda/blob/main/consistency-driver/reports.yml">Consistency Report Configuration</a>
+        </li>
+        <li>
+          <h3>Audit</h3>
+          <ul>
+            <li><a href="index.html?path=audit_status">Audit - Irregular Status</a></li>
+            <li><a href="index.html?path=audit_status_time&unit=HOUR&count=-1">Audit Status - Last Hour</a></li>
+            <li><a href="index.html?path=audit_oldest">Audit - Oldest Unprocessed Item</a></li>
+            <li><a href="index.html?path=audit_size">Audit - Size of Queue</a></li>
+            <li><a href="index.html?path=audit_processed_size">Historical Audits processed + bytes over time</a></li>
+            <li><a href="index.html?path=audit_processed_hours&iterate=1">Hourly Audits processed + bytes over time</a></li>
+          </ul>
+        </li>
+        <li>
+          <h3>Replication - Objects</h3>
+          <ul>
+            <li><a href="index.html?path=wasabi">Wasabi Migration</a></li>
+            <li><a href="index.html?path=replication_needed">Objects - Replication needed</a></li>
+            <li><a href="index.html?path=replic_processed&iterate=1">Replic processed over time</a></li>
+            <li><a href="index.html?path=con_objects&copies=1">Objects with <em>1</em> copy (Replication Needed?)</a></li>
+            <li><a href="index.html?path=con_objects&copies=2">Objects with <em>2</em> copies (Replication Needed?)</a></li>
+            <li><a href="index.html?path=con_objects&copies=4">Objects with <em>4</em> copies (Cleanup Needed?)</a></li>
+            <li><a href="index.html?path=con_replic">Outstanding replication</a></li>
+          </ul>
+        </li>
+        <li>
+          <h3>Replication - File View</h3>
+          <ul>
+            <li><a href="index.html?path=con_files&copies=1">Files with <em>1</em> copy (Replication Needed?)</a></li>
+            <li><a href="index.html?path=con_files&copies=2">Files with <em>2</em> copies (Replication Needed?)</a></li>
+            <li><a href="index.html?path=con_files&copies=4">Files with <em>4</em> copies (Cleanup Needed?)</a></li>
+            <li><a href="index.html?path=con_no_audit">Files not in the audit table (too slow to run from web)</a></li>
+          </ul>
+        </li>
+        <li>
+          <h3>Storage</h3>
+          <ul>
+            <li><a href="index.html?path=nodes">Storage Nodes</a></li>
+            <li><a href="index.html?path=collnodes">Storage Nodes by Collection</a></li>
+            <li><a href="index.html?path=con_primary">Collections with Non-standard Primary Nodes (Not SDSC or Dryad S3)</a></li>
+            <li><a href="index.html?path=con_secondary">Collections with Non-standard Secondary Nodes (Not Glacier+Wasabi or SDSC+Wasabi)</a></li>
+          </ul>
+        </li>
+        <li>
+          <h3>Collections</h3>
+          <ul>
+            <li><a href="index.html?path=object_mult_coll&limit=500">Objects linked to more than one collection</a></li>
+          </ul>
+        </li>
+        <li>
+          <h3>Local Ids</h3>
+          <ul>
+            <li><a href="index.html?path=doi">DOI Ark Conflicts</a></li>
+          </ul>
+        </li>
       </ul>
-
-      <h2>System Consistency - In Progress</h2>
-      <ul>
-        <li><a href="index.html?path=con_primary">Collections with Non-standard Primary Nodes (Not SDSC or Dryad S3)</a></li>
-        <li><a href="index.html?path=con_secondary">Collections with Non-standard Secondary Nodes (Not Glacier+Wasabi or SDSC+Wasabi)</a></li>
-        <li><a href="index.html?path=con_objects&copies=1">Objects with 1 copy (Replication Needed?)</a></li>
-        <li><a href="index.html?path=con_objects&copies=2">Objects with 2 copies (Replication Needed?)</a></li>
-        <li><a href="index.html?path=con_objects&copies=4">Objects with 4 copies (Cleanup Needed?)</a></li>
-        <li><a href="index.html?path=con_files&copies=1">Files with 1 copy (Replication Needed?)</a></li>
-        <li><a href="index.html?path=con_files&copies=2">Files with 2 copies (Replication Needed?)</a></li>
-        <li><a href="index.html?path=con_files&copies=4">Files with 4 copies (Cleanup Needed?)</a></li>
-        <li><a href="index.html?path=con_no_audit">Files not in the audit table (too slow to run from web)</a></li>
-        <li><a href="index.html?path=con_replic">Outstanding replication</a></li>
-        <li><a href="index.html?path=object_mult_coll&limit=500">Objects linked to more than one collection</a></li>
-        <li>Audit - Irregular Status - not processing or verified (see above)</li>
-        <li>Oldest Unprocessed Audit - &gt; 60 days (see above)</li>
-        <li>Audit Queue Batches - older than 24 hours (see above)</li>
-        <li>Failed Queue Items (colladmin)</li>
-        <li>Batch folders older than 1 day without database entries (colladmin)</li>
-        <li>Scan storage buckets for any items not logged in inventory</li>
-        <li>DOI Ark Conflicts (see below)</li>
-      </ul>
-
-      <h2>Common Troubleshooting</h2>
-      <ul>
-        <li><a href="index.html?path=doi">DOI Ark Conflicts</a></li>
-      </ul>
-
 
     </div>
     <div id="data">
