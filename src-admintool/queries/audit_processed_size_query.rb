@@ -5,7 +5,7 @@ class AuditProcessedSizeQuery < AdminQuery
   end
 
   def get_title
-    "Audit Files Processed - Last #{@day} days"
+    "Audit Files Processed - Last #{@days} days"
   end
 
   def get_sql
@@ -74,6 +74,23 @@ class AuditProcessedSizeQuery < AdminQuery
 
   def bytes_unit
     "1000000000"
+  end
+
+  def get_alternative_queries
+    [
+      {
+        label: 'Last 30 days', 
+        url: 'path=audit_processed_size&days=30'
+      },
+      {
+        label: 'Last 60 days', 
+        url: 'path=audit_processed_size&days=60'
+      },
+      {
+        label: 'Last 90 days', 
+        url: 'path=audit_processed_size&days=90'
+      }
+    ]
   end
 
 end

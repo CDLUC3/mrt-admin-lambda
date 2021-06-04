@@ -108,12 +108,10 @@ class AdminTask
     resp.contents.each do |s3obj|
       k = s3obj.key
       next unless k =~ %r[consistency-reports.*(SKIP|PASS|WARN|FAIL)$]
-      puts "==> #{k}"
-      r = @s3_client.put_object({
+      r = @s3_client.delete_object({
         bucket: @s3bucket,
         key: k
       })
-      puts r
     end
     # Save a new object
     @s3_client.put_object({
