@@ -92,8 +92,30 @@ class AdminTask
     "#{@s3consistency}#{report_date}/#{report_name}.#{report_status}"
   end
 
+  def report_path_prefix
+    "#{@s3consistency}#{report_date}/#{report_name}."
+  end
+
   def save_report(path, report)
     return unless is_saveable?
+    # Look for any prior reports for the day
+    resp = @s3_client.list_objects_v2({
+      bucket: @s3bucket,
+      prefix: report_path_prefix
+    })
+    # Delete any prior reports
+    # consistency-reports is intentionally hard coded into the delete
+    resp.contents.each do |s3obj|
+      k = s3obj.key
+      next unless k =~ %r[consistency-reports.*(SKIP|PASS|WARN|FAIL)$]
+      puts "==> #{k}"
+      r = @s3_client.put_object({
+        bucket: @s3bucket,
+        key: k
+      })
+      puts r
+    end
+    # Save a new object
     @s3_client.put_object({
       body: report.to_json,
       bucket: @s3bucket,
