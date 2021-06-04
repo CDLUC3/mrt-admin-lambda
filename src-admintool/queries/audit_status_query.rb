@@ -88,7 +88,7 @@ class AuditStatusQuery < AdminQuery
         'unknown' as astatus,
         acount,
         case 
-          when acount > 0 then 'WARN'
+          when acount > 0 then 'PASS'
           else 'PASS'
         end as status
       from

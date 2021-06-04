@@ -18,3 +18,11 @@ The Merritt Billing database is updated once a day with data aggregated from the
 ## Daily Migration Process Stored Procedures
 
 - See [migrate.sql](sql/migrate.sql)
+
+## Daily Cron
+```
+#!/bin/bash
+
+${HOME}/bin/uc3-mysql.sh billing -- -e 'call update_billing_range();'
+${HOME}/bin/uc3-mysql.sh billing -- -e 'call update_object_size();'
+```

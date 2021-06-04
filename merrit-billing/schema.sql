@@ -58,3 +58,36 @@ CREATE TABLE object_size (
   updated datetime,
   INDEX object_id(inv_object_id)
 );
+
+/*
+DROP TABLE IF EXISTS audits_processed;
+*/
+CREATE TABLE audits_processed (
+  audit_date date,
+  all_files bigint,
+  online_files bigint,
+  online_bytes bigint,
+  s3_files bigint,
+  s3_bytes bigint,
+  glacier_files bigint,
+  glacier_bytes bigint,
+  sdsc_files bigint,
+  sdsc_bytes bigint,
+  wasabi_files bigint,
+  wasabi_bytes bigint,
+  other_files bigint,
+  other_bytes bigint,
+  INDEX audit_date(audit_date)
+);
+
+/*
+DROP TABLE IF EXISTS ingests_completed;
+*/
+CREATE TABLE ingests_completed (
+  ingest_date date,
+  profile varchar(255), 
+  batch_id varchar(255),
+  object_count int, 
+  INDEX ingest_date(ingest_date)
+);
+  
