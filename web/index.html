@@ -111,18 +111,6 @@
         </li>
       </ul>
 
-      <h2>Interesting Use Cases Content</h2>
-      <ul>
-        <li><a href="index.html?path=objects_large">Large Objects</a></li>
-        <li><a href="index.html?path=objects_many_files">Objects with Many Files</a></li>
-        <li><a href="index.html?path=count_objects">Object Counts by Owner and Collection</a></li>
-      </ul>
-
-      <h2>Ingest Use Cases Content</h2>
-      <ul>
-        <li><a href="index.html?path=recent_ingests">Recent Ingests</a></li>
-        <li><a href="index.html?path=big_ingest&items=200&days=14">Big Ingests (200+) - Last 14 days</a></li>
-      </ul>
 
       <h2>Queries by ingest date</h2>
       <ul>
@@ -136,7 +124,6 @@
         <li><a class="json" href="index.html?path=collections_by_time_count_producer&interval=weeks">Producer Files Added by Date (Last 4 weeks)</a></li>
         <li><a class="json" href="index.html?path=collections_by_time_count&interval=weeks">Files Added by Date (Last 4 weeks)</a></li>
         <li><a class="json" href="index.html?path=collections_by_time_size&interval=weeks">File Size Added by Date (Last 4 weeks)</a></li>
-        <li><a class="json" href="index.html?path=objects_recent">Recent object updates by collection (object details)</a></li>
       </ul>
 
       <h2>Operational Information</h2>
@@ -188,7 +175,23 @@
         <li>
           <h3>Collections</h3>
           <ul>
+            <li><a href="index.html?path=count_objects">Object Counts by Owner and Collection</a></li>
+            <li><a class="json" href="index.html?path=objects_recent">Recent object updates by collection (object details)</a></li>
+          </ul>
+        </li>
+        <li>
+          <h3>Ingests</h3>
+          <ul>
+            <li><a href="index.html?path=recent_ingests">Recent Ingests</a></li>
+            <li><a href="index.html?path=big_ingest&items=200&days=14">Big Ingests (200+) - Last 14 days</a></li>
+          </ul>
+        </li>
+        <li>
+          <h3>Objects</h3>
+          <ul>
             <li><a href="index.html?path=object_mult_coll&limit=500">Objects linked to more than one collection</a></li>
+            <li><a href="index.html?path=objects_large">Large Objects</a></li>
+            <li><a href="index.html?path=objects_many_files">Objects with Many Files</a></li>
           </ul>
         </li>
         <li>
