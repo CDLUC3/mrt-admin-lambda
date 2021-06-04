@@ -40,21 +40,7 @@ BEGIN
     audit_date = @dcur;
 
   CREATE TEMPORARY TABLE IF NOT EXISTS tmp_audits_processed AS (
-  select
-    @dcur as audit_date,
-    0 as all_files,
-    0 as online_files,
-    0 as online_bytes,
-    0 as s3_files,
-    0 as s3_bytes,
-    0 as glacier_files,
-    0 as glacier_bytes,
-    0 as sdsc_files,
-    0 as sdsc_bytes,
-    0 as wasabi_files,
-    0 as wasabi_bytes,
-    0 as other_files,
-    0 as other_bytes
+    select * from audits_processed limit 0
   );
 
   truncate table tmp_audits_processed;
