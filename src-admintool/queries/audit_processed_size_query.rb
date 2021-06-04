@@ -24,7 +24,14 @@ class AuditProcessedSizeQuery < AdminQuery
         wasabi_files,
         wasabi_bytes,
         other_files,
-        other_bytes
+        other_bytes,
+        case
+          when (all_files > 400000 and online_bytes > 3000000000000)
+            then 'PASS'
+          when (all_files < 400000 and online_bytes < 3000000000000)
+            then 'FAIL'
+          else 'WARN'
+        end as status
       from 
         audits_processed
       where
@@ -49,7 +56,8 @@ class AuditProcessedSizeQuery < AdminQuery
       'Wasabi Files',
       'Wasabi Bytes', 
       'Other Files',
-      'Other Bytes'
+      'Other Bytes',
+      'Status'
     ]
   end
 
@@ -68,7 +76,8 @@ class AuditProcessedSizeQuery < AdminQuery
       'dataint', 
       'bytes', 
       'dataint', 
-      'bytes'
+      'bytes',
+      'status'
     ]
   end
 
@@ -91,6 +100,10 @@ class AuditProcessedSizeQuery < AdminQuery
         url: 'path=audit_processed_size&days=90'
       }
     ]
+  end
+
+  def init_status
+    :PASS
   end
 
 end

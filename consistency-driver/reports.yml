@@ -32,6 +32,9 @@ admintool:
   - path: audit_size
   # Look for doi conflicts
   - path: doi
+  # Check audit performance
+  - path: audit_processed_size
+    days: 5
 colladmin:
   daily:
   # Look for ingest queue failures  
