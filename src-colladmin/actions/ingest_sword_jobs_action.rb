@@ -35,19 +35,19 @@ class IngestSwordJobsAction < ForwardToIngestAction
     [
       {
         label: 'Sword Jobs Last 3 days', 
-        url: "path=sword&days=3"
+        url: "/collIndex.html?path=sword&days=3"
       },
       {
         label: 'Sword Jobs Last 7 days', 
-        url: "path=sword&days=7"
+        url: "/collIndex.html?path=sword&days=7"
       },
       {
         label: 'Sword Jobs Last 14 days', 
-        url: "path=sword&days=14"
+        url: "/collIndex.html?path=sword&days=14"
       },
       {
         label: 'Sword Jobs Last 21 days', 
-        url: "path=sword&days=21"
+        url: "/collIndex.html?path=sword&days=21"
       }
     ]
   end

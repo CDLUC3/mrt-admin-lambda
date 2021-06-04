@@ -32,11 +32,11 @@ class IngestJobFilesAction < ForwardToIngestAction
     [
       {
         label: 'Job Metadata', 
-        url: "path=job&batch=#{@batch}&job=#{@job}"
+        url: "/collIndex.html?path=job&batch=#{@batch}&job=#{@job}"
       },
       {
         label: 'Job Manifest', 
-        url: "path=manifest&batch=#{@batch}&job=#{@job}"
+        url: "/collIndex.html?path=manifest&batch=#{@batch}&job=#{@job}"
       },
     ]
   end
