@@ -34,7 +34,7 @@ admintool:
   - path: doi
   # Check audit performance
   - path: audit_processed_size
-    days: 5
+    days: '5'
 colladmin:
   daily:
   # Look for ingest queue failures  
