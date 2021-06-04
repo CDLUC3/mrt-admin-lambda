@@ -1,34 +1,64 @@
 class ConsistencyFilesNoAuditQuery < AdminQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
-    @days = CGI.unescape(get_param('days', '0')).to_i
   end
 
   def report_name
-    "#{@path}.#{@days}days"
+    "#{@path}"
   end
 
   def get_title
-    "Files missing from the audit table, older than #{@days} days"
+    "Files missing from the audit table"
   end
 
   def get_sql
     %{
       select 
         count(*),
+        ifnull(
+          sum(
+            case
+              when created < date_add(now(), INTERVAL -2 DAY)
+                then 1
+              else 0
+            end
+          ),
+          0
+        ),
+        ifnull(
+          sum(
+            case
+              when created < date_add(now(), INTERVAL -2 DAY)
+                then 0
+              when created < date_add(now(), INTERVAL -1 DAY) 
+                then 1
+              else 0
+            end
+          ),
+          0
+        ),
+        ifnull(
+          sum(
+            case
+              when created < date_add(now(), INTERVAL -2 DAY)
+                then 0
+              when created < date_add(now(), INTERVAL -1 DAY) 
+                then 0
+              else 1
+            end
+          ),
+          0
+        ),   
         case
           when count(*) = 0 then 'PASS'
-          when #{@days} = 0 then 'SKIP'
-          when #{@days} = 1 then 'WARN'
-          when #{@days} >= 2 then 'FAIL'
-          else 'SKIP'
+          when count(created < date_add(now(), INTERVAL -2 DAY)) > 0 then 'FAIL'
+          when count(created < date_add(now(), INTERVAL -1 DAY)) > 0 then 'WARN'
+          else 'PASS'
         end as status
       from 
         inv.inv_files f
       where
         billable_size > 0
-      and
-        created < date_add(now(), INTERVAL -#{@days} DAY)
       and not exists (
         select 
           1
@@ -42,30 +72,13 @@ class ConsistencyFilesNoAuditQuery < AdminQuery
   end
 
   def get_headers(results)
-    ['File Count', 'Status']
+    ['File Count', '> 2 days', '1-2 days', '< 1 day', 'Status']
   end
 
   def get_types(results)
-    ['dataint', 'status']
+    ['dataint', 'dataint', 'dataint', 'dataint', 'status']
   end
-
-  def get_alternative_queries
-    [
-      {
-        label: "files not in audit table", 
-        url: "path=con_no_audit&days=0"
-      },
-      {
-        label: "files not in audit table, older than 1 day", 
-        url: "path=con_no_audit&days=1"
-      },
-      {
-        label: "files not in audit table, older than 2 days", 
-        url: "path=con_no_audit&days=2"
-      },
-    ]
-  end
-  
+ 
   def init_status
     :PASS
   end

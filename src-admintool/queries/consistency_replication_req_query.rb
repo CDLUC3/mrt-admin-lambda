@@ -1,15 +1,14 @@
 class ConsistencyReplicationReqQuery < AdminQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
-    @days = CGI.unescape(get_param('days', '0')).to_i
   end
 
   def report_name
-    "#{@path}.#{@days}days"
+    "#{@path}"
   end
 
   def get_title
-    "Replication Required, older than #{@days} days"
+    "Replication Required"
   end
 
   def get_sql
@@ -24,24 +23,57 @@ class ConsistencyReplicationReqQuery < AdminQuery
         where
           os.inv_object_id = p.inv_object_id
       ) as fbytes,
+      ifnull(
+        sum(
+          case
+            when o.created < date_add(now(), INTERVAL -2 DAY)
+              then 1
+            else 0
+          end
+        ),
+        0
+      ),
+      ifnull(
+        sum(
+          case
+            when o.created < date_add(now(), INTERVAL -2 DAY)
+              then 0
+            when o.created < date_add(now(), INTERVAL -1 DAY) 
+              then 1
+            else 0
+          end
+        ),
+        0
+      ),
+      ifnull(
+        sum(
+          case
+            when o.created < date_add(now(), INTERVAL -2 DAY)
+              then 0
+            when o.created < date_add(now(), INTERVAL -1 DAY) 
+              then 0
+            else 1
+          end
+        ),
+        0
+      ),   
       case
         when count(distinct p.inv_object_id) = 0 then 'PASS'
-        when #{@days} = 0 then 'SKIP'
-        when #{@days} = 1 then 'WARN'
-        when #{@days} >= 2 then 'FAIL'
-        else 'SKIP'
+        when count(o.created < date_add(now(), INTERVAL -2 DAY)) > 0 then 'FAIL'
+        when count(o.created < date_add(now(), INTERVAL -1 DAY)) > 0 then 'WARN'
+       else 'PASS'
       end as status
-    #{sqlfrag_replic_needed(@days)}
+    #{sqlfrag_replic_needed}
       ;
     }
   end
 
   def get_headers(results)
-    ['Object Count', 'Byte Count', 'Status']
+    ['Object Count', 'Byte Count', '> 2 days', '1-2 days', '< 1 day', 'Status']
   end
 
   def get_types(results)
-    ['dataint', 'bytes', 'status']
+    ['dataint', 'bytes', 'dataint', 'dataint', 'dataint', 'status']
   end
 
   def bytes_unit
@@ -55,21 +87,9 @@ class ConsistencyReplicationReqQuery < AdminQuery
   def get_alternative_queries
     [
       {
-        label: "Object List - Replication Needed", 
-        url: "path=replication_needed&days=#{@days}&limit=500"
-      },
-      {
-        label: "Replication Required", 
-        url: "path=con_replic&days=0"
-      },
-      {
-        label: "Replication Required, older than 1 day", 
-        url: "path=con_replic&days=1"
-      },
-      {
-        label: "Replication Required, older than 2 days", 
-        url: "path=con_replic&days=2"
-      },
+        label: "Object List - Replication Needed, Older than 2 days", 
+        url: "path=replication_needed&days=2&limit=500"
+      }
     ]
   end
 

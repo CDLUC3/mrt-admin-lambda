@@ -204,7 +204,7 @@ class AdminQuery < AdminTask
 
   # Re-usable query fragments
 
-  def sqlfrag_replic_needed(days)
+  def sqlfrag_replic_needed
     %{
       from
       inv.inv_nodes_inv_objects p
@@ -212,8 +212,6 @@ class AdminQuery < AdminTask
       inv.inv_objects o
     on 
       o.id = p.inv_object_id
-    and
-      o.created < date_add(now(), INTERVAL -#{days} DAY)
     where
       p.role='primary'
     and
@@ -230,7 +228,7 @@ class AdminQuery < AdminTask
     }
   end
 
-  def sqlfrag_audit_files_copies(copies, days)
+  def sqlfrag_audit_files_copies(copies)
     %{
       from (
         select 
@@ -254,13 +252,11 @@ class AdminQuery < AdminTask
         group by 
           inv_object_id,
           inv_file_id 
-        having
-          min(created) < date_add(now(), INTERVAL -#{days} DAY)
       ) as age
     }
   end
 
-  def sqlfrag_object_copies(copies, days)
+  def sqlfrag_object_copies(copies)
     %{
       from (
         select 
@@ -282,8 +278,6 @@ class AdminQuery < AdminTask
           on copies.inv_object_id = inio.inv_object_id
         group by 
           inv_object_id 
-        having
-          min(created) < date_add(now(), INTERVAL -#{days} DAY)
       ) as age
     }
   end

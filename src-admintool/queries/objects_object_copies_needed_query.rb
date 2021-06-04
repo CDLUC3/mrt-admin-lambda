@@ -6,7 +6,9 @@ class ObjectsObjectCopiesNeededQuery < ObjectsQuery
     subsql = %{
       select
         distinct age.inv_object_id
-      #{sqlfrag_object_copies(@copies, @days)}
+      #{sqlfrag_object_copies(@copies)}
+      where
+        age.init_created < date_add(now(), INTERVAL -#{@days} DAY)
       limit #{get_limit};
     }
     stmt = @client.prepare(subsql)
@@ -20,7 +22,7 @@ class ObjectsObjectCopiesNeededQuery < ObjectsQuery
   end
 
   def get_title
-    "Objects - Object Copies Needed - Older than #{@days} days (Limit #{get_limit})"
+    "Objects with #{@copies} Copies - Older than #{@days} days (Limit #{get_limit})"
   end
 
   def get_params
@@ -38,15 +40,15 @@ class ObjectsObjectCopiesNeededQuery < ObjectsQuery
   def get_alternative_queries
     [
       {
-        label: "Objects - Object Copies Needed", 
+        label: "Objects with #{@copies} Copies", 
         url: "path=object_copies_needed&days=0&limit=500"
       },
       {
-        label: "Objects - Object Copies Needed, older than 1 day", 
+        label: "Objects with #{@copies} Copies, older than 1 day", 
         url: "path=object_copies_needed&days=1&limit=500"
       },
       {
-        label: "Objects - Object Copies Needed, older than 2 days", 
+        label: "Objects with #{@copies} Copies, older than 2 days", 
         url: "path=object_copies_needed&days=2&limit=500"
       },
     ]

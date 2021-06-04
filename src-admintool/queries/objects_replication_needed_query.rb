@@ -5,7 +5,9 @@ class ReplicationNeededQuery < ObjectsQuery
     subsql = %{
       select
         p.inv_object_id
-      #{sqlfrag_replic_needed(@days)}
+      #{sqlfrag_replic_needed}
+      and
+        o.created < date_add(now(), INTERVAL -#{@days} DAY)
       limit #{get_limit};
     }
     stmt = @client.prepare(subsql)

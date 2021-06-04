@@ -2,41 +2,72 @@ class ConsistencyObjectsQuery < AdminQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
     @copies = CGI.unescape(get_param('copies', '2')).to_i
-    @days = CGI.unescape(get_param('days', '0')).to_i
   end
 
   def report_name
-    "#{@path}.#{@copies}copies.#{@days}days"
+    "#{@path}.#{@copies}copies"
   end
 
   def get_title
-    "Objects with only #{@copies} copies, older than #{@days} days"
+    "Objects with only #{@copies} copies"
   end
 
   def get_sql
     %{
       select 
         count(*),
+        ifnull(
+          sum(
+            case
+              when age.init_created < date_add(now(), INTERVAL -2 DAY)
+                then 1
+              else 0
+            end
+          ),
+          0
+        ),
+        ifnull(
+          sum(
+            case
+              when age.init_created < date_add(now(), INTERVAL -2 DAY)
+                then 0
+              when age.init_created < date_add(now(), INTERVAL -1 DAY) 
+                then 1
+              else 0
+            end
+          ),
+          0
+        ),
+        ifnull(
+          sum(
+            case
+              when age.init_created < date_add(now(), INTERVAL -2 DAY)
+                then 0
+              when age.init_created < date_add(now(), INTERVAL -1 DAY) 
+                then 0
+              else 1
+            end
+          ),
+          0
+        ),   
         case
           when count(*) = 0 then 'PASS'
           when #{@copies} = 3 then 'PASS'
-          when #{@days} = 0 then 'SKIP'
-          when #{@days} = 1 then 'WARN'
-          when #{@copies} > 3 then 'WARN'
-          when #{@days} >= 2 then 'FAIL'
-          else 'SKIP'
+          when count(age.init_created < date_add(now(), INTERVAL -2 DAY)) > 0 then 'FAIL'
+          when count(age.init_created < date_add(now(), INTERVAL -1 DAY)) > 0 then 'WARN'
+          else 'PASS'
         end as status
-            #{sqlfrag_object_copies(@copies, @days)}
+            #{sqlfrag_object_copies(@copies)}
       ; 
     }
   end
 
   def get_headers(results)
-    ['Object Count', 'Status']
+    ['File Count', '> 2 days', '1-2 days', '< 1 day', 'Status']
   end
 
   def get_types(results)
-    ['dataint', 'status']
+    ['dataint', 'dataint', 'dataint', 'dataint', 'status']
   end
   
   def init_status
@@ -46,21 +77,9 @@ class ConsistencyObjectsQuery < AdminQuery
   def get_alternative_queries
     [
       {
-        label: "Object List - #{@copies} copies of an object", 
-        url: "path=object_copies_needed&days=#{@days}&limit=500"
-      },
-      {
-        label: "#{@copies} copies of an object", 
-        url: "path=con_objects&copies=#{@copies}&days=0"
-      },
-      {
-        label: "#{@copies} copies of an object, older than 1 day", 
-        url: "path=con_objects&copies=#{@copies}&days=1"
-      },
-      {
-        label: "#{@copies} copies of an object, older than 2 days", 
-        url: "path=con_objects&copies=#{@copies}&days=2"
-      },
+        label: "Object List - #{@copies} copies of an object, Older than 2 days", 
+        url: "path=object_copies_needed&copies=#{@copies}&days=2&limit=500"
+      }
     ]
   end
 

@@ -2,11 +2,13 @@ class ObjectsFileCopiesNeededQuery < ObjectsQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
     @copies = CGI.unescape(get_param('copies', '2')).to_i
-    @days = CGI.unescape(get_param('days', '0')).to_i
+    @days = CGI.unescape(get_param('days', '2')).to_i
     subsql = %{
       select
         distinct age.inv_object_id
-      #{sqlfrag_audit_files_copies(@copies, @days)}
+      #{sqlfrag_audit_files_copies(@copies)}
+      where
+        age.init_created < date_add(now(), INTERVAL -#{@days} DAY)
       limit #{get_limit};
     }
     stmt = @client.prepare(subsql)
@@ -20,7 +22,7 @@ class ObjectsFileCopiesNeededQuery < ObjectsQuery
   end
 
   def get_title
-    "Objects - File Copies Needed - Older than #{@days} days (Limit #{get_limit})"
+    "Objects with #{@copies} Copies - Older than #{@days} days (Limit #{get_limit})"
   end
 
   def get_params
@@ -38,16 +40,16 @@ class ObjectsFileCopiesNeededQuery < ObjectsQuery
   def get_alternative_queries
     [
       {
-        label: "Objects - File Copies Needed", 
-        url: "path=file_copies_needed&days=0&limit=500"
+        label: "Objects with #{@copies} Copies", 
+        url: "path=file_copies_needed&copies=#{@copies}&days=0&limit=500"
       },
       {
-        label: "Objects - File Copies Needed, older than 1 day", 
-        url: "path=file_copies_needed&days=1&limit=500"
+        label: "Objects with #{@copies} Copies, older than 1 day", 
+        url: "path=file_copies_needed&copies=#{@copies}&days=1&limit=500"
       },
       {
-        label: "Objects - File Copies Needed, older than 2 days", 
-        url: "path=file_copies_needed&days=2&limit=500"
+        label: "Objects with #{@copies} Copies, older than 2 days", 
+        url: "path=file_copies_needed&copies=#{@copies}&days=2&limit=500"
       },
     ]
   end
