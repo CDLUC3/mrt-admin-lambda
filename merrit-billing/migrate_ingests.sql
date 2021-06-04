@@ -20,13 +20,17 @@ BEGIN
   end if;
 END$$
 
+DELIMITER ;
+
 DELIMITER $$
 
 DROP PROCEDURE IF EXISTS update_ingests_processed$$
-CREATE PROCEDURE update_ingests_processed
+CREATE PROCEDURE update_ingests_processed()
 BEGIN
   call update_ingests_processed_for_day(date_add(date(now()), INTERVAL -1 DAY));
 END$$
+
+DELIMITER ;
 
 DELIMITER $$
 

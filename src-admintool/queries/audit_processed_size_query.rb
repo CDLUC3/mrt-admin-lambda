@@ -5,7 +5,7 @@ class AuditProcessedSizeQuery < AdminQuery
   end
 
   def get_title
-    "Audit Files Processed - Last #{@days} days"
+    "Historical Audit Files Processed - Last #{@days} days"
   end
 
   def get_sql

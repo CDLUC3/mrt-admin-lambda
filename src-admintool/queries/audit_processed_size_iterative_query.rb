@@ -5,7 +5,7 @@ class AuditProcessedSizeIterativeQuery < AdminQuery
   end
 
   def get_title
-    "Audit Files Processed on #{@day}"
+    "Audit Files Processed by Hour for #{@day}"
   end
 
   def get_iterative_sql

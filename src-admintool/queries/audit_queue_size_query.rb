@@ -19,7 +19,8 @@ class AuditQueueSizeQuery < AdminQuery
           0
         ) as online_bytes,
         case
-          when verified is null then 'FAIL'
+          when verified is null and min(f.created) < date_add(now(), INTERVAL -1 DAY) then 'FAIL'
+          when verified is null and min(f.created) < date_add(now(), INTERVAL -1 HOUR) then 'WARN'
           when verified < date_add(now(), INTERVAL -1 DAY) then 'FAIL'
           when verified < date_add(now(), INTERVAL -1 HOUR) then 'WARN'
           else 'PASS'

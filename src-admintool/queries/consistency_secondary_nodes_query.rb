@@ -14,8 +14,15 @@ class ConsistencySecondaryNodeQuery < AdminQuery
         count(icin.inv_node_id) as ncount,
         group_concat(number order by number) as nodes,
         case
-          when c.name like '%SLA' then 'WARN'
-          when c.name like '%Service Level Agreement' then 'WARN'
+          when (
+            select
+              aggregate_role
+            from
+              inv.inv_objects o
+            where
+              o.id = c.inv_object_id
+          ) = 'MRT-service-level-agreement'
+            then 'PASS'
           when c.name like 'Merritt %' then 'WARN'
           else 'FAIL'
         end as status
