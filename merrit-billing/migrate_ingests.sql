@@ -27,7 +27,15 @@ DELIMITER $$
 DROP PROCEDURE IF EXISTS update_ingests_processed$$
 CREATE PROCEDURE update_ingests_processed()
 BEGIN
-  call update_ingests_processed_for_day(date_add(date(now()), INTERVAL -1 DAY));
+  call iterate_ingest_range(
+    (
+      select 
+        date_add(max(ingest_date), INTERVAL 1 DAY) 
+      from 
+        ingests_completed
+    ), 
+    date(now())
+  );
 END$$
 
 DELIMITER ;

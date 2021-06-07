@@ -27,7 +27,15 @@ DELIMITER $$
 DROP PROCEDURE IF EXISTS update_audits_processed$$
 CREATE PROCEDURE update_audits_processed()
 BEGIN
-  call update_audits_processed_for_day(date_add(date(now()), INTERVAL -1 DAY));
+  call iterate_audit_range(
+    (
+      select 
+        date_add(max(audit_date), INTERVAL 1 DAY) 
+      from 
+        audits_processed
+    ),
+    date(now())
+  );
 END$$
 
 DELIMITER ;

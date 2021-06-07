@@ -166,7 +166,6 @@ DELIMITER $$
 DROP PROCEDURE IF EXISTS update_billing_range$$
 CREATE PROCEDURE update_billing_range()
 BEGIN
-  set @lastdate = select max(updated) from object_size
   call iterate_range(
     (
       select
@@ -177,6 +176,8 @@ BEGIN
     date(now())
   );
 END$$
+
+DELIMITER ;
 
 DELIMITER $$
 
