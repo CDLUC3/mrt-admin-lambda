@@ -1,19 +1,20 @@
 require 'yaml'
 require 'aws-sdk-ssm'
+require 'aws-sdk-lambda'
 require "base64"
 
 class ConsistencyDriver
-    def initialize(mode, awscli_ver)
+    def initialize(mode)
         @config = YAML.load_file('reports.yml')
-        @awscli_ver = awscli_ver
         region = ENV['AWS_REGION'] || 'us-west-2'
         @ssm_root_path = ENV['SSM_ROOT_PATH'] || ''
         @mode = mode
         @tmpfile = "/tmp/adminrpt.#{@mode}.txt"
 
         @client = Aws::SSM::Client.new(region: region)
-        @admintool = get_parameter("admintool/lambda-arn-base", mode)
-        @colladmin = get_parameter("colladmin/lambda-arn-base", mode)
+        @admintool = get_parameter("admintool/lambda-arn-base", mode).gsub(/^.*function:/,'')
+        @colladmin = get_parameter("colladmin/lambda-arn-base", mode).gsub(/^.*function:/,'')
+        @lambda = Aws::Lambda::Client.new(region: region)
     end
 
     def get_parameter(key, suffix)
@@ -23,11 +24,18 @@ class ConsistencyDriver
     end
 
     def invoke_lambda(arn, params)
-        payload = @awscli_ver == 'v2' ? Base64.encode64(params.to_json) : params.to_json
-        cmd = "aws lambda invoke --function #{arn} --payload '#{payload}' #{@tmpfile} | jq .StatusCode"
-        cmdstat = %x( #{cmd} ).strip!
-        cmdout = %x( jq '.body' #{@tmpfile} | jq -r . | jq .report_path )
-        puts "\t#{cmdstat}: #{cmdout}"
+        begin
+            resp = @lambda.invoke({
+                function_name: arn, 
+                payload: params.to_json 
+            })
+            puts resp.status_code
+            rbody = resp.payload.read
+            rj = JSON.parse(JSON.parse(rbody).fetch("body", {}.to_json))
+            puts rj.fetch("report_path","n/a")
+        rescue => e
+            puts(e.message)
+        end
         sleep 2
     end
 
@@ -47,7 +55,6 @@ end
 
 puts ARGV
 driver = ConsistencyDriver.new(
-    ARGV.length > 0 ? ARGV[0] : 'dev',
-    ARGV.length > 1 ? ARGV[1] : 'v2',
+    ARGV.length > 0 ? ARGV[0] : 'dev'
 )
 driver.run
