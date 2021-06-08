@@ -144,10 +144,11 @@ class AdminTask
   def no_data 
     return_data(
       [[
-        "No data"
+        "No data",
+        "WARN"
       ]],
-      [''],
-      ['Message']
+      ['','status'],
+      ['Message','Status']
     )
   end
 
