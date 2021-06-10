@@ -394,6 +394,8 @@ function appendTable(headers, types, data, filter_col, group_col, show_grand_tot
         if (types[c] == 'status') {
           if (cell.hasClass('status-FAIL')) {
             tr.addClass('status-FAIL');
+          } else if (cell.hasClass('status-INFO')) {
+            tr.addClass('status-INFO');
           } else if (cell.hasClass('status-WARN')) {
             tr.addClass('status-WARN');
           } else if (cell.hasClass('status-PASS')) {
