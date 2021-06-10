@@ -25,6 +25,9 @@ table.results td {
 #consistency.PASS, table.results td.status-PASS {
   color: green;
 }
+#consistency.INFO, table.results td.status-INFO {
+  color: blue;
+}
 #consistency.FAIL, table.results td.status-FAIL {
   color: red;
 }
