@@ -31,7 +31,7 @@ function consistencyStatus() {
     url: lambda_base,
     data: {path: 'report'},
     success: function(data) {
-      var m = data.report_path.match(/(SKIP|PASS|WARN|FAIL)$/);
+      var m = data.report_path.match(/(SKIP|PASS|INFO|WARN|FAIL)$/);
       $("#consistency").text(m[1]).addClass(m[1]);
     }
   });
