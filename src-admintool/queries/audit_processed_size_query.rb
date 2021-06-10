@@ -26,12 +26,12 @@ class AuditProcessedSizeQuery < AdminQuery
         other_files,
         other_bytes,
         case
-          when (audit_date < date_add(now(), INTERVAL -6 DAY))
-            then 'INFO'
           when (all_files > 400000 and online_bytes > 3000000000000)
             then 'PASS'
           when (all_files < 400000 and online_bytes < 3000000000000)
             then 'FAIL'
+          when (audit_date < date_add(now(), INTERVAL -6 DAY))
+            then 'INFO'
           else 'WARN'
         end as status
       from 

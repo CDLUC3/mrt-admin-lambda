@@ -25,6 +25,7 @@ class ConsistencySecondaryNodeQuery < AdminQuery
             then 'INFO'
           when c.name like 'Merritt %' then 'INFO'
           when lower(c.name) like '%service level agreement%' then 'INFO'
+          when c.name like '%SLA' then 'INFO'
           else 'FAIL'
         end as status
       from
