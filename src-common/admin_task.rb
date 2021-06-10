@@ -63,6 +63,7 @@ class AdminTask
       next if row.nil?
       status = evaluate_row_status(row, stat_col)
       next if status == :PASS
+      next if status == :INFO && @report_status == :WARN
       @report_status = status
       return if @report_status == :FAIL
     end
@@ -73,6 +74,7 @@ class AdminTask
     v = row[stat_col]
     return :FAIL if v == "FAIL"
     return :WARN if v == "WARN"
+    return :INFO if v == "INFO"
     :PASS
   end
 
@@ -81,6 +83,7 @@ class AdminTask
     return "WARN" if @report_status == :WARN
     return "PASS" if @report_status == :PASS
     return "SKIP" if @report_status == :SKIP
+    return "INFO" if @report_status == :INFO
     "SKIP"
   end
 
@@ -107,7 +110,7 @@ class AdminTask
     # consistency-reports is intentionally hard coded into the delete
     resp.contents.each do |s3obj|
       k = s3obj.key
-      next unless k =~ %r[consistency-reports.*(SKIP|PASS|WARN|FAIL)$]
+      next unless k =~ %r[consistency-reports.*(SKIP|PASS|INFO|WARN|FAIL)$]
       r = @s3_client.delete_object({
         bucket: @s3bucket,
         key: k
@@ -155,7 +158,7 @@ class AdminTask
   def report_list(path, contents) 
     data = []
     contents.each do |c|
-      m = c.key.match(/\.(SKIP|PASS|FAIL|WARN)$/)
+      m = c.key.match(/\.(SKIP|PASS|INFO|WARN|FAIL)$/)
       stat = m.nil? ? "SKIP" : m[1]
       data.append([c.key, stat])
     end

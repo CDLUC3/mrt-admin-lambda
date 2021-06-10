@@ -22,8 +22,9 @@ class ConsistencySecondaryNodeQuery < AdminQuery
             where
               o.id = c.inv_object_id
           ) = 'MRT-service-level-agreement'
-            then 'PASS'
-          when c.name like 'Merritt %' then 'WARN'
+            then 'INFO'
+          when c.name like 'Merritt %' then 'INFO'
+          when lower(c.name) like '%service level agreement%' then 'INFO'
           else 'FAIL'
         end as status
       from
