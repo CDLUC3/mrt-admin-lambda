@@ -217,8 +217,9 @@ class QueueList < MerrittJson
 
   def to_table
     table = []
-    @jobs.each do |q|
+    @jobs.each_with_index do |q, i|
       table.append(q.to_table_row)
+      break if i >= 2000
     end
     table
   end

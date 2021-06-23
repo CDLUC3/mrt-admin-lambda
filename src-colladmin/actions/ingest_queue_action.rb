@@ -6,7 +6,7 @@ class IngestQueueAction < ForwardToIngestAction
   end
 
   def get_title
-    "List Ingest Queues"
+    "List Ingest Queues (Max 2000 will display)"
   end
 
   def table_headers
