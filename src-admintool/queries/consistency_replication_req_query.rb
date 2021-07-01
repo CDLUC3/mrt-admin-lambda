@@ -14,60 +14,72 @@ class ConsistencyReplicationReqQuery < AdminQuery
   def get_sql
     %{
       select
-      count(distinct p.inv_object_id) as obj,
-      ifnull(
-        sum(
-          case
-            when o.created < date_add(now(), INTERVAL -2 DAY)
-              then 1
-            else 0
-          end
+        count(u.inv_object_id) as obj,
+        sum(os.billable_size) as fbytes,
+        ifnull(
+          sum(
+            case
+              when u.created < date_add(now(), INTERVAL -2 DAY)
+                then 1
+              else 0
+            end
+          ),
+          0
         ),
-        0
-      ),
-      ifnull(
-        sum(
-          case
-            when o.created < date_add(now(), INTERVAL -2 DAY)
-              then 0
-            when o.created < date_add(now(), INTERVAL -1 DAY) 
-              then 1
-            else 0
-          end
+        ifnull(
+          sum(
+            case
+              when u.created < date_add(now(), INTERVAL -2 DAY)
+                then 0
+              when u.created < date_add(now(), INTERVAL -1 DAY) 
+                then 1
+              else 0
+            end
+          ),
+          0
         ),
-        0
-      ),
-      ifnull(
-        sum(
-          case
-            when o.created < date_add(now(), INTERVAL -2 DAY)
-              then 0
-            when o.created < date_add(now(), INTERVAL -1 DAY) 
-              then 0
-            else 1
-          end
-        ),
-        0
-      ),   
-      case
-        when count(distinct p.inv_object_id) = 0 then 'PASS'
-        when count(o.created < date_add(now(), INTERVAL -2 DAY)) > 0 then 'FAIL'
-        when count(o.created < date_add(now(), INTERVAL -1 DAY)) > 0 then 'WARN'
-       else 'PASS'
-      end as status
-    #{sqlfrag_replic_needed}
+        ifnull(
+          sum(
+            case
+              when u.created < date_add(now(), INTERVAL -2 DAY)
+                then 0
+              when u.created < date_add(now(), INTERVAL -1 DAY) 
+                then 0
+              else 1
+            end
+          ),
+          0
+        ),   
+        case
+          when count(distinct u.inv_object_id) = 0 then 'PASS'
+          when count(u.created < date_add(now(), INTERVAL -2 DAY)) > 0 then 'FAIL'
+          when count(u.created < date_add(now(), INTERVAL -1 DAY)) > 0 then 'WARN'
+         else 'PASS'
+        end as status
+      from (
+        select 
+          p.inv_object_id,
+          o.created
+        #{sqlfrag_replic_needed}
+      ) as u
+      inner join object_size os
+        on os.inv_object_id = u.inv_object_id
       ;
     }
   end
 
   def get_headers(results)
-    ['Object Count', '> 2 days', '1-2 days', '< 1 day', 'Status']
+    ['Object Count', 'Byte Count', '> 2 days', '1-2 days', '< 1 day', 'Status']
   end
 
   def get_types(results)
-    ['dataint', 'dataint', 'dataint', 'dataint', 'status']
+    ['dataint', 'bytes', 'dataint', 'dataint', 'dataint', 'status']
   end
 
+  def bytes_unit
+    "1000000000"
+  end
+  
   def init_status
     :PASS
   end

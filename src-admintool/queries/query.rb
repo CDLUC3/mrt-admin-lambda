@@ -206,7 +206,7 @@ class AdminQuery < AdminTask
 
   def sqlfrag_replic_needed
     %{
-      from
+    from
       inv.inv_nodes_inv_objects p
     inner join
       inv.inv_objects o
