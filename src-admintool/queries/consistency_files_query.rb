@@ -22,6 +22,10 @@ class ConsistencyFilesQuery < AdminQuery
             then 'DataOne'
           when c.mnemonic = 'dataone_dash'
             then 'DataOne'
+          when age.inv_object_id = (
+            select id from inv.inv_objects where ark = 'ark:/13030/m5q57br8'
+          )
+            then 'Wasabi Issue 477'
           else
             'Default'
         end as category,
@@ -68,6 +72,9 @@ class ConsistencyFilesQuery < AdminQuery
               when #{@copies} != 2 then 'FAIL'
               when c.mnemonic = 'oneshare_dataup' then 'WARN'
               when c.mnemonic = 'dataone_dash' then 'WARN'
+              when age.inv_object_id = (
+                select id from inv.inv_objects where ark = 'ark:/13030/m5q57br8'
+              ) then 'WARN'
               else 'FAIL'
             end
           when count(age.init_created < date_add(now(), INTERVAL -1 DAY)) > 0 then 'WARN'
