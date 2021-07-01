@@ -15,14 +15,6 @@ class ConsistencyReplicationReqQuery < AdminQuery
     %{
       select
       count(distinct p.inv_object_id) as obj,
-      (
-        select 
-          sum(os.billable_size)
-        from 
-          object_size os
-        where
-          os.inv_object_id = p.inv_object_id
-      ) as fbytes,
       ifnull(
         sum(
           case
@@ -69,17 +61,13 @@ class ConsistencyReplicationReqQuery < AdminQuery
   end
 
   def get_headers(results)
-    ['Object Count', 'Byte Count', '> 2 days', '1-2 days', '< 1 day', 'Status']
+    ['Object Count', '> 2 days', '1-2 days', '< 1 day', 'Status']
   end
 
   def get_types(results)
-    ['dataint', 'bytes', 'dataint', 'dataint', 'dataint', 'status']
+    ['dataint', 'dataint', 'dataint', 'dataint', 'status']
   end
 
-  def bytes_unit
-    "1000000000"
-  end
-  
   def init_status
     :PASS
   end
