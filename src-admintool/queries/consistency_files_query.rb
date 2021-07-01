@@ -15,6 +15,16 @@ class ConsistencyFilesQuery < AdminQuery
   def get_sql
     %{
       select 
+        case
+          when c.mnemonic like 'cdl_dryad%'
+            then 'Dryad'
+          when c.mnemonic = 'oneshare_dataup'
+            then 'DataOne'
+          when c.mnemonic = 'dataone_dash'
+            then 'DataOne'
+          else
+            'Default'
+        end as category,
         count(*),
         ifnull(
           sum(
@@ -53,21 +63,33 @@ class ConsistencyFilesQuery < AdminQuery
         case
           when count(*) = 0 then 'PASS'
           when #{@copies} = 3 then 'PASS'
-          when count(age.init_created < date_add(now(), INTERVAL -2 DAY)) > 0 then 'FAIL'
+          when count(age.init_created < date_add(now(), INTERVAL -2 DAY)) > 0 then 
+            case
+              when #{@copies} != 2 then 'FAIL'
+              when c.mnemonic = 'oneshare_dataup' then 'WARN'
+              when c.mnemonic = 'dataone_dash' then 'WARN'
+              else 'FAIL'
+            end
           when count(age.init_created < date_add(now(), INTERVAL -1 DAY)) > 0 then 'WARN'
           else 'PASS'
         end as status
       #{sqlfrag_audit_files_copies(@copies)}
+      inner join inv.inv_collections_inv_objects icio
+        on age.inv_object_id = icio.inv_object_id
+      inner join inv.inv_collections c
+        on icio.inv_collection_id = c.id
+      group by 
+        category
       ; 
     }
   end
 
   def get_headers(results)
-    ['File Count', '> 2 days', '1-2 days', '< 1 day', 'Status']
+    ['Category', 'File Count', '> 2 days', '1-2 days', '< 1 day', 'Status']
   end
 
   def get_types(results)
-    ['dataint', 'dataint', 'dataint', 'dataint', 'status']
+    ['', 'dataint', 'dataint', 'dataint', 'dataint', 'status']
   end
 
   def init_status
