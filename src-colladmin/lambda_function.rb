@@ -15,6 +15,7 @@ require_relative 'actions/ingest_sword_jobs_action'
 require_relative 'actions/ingest_batch_folders_action'
 require_relative 'actions/ldap_action'
 require_relative 'actions/post_to_ingest_action'
+require_relative 'actions/post_to_ingest_multipart_action.rb'
 
 def get_key_val(obj, key, defval='')
   return "" unless obj
@@ -42,8 +43,8 @@ module LambdaFunctions
         @config = get_config
 
         data = event ? event : {}
-        
-        myparams = get_key_val(data, 'queryStringParameters', data)
+        myparams = data
+
         path = CGI.unescape(get_key_val(myparams, 'path', 'na'))
         result = {message: "Path undefined"}.to_json
 
@@ -69,6 +70,14 @@ module LambdaFunctions
           result = PostToIngestAction.new(@config, path, myparams, "admin/submissions/freeze").get_data
         elsif path == "submissions/unpause" 
           result = PostToIngestAction.new(@config, path, myparams, "admin/submissions/thaw").get_data
+        elsif path == "createProfile/profile" 
+          result = PostToIngestMultipartAction.new(@config, path, myparams, "admin/profile/profile").get_data
+        elsif path == "createProfile/collection" 
+          result = PostToIngestMultipartAction.new(@config, path, myparams, "admin/profile/collection").get_data
+        elsif path == "createProfile/owner" 
+          result = PostToIngestMultipartAction.new(@config, path, myparams, "admin/profile/owner").get_data
+        elsif path == "createProfile/sla" 
+          result = PostToIngestMultipartAction.new(@config, path, myparams, "admin/profile/sla").get_data
         elsif path =~ /ldap\/.*/ 
           result = LDAPAction.make_action(@config, path, myparams).get_data
         end
