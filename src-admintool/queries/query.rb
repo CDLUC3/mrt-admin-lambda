@@ -141,7 +141,8 @@ class AdminQuery < AdminTask
         iterate: @iterate,
         bytes_unit: bytes_unit,
         saveable: is_saveable?,
-        report_path: report_path
+        report_path: report_path,
+        pagination: pagination
       }
       save_report(report_path, report) if is_saveable?
       report

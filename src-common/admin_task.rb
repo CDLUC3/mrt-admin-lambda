@@ -11,8 +11,10 @@ class AdminTask
     @s3consistency = config['s3-consistency-reports']
     @path = path
     @myparams = myparams
-    @format = myparams.key?('format') ? myparams['format'] : 'report'
+    @format = myparams.fetch('format', 'report')
+    @page = myparams.fetch('page', '0').to_i
     @report_status = init_status
+    @known_total = nil
   end
 
   def get_param(key, defval)
@@ -124,12 +126,28 @@ class AdminTask
     })
   end
 
-  def paginated
-    false
+  def paginate_data(fulldata)
+    @known_total = fulldata.length
+    ss = @page * page_size
+    send = ss + page_size 
+    res = fulldata.slice(ss, send)
+    res = [] if res.nil?
+    res
   end
 
-  def known_total
-    nil
+  def pagination
+    return nil unless page_size > 0
+    res = {
+      page_size: page_size
+    }
+    res[:known_total] = @known_total unless @known_total.nil?
+    res[:prior_page] = @page - 1 if @page > 0
+    res[:next_page] = @page + 1 if fulldata.length >= page_size
+    res
+  end
+
+  def page_size
+    0
   end
 
   def return_data(data, types, headers)
@@ -149,8 +167,7 @@ class AdminTask
       bytes_unit: bytes_unit,
       saveable: is_saveable?,
       report_path: report_path,
-      paginated: paginated,
-      known_total: known_total
+      pagination: pagination
     }
   end
 
