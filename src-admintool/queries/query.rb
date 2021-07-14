@@ -146,7 +146,7 @@ class AdminQuery < AdminTask
       save_report(report_path, report) if is_saveable?
       report
     else
-      data_table_to_json(data, headers)
+      data_table_to_json(types, data, headers)
     end
   end
 

@@ -124,6 +124,14 @@ class AdminTask
     })
   end
 
+  def paginated
+    false
+  end
+
+  def known_total
+    nil
+  end
+
   def return_data(data, types, headers)
     evaluate_status(types, data)
     {
@@ -140,7 +148,9 @@ class AdminTask
       iterate: false,
       bytes_unit: bytes_unit,
       saveable: is_saveable?,
-      report_path: report_path
+      report_path: report_path,
+      paginated: paginated,
+      known_total: known_total
     }
   end
 
@@ -189,7 +199,7 @@ class AdminTask
     JSON.parse(result)
   end
 
-  def data_table_to_json(data, headers) 
+  def data_table_to_json(types, data, headers) 
     results = []
     data.each do |r|
       row = {}
