@@ -1,7 +1,4 @@
-require 'json'
-require 'yaml'
-require 'uc3-ssm'
-
+require_relative 'lambda_base'
 require_relative 'actions/action'
 require_relative 'actions/forward_to_ingest_action'
 require_relative 'actions/ingest_queue_action'
@@ -16,16 +13,8 @@ require_relative 'actions/ingest_batch_folders_action'
 require_relative 'actions/ldap_action'
 require_relative 'actions/post_to_ingest_action'
 
-def get_key_val(obj, key, defval='')
-  return "" unless obj
-  return obj[key] if obj[key]
-  return obj[key.to_sym] if obj[key.to_sym]
-  defval
-end
-
 def get_config
   config_file = 'config/database.ssm.yml'
-  config_file = "../src/#{config_file}" unless File.file?(config_file)
   config_block = ENV.key?('MERRITT_ADMIN_CONFIG') ? ENV['MERRITT_ADMIN_CONFIG'] : 'default'
   Uc3Ssm::ConfigResolver.new({
     def_value: 'N/A' 
@@ -36,15 +25,15 @@ def get_config
 end
 
 module LambdaFunctions
-  class Handler
+  class Handler < LambdaBase
     def self.process(event:,context:)
       begin
         @config = get_config
 
         data = event ? event : {}
         
-        myparams = get_key_val(data, 'queryStringParameters', data)
-        path = CGI.unescape(get_key_val(myparams, 'path', 'na'))
+        myparams = LambdaBase.get_key_val(data, 'queryStringParameters', data)
+        path = CGI.unescape(LambdaBase.get_key_val(myparams, 'path', 'na'))
         result = {message: "Path undefined"}.to_json
 
         if path == "profiles" 
