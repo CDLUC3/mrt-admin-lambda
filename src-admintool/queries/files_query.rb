@@ -47,7 +47,7 @@ class FilesQuery < AdminQuery
     } + get_where +
     %{
       order by o.id asc
-      offset #{get_offset} limit #{get_limit};
+      limit #{get_limit} offset #{get_offset};
     }
   end
 

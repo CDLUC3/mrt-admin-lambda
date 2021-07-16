@@ -9,7 +9,7 @@ class ObjectsObjectCopiesNeededQuery < ObjectsQuery
       #{sqlfrag_object_copies(@copies)}
       where
         age.init_created < date_add(now(), INTERVAL -#{@days} DAY)
-      offset #{get_offset} limit #{get_limit};
+      limit #{get_limit} offset #{get_offset};
     }
     stmt = @client.prepare(subsql)
     results = stmt.execute()

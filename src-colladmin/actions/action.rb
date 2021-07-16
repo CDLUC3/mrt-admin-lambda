@@ -19,7 +19,7 @@ class AdminAction < AdminTask
     evaluate_status(table_types, data)
     report = {
       format: 'report',
-      title: get_title,
+      title: get_title_with_pagination,
       headers: table_headers,
       types: table_types,
       data: data,
@@ -31,8 +31,7 @@ class AdminAction < AdminTask
       iterate: false,
       bytes_unit: bytes_unit,
       saveable: is_saveable?,
-      report_path: report_path,
-      pagination: pagination
+      report_path: report_path
     }
     save_report(report_path, report) if is_saveable?
     report.to_json

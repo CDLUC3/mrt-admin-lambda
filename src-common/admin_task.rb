@@ -139,6 +139,7 @@ class AdminTask
   def pagination
     return nil unless page_size > 0
     res = {
+      current_page: @page,
       page_size: page_size
     }
     res[:prior_page] = @page - 1 if @page > 0
@@ -157,7 +158,7 @@ class AdminTask
     evaluate_status(types, data)
     {
       format: 'report',
-      title: get_title,
+      title: get_title_with_pagination,
       headers: headers,
       types: types,
       data: data,
@@ -169,8 +170,7 @@ class AdminTask
       iterate: false,
       bytes_unit: bytes_unit,
       saveable: is_saveable?,
-      report_path: report_path,
-      pagination: pagination
+      report_path: report_path
     }
   end
 
@@ -245,6 +245,15 @@ class AdminTask
     data = get_result_data(results, types)
     headers = get_headers(results)
     format_result_json(types, data, headers)
+  end
+
+  def get_title_with_pagination
+    title = get_title
+    pag = pagination
+    unless pag.nil?
+      title = "#{title} (Page #{@page})"
+    end
+    title
   end
 
   def get_alternative_queries_with_pagination

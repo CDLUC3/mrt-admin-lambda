@@ -43,7 +43,7 @@ class LDAPAction < AdminAction
     return body unless hasTable
     {
       format: 'report',
-      title: get_title,
+      title: get_title_with_pagination,
       headers: table_headers,
       types: table_types,
       data: get_table_rows,

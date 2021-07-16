@@ -129,7 +129,7 @@ class AdminQuery < AdminTask
       evaluate_status(types, data)
       report = {
         format: 'report',
-        title: get_title,
+        title: get_title_with_pagination,
         headers: headers,
         types: types,
         data: data,
@@ -142,8 +142,7 @@ class AdminQuery < AdminTask
         iterate: @iterate,
         bytes_unit: bytes_unit,
         saveable: is_saveable?,
-        report_path: report_path,
-        pagination: pagination
+        report_path: report_path
       }
       save_report(report_path, report) if is_saveable?
       report

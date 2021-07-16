@@ -76,7 +76,7 @@ class ObjectsMultipleCollQuery < ObjectsQuery
     } + get_where +
     %{  
       order by #{@sort}
-      offset #{get_offset} limit #{get_limit};
+      limit #{get_limit} offset #{get_offset};
     }
   end
 
