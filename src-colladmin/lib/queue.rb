@@ -217,7 +217,10 @@ class QueueList < MerrittJson
 
   def to_table
     table = []
-    @jobs.each_with_index do |q, i|
+    @jobs.sort{
+      # reverse sort on status then date, "Completed" should fall to bottom
+      |a,b| a.status == b.status ? b.date <=> a.date : b.status <=> a.status
+    }.each_with_index do |q, i|
       table.append(q.to_table_row)
     end
     table
