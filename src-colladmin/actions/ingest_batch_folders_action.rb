@@ -163,8 +163,8 @@ class BatchFolderList < MerrittJson
   def to_table
     table = []
     @batchFolders.sort {
-      # reverse sort on date
-      |a,b| b.dtime <=> a.dtime
+      # sort on status, then reverse sort on date
+      |a,b| a.status == b.status ? b.dtime <=> a.dtime : AdminTask.status_sort_val(a.status) <=> AdminTask.status_sort_val(b.status)
     }.each do |bf|
       table.append(bf.table_row)
     end

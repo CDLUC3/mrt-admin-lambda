@@ -89,6 +89,14 @@ class AdminTask
     "SKIP"
   end
 
+  def self.status_sort_val(val)
+    return 0 if val == "FAIL"
+    return 1 if val == "WARN"
+    return 2 if val == "INFO"
+    return 3 if val == "PASS"
+    return 4 if val == "SKIP"
+  end
+
   def report_date
     Time.new.strftime('%Y-%m-%d')
   end

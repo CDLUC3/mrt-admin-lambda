@@ -52,9 +52,13 @@ class QueueEntry < MerrittJson
       :queueId, 
       MerrittJsonProperty.new("Queue ID").lookupValue(json, "que", "iD")
     )
+    qs = getValue(:qstatus, "")
+    st = 'INFO'
+    st = 'FAIL' if (qs == "Failed")
+    st = 'PASS' if (qs == "Completed")
     addProperty(
       :status, 
-      MerrittJsonProperty.new("Status", getValue(:qstatus, "") == "Failed" ? 'FAIL' : 'PASS')
+      MerrittJsonProperty.new("Status", st)
     )
   end
 
@@ -219,7 +223,7 @@ class QueueList < MerrittJson
     table = []
     @jobs.sort{
       # reverse sort on status then date, "Completed" should fall to bottom
-      |a,b| a.status == b.status ? b.date <=> a.date : b.status <=> a.status
+      |a,b| a.status == b.status ? b.date <=> a.date : AdminTask.status_sort_val(a.status) <=> AdminTask.status_sort_val(b.status)
     }.each_with_index do |q, i|
       table.append(q.to_table_row)
     end
