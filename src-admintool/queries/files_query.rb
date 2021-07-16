@@ -51,10 +51,6 @@ class FilesQuery < AdminQuery
     }
   end
 
-  def page_size
-    get_limit
-  end
-
   def get_headers(results)
     ['Object Id','Ark', 'Title', 'Version', 'Coll Id', 'Collection', 'File Count', 'Billable Size']
   end
@@ -67,4 +63,7 @@ class FilesQuery < AdminQuery
     get_alternative_limit_queries
   end
 
+  def page_size
+    get_limit
+  end
 end

@@ -85,4 +85,9 @@ class ObjectsMultipleCollQuery < ObjectsQuery
       @report_status = :WARN
     end
   end
+
+  def page_size
+    get_limit
+  end
+
 end

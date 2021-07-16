@@ -55,12 +55,14 @@ class ObjectsQuery < AdminQuery
     } + get_where +
     %{  
       order by #{@sort}
-      limit #{get_limit} offset #{get_offset};
-    }
+    } + get_obj_limit_query
   end
 
-  def page_size
-    get_limit
+  # disable the following if limit has already been applied
+  def get_obj_limit_query
+    %{
+      limit #{get_limit} offset #{get_offset};
+    }
   end
 
   def get_headers(results)
@@ -73,6 +75,10 @@ class ObjectsQuery < AdminQuery
 
   def get_alternative_queries
     get_alternative_limit_queries
+  end
+
+  def page_size
+    get_limit
   end
 
 end

@@ -13,8 +13,8 @@ class ObjectsObjectCopiesNeededQuery < ObjectsQuery
     }
     stmt = @client.prepare(subsql)
     results = stmt.execute()
-    @ids = []
-    @qs = []
+    @ids = [-1]
+    @qs = ['?']
     results.each do |r|
       @ids.push(r.values[0])
       @qs.push('?')
@@ -54,4 +54,11 @@ class ObjectsObjectCopiesNeededQuery < ObjectsQuery
     ]
   end
 
+  def page_size
+    get_limit
+  end
+
+  def get_obj_limit_query
+    ""
+  end
 end

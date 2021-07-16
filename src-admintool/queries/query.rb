@@ -90,7 +90,6 @@ class AdminQuery < AdminTask
 
   def run_query_sql
     sql = get_sql
-    puts(sql)
     stmt = @client.prepare(sql)
     query_params = resolve_params
     results = stmt.execute(*query_params)
@@ -285,6 +284,12 @@ class AdminQuery < AdminTask
           inv_object_id 
       ) as age
     }
+  end
+
+  # since limit/offset have already been applied, do not slice the resulting array
+  def paginate_data(fulldata)
+    @known_total = fulldata.length
+    fulldata
   end
 
 end
