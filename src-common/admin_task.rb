@@ -130,7 +130,7 @@ class AdminTask
     @known_total = fulldata.length
     return fulldata if page_size == 0 || fulldata.length <= page_size
     ss = @page * page_size
-    send = ss + page_size 
+    send = page_size 
     res = fulldata.slice(ss, send)
     res = [] if res.nil?
     res

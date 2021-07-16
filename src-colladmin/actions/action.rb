@@ -16,6 +16,7 @@ class AdminAction < AdminTask
   def convertJsonToTable(body)
     return body unless hasTable
     data = table_rows(body)
+    data = paginate_data(data)
     evaluate_status(table_types, data)
     report = {
       format: 'report',

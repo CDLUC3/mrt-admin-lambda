@@ -6,7 +6,7 @@ class IngestQueueAction < ForwardToIngestAction
   end
 
   def get_title
-    "List Ingest Queues (Max 2000 will display)"
+    "List Ingest Queues"
   end
 
   def table_headers
@@ -37,6 +37,10 @@ class IngestQueueAction < ForwardToIngestAction
         url: '/index.html?path=recent_ingests'
       }
     ]
+  end
+
+  def page_size
+    100
   end
 
 end

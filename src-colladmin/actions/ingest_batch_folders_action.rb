@@ -51,6 +51,10 @@ class IngestBatchFoldersAction < ForwardToIngestAction
     ]
   end
 
+  def page_size
+    500
+  end
+
 end
 
 class BatchFolder < MerrittJson
