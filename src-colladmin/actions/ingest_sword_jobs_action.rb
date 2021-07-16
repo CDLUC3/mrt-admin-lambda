@@ -52,6 +52,10 @@ class IngestSwordJobsAction < ForwardToIngestAction
     ]
   end
 
+  def page_size
+    1000
+  end
+
 end
 
 class Job < MerrittJson

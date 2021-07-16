@@ -11,8 +11,10 @@ class AdminTask
     @s3consistency = config['s3-consistency-reports']
     @path = path
     @myparams = myparams
-    @format = myparams.key?('format') ? myparams['format'] : 'report'
+    @format = myparams.fetch('format', 'report')
+    @page = myparams.fetch('page', '0').to_i
     @report_status = init_status
+    @known_total = nil
   end
 
   def get_param(key, defval)
@@ -87,6 +89,14 @@ class AdminTask
     "SKIP"
   end
 
+  def self.status_sort_val(val)
+    return 0 if val == "FAIL"
+    return 1 if val == "WARN"
+    return 2 if val == "INFO"
+    return 3 if val == "PASS"
+    return 4 if val == "SKIP"
+  end
+
   def report_date
     Time.new.strftime('%Y-%m-%d')
   end
@@ -124,19 +134,39 @@ class AdminTask
     })
   end
 
-  def paginated
-    false
+  def paginate_data(fulldata)
+    @known_total = fulldata.length
+    return fulldata if page_size == 0 || fulldata.length <= page_size
+    ss = @page * page_size
+    send = page_size 
+    res = fulldata.slice(ss, send)
+    res = [] if res.nil?
+    res
   end
 
-  def known_total
-    nil
+  def pagination
+    return nil unless page_size > 0
+    res = {
+      current_page: @page,
+      page_size: page_size
+    }
+    res[:prior_page] = @page - 1 if @page > 0
+    if !@known_total.nil?
+      res[:known_total] = @known_total
+      res[:next_page] = @page + 1 if @known_total >= page_size
+    end
+    res
+  end
+
+  def page_size
+    0
   end
 
   def return_data(data, types, headers)
     evaluate_status(types, data)
     {
       format: 'report',
-      title: get_title,
+      title: get_title_with_pagination,
       headers: headers,
       types: types,
       data: data,
@@ -144,13 +174,11 @@ class AdminTask
       group_col: nil,
       show_grand_total: false,
       merritt_path: @merritt_path,
-      alternative_queries: get_alternative_queries,
+      alternative_queries: get_alternative_queries_with_pagination,
       iterate: false,
       bytes_unit: bytes_unit,
       saveable: is_saveable?,
-      report_path: report_path,
-      paginated: paginated,
-      known_total: known_total
+      report_path: report_path
     }
   end
 
@@ -225,6 +253,39 @@ class AdminTask
     data = get_result_data(results, types)
     headers = get_headers(results)
     format_result_json(types, data, headers)
+  end
+
+  def get_title_with_pagination
+    title = get_title
+    pag = pagination
+    unless pag.nil?
+      title = "#{title} (Page #{@page})"
+    end
+    title
+  end
+
+  def get_alternative_queries_with_pagination
+    qarr = get_alternative_queries
+    pag = pagination
+    unless pag.nil?
+      if pag.key?(:prior_page)
+        params = @myparams.clone
+        params['page'] = pag[:prior_page]
+        qarr.append({
+          label: "Prev: Page #{@page-1}",
+          url: params_to_str(params)
+        })
+      end
+      if pag.key?(:next_page)
+        params = @myparams.clone
+        params['page'] = pag[:next_page]
+        qarr.append({
+          label: "Next: Page #{@page+1}",
+          url: params_to_str(params)
+        })
+      end
+    end
+    qarr
   end
 
   def get_alternative_queries

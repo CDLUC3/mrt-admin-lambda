@@ -4,16 +4,16 @@ class ReplicationNeededQuery < ObjectsQuery
     @days = CGI.unescape(get_param('days', '0')).to_i
     subsql = %{
       select
-        p.inv_object_id
+        distinct p.inv_object_id
       #{sqlfrag_replic_needed}
       and
         o.created < date_add(now(), INTERVAL -#{@days} DAY)
-      limit #{get_limit};
+      limit #{get_limit} offset #{get_offset};
     }
     stmt = @client.prepare(subsql)
     results = stmt.execute()
-    @ids = []
-    @qs = []
+    @ids = [-1]
+    @qs = ['?']
     results.each do |r|
       @ids.push(r.values[0])
       @qs.push('?')
@@ -53,4 +53,11 @@ class ReplicationNeededQuery < ObjectsQuery
     ]
   end
 
+  def page_size
+    get_limit
+  end
+
+  def get_obj_limit_query
+    ""
+  end
 end

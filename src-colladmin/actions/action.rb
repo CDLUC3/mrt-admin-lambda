@@ -16,10 +16,11 @@ class AdminAction < AdminTask
   def convertJsonToTable(body)
     return body unless hasTable
     data = table_rows(body)
+    data = paginate_data(data)
     evaluate_status(table_types, data)
     report = {
       format: 'report',
-      title: get_title,
+      title: get_title_with_pagination,
       headers: table_headers,
       types: table_types,
       data: data,
@@ -27,7 +28,7 @@ class AdminAction < AdminTask
       group_col: nil,
       show_grand_total: false,
       merritt_path: @merritt_path,
-      alternative_queries: get_alternative_queries,
+      alternative_queries: get_alternative_queries_with_pagination,
       iterate: false,
       bytes_unit: bytes_unit,
       saveable: is_saveable?,

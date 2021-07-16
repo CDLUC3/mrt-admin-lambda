@@ -1,4 +1,8 @@
 class AuditQueueSizeQuery < AdminQuery
+  def initialize(query_factory, path, myparams)
+    super(query_factory, path, myparams)
+  end
+
   def get_title
     "Audit Queue Size Query"
   end

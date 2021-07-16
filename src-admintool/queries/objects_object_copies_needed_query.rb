@@ -9,12 +9,12 @@ class ObjectsObjectCopiesNeededQuery < ObjectsQuery
       #{sqlfrag_object_copies(@copies)}
       where
         age.init_created < date_add(now(), INTERVAL -#{@days} DAY)
-      limit #{get_limit};
+      limit #{get_limit} offset #{get_offset};
     }
     stmt = @client.prepare(subsql)
     results = stmt.execute()
-    @ids = []
-    @qs = []
+    @ids = [-1]
+    @qs = ['?']
     results.each do |r|
       @ids.push(r.values[0])
       @qs.push('?')
@@ -54,4 +54,11 @@ class ObjectsObjectCopiesNeededQuery < ObjectsQuery
     ]
   end
 
+  def page_size
+    get_limit
+  end
+
+  def get_obj_limit_query
+    ""
+  end
 end

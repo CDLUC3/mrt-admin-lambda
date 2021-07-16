@@ -76,7 +76,7 @@ class ObjectsMultipleCollQuery < ObjectsQuery
     } + get_where +
     %{  
       order by #{@sort}
-      limit #{get_limit};
+      limit #{get_limit} offset #{get_offset};
     }
   end
 
@@ -85,4 +85,9 @@ class ObjectsMultipleCollQuery < ObjectsQuery
       @report_status = :WARN
     end
   end
+
+  def page_size
+    get_limit
+  end
+
 end

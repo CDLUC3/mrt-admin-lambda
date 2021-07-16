@@ -43,7 +43,7 @@ class LDAPAction < AdminAction
     return body unless hasTable
     {
       format: 'report',
-      title: get_title,
+      title: get_title_with_pagination,
       headers: table_headers,
       types: table_types,
       data: get_table_rows,
@@ -51,7 +51,7 @@ class LDAPAction < AdminAction
       group_col: nil,
       show_grand_total: false,
       merritt_path: @merritt_path,
-      alternative_queries: get_alternative_queries,
+      alternative_queries: get_alternative_queries_with_pagination,
       iterate: false
     }.to_json
   end
