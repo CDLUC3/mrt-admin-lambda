@@ -14,25 +14,26 @@ require_relative 'actions/ldap_action'
 require_relative 'actions/post_to_ingest_action'
 
 def get_config
-  config_file = 'config/database.ssm.yml'
-  config_block = ENV.key?('MERRITT_ADMIN_CONFIG') ? ENV['MERRITT_ADMIN_CONFIG'] : 'default'
-  Uc3Ssm::ConfigResolver.new({
-    def_value: 'N/A' 
-  }).resolve_file_values({
-    file: config_file, 
-    return_key: config_block
-  })
+  
 end
 
 module LambdaFunctions
   class Handler < LambdaBase
     def self.process(event:,context:)
       begin
-        @config = get_config
+        config_file = 'config/database.ssm.yml'
+        config_block = ENV.key?('MERRITT_ADMIN_CONFIG') ? ENV['MERRITT_ADMIN_CONFIG'] : 'default'
+        @config = Uc3Ssm::ConfigResolver.new({
+          def_value: 'N/A' 
+        }).resolve_file_values({
+          file: config_file, 
+          return_key: config_block
+        })
 
         data = event ? event : {}
         
-        myparams = LambdaBase.get_key_val(data, 'queryStringParameters', data)
+        #myparams = LambdaBase.get_key_val(data, 'queryStringParameters', data)
+        myparams = LambdaBase.get_params_from_event(event)
         path = CGI.unescape(LambdaBase.get_key_val(myparams, 'path', 'na'))
         result = {message: "Path undefined"}.to_json
 

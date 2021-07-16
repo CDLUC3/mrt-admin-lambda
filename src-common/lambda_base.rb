@@ -3,6 +3,22 @@ require 'yaml'
 require 'uc3-ssm'
 
 class LambdaBase
+  # Handle GET or POST event structures passed in via the ALB
+  def self.get_params_from_event(event)
+    data = event ? event : {}
+    method = data.fetch('httpMethod', 'GET')
+
+    return data.fetch('queryStringParameters', data) if method == 'GET'
+ 
+    if data['isBase64Encoded'] && data.key?('body')
+      body = Base64.decode64(data['body'])
+      return CGI::parse(body).transform_values(&:first)
+    end
+    body = data.fetch('body', '')
+    return {} if body.empty?            
+    CGI::parse(body).transform_values(&:first)
+  end
+
   def self.get_key_val(obj, key, defval='')
     return "" unless obj
     return obj[key] if obj[key]

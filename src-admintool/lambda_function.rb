@@ -7,21 +7,6 @@ require_relative 'queries/query_factory'
 
 module LambdaFunctions
   class Handler
-    # Handle GET or POST event structures passed in via the ALB
-    def self.get_params_from_event(event)
-      data = event ? event : {}
-      method = data.fetch('httpMethod', 'GET')
-
-      return data.fetch('queryStringParameters', data) if method == 'GET'
-
-      if data['isBase64Encoded'] && data.key?('body')
-        body = Base64.decode64(data['body'])
-        return CGI::parse(body).transform_values(&:first)
-      end
-      body = data.fetch('body', '')
-      return {} if body.empty?            
-      CGI::parse(body).transform_values(&:first)
-    end
 
     def self.process(event:,context:)
       begin
@@ -31,7 +16,7 @@ module LambdaFunctions
         dbconf = @config.fetch('dbconf', {})
         client = get_mysql(dbconf)
 
-        myparams = get_params_from_event(event)
+        myparams = LambdaBase.get_params_from_event(event)
         puts(myparams)
 
         path = LambdaBase.get_key_val(myparams, 'path', 'na')
