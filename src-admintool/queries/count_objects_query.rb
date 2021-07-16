@@ -1,4 +1,8 @@
 class CountObjectsQuery < AdminQuery
+  def initialize(query_factory, path, myparams)
+    super(query_factory, path, myparams)
+  end
+
   def get_title
     "Object Counts by Collection"
   end

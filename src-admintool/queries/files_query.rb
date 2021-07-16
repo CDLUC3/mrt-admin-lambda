@@ -1,4 +1,8 @@
 class FilesQuery < AdminQuery
+  def initialize(query_factory, path, myparams)
+    super(query_factory, path, myparams)
+  end
+
   def get_title
     "File Query"
   end
@@ -43,8 +47,12 @@ class FilesQuery < AdminQuery
     } + get_where +
     %{
       order by o.id asc
-      limit #{get_limit};
+      offset #{get_offset} limit #{get_limit};
     }
+  end
+
+  def page_size
+    get_limit
   end
 
   def get_headers(results)

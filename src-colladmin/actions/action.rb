@@ -27,7 +27,7 @@ class AdminAction < AdminTask
       group_col: nil,
       show_grand_total: false,
       merritt_path: @merritt_path,
-      alternative_queries: get_alternative_queries,
+      alternative_queries: get_alternative_queries_with_pagination,
       iterate: false,
       bytes_unit: bytes_unit,
       saveable: is_saveable?,

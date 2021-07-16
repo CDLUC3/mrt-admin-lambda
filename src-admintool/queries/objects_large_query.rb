@@ -10,7 +10,7 @@ class ObjectsLargeQuery < ObjectsQuery
         f.inv_object_id
       having
         sum(f.billable_size) > 1073741824
-      limit #{get_limit};
+      offset #{get_offset} limit #{get_limit};
     }
     stmt = @client.prepare(subsql)
     results = stmt.execute()

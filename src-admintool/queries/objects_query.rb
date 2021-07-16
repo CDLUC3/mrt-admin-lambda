@@ -55,8 +55,12 @@ class ObjectsQuery < AdminQuery
     } + get_where +
     %{  
       order by #{@sort}
-      limit #{get_limit};
+      offset #{get_offset} limit #{get_limit};
     }
+  end
+
+  def page_size
+    get_limit
   end
 
   def get_headers(results)

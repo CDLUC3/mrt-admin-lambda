@@ -90,6 +90,7 @@ class AdminQuery < AdminTask
 
   def run_query_sql
     sql = get_sql
+    puts(sql)
     stmt = @client.prepare(sql)
     query_params = resolve_params
     results = stmt.execute(*query_params)
@@ -120,7 +121,7 @@ class AdminQuery < AdminTask
       end
       data.push(rdata)
     end
-    data
+    paginate_data(data)
   end
 
   def format_result_json(types, data, headers)
@@ -137,7 +138,7 @@ class AdminQuery < AdminTask
         show_grand_total: show_grand_total,
         show_iterative_total: show_iterative_total,
         merritt_path: @merritt_path,
-        alternative_queries: get_alternative_queries,
+        alternative_queries: get_alternative_queries_with_pagination,
         iterate: @iterate,
         bytes_unit: bytes_unit,
         saveable: is_saveable?,
@@ -178,6 +179,10 @@ class AdminQuery < AdminTask
     @limit
   end
 
+  def get_offset
+    @page * page_size
+  end
+
   def get_default_limit
     50
   end
@@ -193,7 +198,7 @@ class AdminQuery < AdminTask
       limits.append(limit) if limit <= get_max_limit
     end
     limits.each do |limit|
-      params = @myparams
+      params = @myparams.clone
       params['limit'] = limit
       queries.append({
         label: "Limit #{limit}", 

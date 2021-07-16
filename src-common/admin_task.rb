@@ -128,6 +128,7 @@ class AdminTask
 
   def paginate_data(fulldata)
     @known_total = fulldata.length
+    return fulldata if page_size == 0 || fulldata.length <= page_size
     ss = @page * page_size
     send = ss + page_size 
     res = fulldata.slice(ss, send)
@@ -140,9 +141,11 @@ class AdminTask
     res = {
       page_size: page_size
     }
-    res[:known_total] = @known_total unless @known_total.nil?
     res[:prior_page] = @page - 1 if @page > 0
-    res[:next_page] = @page + 1 if fulldata.length >= page_size
+    if !@known_total.nil?
+      res[:known_total] = @known_total
+      res[:next_page] = @page + 1 if @known_total >= page_size
+    end
     res
   end
 
@@ -162,7 +165,7 @@ class AdminTask
       group_col: nil,
       show_grand_total: false,
       merritt_path: @merritt_path,
-      alternative_queries: get_alternative_queries,
+      alternative_queries: get_alternative_queries_with_pagination,
       iterate: false,
       bytes_unit: bytes_unit,
       saveable: is_saveable?,
@@ -242,6 +245,30 @@ class AdminTask
     data = get_result_data(results, types)
     headers = get_headers(results)
     format_result_json(types, data, headers)
+  end
+
+  def get_alternative_queries_with_pagination
+    qarr = get_alternative_queries
+    pag = pagination
+    unless pag.nil?
+      if pag.key?(:prior_page)
+        params = @myparams.clone
+        params['page'] = pag[:prior_page]
+        qarr.append({
+          label: "Prev: Page #{@page-1}",
+          url: params_to_str(params)
+        })
+      end
+      if pag.key?(:next_page)
+        params = @myparams.clone
+        params['page'] = pag[:next_page]
+        qarr.append({
+          label: "Next: Page #{@page+1}",
+          url: params_to_str(params)
+        })
+      end
+    end
+    qarr
   end
 
   def get_alternative_queries

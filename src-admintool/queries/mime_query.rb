@@ -1,4 +1,8 @@
 class MimeQuery < AdminQuery
+  def initialize(query_factory, path, myparams)
+    super(query_factory, path, myparams)
+  end
+
   def get_title
     "Mime Groups (Producer Files)"
   end

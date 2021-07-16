@@ -1,4 +1,8 @@
 class NodesQuery < AdminQuery
+  def initialize(query_factory, path, myparams)
+    super(query_factory, path, myparams)
+  end
+
   def get_title
     "Storage Nodes"
   end

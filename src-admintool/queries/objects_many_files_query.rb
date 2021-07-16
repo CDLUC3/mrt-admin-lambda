@@ -10,7 +10,7 @@ class ObjectsManyFilesQuery < ObjectsQuery
         f.inv_object_id
       having
         count(f.id) > 1000
-      limit #{get_limit};
+      offset #{get_offset} limit #{get_limit};
     }
     stmt = @client.prepare(subsql)
     results = stmt.execute()

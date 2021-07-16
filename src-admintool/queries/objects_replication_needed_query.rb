@@ -8,7 +8,7 @@ class ReplicationNeededQuery < ObjectsQuery
       #{sqlfrag_replic_needed}
       and
         o.created < date_add(now(), INTERVAL -#{@days} DAY)
-      limit #{get_limit};
+      offset #{get_offset} limit #{get_limit};
     }
     stmt = @client.prepare(subsql)
     results = stmt.execute()
