@@ -53,9 +53,15 @@ class ObjectsQuery < AdminQuery
       inner join inv.inv_collections c
         on icio.inv_collection_id = c.id
     } + get_where +
-    %{
+    %{  
       order by #{@sort}
-      limit #{get_limit};
+    } + get_obj_limit_query
+  end
+
+  # disable the following if limit has already been applied
+  def get_obj_limit_query
+    %{
+      limit #{get_limit} offset #{get_offset};
     }
   end
 
@@ -69,6 +75,10 @@ class ObjectsQuery < AdminQuery
 
   def get_alternative_queries
     get_alternative_limit_queries
+  end
+
+  def page_size
+    get_limit
   end
 
 end

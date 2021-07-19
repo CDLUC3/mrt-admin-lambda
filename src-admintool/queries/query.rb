@@ -1,10 +1,9 @@
-require 'cgi'
-class AdminQuery
+require_relative '../admin_task'
+
+class AdminQuery < AdminTask
   def initialize(query_factory, path, myparams)
+    super(query_factory.config, path, myparams)
     @client = query_factory.client
-    @merritt_path = query_factory.merritt_path
-    @path = path
-    @myparams = myparams
     @limit = @myparams.fetch("limit", get_default_limit.to_s).to_i
     @limit = @limit > get_max_limit ? get_max_limit : @limit
     @iterate = myparams.key?('iterate')
@@ -12,10 +11,6 @@ class AdminQuery
     @itparam2 = get_param('itparam2', '')
     @itparam3 = get_param('itparam3', '')
     @format = myparams.key?('format') ? myparams['format'] : 'report'
-  end
-
-  def get_param(key, defval)
-    @myparams.key?(key) ? CGI.unescape(@myparams[key].strip) : defval
   end
 
   def get_title
@@ -28,6 +23,10 @@ class AdminQuery
 
   def get_group_col
     nil
+  end
+
+  def show_iterative_total
+    false
   end
 
   def show_grand_total
@@ -121,56 +120,33 @@ class AdminQuery
       end
       data.push(rdata)
     end
-    data
-  end
-
-  def is_number? string
-    true if Float(string) rescue false
-  end
-  
-  def is_int? string
-    true if Integer(string) rescue false
-  end
-
-  def bytes_unit
-    "1"
+    paginate_data(data)
   end
 
   def format_result_json(types, data, headers)
     if @format == 'report'
-      {
+      evaluate_status(types, data)
+      report = {
         format: 'report',
-        title: get_title,
+        title: get_title_with_pagination,
         headers: headers,
         types: types,
         data: data,
         filter_col: get_filter_col,
         group_col: get_group_col,
         show_grand_total: show_grand_total,
+        show_iterative_total: show_iterative_total,
         merritt_path: @merritt_path,
-        alternative_queries: get_alternative_queries,
+        alternative_queries: get_alternative_queries_with_pagination,
         iterate: @iterate,
-        bytes_unit: bytes_unit
+        bytes_unit: bytes_unit,
+        saveable: is_saveable?,
+        report_path: report_path
       }
+      save_report(report_path, report) if is_saveable?
+      report
     else
-      results = []
-      data.each do |r|
-        row = {}
-        headers.each_with_index do |c, i|
-          if types[i] != 'na'
-            row[c]=r[i]
-            if is_int?(row[c])
-              row[c] = Integer(row[c])
-            elsif is_number?(row[c])
-              row[c] = Float(row[c])
-            end
-          end
-        end
-        results.push(row)
-      end
-      {
-        data: results
-      }
+      data_table_to_json(types, data, headers)
     end
   end
 
@@ -201,22 +177,16 @@ class AdminQuery
     @limit
   end
 
+  def get_offset
+    @page * page_size
+  end
+
   def get_default_limit
     50
   end
 
   def get_max_limit
     500
-  end
-
-  def params_to_str(params)
-    pstr = ""
-    params.each do |k,v|
-      pstr = "#{pstr}&" unless pstr.empty? 
-      v = CGI.unescape(v) if v.instance_of?(String)
-      pstr = "#{pstr}#{k}=#{v}"
-    end 
-    pstr
   end
 
   def get_alternative_limit_queries
@@ -226,7 +196,7 @@ class AdminQuery
       limits.append(limit) if limit <= get_max_limit
     end
     limits.each do |limit|
-      params = @myparams
+      params = @myparams.clone
       params['limit'] = limit
       queries.append({
         label: "Limit #{limit}", 
@@ -234,6 +204,92 @@ class AdminQuery
       })
     end
     queries
+  end
+
+  # Re-usable query fragments
+
+  def sqlfrag_replic_needed
+    %{
+    from
+      inv.inv_nodes_inv_objects p
+    inner join
+      inv.inv_objects o
+    on 
+      o.id = p.inv_object_id
+    where
+      p.role='primary'
+    and
+      not exists(
+        select
+          1
+        from
+          inv.inv_nodes_inv_objects s
+        where
+          s.role='secondary'
+        and
+          p.inv_object_id = s.inv_object_id
+      )  
+    }
+  end
+
+  def sqlfrag_audit_files_copies(copies)
+    %{
+      from (
+        select 
+          a.inv_object_id,
+          a.inv_file_id,
+          min(created) as init_created
+        from
+          inv.inv_audits a
+        inner join (
+          select 
+            inv_file_id, 
+            count(*) 
+          from 
+            inv.inv_audits 
+          group by 
+            inv_file_id 
+          having 
+            count(*) = #{copies}
+        ) as copies
+          on copies.inv_file_id = a.inv_file_id
+        group by 
+          inv_object_id,
+          inv_file_id 
+      ) as age
+    }
+  end
+
+  def sqlfrag_object_copies(copies)
+    %{
+      from (
+        select 
+          inio.inv_object_id,
+          min(created) as init_created
+        from
+          inv.inv_nodes_inv_objects inio
+        inner join (
+          select 
+            inv_object_id, 
+            count(*) 
+          from 
+            inv.inv_nodes_inv_objects 
+          group by 
+            inv_object_id 
+          having 
+            count(*) = #{copies}
+        ) as copies
+          on copies.inv_object_id = inio.inv_object_id
+        group by 
+          inv_object_id 
+      ) as age
+    }
+  end
+
+  # since limit/offset have already been applied, do not slice the resulting array
+  def paginate_data(fulldata)
+    @known_total = fulldata.length
+    fulldata
   end
 
 end

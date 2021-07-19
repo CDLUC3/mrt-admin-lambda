@@ -14,6 +14,8 @@ $(document).ready(function(){
   urlbase = path == '' ? '' : lambda_base + "/" + path;
   var url = path == '' ? '' : urlbase; // + document.location.search;
 
+  consistencyStatus();
+
   if (url != '') {
     showUrl(url);
     $("#menu").hide();
@@ -21,6 +23,20 @@ $(document).ready(function(){
     $("#menu").show();
   }
 });
+
+function consistencyStatus() {
+  $.ajax({
+    dataType: "json",
+    method: 'GET',
+    url: lambda_base,
+    data: {path: 'report'},
+    success: function(data) {
+      var m = data.report_path.match(/(SKIP|PASS|INFO|WARN|FAIL)$/);
+      $("#consistency").text(m[1]).addClass(m[1]);
+    }
+  });
+
+}
 
 function updateBytesUnits() {
   var factor = $("#bytes").val();
@@ -123,6 +139,7 @@ function showUrl(url) {
 
 function processResult(data) {
   $("h1").text(data.title);
+  $(".report_path").text(data.report_path);
 
   if (data.format == 'report'){
     createTable(
@@ -132,6 +149,7 @@ function processResult(data) {
       data.filter_col,
       data.group_col,
       data.show_grand_total,
+      data.show_iterative_total,
       data.merritt_path,
       data.alternative_queries,
       data.iterate
@@ -186,9 +204,21 @@ function postLoad() {
   });
 }
 
-function query_iterate(){
+function query_iterate(show_iterative_total, types, data){
+  for(var r=0; r<data.length; r++) {
+    alldata.push(data[r]);
+  }
   if (iterativeParams.length == 0) {
     sorttable.makeSortable($("#data-table")[0]);
+    if (show_iterative_total) {
+      totr = createTotalRow("grandtotal", null, null, types, "")
+        .appendTo("#data-table tbody");
+      var gtotdata = createTotalData(types);
+      for(var r=0; r<alldata.length; r++) {
+        updateTotalData(gtotdata, types, alldata[r]);
+      }
+      updateTotalRow(totr, types, gtotdata);
+    }
     $("#in-progress").dialog("close");
     $("#iprogress").text("");
     postLoad();
@@ -207,6 +237,7 @@ function query_iterate(){
           data.filter_col,
           data.group_col,
           data.show_grand_total,
+          data.show_iterative_total,
           data.merritt_path
         )
       },
@@ -218,7 +249,8 @@ function query_iterate(){
   }
 }
 
-function createTable(headers, types, data, filter_col, group_col, show_grand_total, merritt_path, alternative_queries, iterate) {
+var alldata = [];
+function createTable(headers, types, data, filter_col, group_col, show_grand_total, show_iterative_total, merritt_path, alternative_queries, iterate) {
   $("p.buttons")
     .show();
   $('#alternative ul').empty().hide();
@@ -243,10 +275,10 @@ function createTable(headers, types, data, filter_col, group_col, show_grand_tot
   if (iterate) {
     $("#exportJson").hide();
     iterativeParams = data;
-    query_iterate();
+    query_iterate(show_iterative_total, types, data);
   } else {
     $("#exportJson").show();
-    appendTable(headers, types, data, filter_col, group_col, show_grand_total, merritt_path);
+    appendTable(headers, types, data, filter_col, group_col, show_grand_total, show_iterative_total, merritt_path);
   }
 }
 
@@ -312,13 +344,14 @@ function updateTotalData(totdata, types, row) {
   return totdata;
 }
 
-function appendTable(headers, types, data, filter_col, group_col, show_grand_total, merritt_path) {
+function appendTable(headers, types, data, filter_col, group_col, show_grand_total, show_iterative_total, merritt_path) {
   if ($("#data-table tr.header").length == 0) {
     var tr = $("<tr/>").appendTo("#data-table thead");
     tr.addClass("header");
     for(var c=0; c<headers.length; c++) {
       if (types[c] != 'na') {
-        tr.append(createCell(headers[c], types[c], true, merritt_path));
+        var cell = createCell(headers[c], types[c], true, merritt_path);
+        tr.append(cell);
       }
     }
   }
@@ -356,7 +389,19 @@ function appendTable(headers, types, data, filter_col, group_col, show_grand_tot
 
     for(var c=0; c<data[r].length; c++) {
       if (types[c] != 'na') {
-        tr.append(createCell(data[r][c], types[c], false, merritt_path));
+        var cell = createCell(data[r][c], types[c], false, merritt_path);
+        tr.append(cell);
+        if (types[c] == 'status') {
+          if (cell.hasClass('status-FAIL')) {
+            tr.addClass('status-FAIL');
+          } else if (cell.hasClass('status-INFO')) {
+            tr.addClass('status-INFO');
+          } else if (cell.hasClass('status-WARN')) {
+            tr.addClass('status-WARN');
+          } else if (cell.hasClass('status-PASS')) {
+            tr.addClass('status-PASS');
+          }
+        }
       }
     }
     if (totr != null) {
@@ -384,7 +429,7 @@ function appendTable(headers, types, data, filter_col, group_col, show_grand_tot
       collision: "none"
     }
   });
-  query_iterate();
+  query_iterate(show_iterative_total, types, data);
 }
 
 function createCell(v, type, isHeader, merritt_path) {
@@ -550,6 +595,11 @@ function format(cell, v, type, merritt_path) {
       makeLiLink(ul, txt, "collIndex.html?path=ldap/user&uid=" + txt.replace(/^.*\(/,'').replace(/\)/,''));
     });
     cell.addClass("hasdata");
+  } else if (type == 'status'){
+    cell.addClass("status-"+v);
+    cell.text(v);
+  } else if (type == 'report'){
+    makeLink(cell, v, "index.html?path=report&report=" + encodeURIComponent(v));
   } else {
     cell.text(v);
   }

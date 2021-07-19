@@ -108,27 +108,53 @@ def run_query_sql
 
   pathmap.keys.sort.each do |path|
     rec = pathmap[path]
-    status = ""
+    cmpstatus = ""
+    status = "PASS"
     if rec[:arks].length > 2
-      status = "More than 2"
+      cmpstatus = "More than 2"
+      status = "WARN"
     elsif rec[:arks][0].nil?
-      status = "Right Only"
+      cmpstatus = "Right Only"
+      if rec[:fpath] == "producer/mrt-provenance.xml" || 
+         rec[:fpath] == "system/mrt-submission-manifest.txt" ||
+         rec[:fpath] == "system/mrt-delete.txt"
+        status = "WARN"
+      else
+        status = "FAIL"
+      end
     elsif rec[:arks][1].nil?
-      status = "Left Only"
+      cmpstatus = "Left Only"
+      if rec[:fpath] == "system/mrt-delete.txt" 
+        status = "WARN"
+      else
+        status = "FAIL"
+      end
     elsif rec[:digs][0] == rec[:digs][1]
-      status = "Match"
+      cmpstatus = "Match"
     else
-      status = "Mismatch"
+      cmpstatus = "Mismatch"
+      if rec[:fpath] == "system/mrt-erc.txt" ||
+         rec[:fpath] == "system/mrt-ingest.txt" ||
+         rec[:fpath] == "system/mrt-membership.txt" ||
+         rec[:fpath] == "system/mrt-mom.txt" ||
+         rec[:fpath] == "system/mrt-object-map.ttl" ||
+         rec[:fpath] == "system/mrt-dc.xml" ||
+         rec[:fpath] == "system/mrt-owner.txt" ||
+         rec[:fpath] == "system/mrt-delete.txt"
+        status = "WARN"
+      else
+        status = "FAIL"
+      end
     end
     outdata.append(
       [
         rec[:localid],
         rec[:ver],
         rec[:fpath],
-        rec[:arks].length,
-        status,
+        cmpstatus,
         rec[:arks][0],
-        rec[:arks][1]
+        rec[:arks][1],
+        status
       ]
     )
   end
@@ -142,10 +168,10 @@ def get_headers(results)
     "Local Id",
     "Version",
     "Path",
-    "Count",
-    "Status",
+    "Compare Status",
     "Ark Left",
-    "Ark Right"
+    "Ark Right",
+    "Status"
   ]
 end
 
@@ -157,8 +183,12 @@ def get_types(results)
     "",
     "",
     "",
-    ""
+    "status"
   ]
+end
+
+def init_status
+  :PASS
 end
 
 end

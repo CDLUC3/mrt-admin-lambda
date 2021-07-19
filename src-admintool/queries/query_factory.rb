@@ -9,17 +9,17 @@ require_relative 'idlist_compare_query'
 Dir[File.dirname(__FILE__) + '/*query.rb'].each {|file| require file }
 
 class QueryFactory
-  def initialize(client, merritt_path)
+  def initialize(client, config)
     @client = client
-    @merritt_path = merritt_path
+    @config = config
   end
 
   def client
     @client
   end
 
-  def merritt_path
-    @merritt_path
+  def config
+    @config
   end
 
   def get_query_for_path(path, myparams)
@@ -91,10 +91,10 @@ class QueryFactory
       AuditOldestQuery.new(self, path, myparams)
     elsif path == 'audit_size'
       AuditQueueSizeQuery.new(self, path, myparams)
-    elsif path == 'audit_processed'
-      AuditProcessedQuery.new(self, path, myparams)
     elsif path == 'audit_processed_size'
       AuditProcessedSizeQuery.new(self, path, myparams)
+    elsif path == 'audit_processed_hours'
+      AuditProcessedSizeIterativeQuery.new(self, path, myparams)
     elsif path == 'replication_needed'
       ReplicationNeededQuery.new(self, path, myparams)
     elsif path == 'replic_processed'
@@ -115,6 +115,26 @@ class QueryFactory
       ArklistCompareQuery.new(self, path, myparams)
     elsif path == 'localcompare'
       LocalidListCompareQuery.new(self, path, myparams)
+    elsif path == 'con_primary'
+      ConsistencyPrimaryNodeQuery.new(self, path, myparams)
+    elsif path == 'con_secondary'
+      ConsistencySecondaryNodeQuery.new(self, path, myparams)
+    elsif path == 'con_files'
+      ConsistencyFilesQuery.new(self, path, myparams)
+    elsif path == 'con_no_audit'
+      ConsistencyFilesNoAuditQuery.new(self, path, myparams)
+    elsif path == 'con_objects'
+      ConsistencyObjectsQuery.new(self, path, myparams)
+    elsif path == 'con_replic'
+      ConsistencyReplicationReqQuery.new(self, path, myparams)    
+    elsif path == 'file_copies_needed'
+      ObjectsFileCopiesNeededQuery.new(self, path, myparams)    
+    elsif path == 'object_copies_needed'
+      ObjectsObjectCopiesNeededQuery.new(self, path, myparams)    
+    elsif path == 'object_mult_coll'
+      ObjectsMultipleCollQuery.new(self, path, myparams)    
+    elsif path == 'report'
+      ReportRetrieve.new(self, path, myparams)    
     else
       puts("path #{path} not matched")
       AdminQuery.new(self, path, myparams)

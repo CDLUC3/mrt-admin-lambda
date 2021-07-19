@@ -19,6 +19,10 @@ class IngestBatchFoldersAction < ForwardToIngestAction
     BatchFolder.table_types
   end
 
+  def init_status
+    :PASS
+  end
+
   def table_rows(body)
     bflist = BatchFolderList.new(body)
     bflist.apply_queue_list(QueueList.get_queue_list(get_ingest_server))
@@ -34,17 +38,21 @@ class IngestBatchFoldersAction < ForwardToIngestAction
     [
       {
         label: 'Batch Folders Last 7 days', 
-        url: "path=batchFolders&days=7"
+        url: "/collIndex.html?path=batchFolders&days=7"
       },
       {
         label: 'Batch Folders Last 14 days', 
-        url: "path=batchFolders&days=14"
+        url: "/collIndex.html?path=batchFolders&days=14"
       },
       {
         label: 'Batch Folders Last 21 days', 
-        url: "path=batchFolders&days=21"
+        url: "/collIndex.html?path=batchFolders&days=21"
       }
     ]
+  end
+
+  def page_size
+    500
   end
 
 end
@@ -69,7 +77,8 @@ class BatchFolder < MerrittJson
       @qsubmitter,
       @dbobj,
       @dbprofile,
-      @dbuser
+      @dbuser,
+      status
     ]
   end
 
@@ -81,7 +90,8 @@ class BatchFolder < MerrittJson
       'Queue Submitter',
       'DB Obj Cnt',
       'DB Profile',
-      'DB User'
+      'DB User',
+      'Status'
     ]
   end
 
@@ -93,8 +103,16 @@ class BatchFolder < MerrittJson
       '',
       'batchnote',
       '',
-      ''
+      '',
+      'status'
     ]
+  end
+  
+  def status
+    return 'PASS' unless @dbobj.empty?
+    return 'FAIL' if DateTime.parse(@dtime) < DateTime.now.next_day(-1) 
+    return 'WARN' if DateTime.parse(@dtime).to_time < (Time.now - 3600) 
+    return 'PASS'
   end
 
   def dtime
@@ -138,11 +156,15 @@ class BatchFolderList < MerrittJson
     end
   end
 
+  def empty?
+    @batchFolders.length == 0
+  end
+
   def to_table
     table = []
     @batchFolders.sort {
-      # reverse sort on date
-      |a,b| b.dtime <=> a.dtime
+      # sort on status, then reverse sort on date
+      |a,b| a.status == b.status ? b.dtime <=> a.dtime : AdminTask.status_sort_val(a.status) <=> AdminTask.status_sort_val(b.status)
     }.each do |bf|
       table.append(bf.table_row)
     end
@@ -150,6 +172,7 @@ class BatchFolderList < MerrittJson
   end
 
   def apply_queue_list(queue_list)
+    return if @batchFolderHash.empty?
     queue_list.batches.each do |bid, qbatch|
       if @batchFolderHash.key?(bid)
         @batchFolderHash[bid].setQueueItem(qbatch)
@@ -158,6 +181,7 @@ class BatchFolderList < MerrittJson
   end
 
   def apply_recent_ingests(recentitems)
+    return if @batchFolderHash.empty?
     recentitems.batches.each do |bid, recentbatch|
       if @batchFolderHash.key?(bid)
         @batchFolderHash[bid].setRecentItem(recentbatch)

@@ -6,7 +6,7 @@
 # This image has been built from an image that matches the Lambda Ruby runtime
 # MySql binary dependencies have been embedded into the image
 
-FROM cdluc3/mysql-ruby-lambda 
+FROM cdluc3/uc3-mrt-admin-common
 
 # Build rest-client gem from source
 RUN yum -y install gcc-c++

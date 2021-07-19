@@ -1,19 +1,53 @@
+require_relative '../admin_task'
 require 'cgi'
-# require 'aws-sdk-s3'
 require 'zip'
 require 'mysql2'
 
-class AdminAction
+class AdminAction < AdminTask
   def initialize(config, path, myparams)
-    @config = config
-    @path = path
-    @myparams = myparams
+    super(config, path, myparams)
     @format = 'report'
-    @merritt_path = config.fetch('merritt_path','na')
   end
 
-  def get_param(key, defval)
-    @myparams.key?(key) ? CGI.unescape(@myparams[key].strip) : defval
+  def hasTable
+    false
+  end
+
+  def convertJsonToTable(body)
+    return body unless hasTable
+    data = table_rows(body)
+    data = paginate_data(data)
+    evaluate_status(table_types, data)
+    report = {
+      format: 'report',
+      title: get_title_with_pagination,
+      headers: table_headers,
+      types: table_types,
+      data: data,
+      filter_col: nil,
+      group_col: nil,
+      show_grand_total: false,
+      merritt_path: @merritt_path,
+      alternative_queries: get_alternative_queries_with_pagination,
+      iterate: false,
+      bytes_unit: bytes_unit,
+      saveable: is_saveable?,
+      report_path: report_path
+    }
+    save_report(report_path, report) if is_saveable?
+    report.to_json
+  end
+
+  def table_headers
+    []
+  end
+
+  def table_types
+    []
+  end
+
+  def table_rows(body)
+    []
   end
 
   def get_title

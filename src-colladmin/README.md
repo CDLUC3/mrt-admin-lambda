@@ -52,25 +52,25 @@
 - Alter submission state
     - POST /admin/submissions/<freeze|thaw> 
 - Generate Profile Object
-  - POST /admin/submissions/profile/profile
+  - POST /admin/profile/profile
   - Steps
     - Mint EZID identifier
     - Generate profile
     - Manually commit to git
 - Generate Ownership Object
-  - POST /admin/submissions/profile/owner
+  - POST /admin/profile/owner
   - Steps
     - Mint EZID identifier
     - Generate profile
     - Manually commit to git
 - Generate Collection Object
-  - POST /admin/submissions/profile/collection
+  - POST /admin/profile/collection
   - Steps
     - Mint EZID identifier
     - Generate profile
     - Manually commit to git
 - Generate SLA Object
-  - POST /admin/submissions/profile/sla
+  - POST /admin/profile/sla
   - Steps
     - Mint EZID identifier
     - Generate profile
@@ -99,7 +99,7 @@ Ingest Admin APIs
 
 - POST /admin/submissions/<freeze|thaw>   - Freeze/Thaw processing of submissions
 
-- POST /admin/submissions/profile/<profile|collection|owner|sla> - Create Ingest submission profiles
+- POST /admin/profile/<profile|collection|owner|sla> - Create Ingest submission profiles
 
 ## Issues/Questions
 - [X ] The "Collection" array is not populating for profile objects - it is returning as an empty string

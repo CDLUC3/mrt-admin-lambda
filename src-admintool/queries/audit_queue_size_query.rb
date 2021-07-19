@@ -1,4 +1,8 @@
 class AuditQueueSizeQuery < AdminQuery
+  def initialize(query_factory, path, myparams)
+    super(query_factory, path, myparams)
+  end
+
   def get_title
     "Audit Queue Size Query"
   end
@@ -17,7 +21,14 @@ class AuditQueueSizeQuery < AdminQuery
             end
           ), 
           0
-        ) as online_bytes
+        ) as online_bytes,
+        case
+          when verified is null and min(f.created) < date_add(now(), INTERVAL -1 DAY) then 'FAIL'
+          when verified is null and min(f.created) < date_add(now(), INTERVAL -10 HOUR) then 'WARN'
+          when verified < date_add(now(), INTERVAL -1 DAY) then 'FAIL'
+          when verified < date_add(now(), INTERVAL -10 HOUR) then 'WARN'
+          else 'PASS'
+        end as status
       from   
         inv.inv_files f 
       inner join inv.inv_audits a
@@ -36,15 +47,19 @@ class AuditQueueSizeQuery < AdminQuery
   end
 
   def get_headers(results)
-    ['Batch Time', 'Count in Processing Queue', 'On-line bytes in processing Queue']
+    ['Batch Time', 'Count in Processing Queue', 'On-line bytes in processing Queue', 'Status']
   end
 
   def get_types(results)
-    ['', 'dataint', 'bytes']
+    ['', 'dataint', 'bytes', 'status']
   end
 
   def bytes_unit
     "1000000000"
+  end
+  
+  def init_status
+    :PASS
   end
 
 end

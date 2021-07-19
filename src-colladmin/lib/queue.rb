@@ -41,8 +41,8 @@ class QueueEntry < MerrittJson
       MerrittJsonProperty.new("File Type").lookupValue(json, "que", "fileType")
     )
     addProperty(
-      :status, 
-      MerrittJsonProperty.new("Status").lookupValue(json, "que", "status")
+      :qstatus, 
+      MerrittJsonProperty.new("QStatus").lookupValue(json, "que", "status")
     )
     addProperty(
       :queue, 
@@ -51,6 +51,14 @@ class QueueEntry < MerrittJson
     addProperty(
       :queueId, 
       MerrittJsonProperty.new("Queue ID").lookupValue(json, "que", "iD")
+    )
+    qs = getValue(:qstatus, "")
+    st = 'INFO'
+    st = 'FAIL' if (qs == "Failed")
+    st = 'PASS' if (qs == "Completed")
+    addProperty(
+      :status, 
+      MerrittJsonProperty.new("Status", st)
     )
   end
 
@@ -72,6 +80,7 @@ class QueueEntry < MerrittJson
       type = ''
       type = 'qbatch' if sym == :bid
       type = 'qjob' if sym == :job
+      type = 'status' if sym == :status
       arr.append(type)
     end
     arr
@@ -212,10 +221,14 @@ class QueueList < MerrittJson
 
   def to_table
     table = []
-    @jobs.each do |q|
+    @jobs.sort{
+      # reverse sort on status then date, "Completed" should fall to bottom
+      |a,b| a.status == b.status ? b.date <=> a.date : AdminTask.status_sort_val(a.status) <=> AdminTask.status_sort_val(b.status)
+    }.each_with_index do |q, i|
       table.append(q.to_table_row)
     end
     table
   end
+
 end
 

@@ -387,7 +387,7 @@ class InvoicesQuery < AdminQuery
   end
 
   def campus_params(campus)
-    params = @myparams
+    params = @myparams.clone
     params["campus"] = campus
     params
   end

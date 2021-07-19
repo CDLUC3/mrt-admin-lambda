@@ -11,12 +11,16 @@
   </head>
   <body>
     <h1>Merritt Admin Tool</h1>
+    <h4 class="report_path"></h4>
     <p><a href="index.html">Home</a></p>
     <p class="buttons">
       <button onclick="$('tr.row').toggle()">Filter Totals/Details</button>
       <button onclick="$('tr.nodata').toggle()">Filter Data</button>
       <button onclick="$('tr.noflag').toggle()">Flagged Data</button>
       <button onclick="$('tr.total').toggle()">Totals On/Off</button>
+      <button onclick="$('tr.status-PASS').toggle()">PASS On/Off</button>
+      <button onclick="$('tr.status-INFO').toggle()">INFO On/Off</button>
+      <button onclick="$('tr.status-WARN').toggle()">WARN On/Off</button>
       <button id="exportTable">Export CSV</button>
       <select id="bytes">
         <option value="1">Bytes</option>
@@ -28,9 +32,15 @@
     </p>
     <div id="menu">
 
-      <h2>Prototypes</h2>
-      <p><a href="collAdmin.html">Collection Admin Screenshots</a></p>
- 
+      <h2>Applications</h2>
+      <ul>
+        <li>
+          <a class="json" href="index.html?path=report">Consistency Reports</a>
+          <span id="consistency">...</span>
+        </li>
+        <li><a href="collAdmin.html">Collection Admin</a></li>
+      </ul>
+
       <h2>Understanding Merritt Content</h2>
       <ul>
         <li><a class="json" href="index.html?path=collections">File Counts by Collections</a></li>
@@ -41,6 +51,7 @@
 
       <h2>Campus Invoices</h2>
       <ul>
+        <li><a class="json" href="index.html?path=invoices&fy=2021">FY2021 Invoices</a></li>
         <li><a class="json" href="index.html?path=invoices&fy=2020">FY2020 Invoices</a></li>
         <li><a class="json" href="index.html?path=invoices&fy=2019">FY2019 Invoices</a></li>
         <li><a class="json" href="index.html?path=invoices&fy=2019&as_of=2020-01-01">FY2019 Invoices- Proj from Jan 1</a></li>
@@ -102,18 +113,6 @@
         </li>
       </ul>
 
-      <h2>Interesting Use Cases Content</h2>
-      <ul>
-        <li><a href="index.html?path=objects_large">Large Objects</a></li>
-        <li><a href="index.html?path=objects_many_files">Objects with Many Files</a></li>
-        <li><a href="index.html?path=count_objects">Object Counts by Owner and Collection</a></li>
-      </ul>
-
-      <h2>Ingest Use Cases Content</h2>
-      <ul>
-        <li><a href="index.html?path=recent_ingests">Recent Ingests</a></li>
-        <li><a href="index.html?path=big_ingest&items=200&days=14">Big Ingests (200+) - Last 14 days</a></li>
-      </ul>
 
       <h2>Queries by ingest date</h2>
       <ul>
@@ -127,29 +126,83 @@
         <li><a class="json" href="index.html?path=collections_by_time_count_producer&interval=weeks">Producer Files Added by Date (Last 4 weeks)</a></li>
         <li><a class="json" href="index.html?path=collections_by_time_count&interval=weeks">Files Added by Date (Last 4 weeks)</a></li>
         <li><a class="json" href="index.html?path=collections_by_time_size&interval=weeks">File Size Added by Date (Last 4 weeks)</a></li>
-        <li><a class="json" href="index.html?path=objects_recent">Recent object updates by collection (object details)</a></li>
       </ul>
 
       <h2>Operational Information</h2>
       <ul>
-        <li><a href="index.html?path=audit_status">Audit - Irregular Status</a></li>
-        <li><a href="index.html?path=audit_status_time&unit=DAY&count=-1">Audit Status - Last Day</a></li>
-        <li><a href="index.html?path=audit_oldest">Audit - Oldest Unprocessed Item</a></li>
-        <li><a href="index.html?path=audit_size">Audit - Size of Queue</a></li>
-        <li><a href="index.html?path=audit_processed&iterate=1">Audits processed over time</a></li>
-        <li><a href="index.html?path=audit_processed_size&iterate=1">Audits processed + bytes over time</a></li>
-        <li><a href="index.html?path=nodes">Storage Nodes</a></li>
-        <li><a href="index.html?path=collnodes">Storage Nodes by Collection</a></li>
-        <li><a href="index.html?path=wasabi">Wasabi Migration</a></li>
-        <li><a href="index.html?path=replication_needed">Replication needed</a></li>
-        <li><a href="index.html?path=replic_processed&iterate=1">Replic processed over time</a></li>
+        <li>
+          <a href="https://github.com/CDLUC3/mrt-cron/blob/main/consistency-driver/reports.yml">Consistency Report Configuration</a>
+        </li>
+        <li>
+          <h3>Audit</h3>
+          <ul>
+            <li><a href="index.html?path=audit_status">Audit - Irregular Status</a></li>
+            <li><a href="index.html?path=audit_status_time&unit=HOUR&count=-1">Audit Status - Last Hour</a></li>
+            <li><a href="index.html?path=audit_oldest">Audit - Oldest Unprocessed Item</a></li>
+            <li><a href="index.html?path=audit_size">Audit - Size of Queue</a></li>
+            <li><a href="index.html?path=audit_processed_size">Historical Audits processed + bytes over time</a></li>
+            <li><a href="index.html?path=audit_processed_hours&iterate=1">Hourly Audits processed + bytes over time</a></li>
+          </ul>
+        </li>
+        <li>
+          <h3>Replication - Objects</h3>
+          <ul>
+            <li><a href="index.html?path=wasabi">Wasabi Migration</a></li>
+            <li><a href="index.html?path=replication_needed">Objects - Replication needed</a></li>
+            <li><a href="index.html?path=replic_processed&iterate=1">Replic processed over time</a></li>
+            <li><a href="index.html?path=con_objects&copies=1">Objects with <em>1</em> copy (Replication Needed?)</a></li>
+            <li><a href="index.html?path=con_objects&copies=2">Objects with <em>2</em> copies (Replication Needed?)</a></li>
+            <li><a href="index.html?path=con_objects&copies=4">Objects with <em>4</em> copies (Cleanup Needed?)</a></li>
+            <li><a href="index.html?path=con_replic">Outstanding replication</a></li>
+          </ul>
+        </li>
+        <li>
+          <h3>Replication - File View</h3>
+          <ul>
+            <li><a href="index.html?path=con_files&copies=1">Files with <em>1</em> copy (Replication Needed?)</a></li>
+            <li><a href="index.html?path=con_files&copies=2">Files with <em>2</em> copies (Replication Needed?)</a></li>
+            <li><a href="index.html?path=con_files&copies=4">Files with <em>4</em> copies (Cleanup Needed?)</a></li>
+            <li><a href="index.html?path=con_no_audit">Files not in the audit table (too slow to run from web)</a></li>
+          </ul>
+        </li>
+        <li>
+          <h3>Storage</h3>
+          <ul>
+            <li><a href="index.html?path=nodes">Storage Nodes</a></li>
+            <li><a href="index.html?path=collnodes">Storage Nodes by Collection</a></li>
+            <li><a href="index.html?path=con_primary">Collections with Non-standard Primary Nodes (Not SDSC or Dryad S3)</a></li>
+            <li><a href="index.html?path=con_secondary">Collections with Non-standard Secondary Nodes (Not Glacier+Wasabi or SDSC+Wasabi)</a></li>
+          </ul>
+        </li>
+        <li>
+          <h3>Collections</h3>
+          <ul>
+            <li><a href="index.html?path=count_objects">Object Counts by Owner and Collection</a></li>
+            <li><a class="json" href="index.html?path=objects_recent">Recent object updates by collection (object details)</a></li>
+          </ul>
+        </li>
+        <li>
+          <h3>Ingests</h3>
+          <ul>
+            <li><a href="index.html?path=recent_ingests">Recent Ingests</a></li>
+            <li><a href="index.html?path=big_ingest&items=200&days=14">Big Ingests (200+) - Last 14 days</a></li>
+          </ul>
+        </li>
+        <li>
+          <h3>Objects</h3>
+          <ul>
+            <li><a href="index.html?path=object_mult_coll&limit=500">Objects linked to more than one collection</a></li>
+            <li><a href="index.html?path=objects_large">Large Objects</a></li>
+            <li><a href="index.html?path=objects_many_files">Objects with Many Files</a></li>
+          </ul>
+        </li>
+        <li>
+          <h3>Local Ids</h3>
+          <ul>
+            <li><a href="index.html?path=doi">DOI Ark Conflicts</a></li>
+          </ul>
+        </li>
       </ul>
-
-      <h2>Common Troubleshooting</h2>
-      <ul>
-        <li><a href="index.html?path=doi">DOI Ark Conflicts</a></li>
-      </ul>
-
 
     </div>
     <div id="data">

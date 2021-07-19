@@ -1,4 +1,4 @@
-## Publish as cdluc3/mysql-ruby-lambda
+## Publish as [cdluc3/mysql-ruby-lambda](https://hub.docker.com/r/cdluc3/mysql-ruby-lambda)
 
 This Docker image is used to facilitate building Ruby Lambda dependencies.
 

@@ -17,3 +17,9 @@ mysql-deps/mysql-dependencies.zip
 ~$MerrittAdminTool.pptx
 mysql-ruby-lambda/.bundle/
 mysql-ruby-lambda/vendor/
+src-admintool/vendor/
+src-admintool/.bundle/
+src-admintool/vendor/bundle/ruby/2.6.0/bundler/gems/uc3-ssm-74b5d8da5e54
+consistency-driver/out.txt
+consistency-driver/vendor/
+consistency-driver/.bundle

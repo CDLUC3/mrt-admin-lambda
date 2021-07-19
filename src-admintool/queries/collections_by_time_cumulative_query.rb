@@ -119,5 +119,8 @@ end
     format_result_json(types, combined_data, get_headers(results))
   end
 
+  def bytes_unit
+    "1000000000000"
+  end
 
 end

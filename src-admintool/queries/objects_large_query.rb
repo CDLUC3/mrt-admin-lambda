@@ -10,12 +10,12 @@ class ObjectsLargeQuery < ObjectsQuery
         f.inv_object_id
       having
         sum(f.billable_size) > 1073741824
-      limit #{get_limit};
+      limit #{get_limit} offset #{get_offset};
     }
     stmt = @client.prepare(subsql)
     results = stmt.execute()
-    @ids = []
-    @qs = []
+    @ids = [-1]
+    @qs = ['?']
     results.each do |r|
       @ids.push(r.values[0])
       @qs.push('?')
@@ -36,6 +36,14 @@ class ObjectsLargeQuery < ObjectsQuery
 
   def get_max_limit
     50
+  end
+
+  def page_size
+    get_limit
+  end
+
+  def get_obj_limit_query
+    ""
   end
 
 end

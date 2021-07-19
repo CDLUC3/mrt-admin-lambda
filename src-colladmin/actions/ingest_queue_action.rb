@@ -26,6 +26,10 @@ class IngestQueueAction < ForwardToIngestAction
     true
   end
 
+  def init_status
+    :PASS
+  end
+
   def get_alternative_queries
     [
       {
@@ -33,6 +37,10 @@ class IngestQueueAction < ForwardToIngestAction
         url: '/index.html?path=recent_ingests'
       }
     ]
+  end
+
+  def page_size
+    100
   end
 
 end

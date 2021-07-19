@@ -1,4 +1,8 @@
 class ObjectsRecentQuery < AdminQuery
+  def initialize(query_factory, path, myparams)
+    super(query_factory, path, myparams)
+  end
+
   def get_title
     "Most Recent Update by Collection"
   end

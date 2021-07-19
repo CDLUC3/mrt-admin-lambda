@@ -64,7 +64,10 @@ module LambdaFunctions
         puts(myparams)
 
         path = get_key_val(myparams, 'path', 'na')
-        query_factory = QueryFactory.new(client, @config['merritt_path'])
+        query_factory = QueryFactory.new(
+          client, 
+          @config
+        )
         query = query_factory.get_query_for_path(path, myparams)
         result = query.run_sql
      

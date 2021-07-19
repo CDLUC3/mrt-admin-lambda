@@ -1,4 +1,8 @@
 class AuditStatusQuery < AdminQuery
+  def initialize(query_factory, path, myparams)
+    super(query_factory, path, myparams)
+  end
+
   def get_title
     "Audit Status (excluding verified)"
   end
@@ -6,80 +10,114 @@ class AuditStatusQuery < AdminQuery
   def get_sql
     %{
       select
-        'unverified' as status,
+        'unverified' as astatus,
+        acount,
+        'PASS' as status
+      from
         (
           select
-            count(*)
+            count(*) as acount            
           from
             inv.inv_audits
           where
             status = 'unverified'
-        )
+        ) as qcount
       union
       select
-        'size-mismatch' as status,
+        'size-mismatch' as astatus,
+        acount,
+        case 
+          when acount > 0 then 'FAIL'
+          else 'PASS'
+        end as status
+      from
         (
           select
-            count(*)
+            count(*) as acount
           from
             inv.inv_audits
           where
             status = 'size-mismatch'
-        )
+        ) as qcount
       union
       select
-        'digest-mismatch' as status,
+        'digest-mismatch' as astatus,
+        acount,
+        case 
+          when acount > 0 then 'FAIL'
+          else 'PASS'
+        end as status
+      from
         (
           select
-            count(*)
+            count(*) as acount
           from
             inv.inv_audits
           where
             status = 'digest-mismatch'
-        )
+        ) as qcount
       union
       select
-        'system-unavailable' as status,
+        'system-unavailable' as astatus,
+        acount,
+        case 
+          when acount > 0 then 'WARN'
+          else 'PASS'
+        end as status
+      from
         (
           select
-            count(*)
+            count(*) as acount
           from
             inv.inv_audits
           where
             status = 'system-unavailable'
-        )
+        ) as qcount
       union
       select
-        'processing' as status,
+        'processing' as astatus,
+        acount,
+        'PASS' as status
+      from
         (
           select
-            count(*)
+            count(*) as acount            
           from
             inv.inv_audits
           where
             status = 'processing'
-        )
+        ) as qcount
       union
       select
-        'unknown' as status,
+        'unknown' as astatus,
+        acount,
+        case 
+          when acount > 0 then 'PASS'
+          else 'PASS'
+        end as status
+      from
         (
           select
-            count(*)
+            count(*) as acount
           from
             inv.inv_audits
           where
             status = 'unknown'
-        )
+        ) as qcount
       ;
     }
   end
 
   def get_headers(results)
-    ['Audit Status', 'File Count']
+    ['Audit Status', 'File Count', 'Status']
   end
 
   def get_types(results)
-    ['', 'dataint']
+    ['', 'dataint', 'status']
+  end
+
+  def init_status
+    :PASS
   end
 
 end

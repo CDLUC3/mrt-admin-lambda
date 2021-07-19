@@ -33,6 +33,7 @@ elif [ $DEPLOY_ENV == 'prd' ]
 then
   MERRITT_PATH=http://merritt.cdlib.org
 fi
+docker build -t cdluc3/uc3-mrt-admin-common src-common || die "Image build failure"
 docker build -t ${ECR_IMAGE_TAG} src-colladmin || die "Image build failure"
 
 # To test: 
@@ -66,8 +67,8 @@ then
     --function-name ${LAMBDA_ARN} \
     --region us-west-2 \
     --output text \
-    --timeout 60 \
-    --memory-size 128 \
+    --timeout 180 \
+    --memory-size 512 \
     --no-cli-pager \
     --environment "Variables={SSM_ROOT_PATH=${SSM_DEPLOY_PATH},MERRITT_PATH=${MERRITT_PATH},BUCKET=${S3WEB_BUCKET}}" 
 fi

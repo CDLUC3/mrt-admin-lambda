@@ -1,85 +1,111 @@
 class AuditProcessedSizeQuery < AdminQuery
-  def get_title
-    "Audit Files Processed With Bytes"
+  def initialize(query_factory, path, myparams)
+    super(query_factory, path, myparams)
+    @days = get_param('days', 30).to_i
   end
 
-  def get_iterative_sql
-    sql = %{
-      select
-        'Last Minute',
-        date_add(now(), interval -1 minute),
-        now()
-      union
-      select
-        'Last 5 Minutes',
-        date_add(now(), interval -5 minute),
-        now()
-      union
-      select
-        'Last Hour',
-        date_add(now(), interval -1 hour),
-        now()
-    }
-
-    for i in 0..8
-      sql = sql + %{
-        union
-        select
-          concat(
-            date_format(date_add(now(), interval -#{i+1} hour), '%H:00:00'),
-            ' - ',
-            date_format(date_add(now(), interval -#{i} hour), '%H:00:00')
-          ),
-          date_format(date_add(now(), interval -#{i+1} hour), '%Y-%m-%d %H:00:00'),
-          date_format(date_add(now(), interval -#{i} hour), '%Y-%m-%d %H:00:00')
-      }
-    end
-
-    sql
+  def get_title
+    "Historical Audit Files Processed - Last #{@days} days"
   end
 
   def get_sql
     %{
       select
-        ? as title,
-        count(a.id) as pcount,
-        ifnull(
-          sum(
-            case 
-              when a.inv_node_id in (select id from inv.inv_nodes where access_mode != 'on-line') 
-                then 0
-              else full_size
-            end
-          ), 
-          0
-        ) as online_bytes
-      from
-        inv.inv_audits a
-      inner join inv.inv_files f
-        on 
-          f.id = a.inv_file_id
-        and 
-          f.inv_object_id = a.inv_object_id
-        and
-          f.inv_version_id = a.inv_version_id
+        audit_date,
+        all_files,
+        online_files,
+        online_bytes,
+        s3_files,
+        s3_bytes,
+        glacier_files,
+        glacier_bytes,
+        sdsc_files,
+        sdsc_bytes,
+        wasabi_files,
+        wasabi_bytes,
+        other_files,
+        other_bytes,
+        case
+          when (all_files > 400000 and online_bytes > 3000000000000)
+            then 'PASS'
+          when (all_files < 400000 and online_bytes < 3000000000000)
+            then 'FAIL'
+          when (audit_date < date_add(now(), INTERVAL -6 DAY))
+            then 'INFO'
+          else 'WARN'
+        end as status
+      from 
+        audits_processed
       where
-        verified >= ?
-      and
-        verified < ?
-      ;
+        audit_date > date_add(now(), INTERVAL - #{@days} DAY)
+      order by
+        audit_date desc
     }
   end
 
   def get_headers(results)
-    ['Time Frame', 'Files Processed', 'On-line Bytes Processed']
+    [
+      'Time Frame', 
+      'Files Processed', 
+      'Online Files', 
+      'Online Bytes', 
+      'S3 Files',
+      'S3 Bytes', 
+      'Glacier Files',
+      'Glacier Bytes', 
+      'SDSC Files',
+      'SDSC Bytes', 
+      'Wasabi Files',
+      'Wasabi Bytes', 
+      'Other Files',
+      'Other Bytes',
+      'Status'
+    ]
   end
 
   def get_types(results)
-    ['', 'dataint', 'bytes']
+    [
+      '', 
+      'dataint', 
+      'dataint', 
+      'bytes', 
+      'dataint', 
+      'bytes', 
+      'dataint', 
+      'bytes', 
+      'dataint', 
+      'bytes', 
+      'dataint', 
+      'bytes', 
+      'dataint', 
+      'bytes',
+      'status'
+    ]
   end
 
   def bytes_unit
     "1000000000"
+  end
+
+  def get_alternative_queries
+    [
+      {
+        label: 'Last 30 days', 
+        url: 'path=audit_processed_size&days=30'
+      },
+      {
+        label: 'Last 60 days', 
+        url: 'path=audit_processed_size&days=60'
+      },
+      {
+        label: 'Last 90 days', 
+        url: 'path=audit_processed_size&days=90'
+      }
+    ]
+  end
+
+  def init_status
+    :PASS
   end
 
 end
