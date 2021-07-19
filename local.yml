@@ -6,6 +6,5 @@ version: '3.7'
 services:
   lambda-container:
     environment:
-      #MERRITT_ADMIN_CONFIG: development
       MERRITT_ADMIN_CONFIG: docker
       INGEST_SERVICES: "http://${HOSTNAME}.cdlib.org:8080/ingest/"
