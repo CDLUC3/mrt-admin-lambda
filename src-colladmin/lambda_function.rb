@@ -44,6 +44,9 @@ module LambdaFunctions
   class Handler < LambdaBase
     def self.process(event:,context:)
       begin
+        respath = event.fetch("path", "")
+        return LambdaBase.web_assets(respath) if LambdaBase.web_asset?(respath)
+
         config_file = 'config/database.ssm.yml'
         config_block = ENV.key?('MERRITT_ADMIN_CONFIG') ? ENV['MERRITT_ADMIN_CONFIG'] : 'default'
         @config = Uc3Ssm::ConfigResolver.new({

@@ -1,6 +1,7 @@
 require 'json'
 require 'yaml'
 require 'uc3-ssm'
+require 'mustache'
 
 class LambdaBase
   # Handle GET or POST event structures passed in via the ALB
@@ -42,5 +43,49 @@ class LambdaBase
       :encoding => dbconf.fetch('encoding', 'utf8mb4'),
       :collation => dbconf.fetch('collation', 'utf8mb4_unicode_ci'),
     )
+  end
+
+  def self.content_type(ext)
+    return "text/html" if ext == "html" || ext == "htm"
+    return "text/javascript" if ext == "js"
+    return "text/css" if ext == "css"
+    nil
+  end
+  
+  def self.web_asset?(path)
+    puts(path)
+    path =~ %r[^/web/] ? true : false
+  end
+
+  def self.web_assets(path)
+    qpath = "/var/task#{path}"
+    return error(404, "File not found #{path}", false) unless File.file?(qpath)
+    ext = path.split(".")[-1]
+    ctype = content_type(ext)
+    return error(404, "Unsupported content type #{ext}", false) unless ctype
+    { 
+      statusCode: 200, 
+      headers: {
+        'Content-Type' => ctype,
+        'Cache-Control' => 'no-store'
+      },
+      body: File.open(qpath).read
+    }
+  end
+  
+  def self.error(status, message, return_page = false)
+    if status != 200 && return_page
+      { 
+        statusCode: 200, 
+        headers: {'Content-Type' => 'text/html'},
+        body: Mustache.render(File.open('template/error.html').read, message: message)
+      }  
+    else
+      { 
+        statusCode: status, 
+        headers: {'Content-Type' => 'text'},
+        body: message 
+      }
+    end
   end
 end

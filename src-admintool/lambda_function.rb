@@ -10,11 +10,14 @@ module LambdaFunctions
 
     def self.process(event:,context:)
       begin
+        respath = event.fetch("path", "")
+        return LambdaBase.web_assets(respath) if LambdaBase.web_asset?(respath)
+
         config_file = 'config/database.ssm.yml'
         config_block = ENV.key?('MERRITT_ADMIN_CONFIG') ? ENV['MERRITT_ADMIN_CONFIG'] : 'default'
         @config = Uc3Ssm::ConfigResolver.new.resolve_file_values(file: config_file, resolve_key: config_block, return_key: config_block)
         dbconf = @config.fetch('dbconf', {})
-        client = get_mysql(dbconf)
+        client = LambdaBase.get_mysql(dbconf)
 
         myparams = LambdaBase.get_params_from_event(event)
         puts(myparams)
