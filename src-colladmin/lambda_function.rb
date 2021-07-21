@@ -1,3 +1,4 @@
+require "cgi"
 require 'json'
 require 'yaml'
 require 'uc3-ssm'
@@ -15,6 +16,7 @@ require_relative 'actions/ingest_sword_jobs_action'
 require_relative 'actions/ingest_batch_folders_action'
 require_relative 'actions/ldap_action'
 require_relative 'actions/post_to_ingest_action'
+require_relative 'actions/post_to_ingest_multipart_action.rb'
 
 def get_key_val(obj, key, defval='')
   return "" unless obj
@@ -35,6 +37,27 @@ def get_config
   })
 end
 
+# Handle GET or POST event structures pass in via the ALB
+def get_params_from_event(event)
+  data = event ? event : {}
+  method = data.fetch('httpMethod', 'GET')
+
+  if (method == 'GET') then
+     data_transform = data.fetch('queryStringParameters', data)
+     # not needed
+     data_transform.delete("splat")
+     return data_transform.each { |k, v| data_transform[k] = CGI.unescape(v) }
+  end
+
+  if data['isBase64Encoded'] && data.key?('body')
+    body = Base64.decode64(data['body'])
+    return CGI::parse(body).transform_values(&:first)
+  end
+  body = data.fetch('body', '')
+  return {} if body.empty?
+  CGI::parse(body).transform_values(&:first)
+end
+
 module LambdaFunctions
   class Handler
     def self.process(event:,context:)
@@ -42,8 +65,8 @@ module LambdaFunctions
         @config = get_config
 
         data = event ? event : {}
-        
-        myparams = get_key_val(data, 'queryStringParameters', data)
+        myparams = get_params_from_event(event)
+
         path = CGI.unescape(get_key_val(myparams, 'path', 'na'))
         result = {message: "Path undefined"}.to_json
 
@@ -69,6 +92,14 @@ module LambdaFunctions
           result = PostToIngestAction.new(@config, path, myparams, "admin/submissions/freeze").get_data
         elsif path == "submissions/unpause" 
           result = PostToIngestAction.new(@config, path, myparams, "admin/submissions/thaw").get_data
+        elsif path == "createProfile/profile" 
+          result = PostToIngestMultipartAction.new(@config, path, myparams, "admin/profile/profile").get_data
+        elsif path == "createProfile/collection" 
+          result = PostToIngestMultipartAction.new(@config, path, myparams, "admin/profile/collection").get_data
+        elsif path == "createProfile/owner" 
+          result = PostToIngestMultipartAction.new(@config, path, myparams, "admin/profile/owner").get_data
+        elsif path == "createProfile/sla" 
+          result = PostToIngestMultipartAction.new(@config, path, myparams, "admin/profile/sla").get_data
         elsif path =~ /ldap\/.*/ 
           result = LDAPAction.make_action(@config, path, myparams).get_data
         end

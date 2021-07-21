@@ -4,3 +4,6 @@ gem 'json'
 gem 'mysql2'
 gem 'uc3-ssm', git: 'https://github.com/CDLUC3/uc3-ssm.git', branch: 'main'
 gem 'aws-sdk-s3'
+gem 'unf_ext', '~> 0.0.7.7'
+gem 'rest-client'
+

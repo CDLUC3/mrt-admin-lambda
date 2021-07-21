@@ -7,4 +7,4 @@ services:
   lambda-container:
     environment:
       MERRITT_ADMIN_CONFIG: docker
-      INGEST_SERVICES: "${HOSTNAME}.cdlib.org:8080/ingest/"
+      INGEST_SERVICES: "http://${HOSTNAME}.cdlib.org:8080/ingest/"

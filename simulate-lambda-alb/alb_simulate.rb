@@ -52,6 +52,9 @@ end
 get '/lambda*' do
   path = params['splat'][0]
   path=path.gsub(/^lambda\//,'')
+  # remove leading slash, if present
+  path=path.gsub(/^\//,'')
+
   event = {
     path: path, 
     queryStringParameters: params,
@@ -63,6 +66,9 @@ end
 post '/lambda*' do
   path = params['splat'][0]
   path=path.gsub(/^lambda\//,'')
+  # remove leading slash, if present
+  path=path.gsub(/^\//,'')
+
   event = {
     path: path, 
     body: Base64.encode64(URI.encode_www_form(params)),

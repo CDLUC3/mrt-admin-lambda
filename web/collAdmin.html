@@ -26,6 +26,83 @@
       <li><a href="collIndex.html?path=ldap/roles">LDAP Roles</a></li>
       <li><a href="collIndex.html?path=ldap/colls">LDAP Collections</a></li>
     </ul>
+
+    <h2>Collection Profiles</h2>
+    <form action="collIndex.html?path=createProfile/profile" method="GET">
+    <fieldset class="collsec">
+      <p>
+        <label for="environment">Environment</label>
+        <input name="environment" id="environment" type="text" readonly size="40" value="docker"/>
+      </p>
+      <p>
+        <label for="path">Path</label>
+        <input name="path" id="path" type="text" readonly size="40" value="createProfile/profile"/>
+      </p>
+      <p>
+        <label for="name">Collection mnemonic</label>
+        <input name="name" id="name" type="input" size="60" value="test_collection_content"/>
+      </p>
+      <p>
+        <label for="context">Context mnemonic</label>
+        <input name="context" id="context" type="input" size="60" value="test_collection"/>
+      </p>
+      <p>
+        <label for="description">Collection description</label>
+        <textarea id="description" name="description" rows="3" cols="80">Testing collection creation</textarea>
+      </p>
+      <p>
+        <label for="collection">Collection ARK</label>
+        <input id="collection" name="collection" type="input" size="20" value="ark:/99999/collection"/>
+      </p>
+      <p>
+        <label for="owner">Owner ARK</label>
+        <select id="owner" name="owner">
+          <option value="ark:/99999/owner"> ark:/99999/owner</option>
+          <option value="ark:/99999/owner2"> ark:/99999/owner2</option>
+        </select>
+      </p>
+      <p>
+        <label for="creationdate">Creation Date</label>
+        <input id="creationdate" name="creationdate" type="input" size="30" value="2019-05-30T13:28:14-08:00"</input>
+      </p>
+      <p>
+        <label for="modificationdate">Modification Date</label>
+        <input id="modificationdate" name="modificationdate" type="input" size="30" value="2019-05-30T13:28:14-08:00"</input>
+      </p>
+      <div class="endUserNotifications">
+        <p>
+          <label for="notifications">End-user Notifications (comma-separated list of email addresses):</label>
+        </p>
+        <p>
+          <input id="notifications" type="input" size="140" value="test@test.com,test@cdlib.org">
+        </p>
+      </div>
+      <div class="storagenode">
+        <label>Primary Storage Node:</label>
+        <label class="container">
+          <input type="radio" checked="checked" name="storagenode" value="9501">
+          <span class="checkmark"></span>
+          9501: Production Minio
+        </label>
+        <label class="container">
+          <input type="radio" name="storagenode" value="9502">
+          <span class="checkmark"></span>
+          9502: Stage Minio
+        </label>
+        <label class="container">
+          <input type="radio" name="storagenode" value="5001">
+          <span class="checkmark"></span>
+          5001: Production AWS Standard
+        </label>
+      </div>
+      <div>
+        <p>
+          <button>Create Profile</button>
+        </p>
+      </div>
+    </fieldset>
+    </form>
+
     <h2>Provision EZID</h2>
     <fieldset class="collsec">
       <p>
@@ -43,71 +120,7 @@
         <span>Harvest Enabled</span>
       </p>
     </fieldset>
-    <h2>Collection Profiles</h2>
-    <fieldset class="collsec">
-      <p>
-        <label for="profile-env">Environment</label>
-        <input id="profile-env" type="text" readonly size="40" value="derive from deployment"/>
-      </p>
-      <p>
-        <label for="profile-mnemonic">Collection mnemonic</label>
-        <input id="profile-mnemonic" type="input" size="60"/>
-      </p>
-      <p>
-        <label for="profile-description">Collection description</label>
-        <textarea id="profile-description" rows="3" cols="80">
-        </textarea>
-      </p>
-      <p>
-        <label for="collection-ark">Collection ARK</label>
-        <output id="collection-ark" type="input" size="20">Comes from EZID</output>
-      </p>
-      <p>
-        <label for="owner-ark">Owner ARK</label>
-        <select id="owner-ark">
-          <option>Pull existing values</option>
-        </select>
-      </p>
-      <div class="adminNotifications">
-        <p>
-          <label for="admin-notifications">Admin Notifications (comma-separated list of email addresses):</label>
-        </p>
-        <p>
-          <output id="admin-notifications" type="input" size="140">configured in SSM</output>
-        </p>
-      </div>
-      <div class="endUserNotifications">
-        <p>
-          <label for="end-user-notifications">End-user Notifications (comma-separated list of email addresses):</label>
-        </p>
-        <p>
-          <input id="end-user-notifications" type="input" size="140">
-        </p>
-      </div>
-      <div class="storageNodes">
-        <label>Primary Storage Node:</label>
-        <label class="container">
-          <input type="radio" checked="checked" name="radio">
-          <span class="checkmark"></span>
-          9501: Production Minio
-        </label>
-        <label class="container">
-          <input type="radio" name="radio">
-          <span class="checkmark"></span>
-          9502: Stage Minio
-        </label>
-        <label class="container">
-          <input type="radio" name="radio">
-          <span class="checkmark"></span>
-          5001: Production AWS Standard
-        </label>
-      </div>
-      <div>
-        <p>
-          <button>Create Profiles</button>
-        </p>
-      </div>
-    </fieldset>
+
     <h2>LDAP Entries</h2>
     <fieldset class="collsec">
       <p>
