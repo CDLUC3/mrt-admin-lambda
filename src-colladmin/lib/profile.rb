@@ -248,7 +248,7 @@ class IngestProfile < MerrittJson
   def table_rows(template)
     rows = []
     getPropertyList.each do |prop|
-      addRow(rows, getLabel(prop), getValue(prop), template.getValue(prop))
+      addRow(rows, getLabel(prop), getValue(prop), template ? template.getValue(prop) : '')
     end
     rows
   end

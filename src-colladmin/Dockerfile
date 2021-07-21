@@ -8,6 +8,9 @@
 
 FROM cdluc3/uc3-mrt-admin-common
 
+# Build rest-client gem from source
+RUN yum -y install gcc-c++
+
 # Add Admin Tool Code to the image
 COPY . /var/task/
 
