@@ -57,14 +57,32 @@ class LambdaBase
     path =~ %r[^/web/] ? true : false
   end
 
+  def self.admintool_url
+    "#{ENV.fetch('ADMIN_ALB_URL','')}/web/index.html"
+  end
+
+  def self.colladmin_url
+    "#{ENV.fetch('COLLADMIN_ALB_URL','')}/web/collIndex.html"
+  end
+
+  def self.colladmin_url_admin
+    "#{ENV.fetch('COLLADMIN_ALB_URL','')}/web/collAdmin.html"
+  end
+
   def self.template_parameters(path)
     lmap = {
-      ADMINTOOL_HOME: "#{ENV.fetch('ADMIN_ALB_URL','')}/web/index.html", 
-      COLLADMIN_HOME: "#{ENV.fetch('COLLADMIN_ALB_URL','')}/web/collIndex.html"
+      ADMINTOOL_HOME: LambdaBase.admintool_url, 
+      COLLADMIN_HOME: LambdaBase.colladmin_url,
+      COLLADMIN_ADMIN: LambdaBase.colladmin_url_admin
     }
     return lmap if path == '/web/lambda.base.js'
     return lmap if path == '/web/coll-lambda.base.js'
+    return lmap if path == '/web/ark.html'
+    return lmap if path == '/web/collAdmin.html'
+    return lmap if path == '/web/collIndex.html'
+    return lmap if path == '/web/doi.html'
     return lmap if path == '/web/index.html'
+    return lmap if path == '/web/localid.html'
     {}
   end
 

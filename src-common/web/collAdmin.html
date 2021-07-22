@@ -12,23 +12,23 @@
   <body>
     <div class="form-body">
     <h1>Merritt Collection Admin</h1>
-    <p><a href="index.html">Admin Tool Home</a> / <a href="collAdmin.html">CollAdmin Tool Home</a></p>
+    <p><a href="{{ADMINTOOL_HOME}}">Admin Tool Home</a> / <a href="{{COLLADMIN_ADMIN}}">CollAdmin Tool Home</a></p>
     <ul>
-      <li><a href="collIndex.html?path=profiles">Collection Profiles (ingest)</a></li>
-      <li><a href="collIndex.html?path=state">Ingest Service State Request</a></li>
-      <li><a href="collIndex.html?path=queues">Ingest Service Show All Queue Jobs</a></li>
-      <li><a href="collIndex.html?path=batchFolders&days=7">Batch Folders Created in the last 7 days</a></li>      
-      <li><a href="collIndex.html?path=sword">Ingest Service Show Sword Jobs</a></li>
+      <li><a href="{{COLLADMIN_HOME}}?path=profiles">Collection Profiles (ingest)</a></li>
+      <li><a href="{{COLLADMIN_HOME}}?path=state">Ingest Service State Request</a></li>
+      <li><a href="{{COLLADMIN_HOME}}?path=queues">Ingest Service Show All Queue Jobs</a></li>
+      <li><a href="{{COLLADMIN_HOME}}?path=batchFolders&days=7">Batch Folders Created in the last 7 days</a></li>      
+      <li><a href="{{COLLADMIN_HOME}}?path=sword">Ingest Service Show Sword Jobs</a></li>
       <li>Inventory Service Show Queues</li>
-      <li><a href="collIndex.html?path=submissions/pause">Pause Submissions</a></li>
-      <li><a href="collIndex.html?path=submissions/unpause">Unpause Submissions</a></li>
-      <li><a href="collIndex.html?path=ldap/users">LDAP Users</a></li>
-      <li><a href="collIndex.html?path=ldap/roles">LDAP Roles</a></li>
-      <li><a href="collIndex.html?path=ldap/colls">LDAP Collections</a></li>
+      <li><a href="{{COLLADMIN_HOME}}?path=submissions/pause">Pause Submissions</a></li>
+      <li><a href="{{COLLADMIN_HOME}}?path=submissions/unpause">Unpause Submissions</a></li>
+      <li><a href="{{COLLADMIN_HOME}}?path=ldap/users">LDAP Users</a></li>
+      <li><a href="{{COLLADMIN_HOME}}?path=ldap/roles">LDAP Roles</a></li>
+      <li><a href="{{COLLADMIN_HOME}}?path=ldap/colls">LDAP Collections</a></li>
     </ul>
 
     <h2>Collection Profiles</h2>
-    <form action="collIndex.html?path=createProfile/profile" method="GET">
+    <form action="{{COLLADMIN_HOME}}?path=createProfile/profile" method="GET">
     <fieldset class="collsec">
       <p>
         <label for="environment">Environment</label>

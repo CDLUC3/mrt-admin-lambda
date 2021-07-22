@@ -35,19 +35,19 @@ class IngestSwordJobsAction < ForwardToIngestAction
     [
       {
         label: 'Sword Jobs Last 3 days', 
-        url: "/collIndex.html?path=sword&days=3"
+        url: "#{LambdaBase.colladmin_url}?path=sword&days=3"
       },
       {
         label: 'Sword Jobs Last 7 days', 
-        url: "/collIndex.html?path=sword&days=7"
+        url: "#{LambdaBase.colladmin_url}?path=sword&days=7"
       },
       {
         label: 'Sword Jobs Last 14 days', 
-        url: "/collIndex.html?path=sword&days=14"
+        url: "#{LambdaBase.colladmin_url}?path=sword&days=14"
       },
       {
         label: 'Sword Jobs Last 21 days', 
-        url: "/collIndex.html?path=sword&days=21"
+        url: "#{LambdaBase.colladmin_url}?path=sword&days=21"
       }
     ]
   end
