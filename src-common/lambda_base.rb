@@ -57,11 +57,15 @@ class LambdaBase
     path =~ %r[^/web/] ? true : false
   end
 
-  def self.template_parameters
-    {
+  def self.template_parameters(path)
+    lmap = {
       ADMINTOOL_HOME: "#{ENV.fetch('ADMIN_ALB_URL','')}/web/index.html", 
       COLLADMIN_HOME: "#{ENV.fetch('COLLADMIN_ALB_URL','')}/web/collIndex.html"
     }
+    return lmap if path == '/web/lambda.base.js'
+    return lmap if path == '/web/coll-lambda.base.js'
+    return lmap if path == '/web/index.html'
+    {}
   end
 
   def self.web_assets(path)
@@ -71,9 +75,8 @@ class LambdaBase
     ctype = content_type(ext)
     return error(404, "Unsupported content type #{ext}", false) unless ctype
     body = File.open(qpath).read
-    if path.split(".")[-2] == "template"
-      body = Mustache.render(body, LambdaBase.template_parameters)
-    end
+    map = LambdaBase.template_parameters(path)
+    body = Mustache.render(body, map) unless map.empty?
     { 
       statusCode: 200, 
       headers: {
