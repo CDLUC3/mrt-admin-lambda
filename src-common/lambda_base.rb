@@ -57,19 +57,30 @@ class LambdaBase
     path =~ %r[^/web/] ? true : false
   end
 
+  def self.template_parameters
+    {
+      ADMINTOOL_HOME: "#{ENV.fetch('ADMIN_ALB_URL','')}/web/index.html", 
+      COLLADMIN_HOME: "#{ENV.fetch('COLLADMIN_ALB_URL','')}/web/collIndex.html"
+    }
+  end
+
   def self.web_assets(path)
     qpath = "/var/task#{path}"
     return error(404, "File not found #{path}", false) unless File.file?(qpath)
     ext = path.split(".")[-1]
     ctype = content_type(ext)
     return error(404, "Unsupported content type #{ext}", false) unless ctype
+    body = File.open(qpath).read
+    if path.split(".")[-2] == "template"
+      body = Mustache.render(body, LambdaBase.template_parameters)
+    end
     { 
       statusCode: 200, 
       headers: {
         'Content-Type' => ctype,
         'Cache-Control' => 'no-store'
       },
-      body: File.open(qpath).read
+      body: body
     }
   end
   

@@ -25,17 +25,18 @@ $(document).ready(function(){
 });
 
 function consistencyStatus() {
-  $.ajax({
-    dataType: "json",
-    method: 'GET',
-    url: lambda_base,
-    data: {path: 'report'},
-    success: function(data) {
-      var m = data.report_path.match(/(SKIP|PASS|INFO|WARN|FAIL)$/);
-      $("#consistency").text(m[1]).addClass(m[1]);
-    }
-  });
-
+  if ($("#consistency").is("*")) {
+    $.ajax({
+      dataType: "json",
+      method: 'GET',
+      url: lambda_base,
+      data: {path: 'report'},
+      success: function(data) {
+        var m = data.report_path.match(/(SKIP|PASS|INFO|WARN|FAIL)$/);
+        $("#consistency").text(m[1]).addClass(m[1]);
+      }
+    });  
+  }
 }
 
 function updateBytesUnits() {
@@ -496,25 +497,25 @@ function format(cell, v, type, merritt_path) {
   } else if (type == 'datetime'){
     cell.text(v.replace(/ [-\+]\d+$/,''));
   } else if (type == 'node' && Number(v) > 0){
-    makeLink(cell, v, "index.html?path=collections_by_node&node="+v);
+    makeLink(cell, v, admintool_home + "?path=collections_by_node&node="+v);
   } else if (type == 'own' && Number(v) > 0){
-    makeLink(cell, v, "index.html?path=collections_by_owner&own="+v);
+    makeLink(cell, v, admintool_home + "?path=collections_by_owner&own="+v);
   } else if (type == 'mime' && !v.startsWith('--')){
-    makeLink(cell, v, "index.html?path=collections_by_mime_type&mime="+v);
+    makeLink(cell, v, admintool_home + "?path=collections_by_mime_type&mime="+v);
   } else if (type == 'gmime' && v != '' && !v.startsWith('ZZ')){
-    makeLink(cell, v, "index.html?path=collections_by_mime_group&mime="+v);
+    makeLink(cell, v, admintool_home + "?path=collections_by_mime_group&mime="+v);
   } else if (type == 'coll' && Number(v) > 0){
-    makeLink(cell, v, "index.html?path=collection_details&coll="+v);
+    makeLink(cell, v, admintool_home + "?path=collection_details&coll="+v);
   } else if (type == 'coll-date' && Number(v) > 0){
-    makeLink(cell, v, "index.html?path=objects_recent_coll&coll="+v);
+    makeLink(cell, v, admintool_home + "?path=objects_recent_coll&coll="+v);
   } else if (type == 'ogroup' && !v.startsWith('ZZ')){
-    makeLink(cell, v, "index.html?path=collection_group_details&coll="+v);
+    makeLink(cell, v, admintool_home + "?path=collection_group_details&coll="+v);
   } else if (type == 'batch') {
-    makeLink(cell, v, "index.html?path=objects_by_batch&batch="+v);
+    makeLink(cell, v, admintool_home + "?path=objects_by_batch&batch="+v);
   } else if (type == 'batchnote') {
     var arr = v.split(";")
     if (arr.length == 2) {
-      makeLink(cell, arr[1], "index.html?path=objects_by_batch&batch="+arr[0]);
+      makeLink(cell, arr[1], admintool_home + "?path=objects_by_batch&batch="+arr[0]);
     } else {
       cell.text(v)
     }
@@ -523,7 +524,7 @@ function format(cell, v, type, merritt_path) {
     if (arr.length == 2) {
       batj = arr[0].split(/\//);
       if (batj.length == 2) {
-        makeLink(cell, arr[1], "index.html?path=objects_by_job&batch="+batj[0]+"&job="+batj[1]);
+        makeLink(cell, arr[1], admintool_home + "?path=objects_by_job&batch="+batj[0]+"&job="+batj[1]);
       } else {
         cell.text(v)
       }
@@ -532,19 +533,19 @@ function format(cell, v, type, merritt_path) {
     }
   } else if (type == 'job') {
     //todo... pass batch as well, job is not indexed
-    makeLink(cell, v, "index.html?path=objects_by_job&job="+v+"&batch=x");
+    makeLink(cell, v, admintool_home + "?path=objects_by_job&job="+v+"&batch=x");
   } else if (type == 'qbatch') {
-    makeLink(cell, v, "collIndex.html?path=batch&batch="+v);
+    makeLink(cell, v, colladmin_home + "?path=batch&batch="+v);
   } else if (type == 'ldapuid') {
-    makeLink(cell, v, "collIndex.html?path=ldap/user&uid="+v.replace(/^.*\(/,'').replace(/\)/,''));
+    makeLink(cell, v, colladmin_home + "?path=ldap/user&uid="+v.replace(/^.*\(/,'').replace(/\)/,''));
   } else if (type == 'ldapcoll') {
-    makeLink(cell, v, "collIndex.html?path=ldap/coll&coll="+v.replace(/^.*\(/,'').replace(/\)/,''));
+    makeLink(cell, v, colladmin_home + "?path=ldap/coll&coll="+v.replace(/^.*\(/,'').replace(/\)/,''));
   } else if (type == 'ldapark') {
-    makeLink(cell, v, "collIndex.html?path=ldap/coll&ark="+v);
+    makeLink(cell, v, colladmin_home + "?path=ldap/coll&ark="+v);
   } else if (type == 'qbatchnote') {
     var arr = v.split(";")
     if (arr.length == 2) {
-      makeLink(cell, arr[1], "collIndex.html?path=batch&batch="+arr[0]);
+      makeLink(cell, arr[1], colladmin_home + "?path=batch&batch="+arr[0]);
     } else {
       cell.text(v)
     }
@@ -552,7 +553,7 @@ function format(cell, v, type, merritt_path) {
     var arr = v.split("/");
     var b = arr[0];
     var j = arr.length > 1 ? arr[1] : "";
-    makeLink(cell, j, "collIndex.html?path=manifest&batch="+b+"&job="+j);
+    makeLink(cell, j, colladmin_home + "?path=manifest&batch="+b+"&job="+j);
   } else if (type == 'mnemonic'){
     makeLink(cell, v, merritt_path + "/m/" + v);
   } else if (type == 'ark'){
@@ -565,7 +566,7 @@ function format(cell, v, type, merritt_path) {
     }
     cell.text(v);
   } else if (type == 'profile'){
-    makeLink(cell, v, "collIndex.html?path=profiles&profile=" + encodeURIComponent(v));
+    makeLink(cell, v, colladmin_home + "?path=profiles&profile=" + encodeURIComponent(v));
   } else if (type == 'list' && v != ''){
     var ul = makeUl(cell);
     $.each(v.split(","), function(i,txt){
@@ -586,20 +587,20 @@ function format(cell, v, type, merritt_path) {
   } else if (type == 'list-host' && v != ''){
     var ul = makeUl(cell);
     $.each(v.split(","), function(i,txt){
-      makeLiLink(ul, txt, "index.html?path=yaml&datatype=hosts&host=" + txt);
+      makeLiLink(ul, txt, admintool_home + "?path=yaml&datatype=hosts&host=" + txt);
     });
     cell.addClass("hasdata");
   } else if (type == 'ldapuidlist' && v != ''){
     var ul = makeUl(cell);
     $.each(v.split(","), function(i,txt){
-      makeLiLink(ul, txt, "collIndex.html?path=ldap/user&uid=" + txt.replace(/^.*\(/,'').replace(/\)/,''));
+      makeLiLink(ul, txt, colladmin_home + "?path=ldap/user&uid=" + txt.replace(/^.*\(/,'').replace(/\)/,''));
     });
     cell.addClass("hasdata");
   } else if (type == 'status'){
     cell.addClass("status-"+v);
     cell.text(v);
   } else if (type == 'report'){
-    makeLink(cell, v, "index.html?path=report&report=" + encodeURIComponent(v));
+    makeLink(cell, v, admintool_home + "?path=report&report=" + encodeURIComponent(v));
   } else {
     cell.text(v);
   }
