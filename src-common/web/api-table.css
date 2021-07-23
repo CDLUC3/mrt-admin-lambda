@@ -212,3 +212,23 @@ output {
   background-color: #EEEEEE;
   font-style: italic;
 }
+
+input:read-only {
+  background-color: #EEEEEE;
+  border-color: #EEEEEE;
+  color: navy;
+}
+
+fieldset.collsec p label {
+  width: 220px;
+  display: inline-block;
+  font-weight: bold;
+}
+
+fieldset.collsec p em {
+  color: red;
+}
+
+.collsec p.error label {
+  color: red;
+}

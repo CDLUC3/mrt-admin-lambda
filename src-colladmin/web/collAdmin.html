@@ -27,81 +27,10 @@
       <li><a href="{{COLLADMIN_HOME}}?path=ldap/colls">LDAP Collections</a></li>
     </ul>
 
-    <h2>Collection Profiles</h2>
-    <form action="{{COLLADMIN_HOME}}?path=createProfile/profile" method="GET">
-    <fieldset class="collsec">
-      <p>
-        <label for="environment">Environment</label>
-        <input name="environment" id="environment" type="text" readonly size="40" value="docker"/>
-      </p>
-      <p>
-        <label for="path">Path</label>
-        <input name="path" id="path" type="text" readonly size="40" value="createProfile/profile"/>
-      </p>
-      <p>
-        <label for="name">Collection mnemonic</label>
-        <input name="name" id="name" type="input" size="60" value="test_collection_content"/>
-      </p>
-      <p>
-        <label for="context">Context mnemonic</label>
-        <input name="context" id="context" type="input" size="60" value="test_collection"/>
-      </p>
-      <p>
-        <label for="description">Collection description</label>
-        <textarea id="description" name="description" rows="3" cols="80">Testing collection creation</textarea>
-      </p>
-      <p>
-        <label for="collection">Collection ARK</label>
-        <input id="collection" name="collection" type="input" size="20" value="ark:/99999/collection"/>
-      </p>
-      <p>
-        <label for="owner">Owner ARK</label>
-        <select id="owner" name="owner">
-          <option value="ark:/99999/owner"> ark:/99999/owner</option>
-          <option value="ark:/99999/owner2"> ark:/99999/owner2</option>
-        </select>
-      </p>
-      <p>
-        <label for="creationdate">Creation Date</label>
-        <input id="creationdate" name="creationdate" type="input" size="30" value="2019-05-30T13:28:14-08:00"</input>
-      </p>
-      <p>
-        <label for="modificationdate">Modification Date</label>
-        <input id="modificationdate" name="modificationdate" type="input" size="30" value="2019-05-30T13:28:14-08:00"</input>
-      </p>
-      <div class="endUserNotifications">
-        <p>
-          <label for="notifications">End-user Notifications (comma-separated list of email addresses):</label>
-        </p>
-        <p>
-          <input id="notifications" type="input" size="140" value="test@test.com,test@cdlib.org">
-        </p>
-      </div>
-      <div class="storagenode">
-        <label>Primary Storage Node:</label>
-        <label class="container">
-          <input type="radio" checked="checked" name="storagenode" value="9501">
-          <span class="checkmark"></span>
-          9501: Production Minio
-        </label>
-        <label class="container">
-          <input type="radio" name="storagenode" value="9502">
-          <span class="checkmark"></span>
-          9502: Stage Minio
-        </label>
-        <label class="container">
-          <input type="radio" name="storagenode" value="5001">
-          <span class="checkmark"></span>
-          5001: Production AWS Standard
-        </label>
-      </div>
-      <div>
-        <p>
-          <button>Create Profile</button>
-        </p>
-      </div>
-    </fieldset>
-    </form>
+    <h2>Create Collection Assets</h2>
+    <ul>
+      <li><a href="{{COLLADMIN_ROOT}}/web/collProfile.html">Create Collections Profiles</a></li>
+    </ul>
 
     <h2>Provision EZID</h2>
     <fieldset class="collsec">

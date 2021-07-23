@@ -371,7 +371,6 @@ class Collection < QueryObject
 
 end
 
-
 class Collections < MerrittQuery
   def initialize(config)
       super(config)
@@ -399,6 +398,37 @@ class Collections < MerrittQuery
 
   def get_by_ark(ark)
       @collections[ark]
+  end
+
+end
+
+class Owners < MerrittQuery
+  def initialize(config)
+      super(config)
+      @owners = []
+      run_query(
+          %{
+              select 
+                ark,
+                case
+                  when name is null then concat('ZZZ: ', ark)
+                  else name
+                end as name 
+              from 
+                inv_owners
+              order by
+                name
+          }
+      ).each do |r|
+        @owners.push({
+          ark: r[0],
+          name: r[1]
+        })
+      end
+  end
+
+  def owners
+      @owners
   end
 
 end

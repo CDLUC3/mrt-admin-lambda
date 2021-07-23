@@ -10,22 +10,23 @@ module LambdaFunctions
 
     def self.process(event:,context:)
       begin
-        respath = event.fetch("path", "")
-        return LambdaBase.web_assets(respath) if LambdaBase.web_asset?(respath)
-
         config_file = 'config/database.ssm.yml'
         config_block = ENV.key?('MERRITT_ADMIN_CONFIG') ? ENV['MERRITT_ADMIN_CONFIG'] : 'default'
-        @config = Uc3Ssm::ConfigResolver.new.resolve_file_values(file: config_file, resolve_key: config_block, return_key: config_block)
-        dbconf = @config.fetch('dbconf', {})
-        client = LambdaBase.get_mysql(dbconf)
+        config = Uc3Ssm::ConfigResolver.new.resolve_file_values(file: config_file, resolve_key: config_block, return_key: config_block)
+        collHandler = Handler.new(config)
+        respath = event.fetch("path", "")
+        return collHandler.web_assets(respath) if collHandler.web_asset?(respath)
 
-        myparams = LambdaBase.get_params_from_event(event)
+        dbconf = config.fetch('dbconf', {})
+        client = collHandler.get_mysql
+
+        myparams = collHandler.get_params_from_event(event)
         puts(myparams)
 
-        path = LambdaBase.get_key_val(myparams, 'path', 'na')
+        path = collHandler.get_key_val(myparams, 'path', 'na')
         query_factory = QueryFactory.new(
           client, 
-          @config
+          config
         )
         query = query_factory.get_query_for_path(path, myparams)
         result = query.run_sql
@@ -51,5 +52,17 @@ module LambdaFunctions
         }
       end
     end
+
+    def initialize(config)
+      super(config)
+    end
+     
+    #def template_parameters(path)
+    #  map = super(path)
+    #  # Add app specific overrides here
+    #  map
+    #end
+  end
+
   end
 end

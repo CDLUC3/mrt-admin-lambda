@@ -1,11 +1,17 @@
+require 'time'
 require 'json'
 require 'yaml'
 require 'uc3-ssm'
 require 'mustache'
 
 class LambdaBase
+
+  def initialize(config)
+    @config =  config
+  end
+
   # Handle GET or POST event structures passed in via the ALB
-  def self.get_params_from_event(event)
+  def get_params_from_event(event)
     data = event ? event : {}
     method = data.fetch('httpMethod', 'GET')
 
@@ -20,14 +26,15 @@ class LambdaBase
     CGI::parse(body).transform_values(&:first)
   end
 
-  def self.get_key_val(obj, key, defval='')
+  def get_key_val(obj, key, defval='')
     return "" unless obj
     return obj[key] if obj[key]
     return obj[key.to_sym] if obj[key.to_sym]
     defval
   end     
 
-  def self.get_mysql(dbconf)
+  def get_mysql
+    dbconf = @config.fetch('dbconf', {})
     raise Exception.new "Configuration username not found" unless dbconf['username']
     raise Exception.new "Configuration password not found" unless dbconf['password']
     raise Exception.new "Configuration database not found" unless dbconf['database']
@@ -45,14 +52,14 @@ class LambdaBase
     )
   end
 
-  def self.content_type(ext)
+  def content_type(ext)
     return "text/html" if ext == "html" || ext == "htm"
     return "text/javascript" if ext == "js"
     return "text/css" if ext == "css"
     nil
   end
   
-  def self.web_asset?(path)
+  def web_asset?(path)
     puts(path)
     path =~ %r[^/web/] ? true : false
   end
@@ -65,35 +72,36 @@ class LambdaBase
     "#{ENV.fetch('COLLADMIN_ALB_URL','')}/web/collIndex.html"
   end
 
+  def self.colladmin_root_url
+    "#{ENV.fetch('COLLADMIN_ALB_URL','')}"
+  end
+
   def self.colladmin_url_admin
     "#{ENV.fetch('COLLADMIN_ALB_URL','')}/web/collAdmin.html"
   end
 
-  def self.template_parameters(path)
+  def template_parameters(path)
     lmap = {
       ADMINTOOL_HOME: LambdaBase.admintool_url, 
       COLLADMIN_HOME: LambdaBase.colladmin_url,
-      COLLADMIN_ADMIN: LambdaBase.colladmin_url_admin
+      COLLADMIN_ROOT: LambdaBase.colladmin_root_url,
+      COLLADMIN_ADMIN: LambdaBase.colladmin_url_admin,
+      NOW: Time.now.strftime("%Y-%m-%dT%H:%M:%S%z")
     }
     return lmap if path == '/web/lambda.base.js'
     return lmap if path == '/web/coll-lambda.base.js'
-    return lmap if path == '/web/ark.html'
-    return lmap if path == '/web/collAdmin.html'
-    return lmap if path == '/web/collIndex.html'
-    return lmap if path == '/web/doi.html'
-    return lmap if path == '/web/index.html'
-    return lmap if path == '/web/localid.html'
+    return lmap if path =~ %r[^/web/.*\.html]
     {}
   end
 
-  def self.web_assets(path)
+  def web_assets(path)
     qpath = "/var/task#{path}"
     return error(404, "File not found #{path}", false) unless File.file?(qpath)
     ext = path.split(".")[-1]
     ctype = content_type(ext)
     return error(404, "Unsupported content type #{ext}", false) unless ctype
     body = File.open(qpath).read
-    map = LambdaBase.template_parameters(path)
+    map = template_parameters(path)
     body = Mustache.render(body, map) unless map.empty?
     { 
       statusCode: 200, 
@@ -105,7 +113,7 @@ class LambdaBase
     }
   end
   
-  def self.error(status, message, return_page = false)
+  def error(status, message, return_page = false)
     if status != 200 && return_page
       { 
         statusCode: 200, 

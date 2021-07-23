@@ -1,0 +1,93 @@
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <script	src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.css"></link>
+    <link rel="stylesheet" type="text/css" href="api-table.css"/>
+    <script type="text/javascript" src="coll-lambda.base.js"></script>
+    <script type="text/javascript" src="api-table.js"></script>
+    <script type="text/javascript" src="profile.js"></script>
+    <script src="sorttable.js" type="text/javascript"></script>
+    <title>Merritt Collection Admin - Profile Creation</title>
+  </head>
+  <body>
+    <div class="form-body">
+    <h1>Merritt Collection Admin - Profile Creation</h1>
+    <p><a href="{{ADMINTOOL_HOME}}">Admin Tool Home</a> / <a href="{{COLLADMIN_ADMIN}}">CollAdmin Tool Home</a></p>
+
+    <form action="{{COLLADMIN_HOME}}?path=createProfile/profile" method="GET" id="profile-form">
+    <fieldset class="collsec">
+      <p class="proval">
+        <label for="environment">Environment</label>
+        <input name="environment" id="environment" type="text" readonly size="40" value="docker"/>
+        <em>Needed?</em>
+      </p>
+      <p class="proval">
+        <label for="path">Path</label>
+        <input name="path" id="path" type="text" readonly size="40" value="createProfile/profile"/>
+      </p>
+      <p class="proval">
+        <label for="context">Context mnemonic</label>
+        <input name="context" id="context" type="input" size="60" value=""/>
+      </p>
+      <p class="proval">
+        <label for="name">Collection mnemonic</label>
+        <input name="name" id="name" type="input" size="60" readonly value=""/>
+      </p>
+      <p class="proval">
+        <label for="description">Collection description</label>
+        <textarea id="description" name="description" rows="3" cols="80" title="Describe the purpose for this collection"></textarea>
+      </p>
+      <p class="proval">
+        <label for="collection">Collection ARK</label>
+        <input id="collection" name="collection" type="input" size="20" value=""/>
+        <input type="button" id="mint" title="Add call out to ezid service" value="Mint (tbd)"/>
+      </p class="proval">
+      <p class="proval">
+        <label for="owner">Owner ARK</label>
+        <select id="owner" name="owner">
+          <option value="">--make selection--</option>
+          {{#OWNERS}}
+          <option value="{{ark}}">{{name}}</option>
+          {{/OWNERS}}
+        </select>
+      </p>
+      <p class="proval">
+        <label for="creationdate">Creation Date</label>
+        <input id="creationdate" name="creationdate" type="input" size="30" readonly value="{{NOW}}"></input>
+      </p>
+      <p class="proval">
+        <label for="modificationdate">Modification Date</label>
+        <input id="modificationdate" name="modificationdate" type="input" size="30" readonly value="{{NOW}}"></input>
+      </p>
+      <p class="proval">
+        <label for="notifications">End-user Notifications</label>
+        <textarea id="notifications" name="notifications" rows="3" cols="80" title="comma-separated list of email addresses"></textarea>
+      </p>
+      <p class="storagenode,proval">
+        <label>Primary Storage Node:</label>
+        <label class="container">
+          <input type="radio" checked="checked" name="storagenode" value="9501">
+          <span class="checkmark"></span>
+          9501: Production Minio
+        </label>
+        <label class="container">
+          <input type="radio" name="storagenode" value="9502">
+          <span class="checkmark"></span>
+          9502: Stage Minio
+        </label>
+        <label class="container">
+          <input type="radio" name="storagenode" value="5001">
+          <span class="checkmark"></span>
+          5001: Production AWS Standard
+        </label>
+      </p>
+      <div>
+        <input type="submit" id='profile-button' value='Create Profile'/>
+      </div>
+    </fieldset>
+    </form>
+  </div>
+  </body>
+</html>
