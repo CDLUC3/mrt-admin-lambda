@@ -15,29 +15,6 @@ set :port, 8091
 
 set :bind, '0.0.0.0'
 
-get '/web' do
-  send_file "../web/index.html"
-end
-  
-get '/web/' do
-  send_file "../web/index.html"
-end
-  
-get '/web/:filename' do |filename|
-  send_file "../web/#{filename}"
-end
-
-post '/web' do
-  send_file "../web/index.html"
-end
-  
-post '/web/' do
-  send_file "../web/index.html"
-end
-  
-post '/web/:filename' do |filename|
-  send_file "../web/#{filename}"
-end
 
 def lambda_process(event)
   cli = HTTPClient.new
@@ -47,6 +24,12 @@ def lambda_process(event)
   status body['statusCode']
   headers body['headers']
   body['body']
+end
+
+def lambda_process_assets(event)
+  # Prevent resource contention by inserting random delay
+  sleep(4*rand)
+  lambda_process(event)
 end
 
 get '/lambda*' do
@@ -61,6 +44,17 @@ get '/lambda*' do
     httpMethod: "GET"
   }.to_json
   lambda_process(event)
+end
+
+get '/web/*' do
+  path = params['splat'][0]
+
+  event = {
+    path: "/web/#{path}", 
+    queryStringParameters: params,
+    httpMethod: "GET"
+  }.to_json
+  lambda_process_assets(event)
 end
 
 post '/lambda*' do
