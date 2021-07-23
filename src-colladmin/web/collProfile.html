@@ -16,7 +16,7 @@
     <h1>Merritt Collection Admin - Profile Creation</h1>
     <p><a href="{{ADMINTOOL_HOME}}">Admin Tool Home</a> / <a href="{{COLLADMIN_ADMIN}}">CollAdmin Tool Home</a></p>
 
-    <form action="{{COLLADMIN_HOME}}?path=createProfile/profile" method="GET" id="profile-form">
+    <form action="#" method="GET" id="profile-form">
     <fieldset class="collsec">
       <p class="proval">
         <label for="environment">Environment</label>
@@ -47,7 +47,7 @@
       <p class="proval">
         <label for="owner">Owner ARK</label>
         <select id="owner" name="owner">
-          <option value="">--make selection--</option>
+          <option value="">--selection required--</option>
           {{#OWNERS}}
           <option value="{{ark}}">{{name}}</option>
           {{/OWNERS}}
@@ -65,29 +65,26 @@
         <label for="notifications">End-user Notifications</label>
         <textarea id="notifications" name="notifications" rows="3" cols="80" title="comma-separated list of email addresses"></textarea>
       </p>
-      <p class="storagenode,proval">
+      <p class="proval">
         <label>Primary Storage Node:</label>
-        <label class="container">
-          <input type="radio" checked="checked" name="storagenode" value="9501">
-          <span class="checkmark"></span>
-          9501: Production Minio
-        </label>
-        <label class="container">
-          <input type="radio" name="storagenode" value="9502">
-          <span class="checkmark"></span>
-          9502: Stage Minio
-        </label>
-        <label class="container">
-          <input type="radio" name="storagenode" value="5001">
-          <span class="checkmark"></span>
-          5001: Production AWS Standard
-        </label>
+        <select id="storagenode" name="storagenode">
+          <option value="">--selection required--</option>
+          {{#NODES}}
+          <option value="{{number}}">{{number}}: {{description}}</option>
+          {{/NODES}}
+        </select>
       </p>
       <div>
         <input type="submit" id='profile-button' value='Create Profile'/>
       </div>
     </fieldset>
     </form>
+    <div>
+      <fieldset>
+        <legend>Generated Output</legend>
+        <textarea id="result" rows="25" cols="100"></textarea>
+      </fieldset>
+    </div>
   </div>
   </body>
 </html>

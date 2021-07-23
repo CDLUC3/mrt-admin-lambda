@@ -120,23 +120,13 @@ module LambdaFunctions
       super(config)
     end
 
-    def owners 
-      [
-        {
-          ark: 'ark:/13030/j205743f',
-          name: 'CDL Publishing'
-        },
-        {
-          ark: 'ark:/13030/j25h73z7',
-          name: 'CDL Digital Special Collections'
-        },
-      ]
-    end
      
     def template_parameters(path)
       map = super(path)
+      return default_template_parameters if path == "/web/profile.js"
       if path == '/web/collProfile.html'
         map['OWNERS'] = Owners.new(@config).owners
+        map['NODES'] = Nodes.new(@config).nodes
       end
       map
     end

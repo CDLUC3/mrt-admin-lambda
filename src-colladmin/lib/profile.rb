@@ -432,3 +432,34 @@ class Owners < MerrittQuery
   end
 
 end
+
+class Nodes < MerrittQuery
+  def initialize(config)
+      super(config)
+      @nodes = []
+      run_query(
+          %{
+              select 
+                number,
+                case
+                  when description is null then 'No description'
+                  else description
+                end as description 
+              from 
+                inv_nodes
+              order by
+                number
+          }
+      ).each do |r|
+        @nodes.push({
+          number: r[0],
+          description: r[1]
+        })
+      end
+  end
+
+  def nodes
+      @nodes
+  end
+
+end

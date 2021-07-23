@@ -213,7 +213,7 @@ output {
   font-style: italic;
 }
 
-input:read-only {
+textarea:read-only, input:read-only {
   background-color: #EEEEEE;
   border-color: #EEEEEE;
   color: navy;

@@ -80,17 +80,20 @@ class LambdaBase
     "#{ENV.fetch('COLLADMIN_ALB_URL','')}/web/collAdmin.html"
   end
 
-  def template_parameters(path)
-    lmap = {
+  def default_template_parameters
+    {
       ADMINTOOL_HOME: LambdaBase.admintool_url, 
       COLLADMIN_HOME: LambdaBase.colladmin_url,
       COLLADMIN_ROOT: LambdaBase.colladmin_root_url,
       COLLADMIN_ADMIN: LambdaBase.colladmin_url_admin,
       NOW: Time.now.strftime("%Y-%m-%dT%H:%M:%S%z")
     }
-    return lmap if path == '/web/lambda.base.js'
-    return lmap if path == '/web/coll-lambda.base.js'
-    return lmap if path =~ %r[^/web/.*\.html]
+  end
+
+  def template_parameters(path)
+    return default_template_parameters if path == '/web/lambda.base.js'
+    return default_template_parameters if path == '/web/coll-lambda.base.js'
+    return default_template_parameters if path =~ %r[^/web/.*\.html]
     {}
   end
 

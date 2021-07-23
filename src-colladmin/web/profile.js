@@ -15,8 +15,37 @@ function init() {
   $("#description,#collection,#notifications").on("blur keyup", function(){
     statusCheck();
   });
-  $("#owner").on("change", function(){
+  $("#owner,#storagenode").on("change", function(){
     statusCheck();
+  });
+  $("#profile-form").on("submit", function(){
+    var formdata = {}
+    $.each($('#profile-form').serializeArray(), function(_, kv) {
+      if (formdata.hasOwnProperty(kv.name)) {
+        formdata[kv.name] = $.makeArray(formdata[kv.name]);
+        formdata[kv.name].push(kv.value);
+      }
+      else {
+        formdata[kv.name] = kv.value;
+      }
+    });
+    $.ajax({
+      dataType: "json",
+      method: "POST",
+      url: "{{COLLADMIN_ROOT}}",
+      data: formdata,
+      success: function(data) {
+        if ("ing:genericState" in data) {
+          if ("ing:string" in data['ing:genericState']) {
+            $("#result").val(data['ing:genericState']['ing:string'].replaceAll("&#10;","\n"));            
+          }
+        }
+      },
+      error: function( xhr, status ) {
+        alert("An error has occurred.  Possibly a timeout.\n"+xhr.responseText)
+      }
+    });
+    return false;
   });
   statusCheck();
 }
@@ -34,6 +63,9 @@ function statusCheck() {
   }
   if ($("#owner").val() == "") {
     $("#owner").parents("p.proval").addClass("error");
+  }
+  if ($("#storagenode").val() == "") {
+    $("#storagenode").parents("p.proval").addClass("error");
   }
   if ($("#collection").val() == "") {
     $("#collection").parents("p.proval").addClass("error");
