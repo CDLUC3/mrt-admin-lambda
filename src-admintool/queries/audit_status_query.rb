@@ -16,7 +16,7 @@ class AuditStatusQuery < AdminQuery
           when acount > 0 then 'FAIL'
           else 'PASS'
         end as status
-    from
+      from
         (
           select
             count(*) as acount            
