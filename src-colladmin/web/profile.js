@@ -3,51 +3,108 @@ $(document).ready(function(){
 });
   
 function init() {
-  $("#context").on("blur keyup", function(){
-    $("#name").val($("#context").val() + "_content");
-    statusCheck();
-  });
-  $("#mint").on("click", function(){
-    $("#collection").val("ark:/99999/collection");
-    statusCheck();
-  });
-
-  $("#description,#collection,#notifications").on("blur keyup", function(){
+  $("#context,#description,#collection,#notification").on("blur keyup", function(){
     statusCheck();
   });
   $("#owner,#storagenode").on("change", function(){
     statusCheck();
   });
+  $("#notifications").on("change", function(){
+    $("#notification").val($("#notifications").val());
+    statusCheck();
+  });
   $("#profile-form").on("submit", function(){
-    var formdata = {}
-    $.each($('#profile-form').serializeArray(), function(_, kv) {
-      if (formdata.hasOwnProperty(kv.name)) {
-        formdata[kv.name] = $.makeArray(formdata[kv.name]);
-        formdata[kv.name].push(kv.value);
-      }
-      else {
-        formdata[kv.name] = kv.value;
-      }
-    });
-    $.ajax({
-      dataType: "json",
-      method: "POST",
-      url: "{{COLLADMIN_ROOT}}",
-      data: formdata,
-      success: function(data) {
-        if ("ing:genericState" in data) {
-          if ("ing:string" in data['ing:genericState']) {
-            $("#result").val(data['ing:genericState']['ing:string'].replaceAll("&#10;","\n"));            
-          }
-        }
-      },
-      error: function( xhr, status ) {
-        alert("An error has occurred.  Possibly a timeout.\n"+xhr.responseText)
-      }
-    });
+    doForm();
+    //stop submit propagation
     return false;
   });
   statusCheck();
+  $("#tabs").tabs({disabled: [1,2,3,4]});
+}
+
+function getFormData() {
+  var formdata = {}
+  $.each($('#profile-form').serializeArray(), function(_, kv) {
+    if (formdata.hasOwnProperty(kv.name)) {
+      formdata[kv.name] = $.makeArray(formdata[kv.name]);
+      formdata[kv.name].push(kv.value);
+    }
+    else {
+      formdata[kv.name] = kv.value;
+    }
+  });
+  return formdata;
+}
+
+function showResult(index, data) {
+  if (typeof data == "object") {
+    try {
+      data = JSON.stringify(data);
+    } catch(e) {
+
+    }
+  }
+  $("#result-"+index).val(data);
+}
+
+function generateName(index, context) {
+  if (index == 0) {
+    return context + "_content";
+  }
+  if (index == 2) {
+    return context + "_owner";
+  }
+  if (index == 3) {
+    return context + "_service_level_agreement";
+  }
+  return context;
+}
+
+function doForm() {
+  $.each(
+    [
+      "createProfile/profile",
+      "createProfile/collection",
+      "createProfile/owner",
+      "createProfile/sla"
+    ],
+    function(index, path){
+      var formdata = getFormData();
+      formdata['path'] = path;
+      formdata['name'] = generateName(index, formdata['context'])
+      if (index > 0) {
+        delete formdata['notification'];
+      }
+      console.log(path + " " + index);
+      $.ajax({
+        dataType: "json",
+        method: "POST",
+        url: "{{COLLADMIN_ROOT}}",
+        data: formdata,
+        success: function(data) {
+          if (data == null || data == "") {
+            data = {message: "no data returned for " + path}
+          }
+          if ("ing:genericState" in data) {
+            if ("ing:string" in data['ing:genericState']) {
+              showResult(index, data['ing:genericState']['ing:string'].replaceAll("&#10;","\n"));            
+            } else {
+              showResult(index, data);
+            }
+          } else {
+            showResult(index, data);
+          }
+          $("#tabs").tabs("enable", index + 1);
+        },
+        error: function( xhr, status ) {
+          showResult(index, xhr.responseText);
+          $("#tabs").tabs("enable", index + 1);
+          //alert("An error has occurred.  Possibly a timeout.\n"+xhr.responseText)
+        }
+      });
+    }
+  )
+
 }
 
 function statusCheck() {
@@ -70,8 +127,8 @@ function statusCheck() {
   if ($("#collection").val() == "") {
     $("#collection").parents("p.proval").addClass("error");
   }
-  if ($("#notifications").val() == "") {
-    $("#notifications").parents("p.proval").addClass("error");
+  if (!$("#notification").val().match(/^((.+)@([^,@]+\.[^,@]+),)*(.+)@([^,@]+\.[^,@]+)$/)) {
+    $("#notification").parents("p.proval").addClass("error");
   }
   $("#profile-button").attr("disabled", $(".collsec p.proval.error").length > 0);
 }

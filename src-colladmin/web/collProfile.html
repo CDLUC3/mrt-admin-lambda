@@ -16,74 +16,110 @@
     <h1>Merritt Collection Admin - Profile Creation</h1>
     <p><a href="{{ADMINTOOL_HOME}}">Admin Tool Home</a> / <a href="{{COLLADMIN_ADMIN}}">CollAdmin Tool Home</a></p>
 
-    <form action="#" method="GET" id="profile-form">
-    <fieldset class="collsec">
-      <p class="proval">
-        <label for="environment">Environment</label>
-        <input name="environment" id="environment" type="text" readonly size="40" value="docker"/>
-        <em>Needed?</em>
-      </p>
-      <p class="proval">
-        <label for="path">Path</label>
-        <input name="path" id="path" type="text" readonly size="40" value="createProfile/profile"/>
-      </p>
-      <p class="proval">
-        <label for="context">Context mnemonic</label>
-        <input name="context" id="context" type="input" size="60" value=""/>
-      </p>
-      <p class="proval">
-        <label for="name">Collection mnemonic</label>
-        <input name="name" id="name" type="input" size="60" readonly value=""/>
-      </p>
-      <p class="proval">
-        <label for="description">Collection description</label>
-        <textarea id="description" name="description" rows="3" cols="80" title="Describe the purpose for this collection"></textarea>
-      </p>
-      <p class="proval">
-        <label for="collection">Collection ARK</label>
-        <input id="collection" name="collection" type="input" size="20" value=""/>
-        <input type="button" id="mint" title="Add call out to ezid service" value="Mint (tbd)"/>
-      </p class="proval">
-      <p class="proval">
-        <label for="owner">Owner ARK</label>
-        <select id="owner" name="owner">
-          <option value="">--selection required--</option>
-          {{#OWNERS}}
-          <option value="{{ark}}">{{name}}</option>
-          {{/OWNERS}}
-        </select>
-      </p>
-      <p class="proval">
-        <label for="creationdate">Creation Date</label>
-        <input id="creationdate" name="creationdate" type="input" size="30" readonly value="{{NOW}}"></input>
-      </p>
-      <p class="proval">
-        <label for="modificationdate">Modification Date</label>
-        <input id="modificationdate" name="modificationdate" type="input" size="30" readonly value="{{NOW}}"></input>
-      </p>
-      <p class="proval">
-        <label for="notifications">End-user Notifications</label>
-        <textarea id="notifications" name="notifications" rows="3" cols="80" title="comma-separated list of email addresses"></textarea>
-      </p>
-      <p class="proval">
-        <label>Primary Storage Node:</label>
-        <select id="storagenode" name="storagenode">
-          <option value="">--selection required--</option>
-          {{#NODES}}
-          <option value="{{number}}">{{number}}: {{description}}</option>
-          {{/NODES}}
-        </select>
-      </p>
-      <div>
-        <input type="submit" id='profile-button' value='Create Profile'/>
+    <div id="tabs">
+      <ul>
+        <li><a href="#tabs-0">Configuration</a></li>
+        <li><a href="#tabs-1">Profile</a></li>
+        <li><a href="#tabs-2">Collection</a></li>
+        <li><a href="#tabs-3">Owner</a></li>
+        <li><a href="#tabs-4">SLA</a></li>
+      </ul>
+      <div id="tabs-0">
+        <form action="#" method="GET" id="profile-form">
+          <fieldset class="collsec">
+            <p class="proval">
+              <label for="context">Context mnemonic</label>
+              <input name="context" id="context" type="input" size="60" value="" title="Note: _owner, _content, and _service_level_agreement will be appended as needed"/>
+            </p>
+            <p class="proval">
+              <label for="description">Collection title</label>
+              <textarea id="description" name="description" rows="3" cols="80" title="Describe the purpose for this collection"></textarea>
+            </p>
+            <p class="proval">
+              <label for="collection">Collection ARK</label>
+              <input id="collection" name="collection" type="input" size="20" value="ark:/99999/collection"/>
+              <em>Remove field once minting is implemented in ingest</em>
+            </p class="proval">
+            <p class="proval">
+              <label for="owner">Owner ARK</label>
+              <select id="owner" name="owner">
+                <option value="">--selection required--</option>
+                {{#OWNERS}}
+                <option value="{{ark}}">{{name}}</option>
+                {{/OWNERS}}
+              </select>
+            </p>
+            <p class="proval">
+              <label for="creationdate">Creation Date</label>
+              <input id="creationdate" name="creationdate" type="input" size="30" readonly value="{{NOW}}"></input>
+            </p>
+            <p class="proval">
+              <label for="modificationdate">Modification Date</label>
+              <input id="modificationdate" name="modificationdate" type="input" size="30" readonly value="{{NOW}}"></input>
+            </p>
+            <fieldset>
+            <legend>End User Notifications</legend>
+            <p class="proval">
+              <label for="notifications">Existing Notifications</label>
+              <select id="notifications">
+                <option value="">--select to re-use existing notification list--</option>
+                {{#NOTIFICATIONS}}
+                <option value="{{contacts}}">{{mnemonic}}</option>
+                {{/NOTIFICATIONS}}
+              </select>
+            </p>
+            <p class="proval">
+              <label for="notification">End-user Notifications</label>
+              <textarea id="notification" name="notification" rows="3" cols="80" title="comma-separated list of email addresses"></textarea>
+            </p>
+            </fieldset>
+            <p class="proval">
+              <label>Primary Storage Node:</label>
+              <select id="storagenode" name="storagenode">
+                <option value="">--selection required--</option>
+                {{#NODES}}
+                <option value="{{number}}">{{number}}: {{description}}</option>
+                {{/NODES}}
+              </select>
+            </p>
+            <div>
+              <input type="submit" id='profile-button' value='Create Profile'/>
+            </div>
+          </fieldset>
+          </form>
+        </div>
+      <div id="tabs-1">
+        <div>
+          <fieldset>
+            <legend>Generated createProfile/profile</legend>
+            <textarea id="result-0" rows="25" cols="100"></textarea>
+          </fieldset>
+        </div>    
       </div>
-    </fieldset>
-    </form>
-    <div>
-      <fieldset>
-        <legend>Generated Output</legend>
-        <textarea id="result" rows="25" cols="100"></textarea>
-      </fieldset>
+      <div id="tabs-2">
+        <div>
+          <fieldset>
+            <legend>Generated createProfile/collection</legend>
+            <textarea id="result-1" rows="25" cols="100"></textarea>
+          </fieldset>
+        </div>    
+      </div>
+      <div id="tabs-3">
+        <div>
+          <fieldset>
+            <legend>Generated createProfile/owner</legend>
+            <textarea id="result-2" rows="25" cols="100"></textarea>
+          </fieldset>
+        </div>    
+      </div>
+      <div id="tabs-4">
+        <div>
+          <fieldset>
+            <legend>Generated createProfile/sla</legend>
+            <textarea id="result-3" rows="25" cols="100"></textarea>
+          </fieldset>
+        </div>    
+      </div>
     </div>
   </div>
   </body>

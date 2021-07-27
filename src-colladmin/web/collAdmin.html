@@ -30,58 +30,12 @@
     <h2>Create Collection Assets</h2>
     <ul>
       <li><a href="{{COLLADMIN_ROOT}}/web/collProfile.html">Create Collections Profiles</a></li>
+      <li>Submit Coll/Own/SLA objects to Merritt (TBD)</li>
+      <li>Create LDAP users (TBD)</li>
+      <li>Create LDAP permissions (TBD)</li>
     </ul>
 
-    <h2>Provision EZID</h2>
-    <fieldset class="collsec">
-      <p>
-        <button onclick="$('#ezid').val('ark:/1234/567')">Request EZID</button>
-        <input id="ezid" type="text" readonly size="40"/>
-      </p>
-      <p>
-        <label for="ezid-status">EZID Status</label>
-        <input id="ezid-status" type="checkbox" value="unavailable"/>
-        <span>Unavailable</span>
-      </p>
-      <p>
-        <label for="ezid-harvest">EZID Harvest</label>
-        <input id="ezid-harvest" type="checkbox" value="enabled"/>
-        <span>Harvest Enabled</span>
-      </p>
-    </fieldset>
-
-    <h2>LDAP Entries</h2>
-    <fieldset class="collsec">
-      <p>
-        <label for="collection-ark-ldap">Collection ARK</label>
-        <input id="collection-ark-ldap" type="input" size="60"/>
-      </p>
-      <p>
-        <label for="collection-description">Collection Description</label>
-        <input id="collection-description" type="input" size="60"/>
-      </p>
-      <p>
-        <label for="submission-profile-name">Submission Profile Name</label>
-        <input id="submission-profile-name" type="input" size="60"/>
-      </p>
-      <p>
-        <button>Generate LDAP Entries</button>
-      </p>
-    </fieldset>
-    <h2>Collection Admin Object</h2>
-    <fieldset class="collsec">
-      <p>
-        <label>Primary Identifier (ARK)</label>
-        <input type="input" size="20">
-      </p>
-      <p>
-        <button>Select File</button><label> (Select a file to upload)</label>
-      </p>
-      <p>
-        <button>Add Object</button>
-      </p>
-    </fieldset>
-    <h2>Update Inventory</h2>
+    <h2>Update Inventory for collection</h2>
     <fieldset class="collsec">
       <h4>
         Entries for inv_collections record

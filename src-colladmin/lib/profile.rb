@@ -30,6 +30,21 @@ class ProfileList < MerrittJson
     rows
   end
 
+  def notification_map
+    map = {}
+    @profiles.each do |p|
+      map[p.getValue(:context)] = p.getValue(:contactsEmail).join(",")
+    end
+    omap = []
+    map.keys.sort.each do |k|
+      omap.push({
+        mnemonic: k,
+        contacts: map[k]
+      })
+    end
+    omap
+  end
+
 end
 
 class SingleIngestProfileWrapper < MerrittJson

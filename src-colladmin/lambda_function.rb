@@ -86,7 +86,7 @@ module LambdaFunctions
         elsif path == "createProfile/collection" 
           result = PostToIngestMultipartAction.new(config, path, myparams, "admin/profile/collection").get_data
         elsif path == "createProfile/owner" 
-          result = PostToIngestMultipartAction.new(@config, path, myparams, "admin/profile/owner").get_data
+          result = PostToIngestMultipartAction.new(config, path, myparams, "admin/profile/owner").get_data
         elsif path == "createProfile/sla" 
           result = PostToIngestMultipartAction.new(config, path, myparams, "admin/profile/sla").get_data
         elsif path =~ /ldap\/.*/ 
@@ -127,6 +127,7 @@ module LambdaFunctions
       if path == '/web/collProfile.html'
         map['OWNERS'] = Owners.new(@config).owners
         map['NODES'] = Nodes.new(@config).nodes
+        map['NOTIFICATIONS'] = IngestProfileAction.new(@config, "", {}).get_profile_list.notification_map
       end
       map
     end

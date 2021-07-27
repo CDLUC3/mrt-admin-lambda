@@ -8,13 +8,16 @@ class ForwardToIngestAction < AdminAction
     @endpoint = endpoint
   end
 
+  def get_body
+    qjson = HttpGetJson.new(get_ingest_server, @endpoint)
+    return { message: "Status #{qjson.status} for #{@endpoint}" }.to_json unless qjson.status == 200
+    return qjson.body unless qjson.body.empty?
+  end
+
   def get_data
     begin
-      qjson = HttpGetJson.new(get_ingest_server, @endpoint)
-      return { message: "Status #{qjson.status} for #{@endpoint}" }.to_json unless qjson.status == 200
-      # puts(qjson.class)
-      # puts(qjson.body)
-      return convertJsonToTable(qjson.body) unless qjson.body.empty?
+      body = get_body
+      return convertJsonToTable(body) unless body.empty?
       { message: "No response for #{@endpoint}" }.to_json
     rescue => e
       puts(e.message)
