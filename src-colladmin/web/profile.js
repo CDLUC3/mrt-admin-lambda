@@ -15,6 +15,7 @@ function init() {
   });
   $("#profile-form").on("submit", function(){
     doForm();
+    $("#profile-button").attr("disabled", true);
     //stop submit propagation
     return false;
   });
@@ -45,6 +46,7 @@ function showResult(index, data) {
     }
   }
   $("#result-"+index).val(data);
+  $("#down-"+index).attr("href", "data:text/plain;charset=utf-8," + data);
 }
 
 function generateName(index, context) {
