@@ -30,6 +30,21 @@ class ProfileList < MerrittJson
     rows
   end
 
+  def notification_map
+    map = {}
+    @profiles.each do |p|
+      map[p.getValue(:context)] = p.getValue(:contactsEmail).join(",")
+    end
+    omap = []
+    map.keys.sort.each do |k|
+      omap.push({
+        mnemonic: k,
+        contacts: map[k]
+      })
+    end
+    omap
+  end
+
 end
 
 class SingleIngestProfileWrapper < MerrittJson
@@ -371,7 +386,6 @@ class Collection < QueryObject
 
 end
 
-
 class Collections < MerrittQuery
   def initialize(config)
       super(config)
@@ -399,6 +413,68 @@ class Collections < MerrittQuery
 
   def get_by_ark(ark)
       @collections[ark]
+  end
+
+end
+
+class Owners < MerrittQuery
+  def initialize(config)
+      super(config)
+      @owners = []
+      run_query(
+          %{
+              select 
+                ark,
+                case
+                  when name is null then concat('ZZZ: ', ark)
+                  else name
+                end as name 
+              from 
+                inv_owners
+              order by
+                name
+          }
+      ).each do |r|
+        @owners.push({
+          ark: r[0],
+          name: r[1]
+        })
+      end
+  end
+
+  def owners
+      @owners
+  end
+
+end
+
+class Nodes < MerrittQuery
+  def initialize(config)
+      super(config)
+      @nodes = []
+      run_query(
+          %{
+              select 
+                number,
+                case
+                  when description is null then 'No description'
+                  else description
+                end as description 
+              from 
+                inv_nodes
+              order by
+                number
+          }
+      ).each do |r|
+        @nodes.push({
+          number: r[0],
+          description: r[1]
+        })
+      end
+  end
+
+  def nodes
+      @nodes
   end
 
 end

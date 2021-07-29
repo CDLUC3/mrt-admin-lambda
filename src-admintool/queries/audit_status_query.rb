@@ -12,7 +12,10 @@ class AuditStatusQuery < AdminQuery
       select
         'unverified' as astatus,
         acount,
-        'PASS' as status
+        case 
+          when acount > 0 then 'FAIL'
+          else 'PASS'
+        end as status
       from
         (
           select

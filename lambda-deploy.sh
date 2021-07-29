@@ -2,8 +2,8 @@
 
 DEPLOY_ENV=${1:-dev}
 
-# Uncommend the following line when a config change is needed
-# run_config=Y
+# Set param 2 to Y if the lambda config should be updated
+run_config=${2:-N}
 
 EXIT_ON_DIE=true
 source ~/.profile.d/uc3-aws-util.sh
@@ -60,6 +60,19 @@ then
   echo " -- pause 60 sec then update function config"
   sleep 60
 
+  if [ "${DEPLOY_ENV}" == "prd" ]
+  then
+    REP=
+  else
+    REP=-${DEPLOY_ENV}
+  fi
+
+  ADMIN_ALB_URL=`get_ssm_value_by_name admintool/api-path`
+  ADMIN_ALB_URL=${ADMIN_ALB_URL//-dev/${REP}}
+
+  COLLADMIN_ALB_URL=`get_ssm_value_by_name colladmin/api-path`
+  COLLADMIN_ALB_URL=${COLLADMIN_ALB_URL//-dev/${REP}}
+
   aws lambda update-function-configuration \
     --function-name ${LAMBDA_ARN} \
     --region us-west-2 \
@@ -67,5 +80,5 @@ then
     --timeout 180 \
     --memory-size 128 \
     --no-cli-pager \
-    --environment "Variables={SSM_ROOT_PATH=${SSM_DEPLOY_PATH},MERRITT_PATH=${MERRITT_PATH}}" 
+    --environment "Variables={SSM_ROOT_PATH=${SSM_DEPLOY_PATH},MERRITT_PATH=${MERRITT_PATH},ADMIN_ALB_URL=${ADMIN_ALB_URL},COLLADMIN_ALB_URL=${COLLADMIN_ALB_URL}}" 
 fi

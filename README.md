@@ -29,8 +29,8 @@ The Lambda code is deployed to the Ruby 2.7 environment.  A build process is req
   - docker image to facilitate localhost testing with docker-compose
 - src-admintool: Admintool Lambda source code
 - src-colladmin: Collection Admin Lambda source code
-- web: static website code to be deployed to S3
-
+- src-common: Code common to both Admin Tool and CollAdmin Tool
+  - web: web resources served from the lambda
 ## Deployment Preparation
 - This code relies on a set of SSM parameters to control the application.
 - https://github.com/CDLUC3/uc3-aws-cli contains the code for reading Merritt SSM parameters.
@@ -42,12 +42,6 @@ The Lambda code is deployed to the Ruby 2.7 environment.  A build process is req
 - Colladmin Lambda deploy variables
   - ../colladmin/lambda-arn-base
   - ../colladmin/ecr-image
-- Static Website variables
-  - ../admintool/api-path - api gateway path (or cloudfront path)
-  - ../admintool/s3-bucket - Website S3 bucket
-  - ../admintool/s3-path - Website path in S3
-  - ../admintool/site-url - CloudFront website
-
 ### Deploy the Lambda Code
 
 The following script should be run from a host that is authorized to 
@@ -64,15 +58,6 @@ This script requires SSM parameters to be configured.  Requires lambda update fu
 
 This script **requires aws cli V2** in order to deploy a docker image to lambda.  
 - The host running this script needs to be able to push to ECR and to update a lambda.
-
-## Static Website Publishing
-- A static website provides the user interface for these queries.
-- On page load, URL parameters are read to determine the query to run
-- A query request is made via ajax
-- Query results are reformatted into an html table and displayed to the user  
-- A publishing script [publish.sh](publish.sh) will copy assets into an S3 bucket
-- AWS Cloud Front has been configured to provide a URL for the static website
-  - Cloud Front is also used to restrict access to the website
 
 ## Local Testing
 

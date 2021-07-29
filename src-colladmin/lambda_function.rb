@@ -1,7 +1,4 @@
-require "cgi"
-require 'json'
-require 'yaml'
-require 'uc3-ssm'
+require_relative 'lambda_base'
 
 require_relative 'actions/action'
 require_relative 'actions/forward_to_ingest_action'
@@ -17,25 +14,6 @@ require_relative 'actions/ingest_batch_folders_action'
 require_relative 'actions/ldap_action'
 require_relative 'actions/post_to_ingest_action'
 require_relative 'actions/post_to_ingest_multipart_action.rb'
-
-def get_key_val(obj, key, defval='')
-  return "" unless obj
-  return obj[key] if obj[key]
-  return obj[key.to_sym] if obj[key.to_sym]
-  defval
-end
-
-def get_config
-  config_file = 'config/database.ssm.yml'
-  config_file = "../src/#{config_file}" unless File.file?(config_file)
-  config_block = ENV.key?('MERRITT_ADMIN_CONFIG') ? ENV['MERRITT_ADMIN_CONFIG'] : 'default'
-  Uc3Ssm::ConfigResolver.new({
-    def_value: 'N/A' 
-  }).resolve_file_values({
-    file: config_file, 
-    return_key: config_block
-  })
-end
 
 # Handle GET or POST event structures pass in via the ALB
 def get_params_from_event(event)
@@ -59,49 +37,60 @@ def get_params_from_event(event)
 end
 
 module LambdaFunctions
-  class Handler
+  class Handler < LambdaBase
     def self.process(event:,context:)
       begin
-        @config = get_config
+        config_file = 'config/database.ssm.yml'
+        config_block = ENV.key?('MERRITT_ADMIN_CONFIG') ? ENV['MERRITT_ADMIN_CONFIG'] : 'default'
+        config = Uc3Ssm::ConfigResolver.new({
+          def_value: 'N/A' 
+        }).resolve_file_values({
+          file: config_file, 
+          return_key: config_block
+        })
+        collHandler = LambdaFunctions::Handler.new(config)
+        respath = event.fetch("path", "")
+        return collHandler.web_assets(respath) if collHandler.web_asset?(respath)
 
         data = event ? event : {}
-        myparams = get_params_from_event(event)
-
-        path = CGI.unescape(get_key_val(myparams, 'path', 'na'))
+        
+        #myparams = get_key_val(data, 'queryStringParameters', data)
+        myparams = collHandler.get_params_from_event(event)
+        path = CGI.unescape(collHandler.get_key_val(myparams, 'path', 'na'))
         result = {message: "Path undefined"}.to_json
 
         if path == "profiles" 
-          result = IngestProfileAction.new(@config, path, myparams).get_data
+          result = IngestProfileAction.new(config, path, myparams).get_data
         elsif path == "state" 
-          result = IngestStateAction.new(@config, path, myparams).get_data
+          result = IngestStateAction.new(config, path, myparams).get_data
         elsif path == "queues" 
-          result = IngestQueueAction.new(@config, path, myparams).get_data
+          result = IngestQueueAction.new(config, path, myparams).get_data
         elsif path == "batch" 
-          result = IngestBatchAction.new(@config, path, myparams).get_data
+          result = IngestBatchAction.new(config, path, myparams).get_data
         elsif path == "job" 
-          result = IngestJobMetadataAction.new(@config, path, myparams).get_data
+          result = IngestJobMetadataAction.new(config, path, myparams).get_data
         elsif path == "manifest" 
-          result = IngestJobManifestAction.new(@config, path, myparams).get_data
+          result = IngestJobManifestAction.new(config, path, myparams).get_data
         elsif path == "files" 
-          result = IngestJobFilesAction.new(@config, path, myparams).get_data
+          result = IngestJobFilesAction.new(config, path, myparams).get_data
         elsif path == "batchFolders" 
-          result = IngestBatchFoldersAction.new(@config, path, myparams).get_data
+          result = IngestBatchFoldersAction.new(config, path, myparams).get_data
         elsif path == "sword" 
-          result = IngestSwordJobsAction.new(@config, path, myparams).get_data
+          result = IngestSwordJobsAction.new(config, path, myparams).get_data
         elsif path == "submissions/pause" 
-          result = PostToIngestAction.new(@config, path, myparams, "admin/submissions/freeze").get_data
+          result = PostToIngestAction.new(config, path, myparams, "admin/submissions/freeze").get_data
         elsif path == "submissions/unpause" 
-          result = PostToIngestAction.new(@config, path, myparams, "admin/submissions/thaw").get_data
+          result = PostToIngestAction.new(config, path, myparams, "admin/submissions/thaw").get_data
         elsif path == "createProfile/profile" 
-          result = PostToIngestMultipartAction.new(@config, path, myparams, "admin/profile/profile").get_data
+          result = PostToIngestMultipartAction.new(config, path, myparams, "admin/profile/profile").get_data
         elsif path == "createProfile/collection" 
-          result = PostToIngestMultipartAction.new(@config, path, myparams, "admin/profile/collection").get_data
+          result = PostToIngestMultipartAction.new(config, path, myparams, "admin/profile/collection").get_data
         elsif path == "createProfile/owner" 
-          result = PostToIngestMultipartAction.new(@config, path, myparams, "admin/profile/owner").get_data
+          result = PostToIngestMultipartAction.new(config, path, myparams, "admin/profile/owner").get_data
         elsif path == "createProfile/sla" 
-          result = PostToIngestMultipartAction.new(@config, path, myparams, "admin/profile/sla").get_data
+          result = PostToIngestMultipartAction.new(config, path, myparams, "admin/profile/sla").get_data
         elsif path =~ /ldap\/.*/ 
-          result = LDAPAction.make_action(@config, path, myparams).get_data
+          result = LDAPAction.make_action(config, path, myparams).get_data
         end
      
         {
@@ -127,6 +116,21 @@ module LambdaFunctions
 
     end
 
+    def initialize(config)
+      super(config)
+    end
+
+     
+    def template_parameters(path)
+      map = super(path)
+      return default_template_parameters if path == "/web/profile.js"
+      if path == '/web/collProfile.html'
+        map['OWNERS'] = Owners.new(@config).owners
+        map['NODES'] = Nodes.new(@config).nodes
+        map['NOTIFICATIONS'] = IngestProfileAction.new(@config, "", {}).get_profile_list.notification_map
+      end
+      map
+    end
   end
 
 end

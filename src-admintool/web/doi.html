@@ -11,13 +11,13 @@
     <script src="sorttable.js" type="text/javascript"></script>
   </head>
   <body>
-    <h1>Merritt Ark Query</h1>
-    <div id="arkform">
+    <h1>DOI Query</h1>
+    <div id="localform">
       <div>
         <fieldset>
-          <legend>Input containing arks</legend>
-          <p>Copy a text file containing a set of arks.  The arks will be parsed into a list.</p>
-          <textarea rows="10" cols="80" name="input" id="arkinput"></textarea>
+          <legend>Input containing dois</legend>
+          <p>Copy a text file containing a set of dois.  The dois will be parsed into a list.</p>
+          <textarea rows="10" cols="80" name="input" id="doiinput"></textarea>
           <div>
             <input type="button" value="Parse Text" id="parse"/>
           </div>
@@ -25,23 +25,23 @@
       </div>
       <div>
         <fieldset>
-          <legend>Here are the <output name="count" id="arkcount">0</output> arks that will be processed.</legend>
-          <textarea rows="10" cols="80" name="list" id="arkoutput" readonly="Y"></textarea>
+          <legend>Here are the <output name="count" id="doicount">0</output> dois that will be processed.</legend>
+          <textarea rows="10" cols="80" name="list" id="doioutput" readonly="Y"></textarea>
         </fieldset>
         </div>
-      <form action="index.html">
+      <form action="{{ADMINTOOL_HOME}}">
         <fieldset>
           <legend>Report</legend>
           <fieldset>
-            <input type="radio" name="path" value="arklist" checked>Listing</input>
-            <input type="radio" name="path" value="arkcompare">Compare Rpt</input>
+            <input type="radio" name="path" value="locallist" checked>Listing</input>
+            <input type="radio" name="path" value="localcompare">Compare Rpt</input>
           </fieldset>
           <fieldset>
             <input type="radio" name="fields" value="summary" checked>Object summary</input>
             <input type="radio" name="fields" value="metadata">Object metadata</input>
           </fieldset>
           <input type="hidden" name="method" value="post"/>
-          <input type="hidden" name="key" value="arklist"/>
+          <input type="hidden" name="key" value="locallist"/>
           <input type="submit"/>
         </fieldset>
       </form>

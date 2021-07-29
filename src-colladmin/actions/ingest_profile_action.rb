@@ -60,6 +60,22 @@ class IngestProfileAction < ForwardToIngestAction
     end
   end
 
+  def get_profile_list
+    begin
+      ProfileList.new(get_body, @collections)
+    rescue => e
+      puts(e.message)
+      puts(e.backtrace)
+      nil
+    end
+  end
+
+  def notification_map
+    profile_list = get_profile_list
+    return [] if profile_list.nil?
+    profile_list.notification_map
+  end
+
   def hasTable
     true
   end
