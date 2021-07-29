@@ -15,6 +15,7 @@ module LambdaFunctions
         config = Uc3Ssm::ConfigResolver.new.resolve_file_values(file: config_file, resolve_key: config_block, return_key: config_block)
         collHandler = Handler.new(config)
         respath = event.fetch("path", "")
+        respath = "/web" + respath if respath =~ %r[^/index.html.*]
         return collHandler.web_assets(respath) if collHandler.web_asset?(respath)
 
         dbconf = config.fetch('dbconf', {})

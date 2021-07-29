@@ -60,11 +60,18 @@ then
   echo " -- pause 60 sec then update function config"
   sleep 60
 
+  if [ "${DEPLOY_ENV}" == "prd" ]
+  then
+    REP=
+  else
+    REP=-${DEPLOY_ENV}
+  fi
+
   ADMIN_ALB_URL=`get_ssm_value_by_name admintool/api-path`
-  ADMIN_ALB_URL=${ADMIN_ALB_URL//dev/${DEPLOY_ENV}}
+  ADMIN_ALB_URL=${ADMIN_ALB_URL//-dev/${REP}}
 
   COLLADMIN_ALB_URL=`get_ssm_value_by_name colladmin/api-path`
-  COLLADMIN_ALB_URL=${COLLADMIN_ALB_URL//dev/${DEPLOY_ENV}}
+  COLLADMIN_ALB_URL=${COLLADMIN_ALB_URL//-dev/${REP}}
 
   aws lambda update-function-configuration \
     --function-name ${LAMBDA_ARN} \
