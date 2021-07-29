@@ -2,8 +2,8 @@
 
 DEPLOY_ENV=${1:-dev}
 
-# Uncommend the following line when a config change is needed
-# run_config=Y
+# Set param 2 to Y if the lambda config should be updated
+run_config=${2:-N}
 
 EXIT_ON_DIE=true
 source ~/.profile.d/uc3-aws-util.sh

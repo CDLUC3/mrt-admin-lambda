@@ -6,7 +6,7 @@ require_relative 'queries/query'
 require_relative 'queries/query_factory'
 
 module LambdaFunctions
-  class Handler
+  class Handler < LambdaBase
 
     def self.process(event:,context:)
       begin
@@ -64,5 +64,4 @@ module LambdaFunctions
     #end
   end
 
-  end
 end
