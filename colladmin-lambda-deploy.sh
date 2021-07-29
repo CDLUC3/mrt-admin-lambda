@@ -63,6 +63,11 @@ then
   if [ "${DEPLOY_ENV}" == "prd" ]
   then
     REP=
+    FORMENV=production
+  elif [ "${DEPLOY_ENV}" == "stg" ]
+  then
+    REP=-${DEPLOY_ENV}
+    FORMENV=stage
   else
     REP=-${DEPLOY_ENV}
   fi
@@ -73,6 +78,12 @@ then
   COLLADMIN_ALB_URL=`get_ssm_value_by_name colladmin/api-path`
   COLLADMIN_ALB_URL=${COLLADMIN_ALB_URL//-dev/${REP}}
 
+  VARS="SSM_ROOT_PATH=${SSM_DEPLOY_PATH}"
+  VARS="${VARS},MERRITT_PATH=${MERRITT_PATH}"
+  VARS="${VARS},ADMIN_ALB_URL=${ADMIN_ALB_URL}"
+  VARS="${VARS},COLLADMIN_ALB_URL=${COLLADMIN_ALB_URL}"
+  VARS="${VARS},FORMENV=${FORMENV}"
+
   aws lambda update-function-configuration \
     --function-name ${LAMBDA_ARN} \
     --region us-west-2 \
@@ -80,5 +91,5 @@ then
     --timeout 180 \
     --memory-size 512 \
     --no-cli-pager \
-    --environment "Variables={SSM_ROOT_PATH=${SSM_DEPLOY_PATH},MERRITT_PATH=${MERRITT_PATH},ADMIN_ALB_URL=${ADMIN_ALB_URL},COLLADMIN_ALB_URL=${COLLADMIN_ALB_URL}}" 
+    --environment "Variables={${VARS}}" 
 fi

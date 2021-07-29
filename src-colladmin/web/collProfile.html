@@ -28,6 +28,10 @@
         <form action="#" method="GET" id="profile-form">
           <fieldset class="collsec">
             <p class="proval">
+              <label for="environment">Environment</label>
+              <input name="environment" id="environment" type="input" size="60" value="{{FORMENV}}" readonly/>
+            </p>
+            <p class="proval">
               <label for="context">Context mnemonic</label>
               <input name="context" id="context" type="input" size="60" value="" title="Note: _owner, _content, and _service_level_agreement will be appended as needed"/>
             </p>

@@ -128,6 +128,7 @@ module LambdaFunctions
         map['OWNERS'] = Owners.new(@config).owners
         map['NODES'] = Nodes.new(@config).nodes
         map['NOTIFICATIONS'] = IngestProfileAction.new(@config, "", {}).get_profile_list.notification_map
+        map['FORMENV']=ENV.fetch("FORMENV",'')
       end
       map
     end
