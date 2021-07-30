@@ -7,7 +7,7 @@ class AdminObjectsFilesQuery < AdminQuery
   end
 
   def get_title
-    "Admin Objects with File Listing"
+    "Admin Objects with File Listing for #{@aggrole}"
   end
 
   def get_sql

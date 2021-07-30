@@ -7,7 +7,7 @@ class AdminObjectsQuery < AdminQuery
   end
 
   def get_title
-    "Admin Objects"
+    "Admin Objects: #{@aggrole}"
   end
 
   def get_sql
@@ -15,14 +15,8 @@ class AdminObjectsQuery < AdminQuery
       select 
         o.id, 
         o.ark, 
-        (
-          select 
-            concat(ifnull(own.name,'No name'), ': ', own.ark)
-          from 
-            inv.inv_owners own
-          where
-            own.id = o.inv_owner_id
-        ) as owner,
+        ifnull(own.name,'No name') as owner,
+        own.ark as ownerark,
         o.object_type, 
         o.role, 
         o.aggregate_role, 
@@ -30,10 +24,13 @@ class AdminObjectsQuery < AdminQuery
         o.created,
         case
           when o.aggregate_role is null then 'INFO'
+          when own.ark != 'ark:/13030/j2rn30xp' then 'INFO'
           else 'PASS'
         end as status 
       from 
         inv.inv_objects o
+      inner join inv.inv_owners own
+        on own.id = o.inv_owner_id
       where 
         #{@where}
       order by 
@@ -43,11 +40,11 @@ class AdminObjectsQuery < AdminQuery
   end
 
   def get_headers(results)
-    ['Obj Id', 'Ark', 'Owner', 'Type', 'Role', 'Aggregate Role', 'Name', 'Created', 'Status']
+    ['Obj Id', 'Ark', 'Owner', 'OwnerArk', 'Type', 'Role', 'Aggregate Role', 'Name', 'Created', 'Status']
   end
 
   def get_types(results)
-    ['objlist', 'ark', 'name', '', '', '', 'name', 'datetime', 'status']
+    ['objlist', 'ark', '', '', '', '', '', 'name', 'datetime', 'status']
   end
 
   def get_alternative_queries

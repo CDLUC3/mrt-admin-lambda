@@ -13,8 +13,11 @@ class ProfileList < MerrittJson
     fetchArrayVal(data, 'prosf:profileState').each do |json|
       p = IngestProfile.new(json, 'prosf')
       p.set_collection(@collections)
-      @profiles.append(p)
-      template = p if p.is_template?
+      if p.is_template?
+        template = p if p.is_template?
+      else
+        @profiles.append(p)
+      end
     end   
     @profiles.each do |p|
       p.scoreDiff(template)

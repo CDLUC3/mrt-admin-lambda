@@ -46,7 +46,8 @@ function showResult(index, data) {
     }
   }
   $("#result-"+index).val(data);
-  $("#down-"+index).attr("href", "data:text/plain;charset=utf-8," + data);
+  $("#down-"+index)
+    .attr("href", "data:text/plain;charset=utf-8," + data);
 }
 
 function generateName(index, context) {
@@ -63,7 +64,7 @@ function generateName(index, context) {
 }
 
 function doForm() {
-  $.each(
+ $.each(
     [
       "createProfile/profile",
       "createProfile/collection",
@@ -72,6 +73,7 @@ function doForm() {
     ],
     function(index, path){
       var formdata = getFormData();
+      $("#down-"+index).attr("download", generateName(index, formdata['context']));
       formdata['path'] = path;
       formdata['name'] = generateName(index, formdata['context'])
       if (index > 0) {
