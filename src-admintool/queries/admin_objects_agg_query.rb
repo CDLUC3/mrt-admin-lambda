@@ -10,12 +10,18 @@ class AdminObjectsAggQuery < AdminQuery
   def get_sql
     %{
       select
-        aggregate_role,
-        count(*)
+        ifnull(aggregate_role, 'Null_Value') as aggregate_role,
+        count(*),
+        case
+          when aggregate_role is null and count(*) > 0 then 'INFO'
+          else 'PASS'
+        end as status
       from
         inv.inv_objects 
       where
-        aggregate_role != 'MRT-none'
+        aggregate_role != 'MRT-none' 
+      or
+        aggregate_role is null
       group by 
         aggregate_role
       ;
@@ -23,20 +29,11 @@ class AdminObjectsAggQuery < AdminQuery
   end
 
   def get_headers(results)
-    ['Aggregate Role', 'Count']
+    ['Aggregate Role', 'Count', 'Status']
   end
 
   def get_types(results)
-    ['aggrole', 'data']
-  end
-
-  def get_alternative_queries
-    [
-      {
-        label: "Admin Objects with Null Aggegate Role", 
-        url: "path=admin_obj"
-      }
-    ]
+    ['aggrole', 'data', 'status']
   end
 
 end

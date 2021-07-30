@@ -1,4 +1,4 @@
-class AdminObjectsQuery < AdminQuery
+class AdminObjectsFilesQuery < AdminQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
     @aggrole = get_param('aggrole', 'Null_Value')
@@ -7,7 +7,7 @@ class AdminObjectsQuery < AdminQuery
   end
 
   def get_title
-    "Admin Objects"
+    "Admin Objects with File Listing"
   end
 
   def get_sql
@@ -15,39 +15,38 @@ class AdminObjectsQuery < AdminQuery
       select 
         o.id, 
         o.ark, 
-        (
-          select 
-            concat(ifnull(own.name,'No name'), ': ', own.ark)
-          from 
-            inv.inv_owners own
-          where
-            own.id = o.inv_owner_id
-        ) as owner,
         o.object_type, 
         o.role, 
         o.aggregate_role, 
-        erc_what, 
+        o.erc_what, 
         o.created,
-        case
-          when o.aggregate_role is null then 'INFO'
-          else 'PASS'
-        end as status 
+        f.source,
+        f.pathname,
+        f.full_size
       from 
-        inv.inv_objects o
+        inv.inv_objects o 
+      inner join inv.inv_versions v
+        on o.id = v.inv_object_id 
+        and o.version_number = v.number
+      inner join inv.inv_files f
+        on o.id = f.inv_object_id
+        and v.id = f.inv_version_id
       where 
         #{@where}
       order by 
-        created desc
+        created desc,
+        source,
+        pathname
       ;
     }
   end
 
   def get_headers(results)
-    ['Obj Id', 'Ark', 'Owner', 'Type', 'Role', 'Aggregate Role', 'Name', 'Created', 'Status']
+    ['Obj Id', 'Ark', 'Type', 'Role', 'Aggregate Role', 'Name', 'Created', 'Source', 'Path', 'File Size']
   end
 
   def get_types(results)
-    ['objlist', 'ark', 'name', '', '', '', 'name', 'datetime', 'status']
+    ['objlist', 'ark', '', '', '', 'name', 'datetime', '', 'name', 'bytes']
   end
 
   def get_alternative_queries
@@ -57,8 +56,8 @@ class AdminObjectsQuery < AdminQuery
         url: "path=admin_obj_agg"
       },
       {
-        label: "Admin Object File List for #{@aggrole}", 
-        url: "path=admin_obj_files&aggrole=#{@aggrole}"
+        label: "Admin Object List for #{@aggrole}", 
+        url: "path=admin_obj&aggrole=#{@aggrole}"
       }
     ]
   end
