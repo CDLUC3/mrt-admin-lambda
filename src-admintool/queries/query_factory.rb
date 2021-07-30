@@ -133,6 +133,10 @@ class QueryFactory
       ObjectsObjectCopiesNeededQuery.new(self, path, myparams)    
     elsif path == 'object_mult_coll'
       ObjectsMultipleCollQuery.new(self, path, myparams)    
+    elsif path == 'admin_obj'
+      AdminObjectsQuery.new(self, path, myparams)    
+    elsif path == 'admin_obj_agg'
+      AdminObjectsAggQuery.new(self, path, myparams)    
     elsif path == 'report'
       ReportRetrieve.new(self, path, myparams)    
     else

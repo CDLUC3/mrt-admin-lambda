@@ -601,6 +601,8 @@ function format(cell, v, type, merritt_path) {
     cell.text(v);
   } else if (type == 'report'){
     makeLink(cell, v, admintool_home + "?path=report&report=" + encodeURIComponent(v));
+  } else if (type == 'aggrole') {
+    makeLink(cell, v, admintool_home + "?path=admin_obj&aggrole="+v);
   } else {
     cell.text(v);
   }
