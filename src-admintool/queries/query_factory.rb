@@ -139,6 +139,8 @@ class QueryFactory
       AdminObjectsFilesQuery.new(self, path, myparams)    
     elsif path == 'admin_obj_agg'
       AdminObjectsAggQuery.new(self, path, myparams)    
+    elsif path == 'admin_coll'
+      AdminCollectionsQuery.new(self, path, myparams)    
     elsif path == 'report'
       ReportRetrieve.new(self, path, myparams)    
     else
