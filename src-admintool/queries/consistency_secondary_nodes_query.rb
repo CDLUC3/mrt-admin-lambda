@@ -34,6 +34,12 @@ class ConsistencySecondaryNodeQuery < AdminQuery
         inv.inv_collections c
       on 
         c.id = icin.inv_collection_id
+      inner join 
+        inv.inv_objects o
+      on 
+        c.inv_object_id = o.id 
+      and 
+        o.aggregate_role = 'MRT-collection'
       inner join
         inv.inv_nodes n
       on

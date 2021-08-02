@@ -19,6 +19,8 @@ class ObjectsMultipleCollQuery < ObjectsQuery
         having 
           count(*) > 1
       )
+      and
+        o.aggregate_role = 'MRT-none'
     }
   end
 

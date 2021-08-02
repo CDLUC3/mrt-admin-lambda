@@ -22,10 +22,12 @@ class CollectionsByNodeQuery < AdminQuery
         c.id,
         c.mnemonic,
         count(co.inv_object_id),
-        sum(case when role ='primary' then 1 else 0 end),
-        sum(case when role ='secondary' then 1 else 0 end)
+        sum(case when inio.role ='primary' then 1 else 0 end),
+        sum(case when inio.role ='secondary' then 1 else 0 end)
       from
         inv.inv_collections c
+        inner join inv.inv_objects o
+          on c.inv_object_id = o.id and o.aggregate_role = 'MRT-collection'
         inner join inv.inv_collections_inv_objects co
           on c.id = co.inv_collection_id
         inner join inv.inv_nodes_inv_objects inio

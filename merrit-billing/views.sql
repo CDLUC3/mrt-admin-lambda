@@ -70,6 +70,8 @@ create view owner_coll_mime_use_details as
     on dmud.inv_owner_id = ol.inv_owner_id
   inner join inv.inv_collections c
     on c.id = dmud.inv_collection_id
+  inner join inv.inv_objects o 
+    on c.inv_object_id = o.id and o.aggregate_role = 'MRT-collection'
 ;
 
 /*
@@ -129,6 +131,8 @@ create view owner_collections_objects as
     count(o.id) count_objects
   from
     inv.inv_collections c
+  inner join inv.inv_objects o2
+    on c.inv_object_id = o2.id and o2.aggregate_role = 'MRT-collection'
   inner join inv.inv_collections_inv_objects icio
     on c.id = icio.inv_collection_id
   inner join inv.inv_objects o

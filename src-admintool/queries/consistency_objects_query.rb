@@ -85,6 +85,8 @@ class ConsistencyObjectsQuery < AdminQuery
           on age.inv_object_id = icio.inv_object_id
         inner join inv.inv_collections c
           on icio.inv_collection_id = c.id
+        inner join inv.inv_objects o
+          on c.inv_object_id = o.id and o.aggregate_role = 'MRT-collection'
         group by 
           category
       ; 

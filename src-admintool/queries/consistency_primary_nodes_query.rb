@@ -46,6 +46,12 @@ class ConsistencyPrimaryNodeQuery < AdminQuery
         inv.inv_collections c
       on 
         c.id = icio.inv_collection_id
+      inner join 
+        inv.inv_objects o
+      on 
+        c.inv_object_id = o.id 
+      and 
+        o.aggregate_role = 'MRT-collection'
       where
         n.number not in (3041, 9501, 9502)
       group by

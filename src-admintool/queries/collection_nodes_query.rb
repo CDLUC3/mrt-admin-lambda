@@ -17,6 +17,8 @@ class CollectionNodesQuery < AdminQuery
         count(*) obj
       from
         inv.inv_collections c
+      inner join inv.inv_objects o
+        on c.inv_object_id = o.id and o.aggregate_role = 'MRT-collection'
       inner join inv.inv_collections_inv_objects icio
         on icio.inv_collection_id = c.id
       inner join inv.inv_nodes_inv_objects inio
