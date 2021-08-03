@@ -3,14 +3,18 @@ $(document).ready(function(){
 });
   
 function init() {
-  $("#context,#description,#collection,#notification").on("blur keyup", function(){
+  $("#context,#description,#collection,#notification,#collection-recent").on("blur keyup", function(){
     statusCheck();
   });
-  $("#owner,#storagenode,input[name=artifact]").on("change", function(){
+  $("#owner,#owner-admin,#storagenode,input[name=artifact],#collection-sla,#collections-recent").on("change", function(){
     statusCheck();
   });
   $("#notifications").on("change", function(){
     $("#notification").val($("#notifications").val());
+    statusCheck();
+  });
+  $("#collections-recent").on("change", function(){
+    $("#collection-recent").val($("#collections-recent").val());
     statusCheck();
   });
   $("#profile-form").on("submit", function(){
@@ -22,6 +26,10 @@ function init() {
   statusCheck();
   $("#tabs").tabs({disabled: [1]});
   $("#intabs").tabs({});
+  //default to object owned by Merritt
+  $("#owner-admin").val("ark:/13030/j2rn30xp");
+  //default to most commonly used storage node
+  $("#nodes options[1]").attr("selected", true);
 }
 
 function getFormData() {
@@ -38,7 +46,7 @@ function getFormData() {
   return formdata;
 }
 
-function showResult(index, data) {
+function showResult(data) {
   if (typeof data == "object") {
     try {
       data = JSON.stringify(data);
@@ -46,76 +54,77 @@ function showResult(index, data) {
 
     }
   }
-  $("#result-"+index).val(data);
-  $("#down-"+index)
+  $("#result").val(data);
+  $("#down")
     .attr("href", "data:text/plain;charset=utf-8," + data);
+  if ($("#down").attr("data") == "profile") {
+    var m = data.match(/^Collection.1: (ark:.*)$/m);
+    if (m) {
+      $("#collection-recent").val(m[1]);
+    }
+  }
 }
 
-function generateName(index, context) {
-  if (index == 0) {
+function generateName(artifact, context) {
+  if (artifact == 'profile') {
     return context + "_content";
   }
-  if (index == 2) {
+  if (artifact == 'owner') {
     return context + "_owner";
   }
-  if (index == 3) {
+  if (artifact == 'sla') {
     return context + "_service_level_agreement";
   }
   return context;
 }
 
 function doForm() {
- $.each(
-    [
-      "createProfile/profile",
-      "createProfile/collection",
-      "createProfile/owner",
-      "createProfile/sla"
-    ],
-    function(index, path){
-      var formdata = getFormData();
-      $("#down-"+index).attr("download", generateName(index, formdata['context']));
-      formdata['path'] = path;
-      formdata['name'] = generateName(index, formdata['context'])
-      if (index > 0) {
-        delete formdata['notification'];
+  var formdata = getFormData();
+  var artifact = formdata['artifact'];
+  var name = generateName(artifact, formdata['context']);
+  $("#down").attr("download", name).attr("data", artifact)
+  formdata['path'] = "createProfile/" + artifact;
+  formdata['name'] = name;
+  if (artifact != 'profile') {
+    delete formdata['notification'];
+  }
+  $.ajax({
+    dataType: "json",
+    method: "POST",
+    url: "{{COLLADMIN_ROOT}}",
+    data: formdata,
+    success: function(data) {
+      if (data == null || data == "") {
+        data = {message: "no data returned for " + path}
       }
-      console.log(path + " " + index);
-      $.ajax({
-        dataType: "json",
-        method: "POST",
-        url: "{{COLLADMIN_ROOT}}",
-        data: formdata,
-        success: function(data) {
-          if (data == null || data == "") {
-            data = {message: "no data returned for " + path}
-          }
-          if ("ing:genericState" in data) {
-            if ("ing:string" in data['ing:genericState']) {
-              showResult(index, data['ing:genericState']['ing:string'].replaceAll("&#10;","\n"));            
-            } else {
-              showResult(index, data);
-            }
-          } else {
-            showResult(index, data);
-          }
-          $("#tabs").tabs("enable", index + 1);
-        },
-        error: function( xhr, status ) {
-          showResult(index, xhr.responseText);
-          $("#tabs").tabs("enable", index + 1);
-          //alert("An error has occurred.  Possibly a timeout.\n"+xhr.responseText)
+      if ("ing:genericState" in data) {
+        if ("ing:string" in data['ing:genericState']) {
+          showResult(data['ing:genericState']['ing:string'].replaceAll("&#10;","\n"));            
+        } else {
+          showResult(data);
         }
-      });
+      } else {
+        showResult(data);
+      }
+      $("#tabs").tabs("enable", 1);
+      $('#tabs').tabs('select', 1)
+    },
+    error: function( xhr, status ) {
+      showResult(xhr.responseText);
+      $("#tabs").tabs("enable", 1);
+      $('#tabs').tabs('select', 1)
     }
-  )
-
+  });
 }
 
 function statusCheck() {
   $(".collsec p.proval").removeClass("error");
+  $(".intabs").attr("disabled", true).parents("p.proval").removeClass("error");
   var n = $("#context").val();
   var a = $("input[name=artifact]:checked").val();
+  if (a != undefined){
+    $(".intabs-"+a).attr("disabled", false);
+  }
   if (n == "" || a == undefined) {
     $("#context").parents("p.proval").addClass("error");
     $("#artifact-name").val("...");
@@ -137,14 +146,23 @@ function statusCheck() {
   if ($("#description").val() == "") {
     $("#description").parents("p.proval").addClass("error");
   }
-  if ($("#owner").val() == "") {
+  if ($("#owner-admin:enabled").val() == "") {
+    $("#owner-admin").parents("p.proval").addClass("error");
+  }
+  if ($("#owner:enabled").val() == "") {
     $("#owner").parents("p.proval").addClass("error");
   }
   if ($("#storagenode").val() == "") {
     $("#storagenode").parents("p.proval").addClass("error");
   }
-  if ($("#collection").val() == "") {
+  if ($("#collection:enabled").val() == "") {
     $("#collection").parents("p.proval").addClass("error");
+  }
+  if ($("#collection-sla:enabled").val() == "") {
+    $("#collection-sla").parents("p.proval").addClass("error");
+  }
+  if ($("#collection-recent:enabled").val() == "") {
+    $("#collection-recent").parents("p.proval").addClass("error");
   }
   if (!$("#notification").val().match(/^((.+)@([^,@]+\.[^,@]+),)*(.+)@([^,@]+\.[^,@]+)$/)) {
     $("#notification").parents("p.proval").addClass("error");

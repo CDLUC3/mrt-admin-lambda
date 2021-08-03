@@ -48,6 +48,25 @@ class ProfileList < MerrittJson
     omap
   end
 
+  def recent_profiles
+    map = {}
+    @profiles.each do |p|
+      map["#{p.getValue(:creationDate)} #{p.getValue(:context)}"] = {
+        ark: p.getValue(:collection),
+        name: p.getValue(:profileDescription),
+        context: p.getValue(:context)
+      }
+    end
+    omap = []
+    map.keys.sort.reverse.each do |k|
+      omap.push({
+        ark: map[k][:ark],
+        name: "#{map[k][:context]}: #{map[k][:name]}"
+      })
+    end
+    omap
+  end
+
 end
 
 class SingleIngestProfileWrapper < MerrittJson
@@ -387,30 +406,45 @@ class Collection < QueryObject
     @dbdescription
   end
 
+  def mnemonic
+    @mnemonic
+  end
+
+  def name_select
+    "#{mnemonic}: #{dbdescription}"
+  end
 end
 
 class Collections < MerrittQuery
-  def initialize(config)
+  def initialize(config, type = "MRT-collection")
       super(config)
       @collections = {}
+      @collections_select = []
       run_query(
           %{
               select 
-                id, 
-                ark,
-                mnemonic,
-                read_privilege,
-                write_privilege,
-                download_privilege,
-                storage_tier,
-                harvest_privilege, 
-                name
+                c.id, 
+                c.ark,
+                c.mnemonic,
+                c.read_privilege,
+                c.write_privilege,
+                c.download_privilege,
+                c.storage_tier,
+                c.harvest_privilege, 
+                c.name
               from 
-                inv_collections
+                inv_collections c
+              inner join inv_objects o
+                on c.inv_object_id = o.id
+                and aggregate_role = '#{type}'
           }
       ).each do |r|
           c = Collection.new(r)
           @collections[c.ark] = c
+          @collections_select.push({
+            ark: c.ark,
+            name: c.name_select
+          })
       end
   end
 
@@ -418,6 +452,9 @@ class Collections < MerrittQuery
       @collections[ark]
   end
 
+  def collections_select
+    @collections_select
+  end
 end
 
 class Owners < MerrittQuery
@@ -462,16 +499,22 @@ class Nodes < MerrittQuery
                 case
                   when description is null then 'No description'
                   else description
-                end as description 
+                end as description,
+                count(*) as pcount 
               from 
-                inv_nodes
-              order by
+                inv_nodes n
+              inner join inv_nodes_inv_objects inio
+                on inio.inv_node_id = n.id
+                and inio.role = 'primary'
+              group by 
                 number
+              order by
+                pcount desc
           }
       ).each do |r|
         @nodes.push({
           number: r[0],
-          description: r[1]
+          description: "#{r[1]} (#{r[2]})"
         })
       end
   end

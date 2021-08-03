@@ -127,10 +127,13 @@ module LambdaFunctions
       if path == '/web/collProfile.html'
         map['OWNERS'] = Owners.new(@config).owners
         map['NODES'] = Nodes.new(@config).nodes
-        map['NOTIFICATIONS'] = IngestProfileAction.new(@config, "", {}).get_profile_list.notification_map
+        profiles = IngestProfileAction.new(@config, "", {}).get_profile_list
+        map['NOTIFICATIONS'] = profiles.notification_map
+        map['RECENTCOLLS'] = profiles.recent_profiles
         formenv = ENV.fetch("FORMENV",'')
         # special path handling for DEV env
         map['FORMENV'] = formenv == 'development' ? '' : formenv
+        map['SLAS'] = Collections.new(@config, "MRT-service-level-agreement").collections_select
       end
       map
     end
