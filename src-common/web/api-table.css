@@ -232,3 +232,9 @@ fieldset.collsec p em {
 .collsec p.error label {
   color: red;
 }
+
+output {
+  width: 300px;
+  border: thin solid black;
+  background-color: #EEEEEE;
+}

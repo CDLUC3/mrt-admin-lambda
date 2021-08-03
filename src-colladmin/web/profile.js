@@ -6,7 +6,7 @@ function init() {
   $("#context,#description,#collection,#notification").on("blur keyup", function(){
     statusCheck();
   });
-  $("#owner,#storagenode").on("change", function(){
+  $("#owner,#storagenode,input[name=artifact]").on("change", function(){
     statusCheck();
   });
   $("#notifications").on("change", function(){
@@ -20,7 +20,8 @@ function init() {
     return false;
   });
   statusCheck();
-  $("#tabs").tabs({disabled: [1,2,3,4]});
+  $("#tabs").tabs({disabled: [1]});
+  $("#intabs").tabs({});
 }
 
 function getFormData() {
@@ -113,8 +114,22 @@ function doForm() {
 
 function statusCheck() {
   $(".collsec p.proval").removeClass("error");
-  if ($("#context").val() == "") {
+  var n = $("#context").val();
+  var a = $("input[name=artifact]:checked").val();
+  if (n == "" || a == undefined) {
     $("#context").parents("p.proval").addClass("error");
+    $("#artifact-name").val("...");
+    $("#artifact-details").hide();
+  } else {
+    if (a == "profile") {
+      n += "_content";
+    } else if (a == "owner") {
+      n += "_owner";
+    } else if (a == "sla") {
+      n += "_service_level_agreement";
+    }
+    $("#artifact-name").val(n);
+    $("#artifact-details").show();
   }
   if ($("#name").val() == "") {
     $("#name").parents("p.proval").addClass("error");
