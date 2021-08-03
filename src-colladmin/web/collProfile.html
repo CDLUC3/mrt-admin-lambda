@@ -19,39 +19,136 @@
     <div id="tabs">
       <ul>
         <li><a href="#tabs-0">Configuration</a></li>
-        <li><a href="#tabs-1">Profile</a></li>
-        <li><a href="#tabs-2">Collection</a></li>
-        <li><a href="#tabs-3">Owner</a></li>
-        <li><a href="#tabs-4">SLA</a></li>
+        <li><a href="#tabs-1">Generated Artifact</a></li>
       </ul>
       <div id="tabs-0">
         <form action="#" method="GET" id="profile-form">
           <fieldset class="collsec">
-            <p class="proval">
-              <label for="environment">Environment</label>
-              <input name="environment" id="environment" type="input" size="60" value="{{FORMENV}}" readonly/>
-            </p>
+            <input name="environment" id="environment" type="hidden" size="60" value="{{FORMENV}}" readonly/>
             <p class="proval">
               <label for="context">Context mnemonic</label>
               <input name="context" id="context" type="input" size="60" value="" title="Note: _owner, _content, and _service_level_agreement will be appended as needed"/>
             </p>
+            <div id="intabs">
+              <ul>
+                <li><a href="#intabs-choose">Artifact</a></li>
+                <li><a href="#intabs-profile">Ingest Profile</a></li>
+                <li><a href="#intabs-collection">Collection Admin Object</a></li>
+                <li><a href="#intabs-owner">Owner Admin Object</a></li>
+                <li><a href="#intabs-sla">SLA</a></li>
+              </ul>
+              <div id="intabs-choose">
+                <p class="proval">
+                  <h2>Choose the Artifact to Create</h2>
+                  The <b>Ingest Profile</b> object defines how the ingest service will process incoming content.  
+                  Every ingest is initiated with a profile name that is used to locate the profile object.
+                  Ingest profile records are actively maintained -- especially the notification list.
+                </p>
+                <p> 
+                  The ingest service will <b>mint the ark</b> for this collection when peforming generating this artifact.
+                </p>
+                <p>
+                  When objects are submitted to Merritt with this profile, the corresponding relationship to an owner object and a collection object will be established.
+                  The record in the <b>inv_collections</b> table will be created when the first object is submitted.
+                </p>
+                <p class="proval">
+                  The <b>Collection Admin Object</b> is used to record the relationship between an Owner(parent) object and a Collection(child).
+                </p>
+                <p class="proval">
+                  The <b>Owner Admin Object</b> is used to define he relationship between an SLA(parent) object and a owner-adminchild).
+                  This object must be submitted before any content is ingested for a new owner.
+                </p>
+                <p class="proval">
+                  The <b>Service Level Agreement (SLA) Admin Object</b> is stored in Merritt and it has a corresponding entry in the inv_collections and inv_owners table.
+                  Each SLA is a collection containing one or more owner objects.
+                </p>
+                <h3>System Evolution</h3>
+                <p>
+                  The Merritt Admin Objects are defined in the initial Merritt specification.  
+                  They are used to represent a Merritt Object hierarchy within Merritt storage.
+                  Most of the content in these admin objects is never read by the system.
+                </p>
+                <p>The Merritt Team is considering deprecating these objects in the future.</p>
+              </div>
+              <div id="intabs-profile">
+                <input type="radio" name="artifact" value="profile">Create Ingest Profile</radio>
+                <p>
+                  Ingest Profile objects are routinely created.  When a profile object has been created, an ark will be minted for the object.
+                  That ark should also be referenced in a comment field within the collection admin object.
+                </p>
+                <p class="proval">
+                  <label for="collection">Collection ARK</label>
+                  <input id="collection" name="collection"  class="intabs intabs-profile" type="input" size="20" value="ark:/99999/ingest-will-mint" title="Remove field once minting is implemented in ingest"/>
+                </p>
+                <p class="proval">
+                  <label for="owner">Owner ARK</label>
+                  <select id="owner" name="owner" class="intabs intabs-profile">
+                    <option value="">--selection required--</option>
+                    {{#OWNERS}}
+                    <option value="{{ark}}">{{name}}</option>
+                    {{/OWNERS}}
+                  </select>
+                </p>
+              </div>
+              <div id="intabs-collection">
+                <input type="radio" name="artifact" value="collection">Create Collection Admin Object</radio>
+                <p>
+                  A new Collection Admin Object is created each time a new Ingest Profile has been created.
+                  These objects are routinely submitted before ingesting the first content into a collection.
+                  <em>What happens in the database onces this object is submitted?</em>
+                </p>
+                <p class="proval">
+                  <label for="collections-recent">Recently Created Profiles</label>
+                  <select id="collections-recent">
+                    <option value="">--select to obtain an ark from a recently published ingest profile--</option>
+                    {{#RECENTCOLLS}}
+                    <option value="{{ark}}">{{name}}</option>
+                    {{/RECENTCOLLS}}
+                  </select>
+                </p>
+                <p class="proval">
+                  <label for="collection-recent">Ark for collection (minted during profile creation)</label>
+                  <input id="collection-recent" name="collection" class="intabs intabs-collection"size="30"/>
+                </p>
+                <p class="proval">
+                  <label for="owner-admin">Owner ARK</label>
+                  <select id="owner-admin" name="owner" class="intabs intabs-collection">
+                    {{#OWNERS}}
+                    <option value="{{ark}}">{{name}}</option>
+                    {{/OWNERS}}
+                  </select>
+                </p>
+              </div>
+              <div id="intabs-owner">
+                <input type="radio" name="artifact" value="owner">Create Owner Admin Object</radio>
+                <p>
+                  Owner objects are rarely created in Merritt now that all UC campuses are active Merritt depositors.
+                </p>
+                <p class="proval">
+                  <label for="collection-sla">SLA ARK</label>
+                  <select id="collection-sla" name="collection" class="intabs intabs-owner">
+                    <option value="">--selection required--</option>
+                    {{#SLAS}}
+                    <option value="{{ark}}">{{name}}</option>
+                    {{/SLAS}}
+                  </select>
+                </p>
+              </div>
+              <div id="intabs-sla">
+                <p>
+                  Service Level Agreement (SLA) objects are rarely created in Merritt now that all UC campuses are active Merritt depositors.
+                </p>
+                <input type="radio" name="artifact" value="sla">Create Service Level Agreement Admin Object</radio>
+              </div>
+            </div>
+            <div id="artifact-details">
             <p class="proval">
-              <label for="description">Collection title</label>
-              <textarea id="description" name="description" rows="3" cols="80" title="Describe the purpose for this collection"></textarea>
+              <label for="artifact-name">Artifact to Create</label>
+              <output id="artifact-name">...</output>
             </p>
             <p class="proval">
-              <label for="collection">Collection ARK</label>
-              <input id="collection" name="collection" type="input" size="20" value="ark:/99999/collection"/>
-              <em>Remove field once minting is implemented in ingest</em>
-            </p class="proval">
-            <p class="proval">
-              <label for="owner">Owner ARK</label>
-              <select id="owner" name="owner">
-                <option value="">--selection required--</option>
-                {{#OWNERS}}
-                <option value="{{ark}}">{{name}}</option>
-                {{/OWNERS}}
-              </select>
+              <label for="description">Title</label>
+              <textarea id="description" name="description" rows="3" cols="80" title="Describe the purpose for this collection"></textarea>
             </p>
             <p class="proval">
               <label for="creationdate">Creation Date</label>
@@ -80,51 +177,24 @@
             <p class="proval">
               <label>Primary Storage Node:</label>
               <select id="storagenode" name="storagenode">
-                <option value="">--selection required--</option>
                 {{#NODES}}
                 <option value="{{number}}">{{number}}: {{description}}</option>
                 {{/NODES}}
               </select>
             </p>
             <div>
-              <input type="submit" id='profile-button' value='Create Profile'/>
+              <input type="submit" id='profile-button' value='Create Artifact'/>
+            </div>
             </div>
           </fieldset>
-          </form>
-        </div>
+        </form>
+      </div>
       <div id="tabs-1">
         <div>
-          <p><a class="download" id="down-0" download="profile">Download Ingest Profile</a></p>
+          <p><a class="download" id="down" download="profile">Download Artifact</a></p>
           <fieldset>
-            <legend>Generated createProfile/profile</legend>
-            <textarea id="result-0" rows="25" cols="100"></textarea>
-          </fieldset>
-        </div>    
-      </div>
-      <div id="tabs-2">
-        <div>
-          <p><a class="download" id="down-1" download="profile">Download Collection Admin Object</a></p>
-          <fieldset>
-            <legend>Generated createProfile/collection</legend>
-            <textarea id="result-1" rows="25" cols="100"></textarea>
-          </fieldset>
-        </div>    
-      </div>
-      <div id="tabs-3">
-        <div>
-          <p><a class="download" id="down-2" download="profile">Download Owner Admin Object</a></p>
-          <fieldset>
-            <legend>Generated createProfile/owner</legend>
-            <textarea id="result-2" rows="25" cols="100"></textarea>
-          </fieldset>
-        </div>    
-      </div>
-      <div id="tabs-4">
-        <div>
-          <p><a class="download" id="down-3" download="profile">Download SLA Admin Object</a></p>
-          <fieldset>
-            <legend>Generated createProfile/sla</legend>
-            <textarea id="result-3" rows="25" cols="100"></textarea>
+            <legend>Generated artifact</legend>
+            <textarea id="result" rows="25" cols="100"></textarea>
           </fieldset>
         </div>    
       </div>

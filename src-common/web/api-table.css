@@ -232,3 +232,17 @@ fieldset.collsec p em {
 .collsec p.error label {
   color: red;
 }
+
+output {
+  width: 300px;
+  border: thin solid black;
+  background-color: #EEEEEE;
+}
+
+input[type=button] {
+  background-color: yellow;
+}
+
+input[type=button]:disabled {
+  background-color: #EEEEEE;
+}
