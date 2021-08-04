@@ -85,6 +85,9 @@ function doForm() {
   $("#down").attr("download", name).attr("data", artifact)
   formdata['path'] = "createProfile/" + artifact;
   formdata['name'] = name;
+  if (artifact == 'profile' || artifact == 'collection') {
+    formdata['ark'] = formdata['collection']
+  }
   if (artifact != 'profile') {
     delete formdata['notification'];
   }

@@ -70,7 +70,7 @@ then
     FORMENV=stage
   else
     REP=-${DEPLOY_ENV}
-    FORMENV=development
+    FORMENV=docker
   fi
 
   ADMIN_ALB_URL=`get_ssm_value_by_name admintool/api-path`

@@ -239,10 +239,10 @@ output {
   background-color: #EEEEEE;
 }
 
-input[type=button] {
+input[type=submit] {
   background-color: yellow;
 }
 
-input[type=button]:disabled {
+input[type=submit]:disabled {
   background-color: #EEEEEE;
 }
