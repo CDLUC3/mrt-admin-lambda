@@ -116,6 +116,16 @@ class LambdaBase
     }
   end
   
+  def redirect(path)
+    { 
+      statusCode: 303, 
+      headers: {
+        'Location' => path
+      },
+      body: "Redirec to #{path}"
+    }
+  end
+
   def error(status, message, return_page = false)
     if status != 200 && return_page
       { 
