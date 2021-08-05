@@ -9,8 +9,28 @@ class ObjectsFileCopiesNeededQuery < ObjectsQuery
       #{sqlfrag_audit_files_copies(@copies)}
       where
         age.init_created < date_add(now(), INTERVAL -#{@days} DAY)
-        limit #{get_limit} offset #{get_offset};
-      }
+      and not exists (
+        select 1
+        from 
+          inv.inv_objects xo 
+        where 
+          xo.ark = 'ark:/13030/m5q57br8'
+        and 
+          xo.id = age.inv_object_id
+      ) 
+      and not exists (
+        select 1
+        from 
+          inv.inv_collections_inv_objects icio
+        inner join inv.inv_collections c
+          on c.id = icio.inv_collection_id
+        where
+          age.inv_object_id = icio.inv_object_id
+        and
+          c.mnemonic in ('oneshare_dataup', 'dataone_dash')
+      )
+      limit #{get_limit} offset #{get_offset};
+    }
     stmt = @client.prepare(subsql)
     results = stmt.execute()
     @ids = [-1]

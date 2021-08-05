@@ -53,6 +53,7 @@
                 </p>
                 <p class="proval">
                   The <b>Collection Admin Object</b> is used to record the relationship between an Owner(parent) object and a Collection(child).
+                  The submission of this object into Merritt triggers the creation of the record in <b>inv_collections</b> table.  The collection ark is <em>??? - question for Mark</em>.
                 </p>
                 <p class="proval">
                   The <b>Owner Admin Object</b> is used to define he relationship between an SLA(parent) object and a owner-adminchild).
@@ -95,7 +96,8 @@
                 <p>
                   A new Collection Admin Object is created each time a new Ingest Profile has been created.
                   These objects are routinely submitted before ingesting the first content into a collection.
-                  <em>What happens in the database onces this object is submitted?</em>
+                  A collection record is created in <b>inv_collections</b> when this object is submitted.  
+                  The ark for the collection is <em>??? - question for Mark</em>.
                 </p>
                 <p class="proval">
                   <label for="collections-recent">Recently Created Profiles</label>

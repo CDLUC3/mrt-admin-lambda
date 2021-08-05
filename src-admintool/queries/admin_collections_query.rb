@@ -20,6 +20,8 @@ class AdminCollectionsQuery < AdminQuery
         case
           when c.inv_object_id is null then 'INFO'
           when c.ark != o.ark then 'INFO'
+          when o.aggregate_role = 'MRT-service-level-agreement' then 'PASS'
+          when c.ark in ('ark:/13030/j2cc0900','ark:/13030/j2h41690') then 'PASS'
           when c.mnemonic is null then 'INFO'
           else 'PASS'
         end as status

@@ -24,11 +24,32 @@ class ObjectsQuery < AdminQuery
         o.id,
         o.ark,
         o.erc_what,
-        o.erc_who,
+        substr(o.erc_who,1,200),
         o.erc_where,
         o.version_number,
-        c.id as collection_id,
-        c.mnemonic,
+        (
+          select 
+            group_concat(inv_collection_id) 
+          from 
+            inv.inv_collections_inv_objects 
+          where 
+            inv_object_id = o.id
+        ) as collection_id,
+        (
+          select 
+            group_concat(mnemonic)
+          from
+            inv.inv_collections 
+          where 
+            id in (
+              select
+                inv_collection_id
+              from 
+                inv.inv_collections_inv_objects 
+              where 
+                inv_object_id = o.id    
+            )
+        ) as mnemonic,
         (
           select
             count(f.id)
@@ -48,10 +69,6 @@ class ObjectsQuery < AdminQuery
         o.modified as modified
       from
         inv.inv_objects o
-      inner join inv.inv_collections_inv_objects icio
-        on o.id = icio.inv_object_id
-      inner join inv.inv_collections c
-        on icio.inv_collection_id = c.id
     } + get_where +
     %{  
       order by #{@sort}

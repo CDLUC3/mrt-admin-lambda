@@ -9,6 +9,26 @@ class ObjectsObjectCopiesNeededQuery < ObjectsQuery
       #{sqlfrag_object_copies(@copies)}
       where
         age.init_created < date_add(now(), INTERVAL -#{@days} DAY)
+      and not exists (
+        select 1
+        from 
+          inv.inv_objects xo 
+        where 
+          xo.ark = 'ark:/13030/m5q57br8'
+        and 
+          xo.id = age.inv_object_id
+      ) 
+      and not exists (
+        select 1
+        from 
+          inv.inv_collections_inv_objects icio
+        inner join inv.inv_collections c
+          on c.id = icio.inv_collection_id
+        where
+          age.inv_object_id = icio.inv_object_id
+        and
+          c.mnemonic in ('oneshare_dataup', 'dataone_dash')
+      )
       limit #{get_limit} offset #{get_offset};
     }
     stmt = @client.prepare(subsql)
@@ -22,7 +42,7 @@ class ObjectsObjectCopiesNeededQuery < ObjectsQuery
   end
 
   def get_title
-    "Objects with #{@copies} Copies - Older than #{@days} days (Limit #{get_limit})"
+    "Objects with #{@copies} Copies (excluding known issues) - Older than #{@days} days (Limit #{get_limit})"
   end
 
   def get_params
