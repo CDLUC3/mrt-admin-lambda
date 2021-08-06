@@ -134,6 +134,8 @@ module LambdaFunctions
         # special path handling for DEV env
         map['FORMENV'] = formenv == 'development' ? '' : formenv
         map['SLAS'] = Collections.new(@config, "MRT-service-level-agreement").collections_select
+      elsif path == '/web/collProperties.html'
+        map['COLLS'] = Collections.new(@config).collections_select
       end
       map
     end

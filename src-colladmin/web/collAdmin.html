@@ -31,72 +31,11 @@
     <ul>
       <li><a href="{{COLLADMIN_ROOT}}/web/collProfile.html">Create Collection Profiles and Admin Objects</a></li>
       <li>Submit Coll/Own/SLA objects to Merritt (TBD)</li>
+      <li><a href="{{COLLADMIN_ROOT}}/web/collProperties.html">Set Collection Properties</a></li>
       <li>Create LDAP users (TBD)</li>
       <li>Create LDAP permissions (TBD)</li>
     </ul>
 
-    <h2>Update Inventory for collection</h2>
-    <fieldset class="collsec">
-      <h4>
-        Entries for inv_collections record
-      </h4>
-      <p>
-        <label for="collection-name">Collection name</label>
-        <input id="collection-name" type="input" size="60"/>
-      </p>
-      <p>
-        <label for="collection-mnemonic">Collection mnemonic</label>
-        <input id="collection-mnemonic" type="input" size="60"/>
-      </p>
-      <p>
-        <label for="collection-read-priv">Collection read privilege</label>
-        <input id="collection-read-priv" type="input" size="60" value="Restricted" />
-      </p>
-      <p>
-        <label for="collection-write-priv">Collection write privilege</label>
-        <input id="collection-write-priv" type="input" size="60" value="Restricted" />
-      </p>
-      <p>
-        <label for="collection-download-priv">Collection download privilege</label>
-        <input id="collection-download-priv" type="input" size="60" value="Restricted" />
-      </p>
-      <p>
-        <label for="collection-storage-tier">Collection storage tier</label>
-        <input id="collection-storage-tier" type="input" size="60" value="Standard" />
-      </p>
-      <h4>
-        Entries for inv_collections_inv_nodes record
-      </h4>
-      <p>
-        Secondary Storage node 1:
-      </p>
-      <div class="dropdown">
-        <button class="dropbtn">Node Selection</button>
-          <div class="dropdown-content">
-            <a href="#">Wasabi</a>
-            <a href="#">Glacier</a>
-            <a href="#">SDSC</a>
-            <a href="#">S3</a>
-          </div>
-      </div>
-      <p>
-        Secondary Storage node 2:
-      </p>
-      <p>
-      <div class="dropdown">
-        <button class="dropbtn">Node Selection</button>
-          <div class="dropdown-content">
-            <a href="#">Wasabi</a>
-            <a href="#">Glacier</a>
-            <a href="#">SDSC</a>
-            <a href="#">S3</a>
-          </div>
-      </div>
-      </p>
-      <p>
-        <button>Submit Inventory Updates</button>
-      </p>
-    </fieldset>
   </div>
   </body>
 </html>

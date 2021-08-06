@@ -437,13 +437,21 @@ class Collections < MerrittQuery
               inner join inv_objects o
                 on c.inv_object_id = o.id
                 and aggregate_role = '#{type}'
+              order by
+                o.created desc
           }
       ).each do |r|
           c = Collection.new(r)
           @collections[c.ark] = c
+          notoggle = (c.ark == 'ark:/13030/j2cc0900' || c.ark == 'ark:/13030/j2h41690')
+          getname = ((c.mnemonic.nil? || c.dbdescription.nil?) && !notoggle)
           @collections_select.push({
             ark: c.ark,
-            name: c.name_select
+            name: c.dbdescription,
+            mnemonic: c.mnemonic,
+            harvest: c.harvest,
+            getname: getname,
+            toggle: !notoggle
           })
       end
   end
