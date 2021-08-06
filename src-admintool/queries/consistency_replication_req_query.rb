@@ -25,7 +25,7 @@ class ConsistencyReplicationReqQuery < AdminQuery
             end
           ),
           0
-        ),
+        ) as day2,
         ifnull(
           sum(
             case
@@ -37,7 +37,7 @@ class ConsistencyReplicationReqQuery < AdminQuery
             end
           ),
           0
-        ),
+        ) as day1,
         ifnull(
           sum(
             case
@@ -49,11 +49,27 @@ class ConsistencyReplicationReqQuery < AdminQuery
             end
           ),
           0
-        ),   
+        ) as day0,   
         case
           when count(distinct u.inv_object_id) = 0 then 'PASS'
-          when count(u.created < date_add(now(), INTERVAL -2 DAY)) > 0 then 'FAIL'
-          when count(u.created < date_add(now(), INTERVAL -1 DAY)) > 0 then 'WARN'
+          when 
+            sum(
+              case
+                when u.created < date_add(now(), INTERVAL -2 DAY)
+                  then 1
+                else 0
+              end
+            ) > 0 then 'FAIL'
+          when 
+            sum(
+              case
+                when u.created < date_add(now(), INTERVAL -2 DAY)
+                  then 0
+                when u.created < date_add(now(), INTERVAL -1 DAY) 
+                  then 1
+                else 0
+              end
+            ) > 0 then 'WARN'
          else 'PASS'
         end as status
       from (
