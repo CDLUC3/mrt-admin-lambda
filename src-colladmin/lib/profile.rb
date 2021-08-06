@@ -446,6 +446,7 @@ class Collections < MerrittQuery
           notoggle = (c.ark == 'ark:/13030/j2cc0900' || c.ark == 'ark:/13030/j2h41690')
           getname = ((c.mnemonic.nil? || c.dbdescription.nil?) && !notoggle)
           @collections_select.push({
+            id: c.id,
             ark: c.ark,
             name: c.dbdescription,
             mnemonic: c.mnemonic,

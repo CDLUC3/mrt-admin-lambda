@@ -33,9 +33,9 @@
               <ul>
                 <li><a href="#intabs-choose">Artifact</a></li>
                 <li><a href="#intabs-profile">Ingest Profile</a></li>
-                <li><a href="#intabs-collection">Collection Admin Object</a></li>
-                <li><a href="#intabs-owner">Owner Admin Object</a></li>
-                <li><a href="#intabs-sla">SLA</a></li>
+                <li><a href="#intabs-collection">Collection Admin Profile</a></li>
+                <li><a href="#intabs-owner">Owner Admin Profile</a></li>
+                <li><a href="#intabs-sla">SLA Profile</a></li>
               </ul>
               <div id="intabs-choose">
                 <p class="proval">
@@ -52,15 +52,15 @@
                   The record in the <b>inv_collections</b> table will be created when the first object is submitted.
                 </p>
                 <p class="proval">
-                  The <b>Collection Admin Object</b> is used to record the relationship between an Owner(parent) object and a Collection(child).
+                  The <b>Collection Admin Profile</b> is used to submit an object that will record the relationship between an Owner(parent) object and a Collection(child).
                   The submission of this object into Merritt triggers the creation of the record in <b>inv_collections</b> table.  The collection ark is <em>??? - question for Mark</em>.
                 </p>
                 <p class="proval">
-                  The <b>Owner Admin Object</b> is used to define he relationship between an SLA(parent) object and a owner-adminchild).
+                  The <b>Owner Admin Profile</b> is used to submit and object that will define the relationship between an SLA(parent) object and a owner (child).
                   This object must be submitted before any content is ingested for a new owner.
                 </p>
                 <p class="proval">
-                  The <b>Service Level Agreement (SLA) Admin Object</b> is stored in Merritt and it has a corresponding entry in the inv_collections and inv_owners table.
+                  The <b>Service Level Agreement (SLA) Admin Profile</b> is used to submit and object in Merritt and it has a corresponding entry in the inv_collections and inv_objects table.
                   Each SLA is a collection containing one or more owner objects.
                 </p>
                 <h3>System Evolution</h3>

@@ -7,41 +7,26 @@
     <link rel="stylesheet" type="text/css" href="api-table.css"/>
     <script type="text/javascript" src="coll-lambda.base.js"></script>
     <script type="text/javascript" src="api-table.js"></script>
-    <script type="text/javascript" src="properties.js"></script>
     <script src="sorttable.js" type="text/javascript"></script>
   </head>
   <body>
     <div class="form-body">
-    <h1>Merritt Collection Properties</h1>
+    <h1>Merritt OWNERS</h1>
     <p><a href="{{ADMINTOOL_HOME}}">Admin Tool Home</a> / <a href="{{COLLADMIN_ADMIN}}">CollAdmin Tool Home</a></p>
-    <h2>Collection List</h2>
+    <h2>Owner List</h2>
     <table class="sortable results">
       <thead>
         <tr class="header">
           <th>Ark</th>
           <th>Name</th>
-          <th>Menemonic</th>
-          <th>Harvest</th>
-          <th>Action</th>
         </tr>
       </thead>
       <tbody>
-        {{#COLLS}}
+        {{#OWNERS}}
         <tr>
           <th>{{ark}}</th>
           <td>{{name}}</td>
-          <td>{{mnemonic}}</td>
-          <td>{{harvest}}</td>
-          <td>
-            {{#toggle}}
-            <input type="button" class="toggle-harvest" data="{{id}}" value="Toggle Harvest - TBD"/>
-            {{/toggle}}
-            {{#getname}}
-            <input type="button" class="pull-profile" data="{{id}}" value="Pull profile details - TBD"/>
-            {{/getname}}
-          </td>
-        </tr>
-        {{/COLLS}}
+        {{/OWNERS}}
       </tbody>
     </table>
   </div>

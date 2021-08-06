@@ -124,6 +124,7 @@ module LambdaFunctions
     def template_parameters(path)
       map = super(path)
       return default_template_parameters if path == "/web/profile.js"
+      return default_template_parameters if path == "/web/properties.js"
       if path == '/web/collProfile.html'
         map['OWNERS'] = Owners.new(@config).owners
         map['NODES'] = Nodes.new(@config).nodes
@@ -134,6 +135,10 @@ module LambdaFunctions
         # special path handling for DEV env
         map['FORMENV'] = formenv == 'development' ? '' : formenv
         map['SLAS'] = Collections.new(@config, "MRT-service-level-agreement").collections_select
+      elsif path == '/web/slas.html'
+        map['SLAS'] = Collections.new(@config, "MRT-service-level-agreement").collections_select
+      elsif path == '/web/owners.html'
+        map['OWNERS'] = Owners.new(@config).owners
       elsif path == '/web/collProperties.html'
         map['COLLS'] = Collections.new(@config).collections_select
       end
