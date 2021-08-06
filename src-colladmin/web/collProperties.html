@@ -22,16 +22,26 @@
           <th>Name</th>
           <th>Menemonic</th>
           <th>Harvest</th>
+          <th>Admin Profile</th>
           <th>Action</th>
         </tr>
       </thead>
       <tbody>
+        <tr>
+          <th></th>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>admin/collection/new (TBD)</td>
+          <td><input type="button" class="submit-profile" data="admin/collection/new" value="Submit Profile"/></td>
+        </tr>
         {{#COLLS}}
         <tr>
           <th>{{ark}}</th>
           <td>{{name}}</td>
           <td>{{mnemonic}}</td>
           <td>{{harvest}}</td>
+          <td>admin/collection/xxx (TBD)</td>
           <td>
             {{#toggle}}
             <input type="button" class="toggle-harvest" data="{{id}}" value="Toggle Harvest - TBD"/>

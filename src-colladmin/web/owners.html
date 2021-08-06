@@ -19,13 +19,24 @@
         <tr class="header">
           <th>Ark</th>
           <th>Name</th>
+          <th>Admin Profile</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
+        <tr>
+          <th></th>
+          <td></td>
+          <td>admin/owner/new (tbd)</td>
+          <td><input type="button" class="submit-profile" data="admin/owner/new" value="Submit Profile"/></td>
+        </tr>
         {{#OWNERS}}
         <tr>
           <th>{{ark}}</th>
           <td>{{name}}</td>
+          <td>admin/owner/xxx (tbd)</td>
+          <td></td>
+        </tr>
         {{/OWNERS}}
       </tbody>
     </table>
