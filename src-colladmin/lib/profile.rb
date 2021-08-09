@@ -443,7 +443,7 @@ class Collections < MerrittQuery
       ).each do |r|
           c = Collection.new(r)
           @collections[c.ark] = c
-          notoggle = (c.ark == LambdaFunction::Handler.merritt_admin_coll_owners || c.ark == LambdaFunction::Handler.merritt_admin_coll_sla)
+          notoggle = (c.ark == LambdaFunctions::Handler.merritt_admin_coll_owners || c.ark == LambdaFunctions::Handler.merritt_admin_coll_sla)
           getname = ((c.mnemonic.nil? || c.dbdescription.nil?) && !notoggle)
           @collections_select.push({
             id: c.id,
