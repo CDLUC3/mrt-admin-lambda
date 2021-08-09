@@ -443,7 +443,7 @@ class Collections < MerrittQuery
       ).each do |r|
           c = Collection.new(r)
           @collections[c.ark] = c
-          notoggle = (c.ark == 'ark:/13030/j2cc0900' || c.ark == 'ark:/13030/j2h41690')
+          notoggle = (c.ark == LambdaFunction::Handler.merritt_admin_coll_owners || c.ark == LambdaFunction::Handler.merritt_admin_coll_sla)
           getname = ((c.mnemonic.nil? || c.dbdescription.nil?) && !notoggle)
           @collections_select.push({
             id: c.id,
@@ -512,11 +512,11 @@ class Nodes < MerrittQuery
                 count(*) as pcount 
               from 
                 inv_nodes n
-              inner join inv_nodes_inv_objects inio
-                on inio.inv_node_id = n.id
+              left join inv_nodes_inv_objects inio
+                on n.id = inio.inv_node_id
                 and inio.role = 'primary'
               group by 
-                number
+                number, description
               order by
                 pcount desc
           }

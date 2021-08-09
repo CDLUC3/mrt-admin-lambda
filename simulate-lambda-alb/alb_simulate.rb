@@ -71,3 +71,18 @@ post '/lambda*' do
   }.to_json
   lambda_process(event)
 end
+
+post '/web/*' do
+  path = params['splat'][0]
+  path=path.gsub(/^lambda\//,'')
+  # remove leading slash, if present
+  path=path.gsub(/^\//,'')
+
+  event = {
+    path: path, 
+    body: Base64.encode64(URI.encode_www_form(params)),
+    httpMethod: "POST",
+    isBase64Encoded: true
+  }.to_json
+  lambda_process(event)
+end

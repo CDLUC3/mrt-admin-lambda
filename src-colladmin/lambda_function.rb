@@ -119,12 +119,21 @@ module LambdaFunctions
     def initialize(config)
       super(config)
     end
-
      
+    def self.merritt_admin_owner
+      "ark:/13030/j2rn30xp"
+    end
+
+    def self.merritt_admin_coll_sla
+      "ark:/13030/j2h41690"
+    end
+
+    def self.merritt_admin_coll_owners
+      "ark:/13030/j2cc0900"
+    end
+
     def template_parameters(path)
       map = super(path)
-      return default_template_parameters if path == "/web/profile.js"
-      return default_template_parameters if path == "/web/properties.js"
       if path == '/web/collProfile.html'
         map['OWNERS'] = Owners.new(@config).owners
         map['NODES'] = Nodes.new(@config).nodes
@@ -135,6 +144,9 @@ module LambdaFunctions
         # special path handling for DEV env
         map['FORMENV'] = formenv == 'development' ? '' : formenv
         map['SLAS'] = Collections.new(@config, "MRT-service-level-agreement").collections_select
+      elsif path == "/web/properties.js"
+      elsif path == "/web/profile.js"
+        map['ADMIN_OWNER'] = LambdaFunctions::Handler.merritt_admin_owner
       elsif path == '/web/slas.html'
         map['SLAS'] = Collections.new(@config, "MRT-service-level-agreement").collections_select
       elsif path == '/web/owners.html'

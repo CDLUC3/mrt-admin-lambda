@@ -53,7 +53,7 @@
                 </p>
                 <p class="proval">
                   The <b>Collection Admin Profile</b> is used to submit an object that will record the relationship between an Owner(parent) object and a Collection(child).
-                  The submission of this object into Merritt triggers the creation of the record in <b>inv_collections</b> table.  The collection ark is <em>??? - question for Mark</em>.
+                  The submission of this object into Merritt triggers the creation of the record in <b>inv_collections</b> table.
                 </p>
                 <p class="proval">
                   The <b>Owner Admin Profile</b> is used to submit and object that will define the relationship between an SLA(parent) object and a owner (child).
@@ -141,6 +141,14 @@
                   Service Level Agreement (SLA) objects are rarely created in Merritt now that all UC campuses are active Merritt depositors.
                 </p>
                 <input type="radio" name="artifact" value="sla">Create Service Level Agreement Admin Object</radio>
+                <p class="proval">
+                  <label for="owner-sla">Owner ARK</label>
+                  <select id="owner-sla" name="owner" class="intabs intabs-sla">
+                    {{#OWNERS}}
+                    <option value="{{ark}}">{{name}}</option>
+                    {{/OWNERS}}
+                  </select>
+                </p>
               </div>
             </div>
             <div id="artifact-details">

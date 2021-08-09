@@ -6,7 +6,7 @@ function init() {
   $("#context,#description,#collection,#notification,#collection-recent").on("blur keyup", function(){
     statusCheck();
   });
-  $("#owner,#owner-admin,#storagenode,input[name=artifact],#collection-sla,#collections-recent").on("change", function(){
+  $("#owner,#owner-admin,#owner-sla,#storagenode,input[name=artifact],#collection-sla,#collections-recent").on("change", function(){
     statusCheck();
   });
   $("#notifications").on("change", function(){
@@ -27,7 +27,8 @@ function init() {
   $("#tabs").tabs({disabled: [1]});
   $("#intabs").tabs({});
   //default to object owned by Merritt
-  $("#owner-admin").val("ark:/13030/j2rn30xp");
+  $("#owner-admin").val("{{ADMIN_OWNER}}");
+  $("#owner-sla").val("{{ADMIN_OWNER}}");
   //default to most commonly used storage node
   $("#nodes options[1]").attr("selected", true);
 }
@@ -151,6 +152,9 @@ function statusCheck() {
   }
   if ($("#owner-admin:enabled").val() == "") {
     $("#owner-admin").parents("p.proval").addClass("error");
+  }
+  if ($("#owner-sla:enabled").val() == "") {
+    $("#owner-sla").parents("p.proval").addClass("error");
   }
   if ($("#owner:enabled").val() == "") {
     $("#owner").parents("p.proval").addClass("error");
