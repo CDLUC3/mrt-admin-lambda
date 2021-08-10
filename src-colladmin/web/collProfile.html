@@ -53,7 +53,7 @@
                 </p>
                 <p class="proval">
                   The <b>Collection Admin Profile</b> is used to submit an object that will record the relationship between an Owner(parent) object and a Collection(child).
-                  The submission of this object into Merritt triggers the creation of the record in <b>inv_collections</b> table.
+                  An collection admin object should be submitted with this profile before adding any content to the collection.
                 </p>
                 <p class="proval">
                   The <b>Owner Admin Profile</b> is used to submit and object that will define the relationship between an SLA(parent) object and a owner (child).
@@ -67,9 +67,10 @@
                 <p>
                   The Merritt Admin Objects are defined in the initial Merritt specification.  
                   They are used to represent a Merritt Object hierarchy within Merritt storage.
-                  Most of the content in these admin objects is never read by the system.
+                  The content (payload) for each Merritt Admin Object is a dummy README file.
+                  The submission of these dummy objects triggers the creation of collection and owner objects in the inventory database.
                 </p>
-                <p>The Merritt Team is considering deprecating these objects in the future.</p>
+                <p>The Merritt Team is considering deprecating these objects in the future in favor of direct insertion into the inventory database.</p>
               </div>
               <div id="intabs-profile">
                 <input type="radio" name="artifact" value="profile">Create Ingest Profile</radio>
@@ -96,8 +97,6 @@
                 <p>
                   A new Collection Admin Object is created each time a new Ingest Profile has been created.
                   These objects are routinely submitted before ingesting the first content into a collection.
-                  A collection record is created in <b>inv_collections</b> when this object is submitted.  
-                  The ark for the collection is <em>??? - question for Mark</em>.
                 </p>
                 <p class="proval">
                   <label for="collections-recent">Recently Created Profiles</label>
