@@ -415,8 +415,9 @@ class Collection < QueryObject
   end
 end
 
+
 class Collections < MerrittQuery
-  def initialize(config, type = "MRT-collection")
+  def initialize(config)
       super(config)
       @collections = {}
       @collections_select = []
@@ -436,7 +437,7 @@ class Collections < MerrittQuery
                 inv_collections c
               inner join inv_objects o
                 on c.inv_object_id = o.id
-                and aggregate_role = '#{type}'
+                and aggregate_role = 'MRT-collection'
               order by
                 o.created desc
           }
@@ -463,6 +464,37 @@ class Collections < MerrittQuery
 
   def collections_select
     @collections_select
+  end
+end
+
+class Slas < MerrittQuery
+  def initialize(config)
+      super(config)
+      @slas_select = []
+      run_query(
+          %{
+              select 
+                id, 
+                ark,
+                erc_what
+              from 
+                inv_objects o
+              where
+                aggregate_role = 'MRT-service-level-agreement'
+              order by
+                o.created desc
+          }
+      ).each do |r|
+          @slas_select.push({
+            id: r[0],
+            ark: r[1],
+            name: r[2]
+          })
+      end
+  end
+
+  def slas_select
+    @slas_select
   end
 end
 
