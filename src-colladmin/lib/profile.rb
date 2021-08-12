@@ -432,10 +432,10 @@ class Collections < MerrittQuery
                 c.download_privilege,
                 c.storage_tier,
                 c.harvest_privilege, 
-                c.name
+                ifnull(c.name, concat('** ', o.erc_what)) as name
               from 
                 inv_collections c
-              inner join inv_objects o
+              left join inv_objects o
                 on c.inv_object_id = o.id
                 and aggregate_role = 'MRT-collection'
               order by
@@ -444,7 +444,11 @@ class Collections < MerrittQuery
       ).each do |r|
           c = Collection.new(r)
           @collections[c.ark] = c
-          notoggle = (c.ark == LambdaFunctions::Handler.merritt_admin_coll_owners || c.ark == LambdaFunctions::Handler.merritt_admin_coll_sla)
+          notoggle = (
+            c.ark == LambdaFunctions::Handler.merritt_admin_coll_owners || 
+            c.ark == LambdaFunctions::Handler.merritt_curatorial || 
+            c.ark == LambdaFunctions::Handler.merritt_admin_coll_sla
+          )
           getname = ((c.mnemonic.nil? || c.dbdescription.nil?) && !notoggle)
           @collections_select.push({
             id: c.id,

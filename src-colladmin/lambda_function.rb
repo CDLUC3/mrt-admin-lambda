@@ -132,6 +132,10 @@ module LambdaFunctions
       "ark:/13030/j2cc0900"
     end
 
+    def self.merritt_curatorial
+      "ark:/13030/j27p88qw"
+    end
+
     def template_parameters(path)
       map = super(path)
       if path == '/web/collProfile.html'
