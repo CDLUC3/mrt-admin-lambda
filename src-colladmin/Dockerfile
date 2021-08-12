@@ -3,6 +3,12 @@
 #   All rights reserved
 #*********************************************************************
 
+FROM node as build
+WORKDIR /tmp/assets
+
+RUN npm install mustache --save
+RUN find . -type f
+
 # This image has been built from an image that matches the Lambda Ruby runtime
 # MySql binary dependencies have been embedded into the image
 
@@ -13,6 +19,7 @@ RUN yum -y install gcc-c++
 
 # Add Admin Tool Code to the image
 COPY . /var/task/
+COPY --from=build /tmp/assets/node_modules/mustache/mustache.min.js /var/task/web/mustache.min.js 
 
 # Bundle dependencies
 RUN bundle install 
