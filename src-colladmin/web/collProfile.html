@@ -20,6 +20,7 @@
       <ul>
         <li><a href="#tabs-0">Configuration</a></li>
         <li><a href="#tabs-1">Generated Artifact</a></li>
+        <li><a href="#tabs-2">Commandline</a></li>
       </ul>
       <div id="tabs-0">
         <form action="#" method="GET" id="profile-form">
@@ -192,14 +193,23 @@
       </div>
       <div id="tabs-1">
         <div>
-          <p><a class="download" id="down" download="profile">Download Artifact</a></p>
+          <p><a class="download" id="down" download="profile">Download Artifact: <span class="downname"/></a></p>
           <fieldset>
             <legend>Generated artifact</legend>
             <textarea id="result" rows="25" cols="100"></textarea>
           </fieldset>
         </div>    
       </div>
-    </div>
+      <div id="tabs-2">
+        <div>
+          <p><a class="download" id="downman" download="">Commandline</a></p>
+          <fieldset>
+            <legend>Command Line Actions</legend>
+            <textarea id="manifest" rows="25" cols="100"></textarea>
+          </fieldset>
+        </div>    
+      </div>
+     </div>
   </div>
   </body>
 </html>

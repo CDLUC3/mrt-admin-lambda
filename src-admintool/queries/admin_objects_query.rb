@@ -17,6 +17,18 @@ class AdminObjectsQuery < AdminQuery
         o.ark, 
         ifnull(own.name,'No name') as owner,
         own.ark as ownerark,
+        (
+          select 
+            group_concat(ifnull(c.mnemonic, ifnull(c.name, c.ark)))
+          from
+            inv.inv_collections c
+          inner join
+            inv.inv_collections_inv_objects icio
+          on 
+            c.id = icio.inv_collection_id
+          where
+            icio.inv_object_id = o.id
+        ) as colls,
         o.object_type, 
         o.role, 
         o.aggregate_role, 
@@ -40,11 +52,11 @@ class AdminObjectsQuery < AdminQuery
   end
 
   def get_headers(results)
-    ['Obj Id', 'Ark', 'Owner', 'OwnerArk', 'Type', 'Role', 'Aggregate Role', 'Name', 'Created', 'Status']
+    ['Obj Id', 'Ark', 'Owner', 'OwnerArk', 'Collections', 'Type', 'Role', 'Aggregate Role', 'Name', 'Created', 'Status']
   end
 
   def get_types(results)
-    ['objlist', 'ark', '', '', '', '', '', 'name', 'datetime', 'status']
+    ['objlist', 'ark', '', '', 'list', '', '', '', 'name', 'datetime', 'status']
   end
 
   def get_alternative_queries

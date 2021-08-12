@@ -507,13 +507,15 @@ class Owners < MerrittQuery
               select 
                 ark,
                 case
-                  when name is null then concat('ZZZ: ', ark)
-                  else name
+                  when erc_what is null then concat('ZZZ: ', ark)
+                  else erc_what
                 end as name 
               from 
-                inv_owners
+                inv_objects
+              where 
+                aggregate_role = 'MRT-owner'
               order by
-                name
+                created desc
           }
       ).each do |r|
         @owners.push({
