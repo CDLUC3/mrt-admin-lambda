@@ -438,6 +438,15 @@ class Collections < MerrittQuery
               left join inv_objects o
                 on c.inv_object_id = o.id
                 and aggregate_role = 'MRT-collection'
+              where not exists (
+                select 1
+                from 
+                  inv_objects o
+                where
+                  c.inv_object_id = o.id
+                and 
+                  aggregate_role = 'MRT-service-level-agreement'
+              )
               order by
                 o.created desc
           }

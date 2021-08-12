@@ -553,3 +553,51 @@ class LdapCollectionDetailed < LdapRecord
   end
 
 end
+
+class LdapCollectionMap < LdapLinkedRecord
+  def initialize(mnemonic)
+    @mnemonic = mnemonic
+    @ldapColl = nil
+    @dbColl = nil
+  end
+
+  def setLdapColl(ldapColl)
+    @ldapColl = ldapColl
+  end
+
+  def setDbColl(dbColl)
+    @dbColl = dbColl
+  end
+
+  def status
+    return 'FAIL' if @ldapColl.nil? || @dbColl.nil?
+    'PASS'
+  end
+
+  def table_row 
+    [
+      @mnemonic,
+      @ldapColl.nil? ? "" : @mnemonic,
+      @dbColl.nil? ? "" : @dbColl[:id],
+      status
+    ]
+  end
+
+  def self.get_headers
+    [
+      "Mnemonic",
+      "LDAP",
+      "Database",
+      "Status"
+    ]
+  end
+
+  def self.get_types
+    [
+      "",
+      "ldapcoll",
+      "coll",
+      "status"
+    ]
+  end
+end

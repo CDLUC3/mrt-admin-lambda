@@ -11,6 +11,8 @@ class LDAPAction < AdminAction
       LDAPActionRoles.new(config, path, myparams)
     elsif path == "ldap/colls"
       LDAPActionColls.new(config, path, myparams)
+    elsif path == "ldap/collmap"
+      LDAPActionCollmap.new(config, path, myparams)
     elsif path == "ldap/coll" && myparams.key?("ark")
       LDAPActionCollArk.new(config, path, myparams)
     elsif path == "ldap/coll"
@@ -173,6 +175,39 @@ class LDAPActionCollArk < LDAPActionCollDetailed
     ark = CGI.unescape(myparams.fetch("ark", ""))
     @data = @merritt_ldap.collection_detail_records_for_ark(ark)
     @title = "Role Details for Collection #{ark}"
+  end
+
+end
+
+class LDAPActionCollmap < LDAPAction
+
+  def initialize(config, path, myparams)
+    super(config, path, myparams)
+    @data = {}
+    @title = "LDAP Collection Map"
+    @merritt_ldap.collections.keys.each do |m|
+      next if m.nil? || m.empty?
+      cm = LdapCollectionMap.new(m)
+      cm.setLdapColl(@merritt_ldap.collections[m])
+      @data[m] = cm
+    end
+    Collections.new(config).collections_select.each do |c|
+      m = c[:mnemonic]
+      next if m.nil? || m.empty?
+      next if m == 'mrt_curatorial_classes'
+      next if m == 'mrt_system_classes'
+      cm = @data.key?(m) ? @data[m] : LdapCollectionMap.new(m)
+      @data[m] = cm
+      cm.setDbColl(c)
+    end
+  end
+
+  def table_headers
+    LdapCollectionMap.get_headers
+  end
+
+  def table_types
+    LdapCollectionMap.get_types
   end
 
 end
