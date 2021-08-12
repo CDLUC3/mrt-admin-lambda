@@ -139,7 +139,8 @@ module LambdaFunctions
         map['NODES'] = Nodes.new(@config).nodes
         profiles = IngestProfileAction.new(@config, "", {}).get_profile_list
         map['NOTIFICATIONS'] = profiles.notification_map
-        map['RECENTCOLLS'] = profiles.recent_profiles
+        # when constructing the admin object hierarchy, the parent object will first exist only in the inv_objects table
+        map['COLLS'] = CollectionObjs.new(@config).collections_select
         formenv = ENV.fetch("FORMENV",'')
         # special path handling for DEV env
         map['FORMENV'] = formenv == 'development' ? '' : formenv

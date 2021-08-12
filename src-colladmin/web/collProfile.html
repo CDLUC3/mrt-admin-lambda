@@ -6,6 +6,7 @@
     <link rel="stylesheet" type="text/css" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.css"></link>
     <link rel="stylesheet" type="text/css" href="api-table.css"/>
     <script type="text/javascript" src="coll-lambda.base.js"></script>
+    <script type="text/javascript" src="mustache.min.js"></script>
     <script type="text/javascript" src="api-table.js"></script>
     <script type="text/javascript" src="profile.js"></script>
     <script src="sorttable.js" type="text/javascript"></script>
@@ -20,7 +21,7 @@
       <ul>
         <li><a href="#tabs-0">Configuration</a></li>
         <li><a href="#tabs-1">Generated Artifact</a></li>
-        <li><a href="#tabs-2">Commandline</a></li>
+        <li><a href="#tabs-2">Commandline (Docker)</a></li>
       </ul>
       <div id="tabs-0">
         <form action="#" method="GET" id="profile-form">
@@ -33,14 +34,26 @@
             <div id="intabs">
               <ul>
                 <li><a href="#intabs-choose">Artifact</a></li>
-                <li><a href="#intabs-profile">Ingest Profile</a></li>
                 <li><a href="#intabs-collection">Collection Admin Profile</a></li>
+                <li><a href="#intabs-profile">Ingest Profile</a></li>
                 <li><a href="#intabs-owner">Owner Admin Profile</a></li>
                 <li><a href="#intabs-sla">SLA Profile</a></li>
               </ul>
               <div id="intabs-choose">
+                <h2>Choose the Artifact to Create</h2>
                 <p class="proval">
-                  <h2>Choose the Artifact to Create</h2>
+                  The <b>Service Level Agreement (SLA) Admin Profile</b> is used to submit a Service Level Agreement object.
+                  Each SLA is a collection containing one or more owner objects.
+                </p>
+                <p class="proval">
+                  The <b>Owner Admin Profile</b> is used to submit and object that will define the relationship between an SLA(parent) object and a owner (child).
+                  This object must be submitted before any content is ingested for a new owner.  An SLA must exist to create this object.
+                </p>
+                <p class="proval">
+                  The <b>Collection Admin Profile</b> is used to submit an object that will record the relationship between an Owner(parent) object and a Collection(child).
+                  An collection admin object should be submitted with this profile before adding any content to the collection. An Owner object must exist to create this object.
+                </p>
+                <p class="proval">
                   The <b>Ingest Profile</b> object defines how the ingest service will process incoming content.  
                   Every ingest is initiated with a profile name that is used to locate the profile object.
                   Ingest profile records are actively maintained -- especially the notification list.
@@ -52,18 +65,6 @@
                   When objects are submitted to Merritt with this profile, the corresponding relationship to an owner object and a collection object will be established.
                   The record in the <b>inv_collections</b> table will be created when the first object is submitted.
                 </p>
-                <p class="proval">
-                  The <b>Collection Admin Profile</b> is used to submit an object that will record the relationship between an Owner(parent) object and a Collection(child).
-                  An collection admin object should be submitted with this profile before adding any content to the collection.
-                </p>
-                <p class="proval">
-                  The <b>Owner Admin Profile</b> is used to submit and object that will define the relationship between an SLA(parent) object and a owner (child).
-                  This object must be submitted before any content is ingested for a new owner.
-                </p>
-                <p class="proval">
-                  The <b>Service Level Agreement (SLA) Admin Profile</b> is used to submit and object in Merritt and it has a corresponding entry in the inv_collections and inv_objects table.
-                  Each SLA is a collection containing one or more owner objects.
-                </p>
                 <h3>System Evolution</h3>
                 <p>
                   The Merritt Admin Objects are defined in the initial Merritt specification.  
@@ -73,15 +74,25 @@
                 </p>
                 <p>The Merritt Team is considering deprecating these objects in the future in favor of direct insertion into the inventory database.</p>
               </div>
+              <div id="intabs-collection">
+                <input type="radio" name="artifact" value="collection">Create Collection Admin Object</radio>
+                <p>
+                  A new Collection Admin Object is created each time a new Ingest Profile has been created.
+                  These objects are routinely submitted before ingesting the first content into a collection.
+                </p>
+                <p class="proval">
+                  <label for="owner-admin">Owner ARK</label>
+                  <select id="owner-admin" name="owner" class="intabs intabs-collection">
+                    {{#OWNERS}}
+                    <option value="{{ark}}">{{name}}</option>
+                    {{/OWNERS}}
+                  </select>
+                </p>
+              </div>
               <div id="intabs-profile">
                 <input type="radio" name="artifact" value="profile">Create Ingest Profile</radio>
                 <p>
-                  Ingest Profile objects are routinely created.  When a profile object has been created, an ark will be minted for the object.
-                  That ark should also be referenced in a comment field within the collection admin object.
-                </p>
-                <p class="proval">
-                  <label for="collection">Collection ARK</label>
-                  <input id="collection" name="collection"  class="intabs intabs-profile" type="input" size="20" value="ark:/99999/ingest-will-mint" title="Remove field once minting is implemented in ingest"/>
+                  Ingest Profile objects are routinely created.  
                 </p>
                 <p class="proval">
                   <label for="owner">Owner ARK</label>
@@ -92,32 +103,13 @@
                     {{/OWNERS}}
                   </select>
                 </p>
-              </div>
-              <div id="intabs-collection">
-                <input type="radio" name="artifact" value="collection">Create Collection Admin Object</radio>
-                <p>
-                  A new Collection Admin Object is created each time a new Ingest Profile has been created.
-                  These objects are routinely submitted before ingesting the first content into a collection.
-                </p>
                 <p class="proval">
-                  <label for="collections-recent">Recently Created Profiles</label>
-                  <select id="collections-recent">
-                    <option value="">--select to obtain an ark from a recently published ingest profile--</option>
-                    {{#RECENTCOLLS}}
+                  <label for="collection">Collection ARK</label>
+                  <select id="collection" name="collection" class="intabs intabs-profile">
+                    <option value="">--selection required--</option>
+                    {{#COLLS}}
                     <option value="{{ark}}">{{name}}</option>
-                    {{/RECENTCOLLS}}
-                  </select>
-                </p>
-                <p class="proval">
-                  <label for="collection-recent">Ark for collection (minted during profile creation)</label>
-                  <input id="collection-recent" name="collection" class="intabs intabs-collection"size="30"/>
-                </p>
-                <p class="proval">
-                  <label for="owner-admin">Owner ARK</label>
-                  <select id="owner-admin" name="owner" class="intabs intabs-collection">
-                    {{#OWNERS}}
-                    <option value="{{ark}}">{{name}}</option>
-                    {{/OWNERS}}
+                    {{/COLLS}}
                   </select>
                 </p>
               </div>
@@ -185,7 +177,7 @@
               </select>
             </p>
             <div>
-              <input type="submit" id='profile-button' value='Create Artifact'/>
+              <input type="submit" id='profile-button' value='Create Profile'/>
             </div>
             </div>
           </fieldset>
@@ -194,6 +186,7 @@
       <div id="tabs-1">
         <div>
           <p><a class="download" id="down" download="profile">Download Artifact: <span class="downname"/></a></p>
+          <p><em>In Stage and production, this object should be committed to GitHub to deploy to the servers.  In Docker, this object should be manually installed to the server.</em></p>
           <fieldset>
             <legend>Generated artifact</legend>
             <textarea id="result" rows="25" cols="100"></textarea>

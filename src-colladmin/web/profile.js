@@ -28,18 +28,18 @@ $(document).ready(function(){
 });
   
 function init() {
-  $("#context,#description,#collection,#notification,#collection-recent").on("blur keyup", function(){
+  $("#context,#description,#notification").on("blur keyup", function(){
     statusCheck();
   });
-  $("#owner,#owner-admin,#storagenode,input[name=artifact],#collection-sla,#collections-recent").on("change", function(){
+  $("#owner,#owner-admin,#storagenode,input[name=artifact],#collection-sla").on("change", function(){
+    statusCheck();
+  });
+  $("#collection").on("change", function(){
+    $("#description").val($("#collection option:selected").text())
     statusCheck();
   });
   $("#notifications").on("change", function(){
     $("#notification").val($("#notifications").val());
-    statusCheck();
-  });
-  $("#collections-recent").on("change", function(){
-    $("#collection-recent").val($("#collections-recent").val());
     statusCheck();
   });
   $("#profile-form").on("submit", function(){
@@ -104,12 +104,6 @@ function showResult(data) {
   } 
 
   $("#manifest").val(cmdline);
-  if ($("#down").attr("data") == "profile") {
-    var m = data.match(/^Collection.1: (ark:.*)$/m);
-    if (m) {
-      $("#collection-recent").val(m[1]);
-    }
-  }
 }
 
 function generateName(artifact, context) {
@@ -213,9 +207,6 @@ function statusCheck() {
   }
   if ($("#collection-sla:enabled").val() == "") {
     $("#collection-sla").parents("p.proval").addClass("error");
-  }
-  if ($("#collection-recent:enabled").val() == "") {
-    $("#collection-recent").parents("p.proval").addClass("error");
   }
   if (!$("#notification").val().match(/^((.+)@([^,@]+\.[^,@]+),)*(.+)@([^,@]+\.[^,@]+)$/)) {
     $("#notification").parents("p.proval").addClass("error");

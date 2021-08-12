@@ -498,6 +498,37 @@ class Slas < MerrittQuery
   end
 end
 
+class CollectionObjs < MerrittQuery
+  def initialize(config)
+      super(config)
+      @collections_select = []
+      run_query(
+          %{
+              select 
+                id, 
+                ark,
+                erc_what
+              from 
+                inv_objects o
+              where
+                aggregate_role = 'MRT-collection'
+              order by
+                o.created desc
+          }
+      ).each do |r|
+          @collections_select.push({
+            id: r[0],
+            ark: r[1],
+            name: r[2]
+          })
+      end
+  end
+
+  def collections_select
+    @collections_select
+  end
+end
+
 class Owners < MerrittQuery
   def initialize(config)
       super(config)
