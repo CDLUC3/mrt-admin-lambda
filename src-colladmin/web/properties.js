@@ -21,7 +21,7 @@ function do_action(formdata) {
   $.ajax({
     dataType: "json",
     method: "POST",
-    url: "{{COLLADMIN_ROOT}}",
+    url: "{{COLLADMIN_ROOT}}/lambda",
     data: formdata,
     success: function(data) {
       if ('message' in data) {

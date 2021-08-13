@@ -135,7 +135,7 @@ function doForm() {
   $.ajax({
     dataType: "json",
     method: "POST",
-    url: "{{COLLADMIN_ROOT}}",
+    url: "{{COLLADMIN_ROOT}}/lambda",
     data: formdata,
     success: function(data) {
       if (data == null || data == "") {

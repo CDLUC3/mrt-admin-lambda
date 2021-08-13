@@ -94,6 +94,7 @@ class LambdaBase
     return default_template_parameters if path == '/web/lambda.base.js'
     return default_template_parameters if path == '/web/coll-lambda.base.js'
     return default_template_parameters if path =~ %r[^/web/.*\.html]
+    return default_template_parameters if path =~ %r[^/web/.*\.js]
     {}
   end
 

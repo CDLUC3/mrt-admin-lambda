@@ -586,6 +586,7 @@ class LdapCollectionMap < LdapLinkedRecord
       @ldapColl.nil? ? "" : @mnemonic,
       @dbColl.nil? ? "" : @dbColl[:id],
       @dbColl.nil? ? "" : @dbColl[:mnemonic],
+      @dbColl.nil? ? "" : @dbColl[:aggregate_role],
       status
     ]
   end
@@ -596,6 +597,7 @@ class LdapCollectionMap < LdapLinkedRecord
       "LDAP",
       "Database",
       "DB mnenomic",
+      "Agg Role",
       "Status"
     ]
   end
@@ -605,6 +607,7 @@ class LdapCollectionMap < LdapLinkedRecord
       "ark",
       "ldapcoll",
       "coll",
+      "",
       "",
       "status"
     ]
