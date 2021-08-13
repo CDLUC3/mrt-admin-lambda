@@ -162,6 +162,8 @@ module LambdaFunctions
         map['OWNERS'] = Owners.new(@config).owners
       elsif path == '/web/collProperties.html'
         map['COLLS'] = Collections.new(@config).collections_select
+      elsif path == '/web/storeCollNodes.html'
+        map['COLLS'] = Collections.new(@config).collections_select
       end
       map
     end
