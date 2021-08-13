@@ -555,7 +555,8 @@ class LdapCollectionDetailed < LdapRecord
 end
 
 class LdapCollectionMap < LdapLinkedRecord
-  def initialize(mnemonic)
+  def initialize(ark, mnemonic)
+    @ark = ark
     @mnemonic = mnemonic
     @ldapColl = nil
     @dbColl = nil
@@ -570,33 +571,41 @@ class LdapCollectionMap < LdapLinkedRecord
   end
 
   def status
-    return 'FAIL' if @ldapColl.nil? || @dbColl.nil?
+    if @dbColl.nil?
+      return 'INFO'
+    else
+      return 'INFO' if @dbColl[:aggregate_role].empty?
+      return 'FAIL' if @ldapColl.nil?
+    end
     'PASS'
   end
 
   def table_row 
     [
-      @mnemonic,
+      @ark,
       @ldapColl.nil? ? "" : @mnemonic,
       @dbColl.nil? ? "" : @dbColl[:id],
+      @dbColl.nil? ? "" : @dbColl[:mnemonic],
       status
     ]
   end
 
   def self.get_headers
     [
-      "Mnemonic",
+      "Ark",
       "LDAP",
       "Database",
+      "DB mnenomic",
       "Status"
     ]
   end
 
   def self.get_types
     [
-      "",
+      "ark",
       "ldapcoll",
       "coll",
+      "",
       "status"
     ]
   end

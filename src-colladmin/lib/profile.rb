@@ -372,6 +372,7 @@ class Collection < QueryObject
       @tier = row[6].nil? ? "-" : row[6]
       @harvest = row[7].nil? ? "-" : row[7]
       @dbdescription = row[8]
+      @aggregate_role = row[9].nil? ? "" : row[9]
   end
 
   def id
@@ -410,6 +411,10 @@ class Collection < QueryObject
     @mnemonic
   end
 
+  def aggregate_role
+    @aggregate_role
+  end
+
   def name_select
     "#{mnemonic}: #{dbdescription}"
   end
@@ -432,7 +437,8 @@ class Collections < MerrittQuery
                 c.download_privilege,
                 c.storage_tier,
                 c.harvest_privilege, 
-                ifnull(c.name, concat('** ', o.erc_what)) as name
+                ifnull(c.name, concat('** ', o.erc_what)) as name,
+                o.aggregate_role
               from 
                 inv_collections c
               left join inv_objects o
@@ -456,6 +462,7 @@ class Collections < MerrittQuery
           notoggle = (
             c.ark == LambdaFunctions::Handler.merritt_admin_coll_owners || 
             c.ark == LambdaFunctions::Handler.merritt_curatorial || 
+            c.ark == LambdaFunctions::Handler.merritt_system || 
             c.ark == LambdaFunctions::Handler.merritt_admin_coll_sla
           )
           getname = ((c.mnemonic.nil? || c.dbdescription.nil?) && !notoggle)
@@ -466,7 +473,8 @@ class Collections < MerrittQuery
             mnemonic: c.mnemonic,
             harvest: c.harvest,
             getname: getname,
-            toggle: !notoggle
+            toggle: !notoggle,
+            aggregate_role: c.aggregate_role
           })
       end
   end

@@ -71,11 +71,11 @@ function getFormData() {
   return formdata;
 }
 
-function set_download(selector, filename, data) {
+function set_download(selector, filename, filepath, data) {
   $(selector)
     .attr("download", filename)
     .attr("href", "data:text/plain;charset=utf-8," + data)
-    .find(".downname").text(filename);
+    .find(".downname").text(filepath);
 }
 
 function makefilecmd(filename, data) {
@@ -96,7 +96,7 @@ function showResult(data) {
   }
   var artifact_name = $("#artifact-name").val();
   $("#result").val(data);
-  set_download("#down", artifact_name, data);
+  set_download("#down", artifact_name, get_path(get_artifact(), artifact_name), data);
   var cmdline = makefilecmd('/tdr/ingest/profiles/' + get_path(get_artifact(), artifact_name), data);
   if (get_artifact() != 'profile') {
     cmdline += makefilecmd('/tdr/ingest/admin-submit/'+artifact_name+'.checkm', get_manifest()) +

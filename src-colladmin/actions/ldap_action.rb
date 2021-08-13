@@ -43,6 +43,7 @@ class LDAPAction < AdminAction
 
   def get_data
     return body unless hasTable
+    evaluate_status(table_types, get_table_rows)
     {
       format: 'report',
       title: get_title_with_pagination,
@@ -54,7 +55,9 @@ class LDAPAction < AdminAction
       show_grand_total: false,
       merritt_path: @merritt_path,
       alternative_queries: get_alternative_queries_with_pagination,
-      iterate: false
+      iterate: false,
+      saveable: is_saveable?,
+      report_path: report_path
     }.to_json
   end
 
@@ -186,18 +189,22 @@ class LDAPActionCollmap < LDAPAction
     @data = {}
     @title = "LDAP Collection Map"
     @merritt_ldap.collections.keys.each do |m|
-      next if m.nil? || m.empty?
-      cm = LdapCollectionMap.new(m)
+      ark = @merritt_ldap.collections[m].ark
+      next if ark.nil? 
+      next if ark.empty?
+      cm = LdapCollectionMap.new(ark, m)
       cm.setLdapColl(@merritt_ldap.collections[m])
-      @data[m] = cm
+      @data[ark] = cm
     end
     Collections.new(config).collections_select.each do |c|
-      m = c[:mnemonic]
-      next if m.nil? || m.empty?
-      next if m == 'mrt_curatorial_classes'
-      next if m == 'mrt_system_classes'
-      cm = @data.key?(m) ? @data[m] : LdapCollectionMap.new(m)
-      @data[m] = cm
+      ark = c.fetch(:ark, "")
+      next if ark.empty?
+      next if ark == LambdaFunctions::Handler.merritt_curatorial
+      next if ark == LambdaFunctions::Handler.merritt_system 
+      next if ark == LambdaFunctions::Handler.merritt_admin_coll_sla
+      next if ark == LambdaFunctions::Handler.merritt_admin_coll_owners 
+      cm = @data.key?(ark) ? @data[ark] : LdapCollectionMap.new(ark, c[:mnemonic])
+      @data[ark] = cm
       cm.setDbColl(c)
     end
   end
@@ -208,6 +215,10 @@ class LDAPActionCollmap < LDAPAction
 
   def table_types
     LdapCollectionMap.get_types
+  end
+
+  def init_status
+    :PASS
   end
 
 end
