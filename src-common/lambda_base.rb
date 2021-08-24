@@ -90,7 +90,7 @@ class LambdaBase
     }
   end
 
-  def template_parameters(path)
+  def template_parameters(path, myparams)
     return default_template_parameters if path == '/web/lambda.base.js'
     return default_template_parameters if path == '/web/coll-lambda.base.js'
     return default_template_parameters if path =~ %r[^/web/.*\.html]
@@ -99,14 +99,14 @@ class LambdaBase
     {}
   end
 
-  def web_assets(path)
+  def web_assets(path, myparams)
     qpath = "/var/task#{path}"
     return error(404, "File not found #{path}", false) unless File.file?(qpath)
     ext = path.split(".")[-1]
     ctype = content_type(ext)
     return error(404, "Unsupported content type #{ext}", false) unless ctype
     body = File.open(qpath).read
-    map = template_parameters(path)
+    map = template_parameters(path, myparams)
     body = Mustache.render(body, map) unless map.empty?
     { 
       statusCode: 200, 

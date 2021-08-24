@@ -12,34 +12,78 @@
   </head>
   <body>
     <div class="form-body">
+    {{#STORE_COLLS}}
     <h1>Manage Storage Nodes for a Collection</h1>
+    {{/STORE_COLLS}}
+    {{#STORE_COLL}}
+    <h1>Manage Storage Nodes for {{COLL}}</h1>
+    {{/STORE_COLL}}
     <p><a href="{{ADMINTOOL_HOME}}">Admin Tool Home</a> / <a href="{{COLLADMIN_ADMIN}}">CollAdmin Tool Home</a></p>
     <p><a href="https://cdluc3.github.io/mrt-doc/diagrams/store-admin-ui#manage-collection-nodes">Mock Up</a></p>
-    <h2>Choose Collection</h2>
-    <form method="GET" action="storeCollNodes.html">
-    <fieldset>
-      <legend>Choose Collection</legend>
-      <p class="proval">
-        <label for="collection">Collection</label>
-        <select id="collection" name="collection">
-          <option value="">--selection required--</option>
+    <div>
+      {{#STORE_COLLS}}
+      <table class="sortable results">
+        <thead>
+          <tr>
+            <th>Ark</th>
+            <th>Name</th>
+            <th>Mnemonic</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
           {{#COLLS}}
-          <option value="{{ark}}">{{name}}</option>
+          <tr>
+            <th>{{ark}}</th>
+            <td>{{name}}</td>
+            <td>{{mnemonic}}</td>
+            <td><a href="?coll={{id}}">Manage Nodes</a></td>
+          </tr>
           {{/COLLS}}
-        </select>
-      </p>
+        </tbody>
+      </table>
+      {{/STORE_COLLS}}
+      {{#STORE_COLL}}
       <div>
-        <input type="submit" id='profile-button' value='Select Collection'/>
+        <fieldset>
+          <legend>Collection Ingest Processing Status</legend>
+          <label>Ingest Paused?</label>
+          <output id="ingest-status">{{ingest_paused}}</output>
+          <input type="button" name="pause" value="Pause Ingest" disabled />
+          <input type="button" name="unpause" value="Unpause Ingest" disabled/>
+        </fieldset>
       </div>
-    </fieldset>
-    </form>
-    <fieldset>
-      <legend>Collection Status</legend>
-      <p>
-        <b>Ingest Paused/Unpaused</b><button>Pause/Unpause</button>
-      </p>
-    </fieldset>
-    <h2>Storage Nodes for the Collection</h2>
+      <h2>Storage Nodes for Collection</h2>
+      <div>
+        <table class="sortable results">
+          <thead>
+            <tr>
+              <th>Role</th>
+              <th>Number</th>
+              <th>Node Name</th>
+              <th>Count</th>
+              <th>% Repl</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#NODES}}
+            <tr>
+              <th>{{role}}</th>
+              <th>{{number}}</th>
+              <td>{{name}}</td>
+              <td>{{count}}</td>
+              <td>{{percent}}</td>
+              <td>
+                <button>Re-Audit</button>
+              </td>
+            </tr>
+            {{/NODES}}
+          </tbody>
+        </table>  
+      </div>
+      {{/STORE_COLL}}
+    </div>
   </div>
   </body>
 </html>

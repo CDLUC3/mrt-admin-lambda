@@ -50,12 +50,12 @@ module LambdaFunctions
         })
         collHandler = LambdaFunctions::Handler.new(config)
         respath = event.fetch("path", "")
-        return collHandler.web_assets(respath) if collHandler.web_asset?(respath)
+        myparams = collHandler.get_params_from_event(event)
+        return collHandler.web_assets(respath, myparams) if collHandler.web_asset?(respath)
 
         data = event ? event : {}
         
         #myparams = get_key_val(data, 'queryStringParameters', data)
-        myparams = collHandler.get_params_from_event(event)
         path = CGI.unescape(collHandler.get_key_val(myparams, 'path', 'na'))
         result = {message: "Path undefined"}.to_json
 
@@ -140,8 +140,8 @@ module LambdaFunctions
       "ark:/13030/j2mw23mp"
     end
 
-    def template_parameters(path)
-      map = super(path)
+    def template_parameters(path, myparams)
+      map = super(path, myparams)
       if path == '/web/collProfile.html'
         map['OWNERS'] = Owners.new(@config).owners
         map['NODES'] = Nodes.new(@config).nodes
@@ -163,7 +163,18 @@ module LambdaFunctions
       elsif path == '/web/collProperties.html'
         map['COLLS'] = Collections.new(@config).collections_select
       elsif path == '/web/storeCollNodes.html'
-        map['COLLS'] = Collections.new(@config).collections_select
+        coll = myparams.fetch("coll", "")
+        if coll.empty?
+          map['STORE_COLLS'] = {
+            COLLS: Collections.new(@config).collections_select
+          }
+        else
+          map['STORE_COLL'] = {
+            COLL: coll.to_i,
+            ingest_paused: false,
+            NODES: CollectionNodes.new(@config, coll.to_i).collnodes
+          }          
+        end
       end
       map
     end

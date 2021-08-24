@@ -16,12 +16,12 @@ module LambdaFunctions
         collHandler = Handler.new(config)
         respath = event.fetch("path", "")
         return collHandler.redirect("/web#{respath}") if respath =~ %r[^/index.html.*]
-        return collHandler.web_assets(respath) if collHandler.web_asset?(respath)
+        myparams = collHandler.get_params_from_event(event)
+        return collHandler.web_assets(respath, myparams) if collHandler.web_asset?(respath)
 
         dbconf = config.fetch('dbconf', {})
         client = collHandler.get_mysql
 
-        myparams = collHandler.get_params_from_event(event)
         puts(myparams)
 
         path = collHandler.get_key_val(myparams, 'path', 'na')
@@ -58,8 +58,8 @@ module LambdaFunctions
       super(config)
     end
      
-    #def template_parameters(path)
-    #  map = super(path)
+    #def template_parameters(path, myparams)
+    #  map = super(path, myparams)
     #  # Add app specific overrides here
     #  map
     #end
