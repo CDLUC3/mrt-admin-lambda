@@ -69,6 +69,50 @@ class ProfileList < MerrittJson
 
 end
 
+class AdminProfileList < MerrittJson
+  def initialize(body)
+    super()
+    @profiles = []
+    data = JSON.parse(body)
+    data = fetchHashVal(data, 'pros:profilesState')
+    data = fetchHashVal(data, 'pros:profiles')
+    template = nil
+    fetchArrayVal(data, 'pros:profileFile').each do |json|
+      k = json.fetch("pros:file", "")
+      next if k =~ %r[/TEMPLATE]
+      @profiles.push({
+        path: k
+      })
+    end   
+  end
+
+  def self.table_headers
+    [
+      "Path"
+    ]
+  end
+
+  def self.table_types
+    [
+      "name"
+    ]
+  end
+
+  def table_rows
+    rows = []
+    @profiles.each do |prof|
+      rows.push([
+        prof[:path]
+      ])
+    end
+    rows
+  end
+
+  def profiles
+    @profiles
+  end
+end
+
 class SingleIngestProfileWrapper < MerrittJson
   def initialize(json)
     super()

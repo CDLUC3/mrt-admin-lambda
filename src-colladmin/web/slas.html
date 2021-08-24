@@ -24,17 +24,25 @@
         </tr>
       </thead>
       <tbody>
+       {{#NEWSLAS}}
         <tr>
           <th></th>
           <td></td>
-          <td>admin/sla/new (tbd)</td>
-          <td><input type="button" class="submit-profile" data="admin/sla/new" value="Submit Profile"/></td>
+          <td>{{path}}</td>
+          <td>
+            <form method="POST" action="{{COLLADMIN_ADMIN}}">
+              <input type="hidden" value="{{path}}" name="path"/>
+              <input type="hidden" value="submit" name="path"/>
+              <input type="submit" class="submit-profile" value="Submit Profile"/>
+            </form>
+          </td>
         </tr>
+        {{/NEWSLAS}}
         {{#SLAS}}
         <tr>
           <th>{{ark}}</th>
           <td>{{name}}</td>
-          <td>admin/sla/xxx (tbd)</td>
+          <td>{{path}}</td>
           <td></td>
         </tr>
         {{/SLAS}}

@@ -5,6 +5,7 @@ require_relative 'actions/forward_to_ingest_action'
 require_relative 'actions/ingest_queue_action'
 require_relative 'actions/ingest_state_action'
 require_relative 'actions/ingest_profile_action'
+require_relative 'actions/admin_profile_action'
 require_relative 'actions/ingest_batch_action'
 require_relative 'actions/ingest_job_metadata_action'
 require_relative 'actions/ingest_job_manifest_action'
@@ -61,6 +62,8 @@ module LambdaFunctions
 
         if path == "profiles" 
           result = IngestProfileAction.new(config, path, myparams).get_data
+        elsif path == "adminprofiles" 
+          result = AdminProfileAction.new(config, path, myparams).get_data
         elsif path == "state" 
           result = IngestStateAction.new(config, path, myparams).get_data
         elsif path == "queues" 
@@ -157,10 +160,13 @@ module LambdaFunctions
       elsif path == "/web/profile.js"
         map['ADMIN_OWNER'] = LambdaFunctions::Handler.merritt_admin_owner
       elsif path == '/web/slas.html'
+        map['NEWSLAS'] = AdminProfileAction.new(@config, "adminprofiles" , {type: 'sla'}).get_profile_list
         map['SLAS'] = Slas.new(@config).slas_select
       elsif path == '/web/owners.html'
+        map['NEWOWNERS'] = AdminProfileAction.new(@config, "adminprofiles" , {type: 'owner'}).get_profile_list
         map['OWNERS'] = Owners.new(@config).owners
       elsif path == '/web/collProperties.html'
+        map['NEWCOLLS'] = AdminProfileAction.new(@config, "adminprofiles" , {type: 'collection'}).get_profile_list
         map['COLLS'] = Collections.new(@config).collections_select
       elsif path == '/web/storeCollNodes.html'
         coll = myparams.fetch("coll", "")
