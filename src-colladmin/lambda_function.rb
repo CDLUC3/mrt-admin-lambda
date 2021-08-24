@@ -84,6 +84,15 @@ module LambdaFunctions
           result = PostToIngestAction.new(config, path, myparams, "admin/submissions/freeze").get_data
         elsif path == "submissions/unpause" 
           result = PostToIngestAction.new(config, path, myparams, "admin/submissions/thaw").get_data
+        elsif path == "submit-profile" 
+          params = {
+            file: "@/var/task/README.dummy.file",
+            submitter: myparams.fetch("submitter", ""),
+            responseForm: "xml",
+            title: myparams.fetch("title", ""),
+            profile: myparams.fetch("profile-path", "")
+          }
+          result = PostToIngestMultipartAction.new(config, path, params, "poster/update").get_data
         elsif path == "createProfile/profile" 
           result = PostToIngestMultipartAction.new(config, path, myparams, "admin/profile/profile").get_data
         elsif path == "createProfile/collection" 

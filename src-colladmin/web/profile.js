@@ -129,9 +129,6 @@ function doForm() {
   if (artifact == 'profile' || artifact == 'collection') {
     formdata['ark'] = formdata['collection']
   }
-  if (artifact != 'profile') {
-    delete formdata['notification'];
-  }
   $.ajax({
     dataType: "json",
     method: "POST",
