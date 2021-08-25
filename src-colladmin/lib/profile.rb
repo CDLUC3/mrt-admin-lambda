@@ -83,9 +83,11 @@ class AdminProfileList < MerrittJson
       next if k =~ %r[/TEMPLATE]
       p = {
         path: k,
-        created: "",
-        name: "",
-        ark: ""
+        created: json.fetch("pros:modificationDate", ""),
+        name: json.fetch("pros:description", ""),
+        ark: "",
+        role: "",
+        noark: true
       }
       n = p[:name].empty? ? p[:path] : p[:name]
       profnames[n] = p 
@@ -93,15 +95,20 @@ class AdminProfileList < MerrittJson
     dbmap.each do |rec|
       ark = rec.fetch(:ark, "")
       name = rec.fetch(:name, "")
+      role = rec.fetch(:role, "")
+      created = rec.fetch(:created, "")
       next if name.empty? || ark.empty?
       if profnames.key?(name)
         profnames[name][:ark] = ark
+        profnames[name][:role] = role
       else
         profnames[ark] = {
-          path: "database/#{ark}",
-          created: "",
+          path: "database only: #{ark}",
+          created: created,
           name: name,
-          ark: ark    
+          ark: ark,
+          role: role,
+          noark: false 
         } 
       end
     end
@@ -113,9 +120,10 @@ class AdminProfileList < MerrittJson
   def self.table_headers
     [
       "Created",
-      "Path",
+      "Path to Admin Profile",
       "Name",
-      "Ark"
+      "Ark",
+      "Role"
     ]
   end
 
@@ -124,6 +132,7 @@ class AdminProfileList < MerrittJson
       "",
       "name",
       "name",
+      "",
       ""
     ]
   end
@@ -132,10 +141,11 @@ class AdminProfileList < MerrittJson
     rows = []
     @profiles.each do |prof|
       rows.push([
-        prof[:create],
+        prof[:created],
         prof[:path],
         prof[:name],
-        prof[:ark]
+        prof[:ark],
+        prof[:role]
       ])
     end
     rows
@@ -621,99 +631,62 @@ class CollectionNodes < MerrittQuery
   end
 end
 
-class Slas < MerrittQuery
-  def initialize(config)
-      super(config)
-      @slas_select = []
-      run_query(
-          %{
-              select 
-                id, 
-                ark,
-                erc_what
-              from 
-                inv_objects o
-              where
-                aggregate_role = 'MRT-service-level-agreement'
-              order by
-                o.created desc
-          }
-      ).each do |r|
-          @slas_select.push({
-            id: r[0],
-            ark: r[1],
-            name: r[2]
-          })
-      end
+class AdminObjects < MerrittQuery
+  def initialize(config, aggrole)
+    super(config)
+    @objs_select = []
+    run_query(
+        %{
+            select 
+              id, 
+              ark,
+              ifnull(erc_what,'--'),
+              created,
+              aggregate_role
+            from 
+              inv_objects o
+            where
+              aggregate_role = ?
+            order by
+              o.created desc
+        },
+        [
+          aggrole
+        ]
+    ).each do |r|
+        @objs_select.push({
+          id: r[0],
+          ark: r[1],
+          name: r[2],
+          created: r[3],
+          role: r[4],
+          noark: false
+        }) 
+    end
   end
 
-  def slas_select
-    @slas_select
-  end
-end
-
-class CollectionObjs < MerrittQuery
-  def initialize(config)
-      super(config)
-      @collections_select = []
-      run_query(
-          %{
-              select 
-                id, 
-                ark,
-                erc_what
-              from 
-                inv_objects o
-              where
-                aggregate_role = 'MRT-collection'
-              order by
-                o.created desc
-          }
-      ).each do |r|
-          @collections_select.push({
-            id: r[0],
-            ark: r[1],
-            name: r[2]
-          })
-      end
-  end
-
-  def collections_select
-    @collections_select
+  def objs_select
+    @objs_select
   end
 end
 
-class Owners < MerrittQuery
+
+class Slas < AdminObjects
   def initialize(config)
-      super(config)
-      @owners = []
-      run_query(
-          %{
-              select 
-                ark,
-                case
-                  when erc_what is null then concat('ZZZ: ', ark)
-                  else erc_what
-                end as name 
-              from 
-                inv_objects
-              where 
-                aggregate_role = 'MRT-owner'
-              order by
-                created desc
-          }
-      ).each do |r|
-        @owners.push({
-          ark: r[0],
-          name: r[1]
-        })
-      end
+      super(config, 'MRT-service-level-agreement')
   end
+end
 
-  def owners
-      @owners
+class CollectionObjs < AdminObjects
+  def initialize(config)
+      super(config, 'MRT-collection')
   end
+end
 
+class Owners < AdminObjects
+  def initialize(config)
+      super(config, 'MRT-owner')
+  end
 end
 
 class Nodes < MerrittQuery

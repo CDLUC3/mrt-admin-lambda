@@ -8,7 +8,7 @@ require_relative '../lib/merritt_query'
 class AdminProfileAction < ForwardToIngestAction
   def initialize(config, path, myparams)
     @type = CGI.unescape(myparams.fetch('type', ''))
-    endpoint = "admin/profiles/admin/#{@type}" 
+    endpoint = @type.empty? ? "admin/profiles/admin" : "admin/profiles/admin/#{@type}" 
     super(config, path, myparams, endpoint)
   end
 
@@ -33,20 +33,19 @@ class AdminProfileAction < ForwardToIngestAction
     true
   end
 
+  # merge profile list with known admin objects from the database
   def get_objs
-    if @type == "sla"
-      Slas.new(@config).slas_select
-    elsif @type == "owner"
-      Owners.new(@config).owners
-    elsif @type == "collection"
-      CollectionObjs.new(@config).collections_select
-    else
-      []
-    end
+    return CollectionObjs.new(@config).objs_select if @type == "collection"
+    return Owners.new(@config).objs_select if @type == "owner"
+    return Slas.new(@config).objs_select if @type == "sla"
+    []
   end
 
   def get_profile_list
     begin
+      puts @type
+      puts get_body
+      puts get_objs
       AdminProfileList.new(get_body, get_objs).profiles
     rescue => e
       puts(e.message)
@@ -54,7 +53,6 @@ class AdminProfileAction < ForwardToIngestAction
       nil
     end
   end
-
 
   def get_alternative_queries
     [

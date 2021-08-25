@@ -155,27 +155,25 @@ module LambdaFunctions
     def template_parameters(path, myparams)
       map = super(path, myparams)
       if path == '/web/collProfile.html'
-        map['OWNERS'] = Owners.new(@config).owners
+        map['OWNERS'] = Owners.new(@config).objs_select
         map['NODES'] = Nodes.new(@config).nodes
         profiles = IngestProfileAction.new(@config, "", {}).get_profile_list
         map['NOTIFICATIONS'] = profiles.notification_map
         # when constructing the admin object hierarchy, the parent object will first exist only in the inv_objects table
-        map['COLLS'] = CollectionObjs.new(@config).collections_select
+        map['COLLS'] = CollectionObjs.new(@config).objs_select
         formenv = ENV.fetch("FORMENV",'')
         # special path handling for DEV env
         map['FORMENV'] = formenv == 'development' ? '' : formenv
-        map['SLAS'] = Slas.new(@config).slas_select
+        map['SLAS'] = Slas.new(@config).objs_select
       elsif path == "/web/properties.js"
       elsif path == "/web/profile.js"
         map['ADMIN_OWNER'] = LambdaFunctions::Handler.merritt_admin_owner
-      elsif path == '/web/slas.html'
-        map['NEWSLAS'] = AdminProfileAction.new(@config, "adminprofiles" , {type: 'sla'}).get_profile_list
-        map['SLAS'] = Slas.new(@config).slas_select
-      elsif path == '/web/owners.html'
-        map['NEWOWNERS'] = AdminProfileAction.new(@config, "adminprofiles" , {type: 'owner'}).get_profile_list
-        map['OWNERS'] = Owners.new(@config).owners
+      elsif path == '/web/collAdminObjs.html'
+        map['NEWOBJS'] = AdminProfileAction.new(@config, "adminprofiles", myparams).get_profile_list
+        map['type'] = myparams.fetch('type', '').upcase
       elsif path == '/web/collProperties.html'
-        map['NEWCOLLS'] = AdminProfileAction.new(@config, "adminprofiles" , {type: 'collection'}).get_profile_list
+        myparams['type'] = 'collection'
+        map['NEWCOLLS'] = AdminProfileAction.new(@config, "adminprofiles", myparams).get_profile_list
         map['COLLS'] = Collections.new(@config).collections_select
       elsif path == '/web/storeCollNodes.html'
         coll = myparams.fetch("coll", "")

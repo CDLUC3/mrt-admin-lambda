@@ -2,27 +2,6 @@ function get_artifact() {
   return $("input[name=artifact]:checked").val();
 }
 
-function get_manifest() {
-  return `#%checkm_0.7
-#%profile | http://uc3.cdlib.org/registry/ingest/manifest/mrt-single-file-batch-manifest
-#%columns | nfo:fileURL | nfo:hashAlgorithm | nfo:hashValue | nfo:fileSize | nfo:fileLastModified | nfo:fileName | mrt:primaryIdentifier | mrt:localIdentifier | mrt:creator | mrt:title | mrt:date
-https://merritt-aws-stg.cdlib.org/README | | | | | | | | | ARTIFACTDESC
-#%EOF`.replace('ARTIFACTDESC', $("#description").val());
-}
-
-function get_curl(artifact_name) {
-  var artifact_name = $("#artifact-name").val();
-  return `curl -v \\
--F "file=@/tdr/ingest/admin-submit/ARTIFACTNAME.checkm" \\
--F "type=single-file-batch-manifest" \\
--F "submitter=merritt-test" \\
--F "responseForm=xml" \\
--F "profile=ARTIFACTPATH" \\
-http://ingest:8080/ingest/poster/update`
-  .replaceAll('ARTIFACTPATH', get_path(get_artifact(), artifact_name))
-  .replaceAll('ARTIFACTNAME', artifact_name);
-}
-
 $(document).ready(function(){
     init();
 });
@@ -98,11 +77,6 @@ function showResult(data) {
   $("#result").val(data);
   set_download("#down", artifact_name, get_path(get_artifact(), artifact_name), data);
   var cmdline = makefilecmd('/tdr/ingest/profiles/' + get_path(get_artifact(), artifact_name), data);
-  if (get_artifact() != 'profile') {
-    cmdline += makefilecmd('/tdr/ingest/admin-submit/'+artifact_name+'.checkm', get_manifest()) +
-      get_curl(artifact_name);
-  } 
-
   $("#manifest").val(cmdline);
 }
 
