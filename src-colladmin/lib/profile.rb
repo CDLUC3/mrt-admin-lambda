@@ -70,9 +70,10 @@ class ProfileList < MerrittJson
 end
 
 class AdminProfileList < MerrittJson
-  def initialize(body)
+  def initialize(body, dbmap)
     super()
     @profiles = []
+    profnames = {}
     data = JSON.parse(body)
     data = fetchHashVal(data, 'pros:profilesState')
     data = fetchHashVal(data, 'pros:profiles')
@@ -80,21 +81,50 @@ class AdminProfileList < MerrittJson
     fetchArrayVal(data, 'pros:profileFile').each do |json|
       k = json.fetch("pros:file", "")
       next if k =~ %r[/TEMPLATE]
-      @profiles.push({
-        path: k
-      })
+      p = {
+        path: k,
+        created: "",
+        name: "",
+        ark: ""
+      }
+      n = p[:name].empty? ? p[:path] : p[:name]
+      profnames[n] = p 
     end   
+    dbmap.each do |rec|
+      ark = rec.fetch(:ark, "")
+      name = rec.fetch(:name, "")
+      next if name.empty? || ark.empty?
+      if profnames.key?(name)
+        profnames[name][:ark] = ark
+      else
+        profnames[ark] = {
+          path: "database/#{ark}",
+          created: "",
+          name: name,
+          ark: ark    
+        } 
+      end
+    end
+    profnames.keys.each do |name|
+      @profiles.push(profnames[name])
+    end
   end
 
   def self.table_headers
     [
-      "Path"
+      "Created",
+      "Path",
+      "Name",
+      "Ark"
     ]
   end
 
   def self.table_types
     [
-      "name"
+      "",
+      "name",
+      "name",
+      ""
     ]
   end
 
@@ -102,7 +132,10 @@ class AdminProfileList < MerrittJson
     rows = []
     @profiles.each do |prof|
       rows.push([
-        prof[:path]
+        prof[:create],
+        prof[:path],
+        prof[:name],
+        prof[:ark]
       ])
     end
     rows

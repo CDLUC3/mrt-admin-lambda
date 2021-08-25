@@ -25,7 +25,7 @@ class AdminProfileAction < ForwardToIngestAction
   end
 
   def table_rows(body)
-    profiles = AdminProfileList.new(body)
+    profiles = AdminProfileList.new(body, get_objs)
     profiles.table_rows
   end
 
@@ -33,9 +33,21 @@ class AdminProfileAction < ForwardToIngestAction
     true
   end
 
+  def get_objs
+    if @type == "sla"
+      Slas.new(@config).slas_select
+    elsif @type == "owner"
+      Owners.new(@config).owners
+    elsif @type == "collection"
+      CollectionObjs.new(@config).collections_select
+    else
+      []
+    end
+  end
+
   def get_profile_list
     begin
-      AdminProfileList.new(get_body).profiles
+      AdminProfileList.new(get_body, get_objs).profiles
     rescue => e
       puts(e.message)
       puts(e.backtrace)

@@ -3,7 +3,7 @@ $(document).ready(function(){
 });
   
 function init() {
-    $("input.submit-profile").on("click", function(){
+    $("input.submit-admin").on("click", function(){
         data = {
             path: "submit-profile",
             submitter: "tbrady",
