@@ -101,6 +101,7 @@ class AdminProfileList < MerrittJson
       if profnames.key?(name)
         profnames[name][:ark] = ark
         profnames[name][:role] = role
+        profnames[name][:noark] = false
       else
         profnames[ark] = {
           path: "database only: #{ark}",
@@ -112,7 +113,10 @@ class AdminProfileList < MerrittJson
         } 
       end
     end
-    profnames.keys.each do |name|
+    profnames.values.sort {
+      # sort on status, then reverse sort on date
+      |a,b| a[:created] <=> b[:created]
+    }.each do |name|
       @profiles.push(profnames[name])
     end
   end

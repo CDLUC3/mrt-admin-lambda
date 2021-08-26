@@ -86,13 +86,22 @@ module LambdaFunctions
           result = PostToIngestAction.new(config, path, myparams, "admin/submissions/thaw").get_data
         elsif path == "submit-profile" 
           params = {
-            file: "@/var/task/README.dummy.file",
+            file: File.new("/var/task/dummy.README"),
+            type: "file",
             submitter: myparams.fetch("submitter", ""),
             responseForm: "xml",
             title: myparams.fetch("title", ""),
             profile: myparams.fetch("profile-path", "")
           }
           result = PostToIngestMultipartAction.new(config, path, params, "poster/update").get_data
+          return {
+            headers: {
+              'Access-Control-Allow-Origin': '*',
+              'Content-Type': 'application/xml; charset=utf-8'
+            },
+            statusCode: 200,
+            body: result
+          }
         elsif path == "createProfile/profile" 
           result = PostToIngestMultipartAction.new(config, path, myparams, "admin/profile/profile").get_data
         elsif path == "createProfile/collection" 
