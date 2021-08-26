@@ -85,7 +85,8 @@ module LambdaFunctions
         elsif path == "submissions/unpause" 
           result = PostToIngestAction.new(config, path, myparams, "admin/submissions/thaw").get_data
         elsif path == "submit-profile" 
-          params = {
+          return LambdaBase.error(405, "Not yet supported", false) unless LambdaBase.is_docker
+         params = {
             file: File.new("/var/task/dummy.README"),
             type: "file",
             submitter: myparams.fetch("submitter", ""),
@@ -125,14 +126,7 @@ module LambdaFunctions
       rescue => e
         puts(e.message)
         puts(e.backtrace)
-        {
-          headers: {
-            'Access-Control-Allow-Origin': '*',
-            'Content-Type': 'application/json; charset=utf-8'
-          },
-          statusCode: 500,
-          body: { error: e.message }.to_json
-        }
+        LambdaBase.error(500, e.message, false)
       end
 
     end
@@ -140,7 +134,7 @@ module LambdaFunctions
     def initialize(config)
       super(config)
     end
-     
+
     def self.merritt_admin_owner
       "ark:/13030/j2rn30xp"
     end

@@ -86,7 +86,12 @@ class LambdaBase
       COLLADMIN_HOME: LambdaBase.colladmin_url,
       COLLADMIN_ROOT: LambdaBase.colladmin_root_url,
       COLLADMIN_ADMIN: LambdaBase.colladmin_url_admin,
-      NOW: Time.now.strftime("%Y-%m-%dT%H:%M:%S%z")
+      NOW: Time.now.strftime("%Y-%m-%dT%H:%M:%S%z"),
+      MYENV: LambdaBase.get_environment,
+      IS_DOCKER: LambdaBase.is_docker,
+      NOT_DOCKER: !LambdaBase.is_docker,
+      IS_PROD: LambdaBase.is_prod,
+      IS_STAGE: LambdaBase.is_stage,
     }
   end
 
@@ -101,10 +106,10 @@ class LambdaBase
 
   def web_assets(path, myparams)
     qpath = "/var/task#{path}"
-    return error(404, "File not found #{path}", false) unless File.file?(qpath)
+    return LambdaBase.error(404, "File not found #{path}", false) unless File.file?(qpath)
     ext = path.split(".")[-1]
     ctype = content_type(ext)
-    return error(404, "Unsupported content type #{ext}", false) unless ctype
+    return LambdaBase.error(404, "Unsupported content type #{ext}", false) unless ctype
     body = File.open(qpath).read
     map = template_parameters(path, myparams)
     body = Mustache.render(body, map) unless map.empty?
@@ -124,23 +129,45 @@ class LambdaBase
       headers: {
         'Location' => path
       },
-      body: "Redirec to #{path}"
+      body: "Redirect to #{path}"
     }
   end
 
-  def error(status, message, return_page = false)
+  def self.error(status, message, return_page = false)
     if status != 200 && return_page
       { 
         statusCode: 200, 
-        headers: {'Content-Type' => 'text/html'},
+        headers: {'Content-Type': 'text/html'},
         body: Mustache.render(File.open('template/error.html').read, message: message)
       }  
-    else
+    else 
       { 
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Content-Type': 'text/plain; charset=UTF-8',
+        },
         statusCode: status, 
-        headers: {'Content-Type' => 'text'},
-        body: message 
+        body: message
       }
     end
+  end
+
+  def self.get_environment
+    c = ENV.fetch('MERRITT_ADMIN_CONFIG', 'default')
+    return c unless c == "default"
+    ENV.fetch('SSM_ROOT_PATH', '')
+  end
+   
+  def self.is_docker
+    LambdaBase.get_environment == "docker"
+  end
+
+
+  def self.is_prod
+    LambdaBase.get_environment =~ %r[prd]
+  end
+
+  def self.is_stage
+    LambdaBase.get_environment =~ %r[stg]
   end
 end

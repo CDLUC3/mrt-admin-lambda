@@ -12,13 +12,13 @@
   </head>
   <body>
     <div class="form-body">
-    <h1>Merritt {{type}}s</h1>
+    <h1>{{MYENV}} Merritt {{type}}s</h1>
     <p><a href="{{ADMINTOOL_HOME}}">Admin Tool Home</a> / <a href="{{COLLADMIN_ADMIN}}">CollAdmin Tool Home</a></p>
     <h2>{{type}} List</h2>
     <table class="sortable results">
       <thead>
         <tr class="header">
-          <th>Created</th>
+          <th>Modified</th>
           <th>Ark</th>
           <th>Name</th>
           <th>Admin Profile</th>
@@ -34,7 +34,7 @@
           <td>{{path}}</td>
           <td>
             {{#noark}}
-            <input type="button" class="submit-admin" data="{{path}}" data-title="{{name}}" value="Submit Admin Object"/>
+            <input type="button" class="submit-admin" data="{{path}}" data-title="{{name}}" value="Submit Admin Object {{#NOT_DOCKER}}**TBD{{/NOT_DOCKER}}"/>
             {{/noark}}
           </td>
         </tr>
