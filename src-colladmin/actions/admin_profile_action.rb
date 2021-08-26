@@ -43,9 +43,6 @@ class AdminProfileAction < ForwardToIngestAction
 
   def get_profile_list
     begin
-      puts @type
-      puts get_body
-      puts get_objs
       AdminProfileList.new(get_body, get_objs).profiles
     rescue => e
       puts(e.message)
