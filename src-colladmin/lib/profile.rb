@@ -113,9 +113,8 @@ class AdminProfileList < MerrittJson
         } 
       end
     end
-    profnames.sort {
-      # sort on status, then reverse sort on date
-      |a,b| a[:created] <=> b[:created]
+    profnames.values.sort {
+      |a,b| b.fetch(:created, :name).to_s <=> a.fetch(:created, :name).to_s
     }.each do |p|
       @profiles.push(p)
     end
