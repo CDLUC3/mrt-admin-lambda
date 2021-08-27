@@ -7,7 +7,7 @@ require_relative '../lib/merritt_query'
 
 class AdminProfileAction < ForwardToIngestAction
   def initialize(config, path, myparams)
-    @type = CGI.unescape(myparams.fetch('type', ''))
+    @type = CGI.unescape(myparams.fetch('type', 'collection'))
     endpoint = @type.empty? ? "admin/profiles/admin" : "admin/profiles/admin/#{@type}" 
     super(config, path, myparams, endpoint)
   end
@@ -64,10 +64,6 @@ class AdminProfileAction < ForwardToIngestAction
       {
         label: 'SLA Admin Profiles', 
         url: "#{LambdaBase.colladmin_url}?path=adminprofiles&type=sla"
-      },
-      {
-        label: 'Admin Profiles', 
-        url: "#{LambdaBase.colladmin_url}?path=adminprofiles"
       },
     ]
   end

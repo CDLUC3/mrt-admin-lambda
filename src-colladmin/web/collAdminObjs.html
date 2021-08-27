@@ -18,7 +18,7 @@
     <table class="sortable results">
       <thead>
         <tr class="header">
-          <th>Modified</th>
+          <th>Created</th>
           <th>Ark</th>
           <th>Name</th>
           <th>Admin Profile</th>
@@ -34,7 +34,8 @@
           <td>{{path}}</td>
           <td>
             {{#noark}}
-            <input type="button" class="submit-admin" data="{{path}}" data-title="{{name}}" value="Submit Admin Object {{#NOT_DOCKER}}**TBD{{/NOT_DOCKER}}"/>
+            <input type="button" class="submit-admin" data="{{path}}" data-title="{{name}}" 
+              value="Submit Admin Object {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}"/>
             {{/noark}}
           </td>
         </tr>

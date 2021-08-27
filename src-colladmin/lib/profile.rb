@@ -83,7 +83,7 @@ class AdminProfileList < MerrittJson
       next if k =~ %r[/TEMPLATE]
       p = {
         path: k,
-        created: json.fetch("pros:modificationDate", ""),
+        created: json.fetch("pros:modificationDate", "").to_s[0,10],
         name: json.fetch("pros:description", ""),
         ark: "",
         role: "",
@@ -96,7 +96,7 @@ class AdminProfileList < MerrittJson
       ark = rec.fetch(:ark, "")
       name = rec.fetch(:name, "")
       role = rec.fetch(:role, "")
-      created = rec.fetch(:created, "")
+      created = rec.fetch(:created, "").to_s[0,10]
       next if name.empty? || ark.empty?
       if profnames.key?(name)
         profnames[name][:ark] = ark
@@ -661,7 +661,7 @@ class AdminObjects < MerrittQuery
           id: r[0],
           ark: r[1],
           name: r[2],
-          created: r[3],
+          created: r[3].to_s[0,10],
           role: r[4],
           noark: false
         }) 
