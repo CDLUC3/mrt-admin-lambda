@@ -73,11 +73,22 @@ class AdminProfileList < MerrittJson
   def initialize(body, dbmap)
     super()
     @profiles = []
-    profnames = {}
     data = JSON.parse(body)
     data = fetchHashVal(data, 'pros:profilesState')
     data = fetchHashVal(data, 'pros:profiles')
-    template = nil
+    
+    profnames = parse_profiles(data)
+    profnames = match_profiles(profnames, dbmap)
+
+    profnames.values.sort {
+      |a,b| b.fetch(:created, :name).to_s <=> a.fetch(:created, :name).to_s
+    }.each do |p|
+      @profiles.push(p)
+    end
+  end
+
+  def parse_profiles(data)
+    profnames = {}
     fetchArrayVal(data, 'pros:profileFile').each do |json|
       k = json.fetch("pros:file", "")
       next if k =~ %r[/TEMPLATE]
@@ -92,47 +103,59 @@ class AdminProfileList < MerrittJson
       n = p[:name].empty? ? p[:path] : p[:name]
       profnames[n] = p 
     end   
+    profnames
+  end
+
+  def match_profiles(profnames, dbmap)
     dbmap.each do |rec|
       ark = rec.fetch(:ark, "")
       name = rec.fetch(:name, "")
       role = rec.fetch(:role, "")
       created = rec.fetch(:created, "").to_s[0,10]
+      # the following varies based on obj type
+      dispname = rec.fetch(:dispname, "")
+      # the following will only be set in specific circumstances
+      mnemonic = rec.fetch(:mnemonic, "")
+      harvest = rec.fetch(:harvest, false)
+
       next if name.empty? || ark.empty?
       if profnames.key?(name)
         profnames[name][:ark] = ark
         profnames[name][:role] = role
         profnames[name][:noark] = false
+        profnames[name][:mnemonic] = mnemonic
+        profnames[name][:harvest] = harvest
       else
         profnames[ark] = {
-          path: "database only: #{ark}",
+          path: "",
           created: created,
           name: name,
           ark: ark,
           role: role,
-          noark: false 
+          noark: false ,
+          mnemonic: mnemonic,
+          harvest: harvest
         } 
       end
     end
-    profnames.values.sort {
-      |a,b| b.fetch(:created, :name).to_s <=> a.fetch(:created, :name).to_s
-    }.each do |p|
-      @profiles.push(p)
-    end
+    profnames
   end
 
   def self.table_headers
     [
       "Created",
       "Path to Admin Profile",
-      "Name",
-      "Ark",
-      "Role"
+      "Obj Name (matching string)",
+      "Disp Name",
+      "Ark (database)",
+      "Role (database)"
     ]
   end
 
   def self.table_types
     [
       "",
+      "name",
       "name",
       "name",
       "",
@@ -147,6 +170,7 @@ class AdminProfileList < MerrittJson
         prof[:created],
         prof[:path],
         prof[:name],
+        prof[:dispname],
         prof[:ark],
         prof[:role]
       ])
@@ -639,20 +663,7 @@ class AdminObjects < MerrittQuery
     super(config)
     @objs_select = []
     run_query(
-        %{
-            select 
-              id, 
-              ark,
-              ifnull(erc_what,'--'),
-              created,
-              aggregate_role
-            from 
-              inv_objects o
-            where
-              aggregate_role = ?
-            order by
-              o.created desc
-        },
+        get_query,
         [
           aggrole
         ]
@@ -663,9 +674,72 @@ class AdminObjects < MerrittQuery
           name: r[2],
           created: r[3].to_s[0,10],
           role: r[4],
-          noark: false
+          noark: false,
+          # the following are only set for collections
+          dispname: r[5].nil? ? "" : r[5],
+          mnemonic: r[6].nil? ? "" : r[6],
+          harvest: r[7].nil? ? "none" : r[7]
         }) 
     end
+  end
+
+  def get_query
+    %{
+      select 
+        id, 
+        ark,
+        ifnull(erc_what,'--'),
+        created,
+        aggregate_role
+      from 
+        inv_objects o
+      where
+        aggregate_role = ?
+      order by
+        o.created desc
+    }
+  end
+
+  def get_own_query
+    %{
+      select 
+        o.id, 
+        o.ark,
+        ifnull(o.erc_what,'--'),
+        o.created,
+        o.aggregate_role,
+        own.name as dispname
+      from 
+        inv_objects o
+      left join inv_owners own
+        on o.ark = own.ark
+      where
+        o.aggregate_role = ?
+      order by
+        o.created desc
+    }
+  end
+
+  def get_coll_query
+    %{
+      select 
+        o.id, 
+        o.ark,
+        ifnull(o.erc_what,'--'),
+        o.created,
+        o.aggregate_role,
+        c.name as dispname,
+        c.mnemonic,
+        c.harvest_privilege
+      from 
+        inv_objects o
+      left join inv_collections c
+        on o.ark = c.ark
+      where
+        o.aggregate_role = ?
+      order by
+        o.created desc
+    }
   end
 
   def objs_select
@@ -678,11 +752,19 @@ class Slas < AdminObjects
   def initialize(config)
       super(config, 'MRT-service-level-agreement')
   end
+
+  def get_query
+    get_coll_query
+  end
 end
 
 class CollectionObjs < AdminObjects
   def initialize(config)
       super(config, 'MRT-collection')
+  end
+
+  def get_query
+    get_coll_query
   end
 end
 
@@ -690,6 +772,11 @@ class Owners < AdminObjects
   def initialize(config)
       super(config, 'MRT-owner')
   end
+
+  def get_query
+    get_own_query
+  end
+
 end
 
 class Nodes < MerrittQuery

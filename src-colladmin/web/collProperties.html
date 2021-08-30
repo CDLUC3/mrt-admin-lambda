@@ -19,7 +19,8 @@
       <thead>
         <tr class="header">
           <th>Ark</th>
-          <th>Name</th>
+          <th>Obj Name</th>
+          <th>Coll Name</th>
           <th>Menemonic</th>
           <th>Harvest</th>
           <th>Admin Profile</th>
@@ -27,27 +28,20 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <th></th>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td>admin/collection/new (TBD)</td>
-          <td><input type="button" class="submit-profile" data="admin/collection/new" value="Submit Profile"/></td>
-        </tr>
         {{#COLLS}}
         <tr>
           <th>{{ark}}</th>
           <td>{{name}}</td>
+          <td>{{dispname}}</td>
           <td>{{mnemonic}}</td>
           <td>{{harvest}}</td>
-          <td>admin/collection/xxx (TBD)</td>
+          <td>{{path}}</td>
           <td>
             {{#toggle}}
-            <input type="button" class="toggle-harvest" data="{{id}}" value="Toggle Harvest - TBD"/>
+            <input type="button" class="toggle-harvest" data="{{id}}" value="Toggle Harvest {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}"/>
             {{/toggle}}
             {{#getname}}
-            <input type="button" class="pull-profile" data="{{id}}" value="Pull profile details - TBD"/>
+            <input type="button" class="pull-profile" data="{{id}}" value="Pull profile details {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}"/>
             {{/getname}}
           </td>
         </tr>

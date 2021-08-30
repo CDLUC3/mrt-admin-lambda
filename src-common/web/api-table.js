@@ -561,6 +561,8 @@ function format(cell, v, type, merritt_path) {
   } else if (type == 'ark'){
     makeLink(cell, v, merritt_path + "/m/" + encodeURIComponent(v));
     cell.addClass("hasdata");
+  } else if (type == 'objlist'){
+    makeLink(cell, v, "?path=filelist&id=" + v);
   } else if (type == 'alert'){
     if (v.match(/!$/)) {
       cell.addClass("flag");

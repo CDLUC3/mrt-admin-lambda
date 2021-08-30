@@ -175,9 +175,8 @@ module LambdaFunctions
         map['NEWOBJS'] = AdminProfileAction.new(@config, "adminprofiles", myparams).get_profile_list
         map['type'] = myparams.fetch('type', '').upcase
       elsif path == '/web/collProperties.html'
-        myparams['type'] = 'collection'
-        map['NEWCOLLS'] = AdminProfileAction.new(@config, "adminprofiles", myparams).get_profile_list
-        map['COLLS'] = Collections.new(@config).collections_select
+        myparams['type'] = "collection"
+        map['COLLS'] = AdminProfileAction.new(@config, "adminprofiles", myparams).get_profile_list
       elsif path == '/web/storeCollNodes.html'
         coll = myparams.fetch("coll", "")
         if coll.empty?
