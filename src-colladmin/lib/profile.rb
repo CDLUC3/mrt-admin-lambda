@@ -69,76 +69,157 @@ class ProfileList < MerrittJson
 
 end
 
+class AdminProfile < MerrittJson
+  def initialize()
+    super()
+    @path = ""
+    @created = ""
+    @name = ""
+    @ark = ""
+    @role = ""
+    @dispname = ""
+    @mnemonic = ""
+  end
+
+  def path
+    @path
+  end
+
+  def created
+    @created
+  end
+
+  def name
+    @name
+  end
+
+  def ark
+    @ark
+  end
+
+  def role
+    @role
+  end
+
+  def dispname
+    @dispname
+  end
+
+  def mnemonic
+    @mnemonic
+  end
+
+  def key
+    return @mnemonic unless @mnemonic.empty?
+    m = @path.match(%r{admin/[^/]+/(collection|owner|sla)/(.*)(_owner|_service_level_agreement)?$})
+    return m[2] if m
+    @path
+  end
+
+  def status
+    return 'FAIL' if @path.empty? || @ark.empty?
+    return 'WARN' if (dispname.empty? || mnemonic.empty?)
+    return 'PASS'
+  end
+
+  def noark
+    @ark.empty?
+  end
+
+  def load_from_json(json)
+    @path = json.fetch("pros:file", "")
+    @created = json.fetch("pros:modificationDate", "").to_s[0,10]
+    @name = json.fetch("pros:description", "")
+    self
+  end
+
+  def skip
+    @path.empty? || path =~ %r[/TEMPLATE]
+  end
+
+  def load_from_db(rec)
+    @ark = rec.fetch(:ark, "")
+    @name = rec.fetch(:name, "")
+    @role = rec.fetch(:role, "")
+    @created = rec.fetch(:created, "").to_s[0,10]
+    # the following varies based on obj type
+    @dispname = rec.fetch(:dispname, "")
+    # the following will only be set in specific circumstances
+    @mnemonic = rec.fetch(:mnemonic, "")
+    @harvest = rec.fetch(:harvest, false)
+    self
+  end
+
+  def toggle
+    return true if @ark == LambdaFunctions::Handler.merritt_admin_coll_owners
+    return true if @ark == LambdaFunctions::Handler.merritt_curatorial
+    return true if @ark == LambdaFunctions::Handler.merritt_system
+    return true if @ark == LambdaFunctions::Handler.merritt_admin_coll_sla
+    false
+  end
+
+  def notoggle
+    !toggle
+  end
+
+  def getname
+    @mnemonic.empty? || @dispname.empty?
+  end
+
+  def to_table_row
+    [
+      created,
+      path,
+      name,
+      dispname,
+      ark,
+      role,
+      status
+    ]
+  end
+end
+
 class AdminProfileList < MerrittJson
   def initialize(body, dbmap)
     super()
     @profiles = []
+    @profile_keys = {}
+    @profile_names = {}
     data = JSON.parse(body)
     data = fetchHashVal(data, 'pros:profilesState')
     data = fetchHashVal(data, 'pros:profiles')
     
-    profnames = parse_profiles(data)
-    profnames = match_profiles(profnames, dbmap)
+    parse_profiles(data)
+    match_profiles(dbmap)
 
-    profnames.values.sort {
-      |a,b| b.fetch(:created, :name).to_s <=> a.fetch(:created, :name).to_s
-    }.each do |p|
-      @profiles.push(p)
-    end
+    @profiles.sort! {
+      |a,b| a.created == b.created ? a.name <=> b.name : b.created <=> a.created
+    }
   end
 
   def parse_profiles(data)
-    profnames = {}
     fetchArrayVal(data, 'pros:profileFile').each do |json|
-      k = json.fetch("pros:file", "")
-      next if k =~ %r[/TEMPLATE]
-      p = {
-        path: k,
-        created: json.fetch("pros:modificationDate", "").to_s[0,10],
-        name: json.fetch("pros:description", ""),
-        ark: "",
-        role: "",
-        noark: true
-      }
-      n = p[:name].empty? ? p[:path] : p[:name]
-      profnames[n] = p 
+      p = AdminProfile.new.load_from_json(json)
+      next if p.skip
+      @profiles.push(p)
+      @profile_keys[p.key] = p
+      @profile_names[p.name] = p
     end   
-    profnames
   end
 
-  def match_profiles(profnames, dbmap)
+  def match_profiles(dbmap)
     dbmap.each do |rec|
-      ark = rec.fetch(:ark, "")
-      name = rec.fetch(:name, "")
-      role = rec.fetch(:role, "")
-      created = rec.fetch(:created, "").to_s[0,10]
-      # the following varies based on obj type
-      dispname = rec.fetch(:dispname, "")
-      # the following will only be set in specific circumstances
       mnemonic = rec.fetch(:mnemonic, "")
-      harvest = rec.fetch(:harvest, false)
+      name = rec.fetch(:name, "")
 
-      next if name.empty? || ark.empty?
-      if profnames.key?(name)
-        profnames[name][:ark] = ark
-        profnames[name][:role] = role
-        profnames[name][:noark] = false
-        profnames[name][:mnemonic] = mnemonic
-        profnames[name][:harvest] = harvest
+      if @profile_keys.key?(mnemonic)
+        @profile_keys[mnemonic].load_from_db(rec)
+      elsif @profile_names.key?(name)
+        @profile_names[name].load_from_db(rec)
       else
-        profnames[ark] = {
-          path: "",
-          created: created,
-          name: name,
-          ark: ark,
-          role: role,
-          noark: false ,
-          mnemonic: mnemonic,
-          harvest: harvest
-        } 
+        @profiles.push(AdminProfile.new.load_from_db(rec))
       end
     end
-    profnames
   end
 
   def self.table_headers
@@ -148,7 +229,8 @@ class AdminProfileList < MerrittJson
       "Obj Name (matching string)",
       "Disp Name",
       "Ark (database)",
-      "Role (database)"
+      "Role (database)",
+      "Status"
     ]
   end
 
@@ -159,21 +241,17 @@ class AdminProfileList < MerrittJson
       "name",
       "name",
       "",
-      ""
+      "",
+      "status"
     ]
   end
 
   def table_rows
     rows = []
-    @profiles.each do |prof|
-      rows.push([
-        prof[:created],
-        prof[:path],
-        prof[:name],
-        prof[:dispname],
-        prof[:ark],
-        prof[:role]
-      ])
+    @profiles.each do |p|
+      rows.push(
+        p.to_table_row
+      )
     end
     rows
   end
@@ -572,21 +650,12 @@ class Collections < MerrittQuery
       ).each do |r|
           c = Collection.new(r)
           @collections[c.ark] = c
-          notoggle = (
-            c.ark == LambdaFunctions::Handler.merritt_admin_coll_owners || 
-            c.ark == LambdaFunctions::Handler.merritt_curatorial || 
-            c.ark == LambdaFunctions::Handler.merritt_system || 
-            c.ark == LambdaFunctions::Handler.merritt_admin_coll_sla
-          )
-          getname = ((c.mnemonic.nil? || c.dbdescription.nil?) && !notoggle)
           @collections_select.push({
             id: c.id,
             ark: c.ark,
             name: c.dbdescription,
             mnemonic: c.mnemonic,
             harvest: c.harvest,
-            getname: getname,
-            toggle: !notoggle,
             aggregate_role: c.aggregate_role
           })
       end
@@ -681,6 +750,10 @@ class AdminObjects < MerrittQuery
           harvest: r[7].nil? ? "none" : r[7]
         }) 
     end
+    refine_objs
+  end
+
+  def refine_objs
   end
 
   def get_query
@@ -766,6 +839,23 @@ class CollectionObjs < AdminObjects
   def get_query
     get_coll_query
   end
+
+  def refine_objs
+    @objs_select.each_with_index do |p,i|
+      ark = p.fetch(:ark, "")
+      mnemonic = p.fetch(:mnemonic, "")
+      dispname = p.fetch(:dispname, "")
+      notoggle = (
+        ark == LambdaFunctions::Handler.merritt_admin_coll_owners || 
+        ark == LambdaFunctions::Handler.merritt_curatorial || 
+        ark == LambdaFunctions::Handler.merritt_system || 
+        ark == LambdaFunctions::Handler.merritt_admin_coll_sla
+      )
+      p[:toggle] = !notoggle
+      p[:getname] = ((mnemonic.empty? || dispname.empty?) && !notoggle)
+    end
+  end
+
 end
 
 class Owners < AdminObjects
