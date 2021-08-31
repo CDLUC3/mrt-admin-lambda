@@ -160,11 +160,17 @@ function processResult(data) {
   }
 }
 
-function postLoad() {
+function showCounts() {
   if ($("#data-table caption").length == 0) {
-    var rcount = $("#data-table tbody tr").length;
-    $("<caption/>").text(rcount + " Rows").prependTo($("#data-table"));  
-  }
+    $("<caption/>").prependTo($("#data-table"));
+  } 
+  var vcount = $("#data-table tbody tr:visible").length;
+  var rcount = $("#data-table tbody tr").length;
+  $("#data-table caption").text(vcount + " of " + rcount + " Rows");  
+}
+
+function postLoad() {
+  showCounts();
   if ($("#bytes").val() != "1") {
     updateBytesUnits();
   }

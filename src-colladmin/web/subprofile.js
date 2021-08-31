@@ -22,4 +22,6 @@ function init() {
             }
         });
     });
+    $("p.buttons").show();
+    showCounts();
 }

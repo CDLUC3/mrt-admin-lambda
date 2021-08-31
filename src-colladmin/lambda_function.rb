@@ -177,7 +177,6 @@ module LambdaFunctions
       elsif path == '/web/collProperties.html'
         myparams['type'] = "collection"
         map['COLLS'] = AdminProfileAction.new(@config, "adminprofiles", myparams).get_profile_list
-        puts map['COLLS']
       elsif path == '/web/storeCollNodes.html'
         coll = myparams.fetch("coll", "")
         if coll.empty?

@@ -15,6 +15,8 @@ function init() {
       collid: $(this).attr("data")
     });
   });
+  $("p.buttons").show();
+  showCounts();
 }
 
 function do_action(formdata) {

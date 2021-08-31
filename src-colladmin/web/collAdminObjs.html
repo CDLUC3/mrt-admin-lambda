@@ -14,32 +14,51 @@
     <div class="form-body">
     <h1>{{MYENV}} Merritt {{type}}s</h1>
     <p><a href="{{ADMINTOOL_HOME}}">Admin Tool Home</a> / <a href="{{COLLADMIN_ADMIN}}">CollAdmin Tool Home</a></p>
+    <p class="buttons">
+      <button onclick="$('tr.row').toggle()">Filter Totals/Details</button>
+      <button onclick="$('tr.nodata').toggle()">Filter Data</button>
+      <button onclick="$('tr.noflag').toggle()">Flagged Data</button>
+      <button onclick="$('tr.total').toggle()">Totals On/Off</button>
+      <button onclick="$('tr.status-PASS').toggle()">PASS On/Off</button>
+      <button onclick="$('tr.status-INFO').toggle()">INFO On/Off</button>
+      <button onclick="$('tr.status-WARN').toggle()">WARN On/Off</button>
+      <button id="exportTable">Export CSV</button>
+      <select id="bytes">
+        <option value="1">Bytes</option>
+        <option value="1000000">MB</option>
+        <option value="1000000000">GB</option>
+        <option value="1000000000000">TB</option>
+      </select>
+      <a id="exportJson" target="_blank">Download Json</a>
+    </p>
     <h2>{{type}} List</h2>
-    <table class="sortable results">
+    <table  id="data-table" class="sortable results">
       <thead>
         <tr class="header">
-          <th>Created</th>
+          <th class="datetime">Created</th>
           <th>Ark (database)</th>
-          <th>Obj Name (matching string)</th>
-          <th>Disp Name</th>
-          <th>Path to Admin Profile</th>
+          <th class="name">Obj Name (matching string)</th>
+          <th class="name">Disp Name</th>
+          <th class="name">Path to Admin Profile</th>
           <th>Actions</th>
+          <th class="status">Status</th>
         </tr>
       </thead>
       <tbody>
        {{#NEWOBJS}}
-        <tr>
-          <th>{{created}}</th>
+        <tr class="status-{{status}}">
+          <th class="datetime">{{created}}</th>
           <th>{{ark}}</th>
-          <td>{{name}}</td>
-          <td>{{dispname}}</td>
-          <td>{{path}}</td>
+          <td class="name">{{name}}</td>
+          <td class="name">{{dispname}}</td>
+          <td class="name">{{path}}</td>
           <td>
             {{#noark}}
             <input type="button" class="submit-admin" data="{{path}}" data-title="{{name}}" 
               value="Submit Admin Object {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}"/>
             {{/noark}}
           </td>
+          <td class="status status-{{status}}">{{status}}</td>
         </tr>
         {{/NEWOBJS}}
       </tbody>

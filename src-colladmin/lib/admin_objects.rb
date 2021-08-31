@@ -53,8 +53,9 @@ class AdminProfile < MerrittJson
   end
 
   def status
-    return 'FAIL' if @path.empty? || @ark.empty?
-    return 'WARN' if (dispname.empty? || mnemonic.empty?)
+    return 'FAIL' if path.empty? || ark.empty?
+    return 'WARN' if dispname.empty? || mnemonic.empty?
+    return 'INFO' unless dispname == name
     return 'PASS'
   end
 
@@ -87,11 +88,12 @@ class AdminProfile < MerrittJson
   end
 
   def toggle
-    return true if @ark == LambdaFunctions::Handler.merritt_admin_coll_owners
-    return true if @ark == LambdaFunctions::Handler.merritt_curatorial
-    return true if @ark == LambdaFunctions::Handler.merritt_system
-    return true if @ark == LambdaFunctions::Handler.merritt_admin_coll_sla
-    !@ark.empty?
+    return false if ark.empty?
+    return false if ark == LambdaFunctions::Handler.merritt_admin_coll_owners
+    return false if ark == LambdaFunctions::Handler.merritt_curatorial
+    return false if ark == LambdaFunctions::Handler.merritt_system
+    return false if ark == LambdaFunctions::Handler.merritt_admin_coll_sla
+    true
   end
 
   def notoggle
@@ -99,7 +101,9 @@ class AdminProfile < MerrittJson
   end
 
   def getname
-    (@mnemonic.empty? || @dispname.empty? || @dispname != @name) && !path.empty?
+    return false if path.empty?
+    return false if ark.empty?
+    mnemonic.empty? || dispname.empty? || dispname != name
   end
 
   def to_table_row
@@ -172,7 +176,7 @@ class AdminProfileList < MerrittJson
 
   def self.table_types
     [
-      "",
+      "datetime",
       "name",
       "name",
       "name",
