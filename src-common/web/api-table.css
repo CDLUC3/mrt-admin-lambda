@@ -56,7 +56,8 @@ table.results th.mime,
 table.results td.mime,
 table.results th.name,
 table.results td.name {
-  width: 300px !important;
+  width: 220px !important;
+  word-break: break-all;
 }
 
 table.results th.status,

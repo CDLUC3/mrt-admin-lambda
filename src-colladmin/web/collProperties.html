@@ -18,24 +18,26 @@
     <table class="sortable results">
       <thead>
         <tr class="header">
+          <th>Created</th>
           <th>Ark</th>
           <th class="name">Obj Name</th>
           <th class="name">Coll Name</th>
           <th>Menemonic</th>
           <th>Harvest</th>
-          <th>Admin Profile</th>
+          <th class="name">Admin Profile</th>
           <th>Action</th>
         </tr>
       </thead>
       <tbody>
         {{#COLLS}}
         <tr>
+          <th>{{created}}</th>
           <th>{{ark}}</th>
-          <td>{{name}}</td>
-          <td>{{dispname}}</td>
+          <td class="name">{{name}}</td>
+          <td class="name">{{dispname}}</td>
           <td>{{mnemonic}}</td>
           <td>{{harvest}}</td>
-          <td>{{path}}</td>
+          <td class="name">{{path}}</td>
           <td>
             {{#toggle}}
             <input type="button" class="toggle-harvest" data="{{id}}" value="Toggle Harvest {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}"/>

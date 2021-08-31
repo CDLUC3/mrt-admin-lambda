@@ -3,6 +3,8 @@ require 'cgi'
 require_relative 'action'
 require_relative 'forward_to_ingest_action'
 require_relative '../lib/profile'
+require_relative '../lib/admin_objects'
+require_relative '../lib/storage_nodes'
 require_relative '../lib/merritt_query'
 
 class AdminProfileAction < ForwardToIngestAction
