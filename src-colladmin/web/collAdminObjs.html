@@ -14,25 +14,9 @@
     <div class="form-body">
     <h1>{{MYENV}} Merritt {{type}}s</h1>
     <p><a href="{{ADMINTOOL_HOME}}">Admin Tool Home</a> / <a href="{{COLLADMIN_ADMIN}}">CollAdmin Tool Home</a></p>
-    <p class="buttons">
-      <button onclick="$('tr.row').toggle()">Filter Totals/Details</button>
-      <button onclick="$('tr.nodata').toggle()">Filter Data</button>
-      <button onclick="$('tr.noflag').toggle()">Flagged Data</button>
-      <button onclick="$('tr.total').toggle()">Totals On/Off</button>
-      <button onclick="$('tr.status-PASS').toggle()">PASS On/Off</button>
-      <button onclick="$('tr.status-INFO').toggle()">INFO On/Off</button>
-      <button onclick="$('tr.status-WARN').toggle()">WARN On/Off</button>
-      <button id="exportTable">Export CSV</button>
-      <select id="bytes">
-        <option value="1">Bytes</option>
-        <option value="1000000">MB</option>
-        <option value="1000000000">GB</option>
-        <option value="1000000000000">TB</option>
-      </select>
-      <a id="exportJson" target="_blank">Download Json</a>
-    </p>
+    {{{BUTTONS}}}
     <h2>{{type}} List</h2>
-    <table  id="data-table" class="sortable results">
+    <table id="data-table" class="sortable results">
       <thead>
         <tr class="header">
           <th class="datetime">Created</th>

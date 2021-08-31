@@ -98,7 +98,11 @@ class LambdaBase
   def template_parameters(path, myparams)
     return default_template_parameters if path == '/web/lambda.base.js'
     return default_template_parameters if path == '/web/coll-lambda.base.js'
-    return default_template_parameters if path =~ %r[^/web/.*\.html]
+    if path =~ %r[^/web/.*\.html]
+      p = default_template_parameters
+      p['BUTTONS'] = File.open("template/buttons.template").read
+      return p
+    end
     return {} if path == 'web/sorttable.js'
     return default_template_parameters if path =~ %r[^/web/.*\.js]
     {}

@@ -13,23 +13,7 @@
     <h1>Merritt Collection Admin Tool</h1>
     <h4 class="report_path"></h4>
     <p><a href="{{ADMINTOOL_HOME}}">Admin Tool Home</a> / <a href="{{COLLADMIN_ADMIN}}">CollAdmin Tool Home</a></p>
-    <p class="buttons">
-      <button onclick="$('tr.row').toggle();showCounts()">Filter Totals/Details</button>
-      <button onclick="$('tr.nodata').toggle();showCounts()">Filter Data</button>
-      <button onclick="$('tr.noflag').toggle();showCounts()">Flagged Data</button>
-      <button onclick="$('tr.total').toggle();showCounts()">Totals On/Off</button>
-      <button onclick="$('tr.status-PASS').toggle();showCounts()">PASS On/Off</button>
-      <button onclick="$('tr.status-INFO').toggle();showCounts()">INFO On/Off</button>
-      <button onclick="$('tr.status-WARN').toggle();showCounts()">WARN On/Off</button>
-      <button id="exportTable">Export CSV</button>
-      <select id="bytes">
-        <option value="1">Bytes</option>
-        <option value="1000000">MB</option>
-        <option value="1000000000">GB</option>
-        <option value="1000000000000">TB</option>
-      </select>
-      <a id="exportJson" target="_blank">Download Json</a>
-    </p>
+    {{{BUTTONS}}}
     <div id="menu">
     </div>
     <div id="data">

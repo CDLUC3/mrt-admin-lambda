@@ -162,7 +162,7 @@ function processResult(data) {
 
 function showCounts() {
   if ($("#data-table caption").length == 0) {
-    $("<caption/>").prependTo($("#data-table"));
+    $("<caption/>").insertBefore($("#data-table thead"));
   } 
   var vcount = $("#data-table tbody tr:visible").length;
   var rcount = $("#data-table tbody tr").length;

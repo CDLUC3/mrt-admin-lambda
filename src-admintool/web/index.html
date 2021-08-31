@@ -13,23 +13,7 @@
     <h1>Merritt Admin Tool</h1>
     <h4 class="report_path"></h4>
     <p><a href="{{ADMINTOOL_HOME}}">Home</a></p>
-    <p class="buttons">
-      <button onclick="$('tr.row').toggle()">Filter Totals/Details</button>
-      <button onclick="$('tr.nodata').toggle()">Filter Data</button>
-      <button onclick="$('tr.noflag').toggle()">Flagged Data</button>
-      <button onclick="$('tr.total').toggle()">Totals On/Off</button>
-      <button onclick="$('tr.status-PASS').toggle()">PASS On/Off</button>
-      <button onclick="$('tr.status-INFO').toggle()">INFO On/Off</button>
-      <button onclick="$('tr.status-WARN').toggle()">WARN On/Off</button>
-      <button id="exportTable">Export CSV</button>
-      <select id="bytes">
-        <option value="1">Bytes</option>
-        <option value="1000000">MB</option>
-        <option value="1000000000">GB</option>
-        <option value="1000000000000">TB</option>
-      </select>
-      <a id="exportJson" target="_blank">Download Json</a>
-    </p>
+    {{{BUTTONS}}}
     <div id="menu">
 
       <h2>Applications</h2>
