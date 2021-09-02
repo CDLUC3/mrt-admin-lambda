@@ -16,7 +16,23 @@ class ObjectIdFilesQuery < AdminQuery
         f.source,
         f.pathname,
         f.full_size,
-        f.created
+        f.created,
+        (
+          select 
+            group_concat(n.number)
+          from
+            inv.inv_audits a
+          inner join
+            inv.inv_nodes n
+          on
+            n.id = a.inv_node_id
+          where
+            a.inv_object_id = o.id
+          and 
+            a.inv_version_id = v.id
+          and
+            a.inv_file_id = f.id
+        )
       from 
         inv.inv_objects o 
       inner join inv.inv_versions v
@@ -41,11 +57,11 @@ class ObjectIdFilesQuery < AdminQuery
   end
 
   def get_headers(results)
-    ['Ark', 'Version', 'Source', 'Path', 'File Size', 'Created']
+    ['Ark', 'Version', 'Source', 'Path', 'File Size', 'Created', 'Nodes']
   end
 
   def get_types(results)
-    ['ark', '', '', 'name', 'bytes', 'datetime']
+    ['ark', '', '', 'name', 'bytes', 'datetime', '']
   end
 
 end

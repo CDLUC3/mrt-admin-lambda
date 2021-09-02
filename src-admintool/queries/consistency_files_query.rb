@@ -22,6 +22,8 @@ class ConsistencyFilesQuery < AdminQuery
             then 'DataOne'
           when c.mnemonic = 'dataone_dash'
             then 'DataOne'
+          when ifnull(c.mnemonic, '') = ''
+            then 'No Mnemonic'
           when age.inv_object_id = (
             select id from inv.inv_objects where ark = 'ark:/13030/m5q57br8'
           )
@@ -72,6 +74,7 @@ class ConsistencyFilesQuery < AdminQuery
               when #{@copies} != 2 then 'FAIL'
               when c.mnemonic = 'oneshare_dataup' then 'WARN'
               when c.mnemonic = 'dataone_dash' then 'WARN'
+              when ifnull(c.mnemonic, '') = '' then 'WARN'
               when age.inv_object_id = (
                 select id from inv.inv_objects where ark = 'ark:/13030/m5q57br8'
               ) then 'WARN'
