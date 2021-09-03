@@ -12,6 +12,7 @@ class AdminProfile < MerrittJson
     @role = ""
     @dispname = ""
     @mnemonic = ""
+    @harvest = ""
   end
 
   def path
@@ -46,7 +47,7 @@ class AdminProfile < MerrittJson
     @harvest
   end
 
-  def harvest_toggled
+  def toggle_harvest
     @harvest == 'none' ? 'public' : 'none'
   end
 

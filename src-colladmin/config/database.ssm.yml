@@ -6,8 +6,8 @@ default:
     host: "{!SSM: inv/db-host}"
     database: "{!SSM: inv/db-name}"
     port: 3306
-    username: "{!SSM: inv/readonly/db-user}"
-    password: "{!SSM: inv/readonly/db-password}"
+    username: "{!SSM: inv/readwrite/db-user}"
+    password: "{!SSM: inv/readwrite/db-password}"
   merritt_path: "{!ENV: MERRITT_PATH !DEFAULT: https://merritt.cdlib.org}"
   ingest-services: "{!SSM: colladmin/ingest-services}"
   ldap:

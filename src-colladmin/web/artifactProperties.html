@@ -56,7 +56,7 @@
               type="button" 
               class="toggle_harvest" 
               data="{{ark}}" 
-              value="Toggle Harvest {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}"
+              value="Toggle Harvest {{#IS_PROD}}🚧{{/IS_PROD}}"
               title="Toggle inv_collections.harvest_privilege between 'none' and 'public'"
             />
             {{/toggle}}
@@ -65,7 +65,7 @@
               type="button" 
               class="set_mnemonic" 
               data="{{ark}}" 
-              value="Set mnemonic from profile {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}"
+              value="Set mnemonic from profile {{#IS_PROD}}🚧{{/IS_PROD}}"
               title="Set inv_collections.mnemonic to the 'context' from the profile"
             />
             {{/set_mnemonic}}
@@ -74,7 +74,7 @@
               type="button" 
               class="set_coll_name" 
               data="{{ark}}" 
-              value="Set {{artifact}} Name {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}"
+              value="Set {{artifact}} Name {{#IS_PROD}}🚧{{/IS_PROD}}"
               title="Set inv_collections.name to the name in the profile."
             />
             {{/set_coll_name}}
@@ -83,7 +83,7 @@
               type="button" 
               class="set_own_name" 
               data="{{ark}}" 
-              value="Set Owner Name {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}"
+              value="Set Owner Name {{#IS_PROD}}🚧{{/IS_PROD}}"
               title="Set inv_owners.name to the name in the profile."
             />
             {{/set_own_name}}

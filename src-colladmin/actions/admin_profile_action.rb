@@ -68,7 +68,7 @@ class AdminProfileAction < ForwardToIngestAction
     p = get_profile(ark)
     return {message: "Ark #{ark} not found"}.to_json if p.nil?
     sql = "update inv_collections set harvest_privilege = ? where ark = ?"
-    MerrittQuery.new(@config).run_update(sql, [p.harvest_toggled, ark], "Update successful, reload page to see result").to_json
+    MerrittQuery.new(@config).run_update(sql, [p.toggle_harvest, ark], "Update successful, reload page to see result").to_json
   end
 
   def set_mnemonic(ark)

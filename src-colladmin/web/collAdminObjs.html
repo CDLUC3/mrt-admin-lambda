@@ -50,7 +50,7 @@
               class="submit-admin" 
               data="{{path}}" 
               data-title="{{name}}" 
-              value="Submit Admin Object {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}"
+              value="Submit Admin Object {{#IS_PROD}}🚧{{/IS_PROD}}"
               title="Submit Admin object (containing dummy content) using the new profile.  This will initialize the inventory database collection/owner objects."
             />
             {{/noark}}
