@@ -54,7 +54,7 @@
             {{#toggle}}
             <input 
               type="button" 
-              class="toggle_harvest" 
+              class="button toggle_harvest" 
               data="{{ark}}" 
               value="Toggle Harvest {{#IS_PROD}}🚧{{/IS_PROD}}"
               title="Toggle inv_collections.harvest_privilege between 'none' and 'public'"
@@ -63,7 +63,7 @@
             {{#set_mnemonic}}
             <input 
               type="button" 
-              class="set_mnemonic" 
+              class="button set_mnemonic" 
               data="{{ark}}" 
               value="Set mnemonic from profile {{#IS_PROD}}🚧{{/IS_PROD}}"
               title="Set inv_collections.mnemonic to the 'context' from the profile"
@@ -72,21 +72,30 @@
             {{#set_coll_name}}
             <input 
               type="button" 
-              class="set_coll_name" 
+              class="button set_coll_name" 
               data="{{ark}}" 
-              value="Set {{artifact}} Name {{#IS_PROD}}🚧{{/IS_PROD}}"
+              value="Set Collection Name {{#IS_PROD}}🚧{{/IS_PROD}}"
               title="Set inv_collections.name to the name in the profile."
             />
             {{/set_coll_name}}
             {{#set_own_name}}
             <input 
               type="button" 
-              class="set_own_name" 
+              class="button set_own_name" 
               data="{{ark}}" 
               value="Set Owner Name {{#IS_PROD}}🚧{{/IS_PROD}}"
               title="Set inv_owners.name to the name in the profile."
             />
             {{/set_own_name}}
+            {{#set_sla_name}}
+            <input 
+              type="button" 
+              class="button set_sla_name" 
+              data="{{ark}}" 
+              value="Set SLA Name {{#IS_PROD}}🚧{{/IS_PROD}}"
+              title="Set inv_collections.name to the name in the profile."
+            />
+            {{/set_sla_name}}
            </td>
           <td class="status status-{{status}}">{{status}}</td>
         </tr>

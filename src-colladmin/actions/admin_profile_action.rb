@@ -8,8 +8,8 @@ require_relative '../lib/storage_nodes'
 require_relative '../lib/merritt_query'
 
 class AdminProfileAction < ForwardToIngestAction
-  def initialize(config, path, myparams)
-    @type = CGI.unescape(myparams.fetch('type', 'collection'))
+  def initialize(config, path, myparams, deftype = "collection")
+    @type = CGI.unescape(myparams.fetch('type', deftype))
     endpoint = @type.empty? ? "admin/profiles/admin" : "admin/profiles/admin/#{@type}" 
     super(config, path, myparams, endpoint)
   end
@@ -80,6 +80,13 @@ class AdminProfileAction < ForwardToIngestAction
   end
 
   def set_coll_name(ark)
+    p = get_profile(ark)
+    return {message: "Ark #{ark} not found"}.to_json if p.nil?
+    sql = "update inv_collections set name=? where ark = ?"
+    MerrittQuery.new(@config).run_update(sql, [p.name, ark], "Update successful, reload page to see result").to_json
+  end
+
+  def set_sla_name(ark)
     p = get_profile(ark)
     return {message: "Ark #{ark} not found"}.to_json if p.nil?
     sql = "update inv_collections set name=? where ark = ?"

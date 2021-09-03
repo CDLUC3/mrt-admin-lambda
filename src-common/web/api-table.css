@@ -247,3 +247,11 @@ input[type=submit] {
 input[type=submit]:disabled {
   background-color: #EEEEEE;
 }
+
+input.button {
+  background-color: yellow;
+}
+
+input.button:disabled {
+  background-color: #EEEEEE;
+}

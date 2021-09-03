@@ -120,7 +120,13 @@ class AdminProfile < MerrittJson
   def set_coll_name
     return false if path.empty?
     return false if ark.empty?
-    (artifact == "collection" || artifact == "sla") && dispname != name
+    artifact == "collection" && dispname != name
+  end
+
+  def set_sla_name
+    return false if path.empty?
+    return false if ark.empty?
+    artifact == "sla" && dispname != name
   end
 
   def set_own_name

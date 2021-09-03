@@ -27,11 +27,18 @@ function init() {
       ark: $(this).attr("data")
     });
   });
+  $(".set_sla_name").on("click", function(){
+    do_action({
+      path: "set_sla_name",
+      ark: $(this).attr("data")
+    });
+  });
   $("p.buttons").show();
   showCounts();
 }
 
 function do_action(formdata) {
+  $("input.button").attr("disabled", true);
   $.ajax({
     dataType: "json",
     method: "POST",
