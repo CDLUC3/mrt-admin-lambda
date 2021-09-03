@@ -201,7 +201,9 @@ class AdminProfileList < MerrittJson
       elsif @profile_names.key?(name)
         @profile_arks[ark] = @profile_names[name].load_from_db(rec)
       else
-        @profile_arks[ark] = @profiles.push(AdminProfile.new(@artifact).load_from_db(rec))
+        p = AdminProfile.new(@artifact).load_from_db(rec)
+        @profile_arks[ark] = p
+        @profiles.push(p)
       end
     end
   end
