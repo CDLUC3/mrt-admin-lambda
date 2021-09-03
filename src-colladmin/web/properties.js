@@ -3,15 +3,27 @@ $(document).ready(function(){
 });
   
 function init() {
-  $(".toggle-harvest").on("click", function(){
+  $(".toggle_harvest").on("click", function(){
     do_action({
-      path: "toggle-harvest",
+      path: "toggle_harvest",
       ark: $(this).attr("data")
     });
   });
-  $(".pull-profile").on("click", function(){
+  $(".set_mnemonic").on("click", function(){
     do_action({
-      path: "pull-profile",
+      path: "set_mnemonic",
+      ark: $(this).attr("data")
+    });
+  });
+  $(".set_coll_name").on("click", function(){
+    do_action({
+      path: "set_coll_name",
+      ark: $(this).attr("data")
+    });
+  });
+  $(".set_own_name").on("click", function(){
+    do_action({
+      path: "set_own_name",
       ark: $(this).attr("data")
     });
   });
@@ -29,7 +41,7 @@ function do_action(formdata) {
       if ('message' in data) {
         alert(data.message);
       }
-      document.location = "{{COLLADMIN_ROOT}}/web/collProperties.html"
+      window.location.reload()
     },
     error: function( xhr, status ) {
       alert(xhr.responseText);

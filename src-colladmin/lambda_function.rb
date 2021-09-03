@@ -85,7 +85,7 @@ module LambdaFunctions
         elsif path == "submissions/unpause" 
           result = PostToIngestAction.new(config, path, myparams, "admin/submissions/thaw").get_data
         elsif path == "submit-profile" 
-          return LambdaBase.error(405, "Not yet supported", false) unless LambdaBase.is_docker
+          return LambdaBase.error(405, "Not yet supported", false) if LambdaBase.is_prod
           params = {
             file: File.new("/var/task/dummy.README"),
             type: "file",
@@ -103,12 +103,18 @@ module LambdaFunctions
             statusCode: 200,
             body: result
           }
-        elsif path == "toggle-harvest" 
-          return LambdaBase.error(405, "Not yet supported", false) unless LambdaBase.is_docker
+        elsif path == "toggle_harvest" 
+          return LambdaBase.error(405, "Not yet supported", false) if LambdaBase.is_prod
           result = AdminProfileAction.new(config, "adminprofiles", myparams).toggle_harvest(myparams.fetch("ark", ""))
-        elsif path == "pull-profile" 
-          return LambdaBase.error(405, "Not yet supported", false) unless LambdaBase.is_docker
-          result = AdminProfileAction.new(config, "adminprofiles", myparams).pull_profile(myparams.fetch("ark", ""))
+        elsif path == "set_mnemonic" 
+          return LambdaBase.error(405, "Not yet supported", false) if LambdaBase.is_prod
+          result = AdminProfileAction.new(config, "adminprofiles", myparams).set_mnemonic(myparams.fetch("ark", ""))
+        elsif path == "set_coll_name" 
+          return LambdaBase.error(405, "Not yet supported", false) if LambdaBase.is_prod
+          result = AdminProfileAction.new(config, "adminprofiles", myparams).set_coll_name(myparams.fetch("ark", ""))
+        elsif path == "set_own_name" 
+          return LambdaBase.error(405, "Not yet supported", false) if LambdaBase.is_prod
+          result = AdminProfileAction.new(config, "adminprofiles", myparams).set_own_name(myparams.fetch("ark", ""))
         elsif path == "createProfile/profile" 
           result = PostToIngestMultipartAction.new(config, path, myparams, "admin/profile/profile").get_data
         elsif path == "createProfile/collection" 
@@ -179,10 +185,14 @@ module LambdaFunctions
       elsif path == "/web/profile.js"
         map['ADMIN_OWNER'] = LambdaFunctions::Handler.merritt_admin_owner
       elsif path == '/web/collAdminObjs.html'
+        artifact = myparams.fetch("type", "")
+        map['artifact'] = artifact
+        map["artifact_#{artifact}"] = true
         map['NEWOBJS'] = AdminProfileAction.new(@config, "adminprofiles", myparams).get_profile_list
-        map['type'] = myparams.fetch('type', '').upcase
-      elsif path == '/web/collProperties.html'
-        myparams['type'] = "collection"
+      elsif path == '/web/artifactProperties.html'
+        artifact = myparams.fetch("type", "")
+        map['artifact'] = artifact
+        map["artifact_#{artifact}"] = true
         map['COLLS'] = AdminProfileAction.new(@config, "adminprofiles", myparams).get_profile_list
       elsif path == '/web/storeCollNodes.html'
         coll = myparams.fetch("coll", "")

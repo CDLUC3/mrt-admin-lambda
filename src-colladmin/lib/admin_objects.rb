@@ -2,8 +2,9 @@ require_relative 'merritt_json'
 require_relative 'merritt_query'
 
 class AdminProfile < MerrittJson
-  def initialize()
+  def initialize(artifact)
     super()
+    @artifact = artifact
     @path = ""
     @created = ""
     @name = ""
@@ -56,6 +57,10 @@ class AdminProfile < MerrittJson
     @path
   end
 
+  def artifact
+    @artifact
+  end
+
   def status
     return 'FAIL' if path.empty? || ark.empty?
     return 'WARN' if dispname.empty? || mnemonic.empty?
@@ -92,6 +97,7 @@ class AdminProfile < MerrittJson
   end
 
   def toggle
+    return false unless @artifact == "collection"
     return false if ark.empty?
     return false if ark == LambdaFunctions::Handler.merritt_admin_coll_owners
     return false if ark == LambdaFunctions::Handler.merritt_curatorial
@@ -104,10 +110,38 @@ class AdminProfile < MerrittJson
     !toggle
   end
 
-  def getname
+  def set_mnemonic
     return false if path.empty?
     return false if ark.empty?
-    mnemonic.empty? || dispname.empty? || dispname != name
+    artifact == "collection" && mnemonic.empty?
+  end
+
+  def set_coll_name
+    return false if path.empty?
+    return false if ark.empty?
+    (artifact == "collection" || artifact == "sla") && dispname != name
+  end
+
+  def set_own_name
+    return false if path.empty?
+    return false if ark.empty?
+    artifact == "owner" && dispname != name
+  end
+
+  def artifact_collection
+    artifact == "collection" 
+  end
+
+  def artifact_sla
+    artifact == "collection" 
+  end
+
+  def artifact_collection_or_sla
+    artifact == "collection" || artifact == "sla"
+  end
+
+  def artifact_owner
+    artifact == "owner"
   end
 
   def to_table_row
@@ -125,8 +159,9 @@ class AdminProfile < MerrittJson
 end
 
 class AdminProfileList < MerrittJson
-  def initialize(body, dbmap)
+  def initialize(body, dbmap, artifact)
     super()
+    @artifact = artifact
     @profiles = []
     @profile_keys = {}
     @profile_names = {}
@@ -145,7 +180,7 @@ class AdminProfileList < MerrittJson
 
   def parse_profiles(data)
     fetchArrayVal(data, 'pros:profileFile').each do |json|
-      p = AdminProfile.new.load_from_json(json)
+      p = AdminProfile.new(@artifact).load_from_json(json)
       next if p.skip
       @profiles.push(p)
       @profile_keys[p.key] = p
@@ -165,7 +200,7 @@ class AdminProfileList < MerrittJson
       elsif @profile_names.key?(name)
         @profile_arks[ark] = @profile_names[name].load_from_db(rec)
       else
-        @profile_arks[ark] = @profiles.push(AdminProfile.new.load_from_db(rec))
+        @profile_arks[ark] = @profiles.push(AdminProfile.new(@artifact).load_from_db(rec))
       end
     end
   end

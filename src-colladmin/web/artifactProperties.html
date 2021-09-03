@@ -12,10 +12,10 @@
   </head>
   <body>
     <div class="form-body">
-    <h1>Merritt Collection Properties</h1>
+    <h1>Merritt {{artifact}} Properties</h1>
     <p><a href="{{ADMINTOOL_HOME}}">Admin Tool Home</a> / <a href="{{COLLADMIN_ADMIN}}">CollAdmin Tool Home</a></p>
     {{{BUTTONS}}}
-    <h2>Collection List</h2>
+    <h2>{{artifact}} List</h2>
     <div>
       <ul>
         <li><a href="/web/collProfile.html">Create Profiles</a></li>
@@ -28,9 +28,11 @@
           <th class="datetime">Created</th>
           <th>Ark</th>
           <th class="name">Obj Name</th>
-          <th class="name">Coll Name</th>
+          <th class="name">{{artifact}} Name</th>
+          {{#artifact_collection}}
           <th>Menemonic</th>
           <th>Harvest</th>
+          {{/artifact_collection}}
           <th class="name">Admin Profile</th>
           <th>Action</th>
           <th class="status">Status</th>
@@ -43,29 +45,49 @@
           <th>{{ark}}</th>
           <td class="name">{{name}}</td>
           <td class="name">{{dispname}}</td>
+          {{#artifact_collection}}
           <td>{{mnemonic}}</td>
           <td>{{harvest}}</td>
+          {{/artifact_collection}}
           <td class="name">{{path}}</td>
           <td>
             {{#toggle}}
             <input 
               type="button" 
-              class="toggle-harvest" 
+              class="toggle_harvest" 
               data="{{ark}}" 
               value="Toggle Harvest {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}"
               title="Toggle inv_collections.harvest_privilege between 'none' and 'public'"
             />
             {{/toggle}}
-            {{#getname}}
+            {{#set_mnemonic}}
             <input 
               type="button" 
-              class="pull-profile" 
+              class="set_mnemonic" 
               data="{{ark}}" 
-              value="Pull profile details {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}"
-              title="Set inv_collections.mnemonic to the 'context' from the profile. Set inv_collections.name to the name in the profile."
+              value="Set mnemonic from profile {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}"
+              title="Set inv_collections.mnemonic to the 'context' from the profile"
             />
-            {{/getname}}
-          </td>
+            {{/set_mnemonic}}
+            {{#set_coll_name}}
+            <input 
+              type="button" 
+              class="set_coll_name" 
+              data="{{ark}}" 
+              value="Set {{artifact}} Name {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}"
+              title="Set inv_collections.name to the name in the profile."
+            />
+            {{/set_coll_name}}
+            {{#set_own_name}}
+            <input 
+              type="button" 
+              class="set_own_name" 
+              data="{{ark}}" 
+              value="Set Owner Name {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}"
+              title="Set inv_owners.name to the name in the profile."
+            />
+            {{/set_own_name}}
+           </td>
           <td class="status status-{{status}}">{{status}}</td>
         </tr>
         {{/COLLS}}

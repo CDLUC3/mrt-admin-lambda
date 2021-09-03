@@ -27,7 +27,7 @@ class AdminProfileAction < ForwardToIngestAction
   end
 
   def table_rows(body)
-    profiles = AdminProfileList.new(body, get_objs)
+    profiles = AdminProfileList.new(body, get_objs, @type)
     profiles.table_rows
   end
 
@@ -50,7 +50,7 @@ class AdminProfileAction < ForwardToIngestAction
 
   def get_admin_profile_list
     begin
-      AdminProfileList.new(get_body, get_objs)
+      AdminProfileList.new(get_body, get_objs, @type)
     rescue => e
       puts(e.message)
       puts(e.backtrace)
@@ -71,12 +71,26 @@ class AdminProfileAction < ForwardToIngestAction
     MerrittQuery.new(@config).run_update(sql, [p.harvest_toggled, ark], "Update successful, reload page to see result").to_json
   end
 
-  def pull_profile(ark)
+  def set_mnemonic(ark)
     p = get_profile(ark)
     return {message: "Ark #{ark} not found"}.to_json if p.nil?
     return {message: "Context not found"}.to_json if p.key.empty?
-    sql = "update inv_collections set mnemonic = ?, name=? where ark = ?"
-    MerrittQuery.new(@config).run_update(sql, [p.key, p.name, ark], "Update successful, reload page to see result").to_json
+    sql = "update inv_collections set mnemonic = ? where ark = ?"
+    MerrittQuery.new(@config).run_update(sql, [p.key, ark], "Update successful, reload page to see result").to_json
+  end
+
+  def set_coll_name(ark)
+    p = get_profile(ark)
+    return {message: "Ark #{ark} not found"}.to_json if p.nil?
+    sql = "update inv_collections set name=? where ark = ?"
+    MerrittQuery.new(@config).run_update(sql, [p.name, ark], "Update successful, reload page to see result").to_json
+  end
+
+  def set_own_name(ark)
+    p = get_profile(ark)
+    return {message: "Ark #{ark} not found"}.to_json if p.nil?
+    sql = "update inv_owners set name=? where ark = ?"
+    MerrittQuery.new(@config).run_update(sql, [p.name, ark], "Update successful, reload page to see result").to_json
   end
 
   def get_alternative_queries

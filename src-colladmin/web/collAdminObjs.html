@@ -12,14 +12,14 @@
   </head>
   <body>
     <div class="form-body">
-    <h1>{{MYENV}} Merritt {{type}}s</h1>
+    <h1>Merritt {{arifact}}</h1>
     <p><a href="{{ADMINTOOL_HOME}}">Admin Tool Home</a> / <a href="{{COLLADMIN_ADMIN}}">CollAdmin Tool Home</a></p>
     {{{BUTTONS}}}
     <h2>{{type}} List</h2>
     <div>
       <ul>
         <li><a href="/web/collProfile.html">Create Profiles</a></li>
-        <li><a href="">Update Inventory Database Config for {{artifact}}</a></li>
+        <li><a href="/web/artifactProperties.html?type={{artifact}}">Update Inventory Database Config for {{artifact}}</a></li>
       </ul>
     </div>
     <div>
@@ -28,7 +28,7 @@
         <tr class="header">
           <th class="datetime">Created</th>
           <th>Ark (database)</th>
-          <th class="name">Obj Name (matching string)</th>
+          <th class="name">{{artifact}} Name (matching string)</th>
           <th class="name">Disp Name</th>
           <th class="name">Path to Admin Profile</th>
           <th>Actions</th>
