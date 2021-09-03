@@ -35,6 +35,11 @@ class MerrittLdap
     @users 
   end
 
+  def user_displayname(uid)
+    return uid unless @users.key?(uid)
+    @users[uid].displayname
+  end
+
   def user_detail_records(uid)
     return [] unless @users.key?(uid)
     @users.fetch(uid).detail_records 
@@ -46,6 +51,11 @@ class MerrittLdap
 
   def collections
     @collections 
+  end
+
+  def coll_displayname(coll)
+    return col unless @collections.key?(coll)
+    @collections[coll].description
   end
 
   def collection_detail_records(coll)

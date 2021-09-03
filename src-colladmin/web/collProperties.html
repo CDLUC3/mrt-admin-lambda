@@ -16,6 +16,12 @@
     <p><a href="{{ADMINTOOL_HOME}}">Admin Tool Home</a> / <a href="{{COLLADMIN_ADMIN}}">CollAdmin Tool Home</a></p>
     {{{BUTTONS}}}
     <h2>Collection List</h2>
+    <div>
+      <ul>
+        <li><a href="/web/collProfile.html">Create Profiles</a></li>
+        <li><a href="/web/collAdminObjs.html?type={{artifact}}">Submit Admin Objects for {{artifact}}</a></li>
+      </ul>
+    </div>
     <table id="data-table" class="sortable results">
       <thead>
         <tr class="header">
@@ -42,10 +48,22 @@
           <td class="name">{{path}}</td>
           <td>
             {{#toggle}}
-            <input type="button" class="toggle-harvest" data="{{id}}" value="Toggle Harvest {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}"/>
+            <input 
+              type="button" 
+              class="toggle-harvest" 
+              data="{{ark}}" 
+              value="Toggle Harvest {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}"
+              title="Toggle inv_collections.harvest_privilege between 'none' and 'public'"
+            />
             {{/toggle}}
             {{#getname}}
-            <input type="button" class="pull-profile" data="{{id}}" value="Pull profile details {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}"/>
+            <input 
+              type="button" 
+              class="pull-profile" 
+              data="{{ark}}" 
+              value="Pull profile details {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}"
+              title="Set inv_collections.mnemonic to the 'context' from the profile. Set inv_collections.name to the name in the profile."
+            />
             {{/getname}}
           </td>
           <td class="status status-{{status}}">{{status}}</td>

@@ -17,6 +17,13 @@ class MerrittQuery
        end
        data
     end
+
+    def run_update(sql, arr = [], success_msg) 
+      stmt = @client.prepare(sql)
+      stmt.execute(*arr)
+      {message: success_msg}
+   end
+
 end  
 
 class QueryObject

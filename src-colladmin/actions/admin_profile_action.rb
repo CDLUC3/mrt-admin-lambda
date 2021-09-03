@@ -44,13 +44,39 @@ class AdminProfileAction < ForwardToIngestAction
   end
 
   def get_profile_list
+    apl = get_admin_profile_list
+    apl.nil? ? nil : apl.profiles
+  end
+
+  def get_admin_profile_list
     begin
-      AdminProfileList.new(get_body, get_objs).profiles
+      AdminProfileList.new(get_body, get_objs)
     rescue => e
       puts(e.message)
       puts(e.backtrace)
       nil
     end
+  end
+
+  def get_profile(ark)
+    apl = get_admin_profile_list
+    return nil if apl.nil?
+    apl.profile_for_ark(ark)
+  end
+
+  def toggle_harvest(ark)
+    p = get_profile(ark)
+    return {message: "Ark #{ark} not found"}.to_json if p.nil?
+    sql = "update inv_collections set harvest_privilege = ? where ark = ?"
+    MerrittQuery.new(@config).run_update(sql, [p.harvest_toggled, ark], "Update successful, reload page to see result").to_json
+  end
+
+  def pull_profile(ark)
+    p = get_profile(ark)
+    return {message: "Ark #{ark} not found"}.to_json if p.nil?
+    return {message: "Context not found"}.to_json if p.key.empty?
+    sql = "update inv_collections set mnemonic = ?, name=? where ark = ?"
+    MerrittQuery.new(@config).run_update(sql, [p.key, p.name, ark], "Update successful, reload page to see result").to_json
   end
 
   def get_alternative_queries

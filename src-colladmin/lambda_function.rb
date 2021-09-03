@@ -86,7 +86,7 @@ module LambdaFunctions
           result = PostToIngestAction.new(config, path, myparams, "admin/submissions/thaw").get_data
         elsif path == "submit-profile" 
           return LambdaBase.error(405, "Not yet supported", false) unless LambdaBase.is_docker
-         params = {
+          params = {
             file: File.new("/var/task/dummy.README"),
             type: "file",
             submitter: myparams.fetch("submitter", ""),
@@ -103,6 +103,12 @@ module LambdaFunctions
             statusCode: 200,
             body: result
           }
+        elsif path == "toggle-harvest" 
+          return LambdaBase.error(405, "Not yet supported", false) unless LambdaBase.is_docker
+          result = AdminProfileAction.new(config, "adminprofiles", myparams).toggle_harvest(myparams.fetch("ark", ""))
+        elsif path == "pull-profile" 
+          return LambdaBase.error(405, "Not yet supported", false) unless LambdaBase.is_docker
+          result = AdminProfileAction.new(config, "adminprofiles", myparams).pull_profile(myparams.fetch("ark", ""))
         elsif path == "createProfile/profile" 
           result = PostToIngestMultipartAction.new(config, path, myparams, "admin/profile/profile").get_data
         elsif path == "createProfile/collection" 
@@ -115,6 +121,7 @@ module LambdaFunctions
           result = LDAPAction.make_action(config, path, myparams).get_data
         end
      
+        puts result
         {
           headers: {
             'Access-Control-Allow-Origin': '*',

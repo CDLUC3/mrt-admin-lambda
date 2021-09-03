@@ -103,7 +103,7 @@ class LDAPActionUserDetailed < LDAPAction
     super(config, path, myparams)
     uid = myparams.fetch("uid", "")
     @data = @merritt_ldap.user_detail_records(uid)
-    @title = "Role Details for LDAP User #{uid}"
+    @title = "Role Details for LDAP User #{@merritt_ldap.user_displayname(uid)}"
   end
 
   def table_headers
@@ -158,7 +158,7 @@ class LDAPActionCollDetailed < LDAPAction
     super(config, path, myparams)
     coll = myparams.fetch("coll", "")
     @data = @merritt_ldap.collection_detail_records(coll)
-    @title = "Role Details for Collection #{coll}"
+    @title = "Role Details for Collection #{@merritt_ldap.coll_displayname(coll)} (#{coll})"
   end
 
   def table_headers

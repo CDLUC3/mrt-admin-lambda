@@ -71,7 +71,6 @@
                   The content (payload) for each Merritt Admin Object is a dummy README file.
                   The submission of these dummy objects triggers the creation of collection and owner objects in the inventory database.
                 </p>
-                <p>The Merritt Team is considering deprecating these objects in the future in favor of direct insertion into the inventory database.</p>
               </div>
               <div id="intabs-collection">
                 <input type="radio" name="artifact" value="collection">Create Collection Admin Object</radio>
@@ -185,7 +184,18 @@
       <div id="tabs-1">
         <div>
           <p><a class="download" id="down" download="profile">Download Artifact: <span class="downname"/></a></p>
-          <p><em>In Stage and production, this object should be committed to GitHub to deploy to the servers.  In Docker, this object should be manually installed to the server.</em></p>
+          <ul>
+            <li>
+              In Stage and production, this object should be committed to GitHub.
+              An hourly process will replicate profiles from GitHub to the servers.
+            </li>
+            <li>
+              In Docker, this object should be manually installed to the server (see next tab).
+            </li>
+          </ul>
+          <p>
+            Once the profiles are available on the server, you can <a id="sub-admin-link" href="/web/collAdminObjs.html?type=collection">submit an admin object</a>.
+          </p>
           <fieldset>
             <legend>Generated artifact</legend>
             <textarea id="result" rows="25" cols="100"></textarea>

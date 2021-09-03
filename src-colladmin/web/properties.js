@@ -6,13 +6,13 @@ function init() {
   $(".toggle-harvest").on("click", function(){
     do_action({
       path: "toggle-harvest",
-      collid: $(this).attr("data")
+      ark: $(this).attr("data")
     });
   });
   $(".pull-profile").on("click", function(){
     do_action({
       path: "pull-profile",
-      collid: $(this).attr("data")
+      ark: $(this).attr("data")
     });
   });
   $("p.buttons").show();

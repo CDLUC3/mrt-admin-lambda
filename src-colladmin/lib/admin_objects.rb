@@ -45,6 +45,10 @@ class AdminProfile < MerrittJson
     @harvest
   end
 
+  def harvest_toggled
+    @harvest == 'none' ? 'public' : 'none'
+  end
+
   def key
     return @mnemonic unless @mnemonic.empty?
     m = @path.match(%r{admin/[^/]+/(collection|owner|sla)/(.*)(_owner|_service_level_agreement)?$})
@@ -109,6 +113,7 @@ class AdminProfile < MerrittJson
   def to_table_row
     [
       created,
+      key,
       path,
       name,
       dispname,
@@ -125,6 +130,7 @@ class AdminProfileList < MerrittJson
     @profiles = []
     @profile_keys = {}
     @profile_names = {}
+    @profile_arks = {}
     data = JSON.parse(body)
     data = fetchHashVal(data, 'pros:profilesState')
     data = fetchHashVal(data, 'pros:profiles')
@@ -151,13 +157,15 @@ class AdminProfileList < MerrittJson
     dbmap.each do |rec|
       mnemonic = rec.fetch(:mnemonic, "")
       name = rec.fetch(:name, "")
+      ark = rec.fetch(:ark, "")
+      next if ark.empty?
 
       if @profile_keys.key?(mnemonic)
-        @profile_keys[mnemonic].load_from_db(rec)
+        @profile_arks[ark] = @profile_keys[mnemonic].load_from_db(rec)
       elsif @profile_names.key?(name)
-        @profile_names[name].load_from_db(rec)
+        @profile_arks[ark] = @profile_names[name].load_from_db(rec)
       else
-        @profiles.push(AdminProfile.new.load_from_db(rec))
+        @profile_arks[ark] = @profiles.push(AdminProfile.new.load_from_db(rec))
       end
     end
   end
@@ -165,6 +173,7 @@ class AdminProfileList < MerrittJson
   def self.table_headers
     [
       "Created",
+      "Mnemonic/Key",
       "Path to Admin Profile",
       "Obj Name (matching string)",
       "Disp Name",
@@ -177,10 +186,11 @@ class AdminProfileList < MerrittJson
   def self.table_types
     [
       "datetime",
+      "ldapcoll",
       "name",
       "name",
       "name",
-      "",
+      "ark",
       "",
       "status"
     ]
@@ -199,6 +209,11 @@ class AdminProfileList < MerrittJson
   def profiles
     @profiles
   end
+
+  def profile_for_ark(ark)
+    @profile_arks[ark]
+  end
+
 end
 
 class AdminObjects < MerrittQuery
@@ -279,6 +294,13 @@ class AdminObjects < MerrittQuery
         on o.ark = c.ark
       where
         o.aggregate_role = ?
+      and 
+        o.ark not in (
+          '#{LambdaFunctions::Handler.merritt_admin_coll_owners}', 
+          '#{LambdaFunctions::Handler.merritt_curatorial}', 
+          '#{LambdaFunctions::Handler.merritt_system}', 
+          '#{LambdaFunctions::Handler.merritt_admin_coll_sla}'
+        )
       order by
         o.created desc
     }

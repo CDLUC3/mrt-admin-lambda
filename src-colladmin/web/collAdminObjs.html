@@ -16,6 +16,13 @@
     <p><a href="{{ADMINTOOL_HOME}}">Admin Tool Home</a> / <a href="{{COLLADMIN_ADMIN}}">CollAdmin Tool Home</a></p>
     {{{BUTTONS}}}
     <h2>{{type}} List</h2>
+    <div>
+      <ul>
+        <li><a href="/web/collProfile.html">Create Profiles</a></li>
+        <li><a href="">Update Inventory Database Config for {{artifact}}</a></li>
+      </ul>
+    </div>
+    <div>
     <table id="data-table" class="sortable results">
       <thead>
         <tr class="header">
@@ -38,8 +45,14 @@
           <td class="name">{{path}}</td>
           <td>
             {{#noark}}
-            <input type="button" class="submit-admin" data="{{path}}" data-title="{{name}}" 
-              value="Submit Admin Object {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}"/>
+            <input 
+              type="button" 
+              class="submit-admin" 
+              data="{{path}}" 
+              data-title="{{name}}" 
+              value="Submit Admin Object {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}"
+              title="Submit Admin object (containing dummy content) using the new profile.  This will initialize the inventory database collection/owner objects."
+            />
             {{/noark}}
           </td>
           <td class="status status-{{status}}">{{status}}</td>
@@ -47,6 +60,7 @@
         {{/NEWOBJS}}
       </tbody>
     </table>
+    </div>
   </div>
   </body>
 </html>

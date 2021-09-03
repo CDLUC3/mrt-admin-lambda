@@ -78,6 +78,7 @@ function showResult(data) {
   set_download("#down", artifact_name, get_path(get_artifact(), artifact_name), data);
   var cmdline = makefilecmd('/tdr/ingest/profiles/' + get_path(get_artifact(), artifact_name), data);
   $("#manifest").val(cmdline);
+  $("#sub-admin-link").attr("href", "/web/collAdminObjs.html?type=" + get_artifact());
 }
 
 function generateName(artifact, context) {
