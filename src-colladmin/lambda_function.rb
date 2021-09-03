@@ -103,26 +103,10 @@ module LambdaFunctions
             statusCode: 200,
             body: result
           }
-        elsif path == "toggle_harvest" 
+        elsif path == "toggle_harvest" || path == "set_mnemonic" || path == "set_coll_name" || path == "set_sla_name" || path == "set_own_name" 
           return LambdaBase.error(405, "Not yet supported", false) if LambdaBase.is_prod
-          apa = AdminProfileAction.new(config, "adminprofiles", myparams)
-          result = apa.toggle_harvest(myparams.fetch("ark", ""))
-        elsif path == "set_mnemonic" 
-          return LambdaBase.error(405, "Not yet supported", false) if LambdaBase.is_prod
-          apa = AdminProfileAction.new(config, "adminprofiles", myparams)
-          result = apa.set_mnemonic(myparams.fetch("ark", ""))
-        elsif path == "set_coll_name" 
-          return LambdaBase.error(405, "Not yet supported", false) if LambdaBase.is_prod
-          apa = AdminProfileAction.new(config, "adminprofiles", myparams, "collection")
-          result = apa.set_coll_name(myparams.fetch("ark", ""))
-        elsif path == "set_sla_name" 
-          return LambdaBase.error(405, "Not yet supported", false) if LambdaBase.is_prod
-          apa = AdminProfileAction.new(config, "adminprofiles", myparams, "sla")
-          result = apa.set_sla_name(myparams.fetch("ark", ""))
-        elsif path == "set_own_name" 
-          return LambdaBase.error(405, "Not yet supported", false) if LambdaBase.is_prod
-          apa = AdminProfileAction.new(config, "adminprofiles", myparams, "owner")
-          result = apa.set_own_name(myparams.fetch("ark", ""))
+          apa = AdminProfileAction.new(config, path, myparams)
+          result = apa.perform_action
         elsif path == "createProfile/profile" 
           result = PostToIngestMultipartAction.new(config, path, myparams, "admin/profile/profile").get_data
         elsif path == "createProfile/collection" 

@@ -28,7 +28,7 @@ end
 
 def lambda_process_assets(event)
   # Prevent resource contention by inserting random delay
-  sleep(4*rand)
+  sleep(6*rand)
   lambda_process(event)
 end
 

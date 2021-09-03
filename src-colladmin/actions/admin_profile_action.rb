@@ -8,10 +8,16 @@ require_relative '../lib/storage_nodes'
 require_relative '../lib/merritt_query'
 
 class AdminProfileAction < ForwardToIngestAction
-  def initialize(config, path, myparams, deftype = "collection")
-    @type = CGI.unescape(myparams.fetch('type', deftype))
+  def initialize(config, path, myparams)
+    @type = CGI.unescape(myparams.fetch('type', get_type_for_path(path)))
     endpoint = @type.empty? ? "admin/profiles/admin" : "admin/profiles/admin/#{@type}" 
     super(config, path, myparams, endpoint)
+  end
+
+  def get_type_for_path(path)
+    return "owner" if path == "set_own_name"
+    return "sla" if path == "set_sla_name"
+    "collection"
   end
 
   def get_title
@@ -64,40 +70,37 @@ class AdminProfileAction < ForwardToIngestAction
     apl.profile_for_ark(ark)
   end
 
-  def toggle_harvest(ark)
+  def perform_action
+    ark = @myparams.fetch("ark", "")
+    return {message: "No ark provided"}.to_json if ark.empty?
     p = get_profile(ark)
     return {message: "Ark #{ark} not found"}.to_json if p.nil?
-    sql = "update inv_collections set harvest_privilege = ? where ark = ?"
-    MerrittQuery.new(@config).run_update(sql, [p.toggle_harvest, ark], "Update successful, reload page to see result").to_json
-  end
-
-  def set_mnemonic(ark)
-    p = get_profile(ark)
-    return {message: "Ark #{ark} not found"}.to_json if p.nil?
-    return {message: "Context not found"}.to_json if p.key.empty?
-    sql = "update inv_collections set mnemonic = ? where ark = ?"
-    MerrittQuery.new(@config).run_update(sql, [p.key, ark], "Update successful, reload page to see result").to_json
-  end
-
-  def set_coll_name(ark)
-    p = get_profile(ark)
-    return {message: "Ark #{ark} not found"}.to_json if p.nil?
-    sql = "update inv_collections set name=? where ark = ?"
-    MerrittQuery.new(@config).run_update(sql, [p.name, ark], "Update successful, reload page to see result").to_json
-  end
-
-  def set_sla_name(ark)
-    p = get_profile(ark)
-    return {message: "Ark #{ark} not found"}.to_json if p.nil?
-    sql = "update inv_collections set name=? where ark = ?"
-    MerrittQuery.new(@config).run_update(sql, [p.name, ark], "Update successful, reload page to see result").to_json
-  end
-
-  def set_own_name(ark)
-    p = get_profile(ark)
-    return {message: "Ark #{ark} not found"}.to_json if p.nil?
-    sql = "update inv_owners set name=? where ark = ?"
-    MerrittQuery.new(@config).run_update(sql, [p.name, ark], "Update successful, reload page to see result").to_json
+    if @path == "toggle_harvest"
+      return MerrittQuery.new(@config).run_update(
+        "update inv_collections set harvest_privilege = ? where ark = ?", 
+        [p.toggle_harvest, ark], 
+        "Update successful, reload page to see result"
+      ).to_json
+    elsif @path == "set_mnemonic"
+      return {message: "Context not found"}.to_json if p.key.empty?
+      return MerrittQuery.new(@config).run_update(
+        "update inv_collections set mnemonic = ? where ark = ?", 
+        [p.key, ark], 
+        "Update successful, reload page to see result"
+      ).to_json
+    elsif @path == "set_coll_name" || @path == "set_sla_name"
+      return MerrittQuery.new(@config).run_update(
+        "update inv_collections set name=? where ark = ?", 
+        [p.name, ark], 
+        "Update successful, reload page to see result"
+      ).to_json
+    elsif @path == "set_own_name"
+      return MerrittQuery.new(@config).run_update(
+        "update inv_owners set name=? where ark = ?", 
+        [p.name, ark], 
+        "Update successful, reload page to see result"
+      ).to_json
+    end
   end
 
   def get_alternative_queries
