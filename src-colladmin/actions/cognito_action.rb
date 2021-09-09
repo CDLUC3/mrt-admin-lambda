@@ -1,10 +1,16 @@
 require_relative 'action'
+require 'aws-sdk-lambda'
 
 class CognitoAction < AdminAction
 
   def initialize(config, path, myparams)
     super(config, path, myparams)
-    @cognito = MerrittCognito.new(config)
+    region = ENV['AWS_REGION'] || 'us-west-2'
+    @lambda = Aws::Lambda::Client.new(
+      region: region, 
+      http_read_timeout: 10
+    )
+    @arn = @config.fetch("cognito-users-arn", "NA")
     @title = "Cognito Users"
   end
 
@@ -13,11 +19,17 @@ class CognitoAction < AdminAction
   end
 
   def table_headers
-    CognitoUser.get_headers
+    [
+      "Username",
+      "email"
+    ]
   end
 
   def table_types
-    CognitoUser.get_types
+    [
+      "",
+      ""
+    ]
   end
 
   def get_data
@@ -40,9 +52,23 @@ class CognitoAction < AdminAction
   end
 
   def get_table_rows
+    return [] if @arn == "NA"
+    params = {
+      userpool: @config.fetch("userpool", "NA"),
+      path: "list-users"
+    }
+    resp = @lambda.invoke({
+      function_name: @arn, 
+      payload: params.to_json 
+    })
+    # payload is serialized json
+    payload = JSON.parse(resp.payload.read)
     rows = []
-    @cognito.users.keys.sort.each do |k|
-      rows.append(@users[k].table_row)
+    payload.each do |user|
+      rows.append([
+        user.fetch("username", ""),
+        user.fetch("email", "")
+      ])
     end
     rows
   end

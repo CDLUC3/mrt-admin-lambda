@@ -120,7 +120,7 @@ module LambdaFunctions
         elsif path =~ /ldap\/.*/ 
           result = LDAPAction.make_action(config, path, myparams).get_data
         elsif path == "cognito-users" 
-          # result = CognitoAction.new(config, path, myparams).get_data
+          result = CognitoAction.new(config, path, myparams).get_data
         end
      
         puts result

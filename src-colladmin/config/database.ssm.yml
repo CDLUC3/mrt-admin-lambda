@@ -27,6 +27,7 @@ default:
   s3-bucket: "{!SSM: admintool/s3-bucket}"
   s3-consistency-reports: "{!SSM: admintool/s3-consistency-reports}"
   user-pool: "{!SSM: admintool/user-pool !DEFAULT: NA}"
+  cognito-users-arn: "{!SSM: cognito-users/lambda-arn-base !DEFAULT: NA}"
 
 # use personal credentials when configuring a local environment
 # set up a script to set these variables
@@ -57,4 +58,5 @@ docker:
   s3-bucket: ""
   s3-consistency-reports: "consistency-reports"
   user-pool: "NA"
+  cognito-users-arn: "NA"
 
