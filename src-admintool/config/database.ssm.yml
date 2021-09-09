@@ -11,6 +11,7 @@ default:
   merritt_path: "{!ENV: MERRITT_PATH !DEFAULT: https://merritt.cdlib.org}"
   s3-bucket: "{!SSM: admintool/s3-bucket}"
   s3-consistency-reports: "{!SSM: admintool/s3-consistency-reports}"
+  user-pool: "{!SSM: admintool/user-pool !DEFAULT: NA}"
 
 # use personal credentials when configuring a local environment
 # set up a script to set these variables
@@ -27,3 +28,4 @@ docker:
   merritt_path: "{!ENV: MERRITT_PATH !DEFAULT: https://merritt.cdlib.org}"
   s3-bucket: ""
   s3-consistency-reports: ""
+  user-pool: "NA"

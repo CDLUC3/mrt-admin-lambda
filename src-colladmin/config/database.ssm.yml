@@ -26,6 +26,7 @@ default:
     connect_timeout: 60
   s3-bucket: "{!SSM: admintool/s3-bucket}"
   s3-consistency-reports: "{!SSM: admintool/s3-consistency-reports}"
+  user-pool: "{!SSM: admintool/user-pool !DEFAULT: NA}"
 
 # use personal credentials when configuring a local environment
 # set up a script to set these variables
@@ -55,3 +56,5 @@ docker:
     connect_timeout: 60
   s3-bucket: ""
   s3-consistency-reports: "consistency-reports"
+  user-pool: "NA"
+

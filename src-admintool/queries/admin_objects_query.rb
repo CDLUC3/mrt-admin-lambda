@@ -15,6 +15,7 @@ class AdminObjectsQuery < AdminQuery
       select 
         o.id, 
         o.ark, 
+        alt.ark as altark,
         ifnull(own.name,'No name') as owner,
         own.ark as ownerark,
         (
@@ -35,12 +36,28 @@ class AdminObjectsQuery < AdminQuery
         erc_what, 
         o.created,
         case
+          when o.ark != ifnull(alt.ark, '') then 'FAIL'
           when o.aggregate_role is null then 'INFO'
           when own.ark != 'ark:/13030/j2rn30xp' then 'INFO'
           else 'PASS'
         end as status 
       from 
         inv.inv_objects o
+      left join
+        (
+          select
+            inv_object_id,
+            ark
+          from
+            inv.inv_collections
+          union
+          select
+            inv_object_id,
+            ark
+          from
+            inv.inv_owners 
+        ) as alt
+        on o.id = alt.inv_object_id
       inner join inv.inv_owners own
         on own.id = o.inv_owner_id
       where 
@@ -52,11 +69,11 @@ class AdminObjectsQuery < AdminQuery
   end
 
   def get_headers(results)
-    ['Obj Id', 'Ark', 'Owner', 'OwnerArk', 'Collections', 'Type', 'Role', 'Aggregate Role', 'Name', 'Created', 'Status']
+    ['Obj Id', 'Obj Ark', 'Coll/Own Ark', 'Owner', 'OwnerArk', 'Collections', 'Type', 'Role', 'Aggregate Role', 'Name', 'Created', 'Status']
   end
 
   def get_types(results)
-    ['objlist', 'ark', '', '', 'list', '', '', '', 'name', 'datetime', 'status']
+    ['objlist', 'ark', 'ark', '', '', 'list', '', '', '', 'name', 'datetime', 'status']
   end
 
   def get_alternative_queries
