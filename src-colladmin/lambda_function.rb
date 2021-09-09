@@ -15,6 +15,7 @@ require_relative 'actions/ingest_batch_folders_action'
 require_relative 'actions/ldap_action'
 require_relative 'actions/post_to_ingest_action'
 require_relative 'actions/post_to_ingest_multipart_action.rb'
+require_relative 'actions/cognito_action.rb'
 
 # Handle GET or POST event structures pass in via the ALB
 def get_params_from_event(event)
@@ -52,6 +53,7 @@ module LambdaFunctions
         collHandler = LambdaFunctions::Handler.new(config)
         respath = event.fetch("path", "")
         myparams = collHandler.get_params_from_event(event)
+        return collHandler.web_assets("/web/favicon.ico", myparams) if respath =~ %r[^/(favicon.ico).*]
         return collHandler.web_assets(respath, myparams) if collHandler.web_asset?(respath)
 
         data = event ? event : {}
@@ -117,6 +119,8 @@ module LambdaFunctions
           result = PostToIngestMultipartAction.new(config, path, myparams, "admin/profile/sla").get_data
         elsif path =~ /ldap\/.*/ 
           result = LDAPAction.make_action(config, path, myparams).get_data
+        elsif path == "cognito-users" 
+          # result = CognitoAction.new(config, path, myparams).get_data
         end
      
         puts result

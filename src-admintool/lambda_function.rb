@@ -17,6 +17,7 @@ module LambdaFunctions
         respath = event.fetch("path", "")
         return collHandler.redirect("/web#{respath}") if respath =~ %r[^/index.html.*]
         myparams = collHandler.get_params_from_event(event)
+        return collHandler.web_assets("/web/favicon.ico", myparams) if respath =~ %r[^/favicon.ico.*]
         return collHandler.web_assets(respath, myparams) if collHandler.web_asset?(respath)
 
         dbconf = config.fetch('dbconf', {})

@@ -1,5 +1,4 @@
 require_relative 'action'
-require_relative '../lib/merritt_cognito'
 
 class CognitoAction < AdminAction
 
