@@ -23,3 +23,5 @@ src-admintool/vendor/bundle/ruby/2.6.0/bundler/gems/uc3-ssm-74b5d8da5e54
 consistency-driver/out.txt
 consistency-driver/vendor/
 consistency-driver/.bundle
+src-colladmin/vendor/
+src-colladmin/.bundle/config
