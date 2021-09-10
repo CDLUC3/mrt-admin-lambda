@@ -17,7 +17,7 @@ LAMBDA_ARN=${LAMBDA_ARN_BASE}
 ECR_REGISTRY=`get_ssm_value_by_name admintool/ecr-registry`
 ECR_IMAGE_NAME=`get_ssm_value_by_name cognito-users/ecr-image`
 # One deployment will support all domains - no tag included
-ECR_IMAGE_TAG=${ECR_REGISTRY}${ECR_IMAGE_NAME}
+ECR_IMAGE_TAG=${ECR_REGISTRY}${ECR_IMAGE_NAME}:latest
 
 docker build -t ${ECR_IMAGE_TAG} cognito-lambda-nonvpc || die "Image build failure"
 

@@ -54,17 +54,21 @@ class CognitoAction < AdminAction
   def get_table_rows
     return [] if @arn == "NA"
     params = {
-      userpool: @config.fetch("userpool", "NA"),
+      userpool: @config.fetch("user-pool", "NA"),
       path: "list-users"
     }
     resp = @lambda.invoke({
       function_name: @arn, 
       payload: params.to_json 
     })
+
+    throw resp.function_error if resp.status_code != 200
+
     # payload is serialized json
-    payload = JSON.parse(resp.payload.read)
+    payload = JSON.parse(resp.payload.read) 
     rows = []
-    payload.each do |user|
+    body = payload.fetch("body", {})
+    body.each do |k, user|
       rows.append([
         user.fetch("username", ""),
         user.fetch("email", "")

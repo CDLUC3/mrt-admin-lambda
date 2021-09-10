@@ -26,7 +26,7 @@ default:
     connect_timeout: 60
   s3-bucket: "{!SSM: admintool/s3-bucket}"
   s3-consistency-reports: "{!SSM: admintool/s3-consistency-reports}"
-  user-pool: "{!SSM: admintool/user-pool !DEFAULT: NA}"
+  user-pool: "{!SSM: colladmin/user-pool !DEFAULT: NA}"
   cognito-users-arn: "{!SSM: cognito-users/lambda-arn-base !DEFAULT: NA}"
 
 # use personal credentials when configuring a local environment
