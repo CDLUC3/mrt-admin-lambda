@@ -3,6 +3,7 @@ require 'json'
 require 'yaml'
 require 'uc3-ssm'
 require 'mustache'
+require 'base64'
 
 class LambdaBase
 
@@ -53,9 +54,12 @@ class LambdaBase
   end
 
   def content_type(ext)
+    return "image/x-icon" if ext == "ico"
+    return "image/jpeg" if ext == "jpg"
     return "text/html" if ext == "html" || ext == "htm"
     return "text/javascript" if ext == "js"
     return "text/css" if ext == "css"
+    return "text/plain; charset=utf-8" if ext == "txt"
     nil
   end
   
@@ -114,15 +118,28 @@ class LambdaBase
     ext = path.split(".")[-1]
     ctype = content_type(ext)
     return LambdaBase.error(404, "Unsupported content type #{ext}", false) unless ctype
+    if ctype =~ %r[^image.*] 
+      return {
+        statusCode: 200,
+        headers: {
+          'Content-Type' => ctype
+        },
+        isBase64Encoded: true,
+        body: Base64.encode64(IO.binread(qpath))
+      }
+    end
+
     body = File.open(qpath).read
     map = template_parameters(path, myparams)
     body = Mustache.render(body, map) unless map.empty?
+    headers = {
+      'Content-Type' => ctype
+    }
+
+    headers['Cache-Control'] = 'no-store' unless path =~ %r[^/web/(favicon.ico|sortable.js).*]
     { 
       statusCode: 200, 
-      headers: {
-        'Content-Type' => ctype,
-        'Cache-Control' => 'no-store'
-      },
+      headers: headers,
       body: body
     }
   end

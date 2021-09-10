@@ -613,9 +613,28 @@ function format(cell, v, type, merritt_path) {
     makeLink(cell, v, admintool_home + "?path=report&report=" + encodeURIComponent(v));
   } else if (type == 'aggrole') {
     makeLink(cell, v, admintool_home + "?path=admin_obj&aggrole="+v);
+  } else if (type == 'cognito') {
+    var arr = v.split(";");
+    var yn = arr.length > 0 ? arr[0] : "";
+    var u = arr.length > 1 ? arr[1] : "";
+    var g = arr.length > 2 ? arr[2] : "";
+    cell.text(yn + "; ");
+    if (u != "" && g != "") {
+      var param = "&user=" + encodeURIComponent(u) + "&group=" + encodeURIComponent(g);
+      if (yn == "Y") {
+        makeLink(cell, 'Remove', colladmin_home + "?path=cognito-remove-user-from-group" + param);
+      } else {
+        makeLink(cell, 'Add', colladmin_home + "?path=cognito-add-user-to-group" + param);
+      }
+    }
   } else {
     cell.text(v);
   }
+}
+
+function cognitoUserAdmin(u,g) {
+  alert(u);
+  alert(g);
 }
 
 

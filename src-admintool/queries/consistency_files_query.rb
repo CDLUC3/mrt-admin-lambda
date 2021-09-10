@@ -28,6 +28,14 @@ class ConsistencyFilesQuery < AdminQuery
             select id from inv.inv_objects where ark = 'ark:/13030/m5q57br8'
           )
             then 'Wasabi Issue 477'
+          when age.inv_object_id = (
+            select id from inv.inv_objects where ark = 'ark:/13030/m5vb3g5r'
+          )
+            then 'Minio Flip'
+          when age.inv_object_id = (
+            select id from inv.inv_objects where ark = 'ark:/13030/m5v45qp2'
+          )
+            then 'UCD Curatorial'
           else
             'Default'
         end as category,
@@ -69,8 +77,23 @@ class ConsistencyFilesQuery < AdminQuery
         case
           when count(*) = 0 then 'PASS'
           when #{@copies} = 3 then 'PASS'
-          when count(age.init_created < date_add(now(), INTERVAL -2 DAY)) > 0 then 
+          when ifnull(
+            sum(
+              case
+                when age.init_created < date_add(now(), INTERVAL -2 DAY)
+                  then 1
+                else 0
+              end
+            ),
+            0
+          ) > 0 then 
             case
+              when age.inv_object_id = (
+                select id from inv.inv_objects where ark = 'ark:/13030/m5vb3g5r'
+              ) then 'WARN'
+              when age.inv_object_id = (
+                select id from inv.inv_objects where ark = 'ark:/13030/m5v45qp2'
+              ) then 'WARN'
               when #{@copies} != 2 then 'FAIL'
               when c.mnemonic = 'oneshare_dataup' then 'WARN'
               when c.mnemonic = 'dataone_dash' then 'WARN'
@@ -80,7 +103,18 @@ class ConsistencyFilesQuery < AdminQuery
               ) then 'WARN'
               else 'FAIL'
             end
-          when count(age.init_created < date_add(now(), INTERVAL -1 DAY)) > 0 then 'WARN'
+          when ifnull(
+            sum(
+              case
+                when age.init_created < date_add(now(), INTERVAL -2 DAY)
+                  then 0
+                when age.init_created < date_add(now(), INTERVAL -1 DAY) 
+                  then 1
+                else 0
+              end
+            ),
+            0
+          ) > 0 then 'WARN'
           else 'PASS'
         end as status
       #{sqlfrag_audit_files_copies(@copies)}
