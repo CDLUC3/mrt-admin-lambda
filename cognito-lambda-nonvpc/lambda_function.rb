@@ -1,4 +1,5 @@
 require 'json'
+require 'cgi'
 require 'aws-sdk-cognitoidentityprovider'
 
 module LambdaFunctions
@@ -17,13 +18,13 @@ module LambdaFunctions
         return list_users
       end
 
-      group = @event.fetch('group', '')
+      group = CGI.unescape(@event.fetch('group', ''))
       return {} if group.empty?
-      if @path == "list-users"
+      if @path == "list-users-for-group"
         return list_users_for_group(group)
       end
 
-      user = @event.fetch('user', '')
+      user = CGI.unescape(@event.fetch('user', ''))
       return {} if user.empty?
 
       if @path == "add-user-to-group"
@@ -53,26 +54,31 @@ module LambdaFunctions
 
     def list_users
       users = {}
-      report_groups = @event.fetch('groups', [])
-      pagination_token = "init"
-      while pagination_token
-        params = {
-          user_pool_id: @userpool, 
-          limit: @LIMIT
-        }
-        params[:pagination_token] = pagination_token unless pagination_token == "init"
-        resp = @client.list_users(params)
-        resp.users.each do |user|
-          add_user_to_list(users, user)
+      begin
+        report_groups = @event.fetch('groups', "").split(",")
+        pagination_token = "init"
+        while pagination_token
+          params = {
+            user_pool_id: @userpool, 
+            limit: @LIMIT
+          }
+          params[:pagination_token] = pagination_token unless pagination_token == "init"
+          resp = @client.list_users(params)
+          resp.users.each do |user|
+            add_user_to_list(users, user)
+          end
+          pagination_token = resp.pagination_token
         end
-        pagination_token = resp.pagination_token 
-      end
-      report_groups.each do |group|
-        gusers = list_users_in_group(group)
-        gusers.keys.each do |u|
-          next unless users.key?(u)
-          users[u][group] = true
+        report_groups.each do |group|
+          gusers = list_users_in_group(group)
+          gusers.keys.each do |u|
+            next unless users.key?(u)
+            users[u][group] = true
+          end
         end
+      rescue => e
+        puts(e.message)
+        puts(e.backtrace)
       end
       users
     end
@@ -80,25 +86,30 @@ module LambdaFunctions
     def list_users_in_group(group)
       users = {}
       pagination_token = "init"
-      while pagination_token
-        params = {
-          user_pool_id: @userpool, 
-          group_name: group,
-          limit: @LIMIT
-        }
-        params[:pagination_token] = pagination_token unless pagination_token == "init"
-        resp = @client.list_users_in_group(params)
-        resp.users.each do |user|
-          add_user_to_list(users, user)
-        end
-        pagination_token = resp.pagination_token 
-      end 
+      begin
+        while pagination_token
+          params = {
+            user_pool_id: @userpool, 
+            group_name: group,
+            limit: @LIMIT
+          }
+          params[:next_token] = pagination_token unless pagination_token == "init"
+          resp = @client.list_users_in_group(params)
+          resp.users.each do |user|
+            add_user_to_list(users, user)
+          end
+          pagination_token = resp.next_token
+        end 
+      rescue => e
+        puts(e.message)
+        puts(e.backtrace)
+      end
       users
     end
 
     def add_user_to_group(user, group)
       @client.admin_add_user_to_group({
-        user_pool_id: upool,
+        user_pool_id: @userpool,
         username: user, 
         group_name: group
       })
@@ -107,7 +118,7 @@ module LambdaFunctions
 
     def remove_user_from_group(user, group)
       @client.admin_remove_user_from_group({
-        user_pool_id: upool,
+        user_pool_id: @userpool,
         username: user, 
         group_name: group
       })

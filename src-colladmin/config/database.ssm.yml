@@ -27,7 +27,11 @@ default:
   s3-bucket: "{!SSM: admintool/s3-bucket}"
   s3-consistency-reports: "{!SSM: admintool/s3-consistency-reports}"
   user-pool: "{!SSM: colladmin/user-pool !DEFAULT: NA}"
+  # Interface to Cognito API (via Lambda)
   cognito-users-arn: "{!SSM: cognito-users/lambda-arn-base !DEFAULT: NA}"
+  cognito-groups-to-manage: "{!SSM: colladmin/cognito-groups-to-manage !DEFAULT: NA}"
+  # Value to be checked against Cognito token - passively provided by ALB
+  cognito-groups-allowed: "{!SSM: colladmin/cognito-groups-allowed !DEFAULT: NA}"
 
 # use personal credentials when configuring a local environment
 # set up a script to set these variables
@@ -59,4 +63,6 @@ docker:
   s3-consistency-reports: "consistency-reports"
   user-pool: "NA"
   cognito-users-arn: "NA"
+  cognito-groups-allowed: "NONE"
+  cognito-groups-to-manage: "NONE"
 

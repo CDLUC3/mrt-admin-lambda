@@ -11,6 +11,19 @@ class CognitoAction < AdminAction
       http_read_timeout: 10
     )
     @arn = @config.fetch("cognito-users-arn", "NA")
+    @groups = @config.fetch("cognito-groups-to-manage", "")
+    @headers = [
+      "Username",
+      "email"
+    ]
+    @types = [
+      "",
+      ""
+    ]
+    @groups.split(",").each do |g|
+      @headers.push(g)
+      @types.push("cognito")
+    end
     @title = "Cognito Users"
   end
 
@@ -19,17 +32,11 @@ class CognitoAction < AdminAction
   end
 
   def table_headers
-    [
-      "Username",
-      "email"
-    ]
+    @headers
   end
 
   def table_types
-    [
-      "",
-      ""
-    ]
+    @types
   end
 
   def get_data
@@ -53,9 +60,39 @@ class CognitoAction < AdminAction
 
   def get_table_rows
     return [] if @arn == "NA"
+
+    if @path == "cognito-add-user-to-group"
+      resp = @lambda.invoke({
+        function_name: @arn, 
+        payload: {
+          userpool: @config.fetch("user-pool", "NA"),
+          path: "add-user-to-group",
+          group: CGI.unescape(@myparams.fetch("group", "")),
+          user: CGI.unescape(@myparams.fetch("user", ""))
+        }.to_json 
+      })
+      throw resp.function_error if resp.status_code != 200
+    elsif @path == "cognito-remove-user-from-group"
+      resp = @lambda.invoke({
+        function_name: @arn, 
+        payload: {
+          userpool: @config.fetch("user-pool", "NA"),
+          path: "remove-user-from-group",
+          group: CGI.unescape(@myparams.fetch("group", "")),
+          user: CGI.unescape(@myparams.fetch("user", ""))
+        }.to_json 
+      })
+      throw resp.function_error if resp.status_code != 200
+    end
+
+    return_users
+  end
+
+  def return_users
     params = {
       userpool: @config.fetch("user-pool", "NA"),
-      path: "list-users"
+      path: "list-users",
+      groups: @groups
     }
     resp = @lambda.invoke({
       function_name: @arn, 
@@ -69,10 +106,15 @@ class CognitoAction < AdminAction
     rows = []
     body = payload.fetch("body", {})
     body.each do |k, user|
-      rows.append([
-        user.fetch("username", ""),
+      u = user.fetch("username", "")
+      row = [
+        u,
         user.fetch("email", "")
-      ])
+      ]
+      @groups.split(",").each do |g|
+        row.push(user.fetch(g, false) ? "Y;#{u};#{g}" : "N;#{u};#{g}")
+      end
+      rows.append(row)
     end
     rows
   end
