@@ -31,6 +31,8 @@ The Lambda code is deployed to the Ruby 2.7 environment.  A build process is req
 - src-colladmin: Collection Admin Lambda source code
 - src-common: Code common to both Admin Tool and CollAdmin Tool
   - web: web resources served from the lambda
+- cognito-lambda-nonvpc: Wrapper around the Cognito API (used by Colladmin)
+  - Cognito API calls cannot be made directly from the VPC 
 ## Deployment Preparation
 - This code relies on a set of SSM parameters to control the application.
 - https://github.com/CDLUC3/uc3-aws-cli contains the code for reading Merritt SSM parameters.
@@ -51,6 +53,7 @@ The following script should be run from a host that is authorized to
 Deploy Scripts
 - Admin Tool: [lambda-deploy.sh](lambda-deploy.sh)
 - Collection Admin Tool: [colladmin-lambda-deploy.sh](colladmin-lambda-deploy.sh)
+- Cognito User Management: [cognito-lambda-deploy.sh](colladmin-lambda-deploy.sh)
 
 This will build a docker image, push it to ECR, and update lambda to use the new image.
 
