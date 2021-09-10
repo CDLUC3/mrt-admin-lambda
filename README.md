@@ -2,10 +2,10 @@
 
 This library is part of the [Merritt Preservation System](https://github.com/CDLUC3/mrt-doc).
 
-## Admin Tool Web Interface - Single Page App
-This code is deployed as an AWS Lambda that is accessible to staff from a static website deployed to S3.
+## Admin Tool Web Interface 
+Each Admin Lambda application functions as a simple web server displaying the pages for the application.
 
-[![Admin Tool Web App (SPA)](https://github.com/CDLUC3/mrt-doc/raw/main/diagrams/admin-spa.mmd.svg)](https://cdluc3.github.io/mrt-doc/diagrams/admin-spa)
+[![Admin Tool Web App](https://github.com/CDLUC3/mrt-doc/raw/main/diagrams/admin-spa.mmd.svg)](https://cdluc3.github.io/mrt-doc/diagrams/admin-spa)
 
 ## Admin Tool Lambda
 This code contains a generalized query tool for the Merritt team.
