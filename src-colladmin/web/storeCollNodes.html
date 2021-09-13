@@ -14,12 +14,12 @@
     <div class="form-body">
     {{#STORE_COLLS}}
     <h1>Manage Storage Nodes for a Collection</h1>
+    <p>Select a specific collection to explore the storage nodes in use and to manage the configuration.</p>
     {{/STORE_COLLS}}
     {{#STORE_COLL}}
-    <h1>Manage Storage Nodes for {{COLL}}</h1>
+    <h1>Manage Storage Nodes for {{COLLNAME}}</h1>
     {{/STORE_COLL}}
     <p><a href="{{ADMINTOOL_HOME}}">Admin Tool Home</a> / <a href="{{COLLADMIN_ADMIN}}">CollAdmin Tool Home</a></p>
-    <p><a href="https://cdluc3.github.io/mrt-doc/diagrams/store-admin-ui#manage-collection-nodes">Mock Up</a></p>
     <div>
       {{#STORE_COLLS}}
       <table class="sortable results">
@@ -28,6 +28,7 @@
             <th>Ark</th>
             <th>Name</th>
             <th>Mnemonic</th>
+            <th>Primary Node (from profile)</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -36,24 +37,24 @@
           <tr>
             <th>{{ark}}</th>
             <td>{{name}}</td>
-            <td>{{mnemonic}}</td>
-            <td><a href="?coll={{id}}">Manage Nodes</a></td>
+            <td><a href="{{COLLADMIN_HOME}}?path=profiles&profile={{mnemonic}}_content">{{mnemonic}}</a></td>
+            <td>{{primary_node}}</td>
+            <td><a href="?coll={{id}}&name={{name}}&primary_node={{primary_node}}">Manage Nodes</a></td>
           </tr>
           {{/COLLS}}
         </tbody>
       </table>
       {{/STORE_COLLS}}
       {{#STORE_COLL}}
-      <div>
-        <fieldset>
-          <legend>Collection Ingest Processing Status</legend>
-          <label>Ingest Paused?</label>
-          <output id="ingest-status">{{ingest_paused}}</output>
-          <input type="button" name="pause" value="Pause Ingest" disabled />
-          <input type="button" name="unpause" value="Unpause Ingest" disabled/>
-        </fieldset>
+      <h2>Collection Ingest Processing Status</h2>
+      <div class="indent">
+        <label for="ingest-status">Current Status: </label>
+        <output id="ingest-status">{{ingest_paused}}</output>
+        <input type="button" name="pause" value="Pause Ingest {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}" disabled />
+        <input type="button" name="unpause" value="Unpause Ingest {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}" disabled/>
       </div>
       <h2>Storage Nodes for Collection</h2>
+      <p>Primary Node (from Collection Profile): {{PRIMARY_NODE}}</p>
       <div>
         <table class="sortable results">
           <thead>
@@ -75,7 +76,10 @@
               <td>{{count}}</td>
               <td>{{percent}}</td>
               <td>
-                <button>Re-Audit</button>
+                <button title="Trigger the re-audit of all objects in the collection.">Re-Audit {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}</button>
+                <button disabled="{{primary}}" title="Delete all objects in the collection from this SECONDARY node.">Delete Coll from Node {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}</button>
+                <button disabled="true" title="Make this storage node the primary node for a collection.  The node must be ONLINE (not nearline) and replication must be 100% complete. The collection profile must have this node marked as primary.">Make Primary {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}</button>
+                <button disabled="true" title="Temporarily redirect UI traffic to this SECONDAY node.  The node must be ONLINE (not nearline) and replication must be 100% complete.">Make UI Primary {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}</button>
               </td>
             </tr>
             {{/NODES}}
@@ -83,6 +87,19 @@
         </table>  
       </div>
       {{/STORE_COLL}}
+      <h2>Add Secondary Storage Node for this collection</h2>
+      <div class="indent">
+        <label>Storage Node:</label>
+        <select id="storagenode" name="storagenode">
+          <option>-- Choose Node --</option>
+          {{#NODES}}
+          <option value="{{number}}">{{number}}: {{description}}</option>
+          {{/NODES}}
+        </select>
+        <div>
+          <button disabled="true">Add Storage Node to this Collection {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}</button>
+        </div>
+      </div>
     </div>
   </div>
   </body>

@@ -255,3 +255,7 @@ input.button {
 input.button:disabled {
   background-color: #EEEEEE;
 }
+
+div.indent {
+  margin-left: 100px;
+}

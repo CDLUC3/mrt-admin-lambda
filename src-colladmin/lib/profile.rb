@@ -67,6 +67,9 @@ class ProfileList < MerrittJson
     omap
   end
 
+  def profiles
+    @profiles
+  end
 end
 
 class SingleIngestProfileWrapper < MerrittJson
@@ -373,6 +376,7 @@ class Collection < QueryObject
       @harvest = row[7].nil? ? "-" : row[7]
       @dbdescription = row[8]
       @aggregate_role = row[9].nil? ? "" : row[9]
+      @primary_node = ""
   end
 
   def id
@@ -415,6 +419,14 @@ class Collection < QueryObject
     @aggregate_role
   end
 
+  def set_primary_node(n)
+    @primary_node = n 
+  end
+
+  def primary_node
+    @primary_node 
+  end
+
   def name_select
     "#{mnemonic}: #{dbdescription}"
   end
@@ -424,7 +436,7 @@ class Collections < MerrittQuery
   def initialize(config)
       super(config)
       @collections = {}
-      @collections_select = []
+      @mnemonics = {}
       run_query(
           %{
               select 
@@ -458,14 +470,8 @@ class Collections < MerrittQuery
       ).each do |r|
           c = Collection.new(r)
           @collections[c.ark] = c
-          @collections_select.push({
-            id: c.id,
-            ark: c.ark,
-            name: c.dbdescription,
-            mnemonic: c.mnemonic,
-            harvest: c.harvest,
-            aggregate_role: c.aggregate_role
-          })
+          m = c.mnemonic.nil? ? "" : c.mnemonic
+          @mnemonics[m] = c unless m.empty?
       end
   end
 
@@ -473,101 +479,41 @@ class Collections < MerrittQuery
       @collections[ark]
   end
 
+  def get_by_mnemonic(mnemonic)
+    @mnemonics[mnemonic]
+  end
+
   def collections_select
-    @collections_select
-  end
-end
-
-class CollectionNodes < MerrittQuery
-  def initialize(config, collid)
-      super(config)
-      @collnodes = []
-      run_query(
-          %{
-            select
-              inio.role,
-              n.number,
-              n.description,
-              count(*)
-            from
-              inv_collections c
-            inner join
-              inv_collections_inv_objects icio
-            on
-              icio.inv_collection_id = c.id
-            inner join
-              inv_nodes_inv_objects inio
-            on
-              inio.inv_object_id = icio.inv_object_id
-            inner join
-              inv_nodes n
-            on
-              inio.inv_node_id = n.id
-            where
-              c.id = ?
-            group by
-              inio.role,
-              n.number,
-              n.description
-            order by
-              inio.role,
-              n.number
-            ;
-          },
-          [collid]
-      ).each_with_index do |r, i|
-          percent = 100
-          if i > 0
-            percent = ((r[3] * 100.0)/@collnodes[0][:count]).to_i if @collnodes[0][:count] > 0
-          end
-          @collnodes.push({
-            role: r[0],
-            number: r[1],
-            name: r[2],
-            count: r[3],
-            percent: percent
-          })
-      end
+    arr = []
+    @collections.values.each do |c|
+      arr.push({
+        id: c.id,
+        ark: c.ark,
+        name: c.dbdescription,
+        mnemonic: c.mnemonic,
+        harvest: c.harvest,
+        aggregate_role: c.aggregate_role,
+        primary_node: c.primary_node
+      })
+    end
+    arr
   end
 
-  def collnodes
-    @collnodes
-  end
-end
+  def merge_profiles
+    #remove special system collections
+    @collections.delete(LambdaFunctions::Handler.merritt_admin_coll_owners)
+    @collections.delete(LambdaFunctions::Handler.merritt_curatorial)
+    @collections.delete(LambdaFunctions::Handler.merritt_system)
+    @collections.delete(LambdaFunctions::Handler.merritt_admin_coll_sla)
 
-class Nodes < MerrittQuery
-  def initialize(config)
-      super(config)
-      @nodes = []
-      run_query(
-          %{
-              select 
-                number,
-                case
-                  when description is null then 'No description'
-                  else description
-                end as description,
-                count(*) as pcount 
-              from 
-                inv_nodes n
-              left join inv_nodes_inv_objects inio
-                on n.id = inio.inv_node_id
-                and inio.role = 'primary'
-              group by 
-                number, description
-              order by
-                pcount desc
-          }
-      ).each do |r|
-        @nodes.push({
-          number: r[0],
-          description: "#{r[1]} (#{r[2]})"
-        })
-      end
+    profiles = IngestProfileAction.new(@config, "", {}).get_profile_list
+    profiles.profiles.each do |p|
+      context = p.getValue(:context)
+      next if context.nil?
+      next if context.empty?
+      context.sub!(%r[_content$], '')
+      next unless @mnemonics.key?(context)
+      @mnemonics[context].set_primary_node(p.getValue(:nodeID))
+    end
   end
-
-  def nodes
-      @nodes
-  end
-
 end

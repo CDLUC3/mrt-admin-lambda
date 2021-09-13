@@ -196,16 +196,25 @@ module LambdaFunctions
       elsif path == '/web/storeCollNodes.html'
         coll = myparams.fetch("coll", "")
         if coll.empty?
+          colls = Collections.new(@config)
+          colls.merge_profiles
           map['STORE_COLLS'] = {
-            COLLS: Collections.new(@config).collections_select
+            COLLS: colls.collections_select
           }
         else
+          name = myparams.fetch("name", "")
+          primary_node = myparams.fetch("primary_node", "")
+          map['COLLNAME'] = CGI.unescape(name)
+          map['PRIMARY_NODE'] = primary_node
           map['STORE_COLL'] = {
             COLL: coll.to_i,
             ingest_paused: false,
-            NODES: CollectionNodes.new(@config, coll.to_i).collnodes
+            NODES: CollectionNodes.new(@config, coll.to_i, primary_node).collnodes
           }          
+          map['NODES'] = Nodes.new(@config).nodes
         end
+      elsif path == '/web/storeNodes.html'
+        map['NODES'] = Nodes.new(@config).nodes
       end
       map
     end
