@@ -121,9 +121,12 @@ module LambdaFunctions
           result = LDAPAction.make_action(config, path, myparams).get_data
         elsif path == "cognito-users" 
           result = CognitoAction.new(config, path, myparams).get_data
+        elsif path == "cognito-remove-user-from-group" 
+          result = CognitoAction.new(config, path, myparams).get_data
+        elsif path == "cognito-add-user-to-group" 
+          result = CognitoAction.new(config, path, myparams).get_data
         end
      
-        puts result
         {
           headers: {
             'Access-Control-Allow-Origin': '*',
