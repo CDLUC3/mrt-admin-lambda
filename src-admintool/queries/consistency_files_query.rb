@@ -29,10 +29,6 @@ class ConsistencyFilesQuery < AdminQuery
           )
             then 'Wasabi Issue 477'
           when age.inv_object_id = (
-            select id from inv.inv_objects where ark = 'ark:/13030/m5vb3g5r'
-          )
-            then 'Minio Flip'
-          when age.inv_object_id = (
             select id from inv.inv_objects where ark = 'ark:/13030/m5v45qp2'
           )
             then 'UCD Curatorial'
@@ -88,9 +84,6 @@ class ConsistencyFilesQuery < AdminQuery
             0
           ) > 0 then 
             case
-              when age.inv_object_id = (
-                select id from inv.inv_objects where ark = 'ark:/13030/m5vb3g5r'
-              ) then 'WARN'
               when age.inv_object_id = (
                 select id from inv.inv_objects where ark = 'ark:/13030/m5v45qp2'
               ) then 'WARN'
