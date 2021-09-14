@@ -215,6 +215,13 @@ module LambdaFunctions
         end
       elsif path == '/web/storeNodes.html'
         map['NODES'] = Nodes.new(@config).nodes
+      elsif path == '/web/storeNodeDeletes.html'
+      elsif path == '/web/storeObjects.html'
+        map['OBJS'] = ObjectQuery.query_factory(
+          @config,
+          myparams.fetch("mode",""),
+          CGI.unescape(myparams.fetch("objlist",""))
+        ).objects
       end
       map
     end

@@ -156,3 +156,136 @@ class Nodes < MerrittQuery
   end
 
 end
+
+class ObjectQuery < MerrittQuery
+  def self.query_factory(config, mode, search_string)
+    if mode == "ark"
+      ArkObjectQuery.new(config, search_string)
+    elsif mode == "localid"
+      LocalidObjectQuery.new(config, search_string)
+    elsif mode == "id"
+      ObjectIdObjectQuery.new(config, search_string)
+    else
+      ObjectQuery.new(config, search_string)
+    end
+  end
+
+  def initialize(config, search_string)
+    super(config)
+    @norm_search = normalize_search_string(search_string)
+    @objects = search(search_string)
+  end
+
+  def normalize_search_string(search_string)
+    arr = []
+    search_string.split("\n").each do |s|
+      arr.push(normalize(s))
+    end
+    arr
+  end
+
+  def normalize(s)
+    s.strip
+  end
+
+  def get_sql
+    %{
+      select
+        c.name,
+        o.id,
+        o.ark,
+        loc.local_id,
+        o.erc_what,
+        o.created
+      from
+        inv_objects o
+      inner join inv_collections_inv_objects icio
+        on icio.inv_object_id = o.id
+      inner join inv_collections c
+        on c.id = icio.inv_collection_id
+      inner join inv_localids loc
+        on o.ark = loc.inv_object_ark
+      where
+        #{get_where}
+    }
+  end
+
+  def get_where
+    %{
+      1 = 2
+    }
+  end
+
+  def search(search_string)
+    objects = []
+    run_query(
+      get_sql,
+      @norm_search
+    ).each do |r|
+      @objects.push({
+        coll: r[1],
+        id: r[2],
+        ark: r[3],
+        localid: r[4],
+        title: r[5],
+        created: r[6]
+      })
+    end
+    objects
+  end
+
+  def objects
+    return @objects
+  end
+
+  def get_placeholders
+    p = []
+    @norm_search.each do |s|
+      p.append("?")
+    end
+    p.join(",")
+  end
+end
+
+class ArkObjectQuery < ObjectQuery
+  def initialize(config, search_string)
+    super(config, search_string)
+  end
+
+  def get_where
+    %{
+      o.ark in (#{get_placeholders})
+    }
+  end
+ 
+end
+
+class LocalidObjectQuery < ObjectQuery
+  def initialize(config, search_string)
+    super(config, search_string)
+  end
+
+  def get_where
+    %{
+      loc.local_id in (#{get_placeholders})
+    }
+  end
+ 
+end
+
+class ObjectIdObjectQuery < ObjectQuery
+  def initialize(config, search_string)
+    super(config, search_string)
+  end
+
+  def get_where
+    %{
+      o.id in (#{get_placeholders})
+    }
+  end
+
+  def normalize(s)
+    s.strip.to_i
+  end
+
+end

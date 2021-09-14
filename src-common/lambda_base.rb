@@ -125,7 +125,7 @@ class LambdaBase
           'Content-Type' => ctype
         },
         isBase64Encoded: true,
-        body: Base64.encode64(IO.binread(qpath))
+        body: Base64.strict_encode64(IO.binread(qpath))
       }
     end
 
