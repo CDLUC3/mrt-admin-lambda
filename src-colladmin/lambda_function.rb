@@ -228,6 +228,10 @@ module LambdaFunctions
           mode,
           objlist
         ).objects
+      elsif path == '/web/storeObjectNodes.html'
+        ark = CGI.unescape(myparams.fetch("ark",""))
+        map['ARK'] = ark
+        map['OBJNODES'] = ObjectNodes.new(@config, ark).nodes
       end
       map
     end

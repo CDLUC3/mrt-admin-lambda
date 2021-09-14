@@ -290,3 +290,40 @@ class ObjectIdObjectQuery < ObjectQuery
   end
 
 end
+
+class ObjectNodes < MerrittQuery
+  def initialize(config, ark)
+    super(config)
+    @nodes = []
+    run_query(
+      %{
+        select
+          inio.role,
+          n.number,
+          n.description
+        from
+          inv_objects o
+        inner join inv_nodes_inv_objects inio
+          on o.id = inio.inv_object_id
+        inner join inv_nodes n
+          on inio.inv_node_id = n.id
+        where
+          o.ark = ?
+        order by
+          role,
+          number
+      },
+      [ark]
+    ).each do |r|
+      @nodes.push({
+        role: r[0],
+        number: r[1],
+        name: r[2]
+      })
+    end
+  end
+
+  def nodes
+    @nodes
+  end
+end
