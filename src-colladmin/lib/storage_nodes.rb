@@ -173,7 +173,7 @@ class ObjectQuery < MerrittQuery
   def initialize(config, search_string)
     super(config)
     @norm_search = normalize_search_string(search_string)
-    @objects = search(search_string)
+    @objects = search
   end
 
   def normalize_search_string(search_string)
@@ -203,7 +203,7 @@ class ObjectQuery < MerrittQuery
         on icio.inv_object_id = o.id
       inner join inv_collections c
         on c.id = icio.inv_collection_id
-      inner join inv_localids loc
+      left join inv_localids loc
         on o.ark = loc.inv_object_ark
       where
         #{get_where}
@@ -216,19 +216,20 @@ class ObjectQuery < MerrittQuery
     }
   end
 
-  def search(search_string)
+  def search
     objects = []
+
     run_query(
       get_sql,
       @norm_search
     ).each do |r|
-      @objects.push({
-        coll: r[1],
-        id: r[2],
-        ark: r[3],
-        localid: r[4],
-        title: r[5],
-        created: r[6]
+      objects.push({
+        coll: r[0],
+        id: r[1],
+        ark: r[2],
+        localid: r[3],
+        title: r[4],
+        created: r[5]
       })
     end
     objects

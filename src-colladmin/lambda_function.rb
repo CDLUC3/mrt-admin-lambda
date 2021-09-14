@@ -217,10 +217,16 @@ module LambdaFunctions
         map['NODES'] = Nodes.new(@config).nodes
       elsif path == '/web/storeNodeDeletes.html'
       elsif path == '/web/storeObjects.html'
+        objlist = CGI.unescape(myparams.fetch("objlist",""))
+        mode = myparams.fetch("mode","")
+        map['OBJLIST'] = objlist
+        map['ISARK'] = mode == "ark"
+        map['ISLOC'] = mode == "localid"
+        map['ISID'] = mode == "id"
         map['OBJS'] = ObjectQuery.query_factory(
           @config,
-          myparams.fetch("mode",""),
-          CGI.unescape(myparams.fetch("objlist",""))
+          mode,
+          objlist
         ).objects
       end
       map

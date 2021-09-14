@@ -20,16 +20,16 @@
       <form method="POST">
         <div>
           <select name="mode">
-            <option val="ark">Search by ark</option>
-            <option val="localid">Search by localid</option>
-            <option val="id">Search by object_id</option>
+            <option value="ark" selected={{ISARK}}>Search by ark</option>
+            <option value="localid" selected={{ISLOC}}>Search by localid</option>
+            <option value="id" selected={{ISID}}>Search by object_id</option>
           </select>
         </div>
         <div>
           <label for="object list">Object(s). Place one or more identifiers on each line below.</label>
         </div>
         <div>
-          <textarea id="objlist" name="objlist" rows="5" cols="40"></textarea>
+          <textarea id="objlist" name="objlist" rows="5" cols="40">{{OBJLIST}}</textarea>
         </div>
         <div>
           <input type="submit" value="Search"/>
@@ -52,12 +52,12 @@
       <tbody>
         {{#OBJS}}
         <tr>
-          <th></th>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <th>{{coll}}</th>
+          <td>{{id}}</td>
+          <td>{{ark}}</td>
+          <td>{{localid}}</td>
+          <td>{{title}}</td>
+          <td>{{created}}</td>
           <td>
             <button title="" disabled>Delete Object {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}</button>
             <button title="" disabled>Trigger Replication {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}</button>
