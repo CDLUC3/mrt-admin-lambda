@@ -15,7 +15,7 @@ module LambdaFunctions
         config = Uc3Ssm::ConfigResolver.new.resolve_file_values(file: config_file, resolve_key: config_block, return_key: config_block)
         collHandler = Handler.new(config)
         respath = event.fetch("path", "")
-        return collHandler.redirect("/web#{respath}") if respath =~ %r[^/index.html.*]
+        return LambdaBase.redirect("/web#{respath}") if respath =~ %r[^/index.html.*]
         myparams = collHandler.get_params_from_event(event)
         return collHandler.web_assets("/web/favicon.ico", myparams) if respath =~ %r[^/favicon.ico.*]
         return collHandler.web_assets(respath, myparams) if collHandler.web_asset?(respath)

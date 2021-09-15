@@ -144,13 +144,23 @@ class LambdaBase
     }
   end
   
-  def redirect(path)
+  def self.redirect(path)
     { 
       statusCode: 303, 
       headers: {
         'Location' => path
       },
       body: "Redirect to #{path}"
+    }
+  end
+
+  def self.jsredirect(path)
+    { 
+      statusCode: 200, 
+      headers: {
+        'Content-Type' => 'application/json'
+      },
+      body: {location: path}
     }
   end
 

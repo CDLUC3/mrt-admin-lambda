@@ -20,16 +20,25 @@
       <form method="POST">
         <div>
           <select name="mode">
-            <option value="ark" selected={{ISARK}}>Search by ark</option>
-            <option value="localid" selected={{ISLOC}}>Search by localid</option>
-            <option value="id" selected={{ISID}}>Search by object_id</option>
+            <option value="ark" {{#ISARK}}selected{{/ISARK}}>Search by ark</option>
+            <option value="localid" {{#ISLOC}}selected{{/ISLOC}}>Search by localid</option>
+            <option value="id" {{#ISID}}selected{{/ISID}}>Search by object_id</option>
           </select>
         </div>
+        <p class="proval">
+          <label for="owner">Owner</label>
+          <select id="owner" name="owner">
+            <option value="">--ANY Owner--</option>
+            {{#OWNERS}}
+            <option value="{{ark}}">{{name}}</option>
+            {{/OWNERS}}
+          </select>
+        </p>
         <div>
-          <label for="object list">Object(s). Place one or more identifiers on each line below.</label>
-        </div>
-        <div>
-          <textarea id="objlist" name="objlist" rows="5" cols="40">{{OBJLIST}}</textarea>
+          <fieldset>
+            <legend>Object(s). Place one or more identifiers on each line below.</legend>
+            <textarea id="objlist" name="objlist" rows="5" cols="40">{{OBJLIST}}</textarea>
+          </fieldset>
         </div>
         <div>
           <input type="submit" value="Search"/>
@@ -40,9 +49,10 @@
     <table class="sortable results">
       <thead>
         <tr>
-          <th>Collection</th>
-          <th>Object Id</th>
           <th>Ark</th>
+          <th>Collection</th>
+          <th>Owner</th>
+          <th>Object Id</th>
           <th>Local Id</th>
           <th>Title</th>
           <th>Created</th>
@@ -52,9 +62,10 @@
       <tbody>
         {{#OBJS}}
         <tr>
-          <th>{{coll}}</th>
+          <th>{{ark}}</th>
+          <td>{{coll}}</td>
+          <td>{{owner}}</td>
           <td>{{id}}</td>
-          <td>{{ark}}</td>
           <td>{{localid}}</td>
           <td>{{title}}</td>
           <td>{{created}}</td>

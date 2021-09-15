@@ -125,6 +125,34 @@ module LambdaFunctions
           result = CognitoAction.new(config, path, myparams).get_data
         elsif path == "cognito-add-user-to-group" 
           result = CognitoAction.new(config, path, myparams).get_data
+        elsif path == "unpause-ingest-for-collection" 
+          result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-pause-ing-for-coll")
+        elsif path == "pause-ingest-for-collection" 
+          result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-pause-ing-for-coll")
+        elsif path == "storage-force-audit-for-object" 
+          result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-force-audit")
+        elsif path == "storage-force-audit-for-collection" 
+          result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-force-audit")
+        elsif path == "storage-force-replic-for-object" 
+          result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-force-replic")
+        elsif path == "storage-force-replic-for-collection" 
+          result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-force-replic")
+        elsif path == "storage-add-node-for-collection" 
+          result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-add-node")
+        elsif path == "storage-del-node-for-collection" 
+          result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-node")
+        elsif path == "storage-del-node-for-object" 
+          result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-node-obj")
+        elsif path == "storage-change-primary-for-collection" 
+          result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-change-primary-node")
+        elsif path == "storage-reroute-ui-for-collection" 
+          result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-reroute-ui")
+        elsif path == "storage-scan-node" 
+          result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-scan-node")
+        elsif path == "storage-delete-node-key" 
+          result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-node-keys")
+        elsif path == "storage-delete-node-obj" 
+          result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-node-keys")
         end
      
         {
@@ -219,6 +247,7 @@ module LambdaFunctions
       elsif path == '/web/storeObjects.html'
         objlist = CGI.unescape(myparams.fetch("objlist",""))
         mode = myparams.fetch("mode","")
+        map['OWNERS'] = Owners.new(@config).objs_select
         map['OBJLIST'] = objlist
         map['ISARK'] = mode == "ark"
         map['ISLOC'] = mode == "localid"

@@ -12,6 +12,7 @@ class CollectionNodes < MerrittQuery
               inio.role,
               n.number,
               n.description,
+              n.access_mode,
               count(*)
             from
               inv_collections c
@@ -32,12 +33,14 @@ class CollectionNodes < MerrittQuery
             group by
               inio.role,
               n.number,
-              n.description
+              n.description,
+              n.access_mode
             union
             select
               'primary' as role,
               n.number,
               n.description as description,
+              n.access_mode,
               0
             from
               inv_collections c,
@@ -67,6 +70,7 @@ class CollectionNodes < MerrittQuery
               'secondary' as role,
               n.number,
               n.description,
+              n.access_mode,
               0
             from
               inv_collections c
@@ -103,13 +107,14 @@ class CollectionNodes < MerrittQuery
       ).each_with_index do |r, i|
           percent = 100
           if i > 0
-            percent = ((r[3] * 100.0)/@collnodes[0][:count]).to_i if @collnodes[0][:count] > 0
+            percent = ((r[4] * 100.0)/@collnodes[0][:count]).to_i if @collnodes[0][:count] > 0
           end
           @collnodes.push({
             role: r[0],
             number: r[1],
             name: r[2],
-            count: r[3],
+            access_mode: r[3],
+            count: r[4],
             percent: percent
           })
       end
@@ -132,7 +137,8 @@ class Nodes < MerrittQuery
                   when description is null then 'No description'
                   else description
                 end as description,
-                count(*) as pcount 
+                access_mode,
+                count(inio.inv_object_id) as pcount 
               from 
                 inv_nodes n
               left join inv_nodes_inv_objects inio
@@ -146,7 +152,8 @@ class Nodes < MerrittQuery
       ).each do |r|
         @nodes.push({
           number: r[0],
-          description: "#{r[1]} (#{r[2]})"
+          description: "#{r[1]} (#{r[3]})",
+          access_mode: r[2]
         })
       end
   end
@@ -191,7 +198,8 @@ class ObjectQuery < MerrittQuery
   def get_sql
     %{
       select
-        c.name,
+        c.name as coll,
+        own.name as owner,
         o.id,
         o.ark,
         loc.local_id,
@@ -199,6 +207,8 @@ class ObjectQuery < MerrittQuery
         o.created
       from
         inv_objects o
+      inner join inv_owners own
+        on o.inv_owner_id = own.id
       inner join inv_collections_inv_objects icio
         on icio.inv_object_id = o.id
       inner join inv_collections c
@@ -225,11 +235,12 @@ class ObjectQuery < MerrittQuery
     ).each do |r|
       objects.push({
         coll: r[0],
-        id: r[1],
-        ark: r[2],
-        localid: r[3],
-        title: r[4],
-        created: r[5]
+        owner: r[1],
+        id: r[2],
+        ark: r[3],
+        localid: r[4],
+        title: r[5],
+        created: r[6]
       })
     end
     objects
@@ -300,7 +311,8 @@ class ObjectNodes < MerrittQuery
         select
           inio.role,
           n.number,
-          n.description
+          n.description,
+          n.access_mode
         from
           inv_objects o
         inner join inv_nodes_inv_objects inio
@@ -318,7 +330,8 @@ class ObjectNodes < MerrittQuery
       @nodes.push({
         role: r[0],
         number: r[1],
-        name: r[2]
+        name: r[2],
+        access_mode: r[3]
       })
     end
   end
