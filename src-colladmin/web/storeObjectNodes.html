@@ -7,7 +7,7 @@
     <link rel="stylesheet" type="text/css" href="api-table.css"/>
     <script type="text/javascript" src="coll-lambda.base.js"></script>
     <script type="text/javascript" src="api-table.js"></script>
-    <script type="text/javascript" src="properties.js"></script>
+    <script type="text/javascript" src="storage.js"></script>
     <script src="sorttable.js" type="text/javascript"></script>
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
   </head>
@@ -33,9 +33,14 @@
           <td>{{name}}</td>
           <td>{{access_mode}}</td>
           <td>
-            <button title=""
-              onclick="javascript:document.location='https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-node-keys'"
+            {{#secondary}}
+            <button 
+              data-ark="{{ARK}}"
+              data-node="{{number}} {{name}}"
+              title="Delete a secondary copy of an object.  Cannot be run on the primary node."
+              class="store-obj-node"
             >Delete Object from Node {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}</button>
+            {{/secondary}}
           </td>
         </tr>
         {{/OBJNODES}}

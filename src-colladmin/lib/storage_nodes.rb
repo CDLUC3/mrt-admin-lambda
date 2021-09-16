@@ -344,7 +344,9 @@ class ObjectNodes < MerrittQuery
         role: r[0],
         number: r[1],
         name: r[2],
-        access_mode: r[3]
+        access_mode: r[3],
+        primary: r[0] == 'primary',
+        secondary: r[0] == 'secondary'
       })
     end
   end
