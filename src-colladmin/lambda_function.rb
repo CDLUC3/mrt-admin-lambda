@@ -246,17 +246,21 @@ module LambdaFunctions
       elsif path == '/web/storeNodeDeletes.html'
       elsif path == '/web/storeObjects.html'
         objlist = CGI.unescape(myparams.fetch("objlist",""))
-        mode = myparams.fetch("mode","")
-        map['OWNERS'] = Owners.new(@config).objs_select
+        mode = myparams.fetch("mode", "")
+        owner = myparams.fetch("owner", "")
+        map['OWNERS'] = Owners.new(@config, owner).objs_select
         map['OBJLIST'] = objlist
         map['ISARK'] = mode == "ark"
         map['ISLOC'] = mode == "localid"
         map['ISID'] = mode == "id"
-        map['OBJS'] = ObjectQuery.query_factory(
+        objects = ObjectQuery.query_factory(
           @config,
           mode,
-          objlist
+          objlist,
+          owner
         ).objects
+        map['OBJS'] = objects
+        map['OBJSCNT'] = objects.length
       elsif path == '/web/storeObjectNodes.html'
         ark = CGI.unescape(myparams.fetch("ark",""))
         map['ARK'] = ark

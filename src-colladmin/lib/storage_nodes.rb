@@ -165,20 +165,21 @@ class Nodes < MerrittQuery
 end
 
 class ObjectQuery < MerrittQuery
-  def self.query_factory(config, mode, search_string)
+  def self.query_factory(config, mode, search_string, owner)
     if mode == "ark"
-      ArkObjectQuery.new(config, search_string)
+      ArkObjectQuery.new(config, search_string, owner)
     elsif mode == "localid"
-      LocalidObjectQuery.new(config, search_string)
+      LocalidObjectQuery.new(config, search_string, owner)
     elsif mode == "id"
-      ObjectIdObjectQuery.new(config, search_string)
+      ObjectIdObjectQuery.new(config, search_string, owner)
     else
-      ObjectQuery.new(config, search_string)
+      ObjectQuery.new(config, search_string, owner)
     end
   end
 
-  def initialize(config, search_string)
+  def initialize(config, search_string, owner)
     super(config)
+    @owner = owner
     @norm_search = normalize_search_string(search_string)
     @objects = search
   end
@@ -186,7 +187,8 @@ class ObjectQuery < MerrittQuery
   def normalize_search_string(search_string)
     arr = []
     search_string.split("\n").each do |s|
-      arr.push(normalize(s))
+      ns = normalize(s)
+      arr.push(ns) unless ns.empty?
     end
     arr
   end
@@ -217,6 +219,7 @@ class ObjectQuery < MerrittQuery
         on o.ark = loc.inv_object_ark
       where
         #{get_where}
+        #{owner_clause}
     }
   end
 
@@ -226,12 +229,22 @@ class ObjectQuery < MerrittQuery
     }
   end
 
+  def owner_clause
+    return %{ and own.ark = ? } unless @owner.empty?
+    ""
+  end
+
   def search
     objects = []
+    params = []
+    @norm_search.each do |p|
+      params.append(p)
+    end
+    params.push(@owner) unless @owner.empty?
 
     run_query(
       get_sql,
-      @norm_search
+      params
     ).each do |r|
       objects.push({
         coll: r[0],
@@ -260,8 +273,8 @@ class ObjectQuery < MerrittQuery
 end
 
 class ArkObjectQuery < ObjectQuery
-  def initialize(config, search_string)
-    super(config, search_string)
+  def initialize(config, search_string, owner)
+    super(config, search_string, owner)
   end
 
   def get_where
@@ -273,8 +286,8 @@ class ArkObjectQuery < ObjectQuery
 end
 
 class LocalidObjectQuery < ObjectQuery
-  def initialize(config, search_string)
-    super(config, search_string)
+  def initialize(config, search_string, owner)
+    super(config, search_string, owner)
   end
 
   def get_where
@@ -286,8 +299,8 @@ class LocalidObjectQuery < ObjectQuery
 end
 
 class ObjectIdObjectQuery < ObjectQuery
-  def initialize(config, search_string)
-    super(config, search_string)
+  def initialize(config, search_string, owner)
+    super(config, search_string, owner)
   end
 
   def get_where

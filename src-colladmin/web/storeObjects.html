@@ -30,7 +30,7 @@
           <select id="owner" name="owner">
             <option value="">--ANY Owner--</option>
             {{#OWNERS}}
-            <option value="{{ark}}">{{name}}</option>
+            <option value="{{ark}}" {{#selected}}selected{{/selected}}>{{name}}</option>
             {{/OWNERS}}
           </select>
         </p>
@@ -47,6 +47,7 @@
     </div>
     <h2>Objects</h2>
     <table class="sortable results">
+      <caption>{{OBJSCNT}} Objects</caption>
       <thead>
         <tr>
           <th>Ark</th>

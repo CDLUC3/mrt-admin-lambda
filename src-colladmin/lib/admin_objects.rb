@@ -261,7 +261,7 @@ class AdminProfileList < MerrittJson
 end
 
 class AdminObjects < MerrittQuery
-  def initialize(config, aggrole)
+  def initialize(config, aggrole, selobj)
     super(config)
     @objs_select = []
     run_query(
@@ -279,7 +279,8 @@ class AdminObjects < MerrittQuery
           # the following are only set for collections
           dispname: r[5].nil? ? "" : r[5],
           mnemonic: r[6].nil? ? "" : r[6],
-          harvest: r[7].nil? ? "none" : r[7]
+          harvest: r[7].nil? ? "none" : r[7],
+          selected: r[1] == selobj
         }) 
     end
   end
@@ -377,8 +378,8 @@ class CollectionObjs < AdminObjects
 end
 
 class Owners < AdminObjects
-  def initialize(config)
-      super(config, 'MRT-owner')
+  def initialize(config, owner = "")
+      super(config, 'MRT-owner', owner)
   end
 
   def get_query
