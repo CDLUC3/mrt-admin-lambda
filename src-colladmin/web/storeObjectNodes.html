@@ -36,7 +36,8 @@
             {{#secondary}}
             <button 
               data-ark="{{ARK}}"
-              data-node="{{number}} {{name}}"
+              data-node-num="{{number}}"
+              data-node-name="{{name}}"
               title="Delete a secondary copy of an object.  Cannot be run on the primary node."
               class="store-obj-node"
             >Delete Object from Node {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}</button>

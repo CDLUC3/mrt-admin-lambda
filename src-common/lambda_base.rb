@@ -158,9 +158,10 @@ class LambdaBase
     { 
       statusCode: 200, 
       headers: {
-        'Content-Type' => 'application/json'
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type' => 'application/json; charset=utf-8'
       },
-      body: {location: path}
+      body: {location: path}.to_json
     }
   end
 

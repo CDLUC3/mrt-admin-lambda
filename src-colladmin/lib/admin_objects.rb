@@ -53,9 +53,9 @@ class AdminProfile < MerrittJson
 
   def key
     return @mnemonic unless @mnemonic.empty?
-    m = @path.match(%r{admin/[^/]+/(collection|owner|sla)/(.*)(_owner|_service_level_agreement)?$})
-    return m[2] if m
-    @path
+    m = @path.match(%r{admin/[^/]+/(collection|owner|sla)/(.*)$})
+    return @path.strip unless m
+    m[2].sub(%r[(_owner|_service_level_agreement)$], '').strip
   end
 
   def artifact
@@ -357,8 +357,8 @@ class AdminObjects < MerrittQuery
 end
 
 class Slas < AdminObjects
-  def initialize(config)
-      super(config, 'MRT-service-level-agreement')
+  def initialize(config, selobj = "")
+      super(config, 'MRT-service-level-agreement', selobj)
   end
 
   def get_query
@@ -367,8 +367,8 @@ class Slas < AdminObjects
 end
 
 class CollectionObjs < AdminObjects
-  def initialize(config)
-      super(config, 'MRT-collection')
+  def initialize(config, selobj = "")
+      super(config, 'MRT-collection', selobj)
   end
 
   def get_query
@@ -378,8 +378,8 @@ class CollectionObjs < AdminObjects
 end
 
 class Owners < AdminObjects
-  def initialize(config, owner = "")
-      super(config, 'MRT-owner', owner)
+  def initialize(config, selobj = "")
+      super(config, 'MRT-owner', selobj)
   end
 
   def get_query

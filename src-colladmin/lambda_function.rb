@@ -141,7 +141,7 @@ module LambdaFunctions
           result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-add-node")
         elsif path == "storage-del-node-for-collection" 
           result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-node")
-        elsif path == "storage-del-node-for-object" 
+        elsif path == "storage-del-object-from-node" 
           result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-node-obj")
         elsif path == "storage-change-primary-for-collection" 
           result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-change-primary-node")
@@ -151,8 +151,8 @@ module LambdaFunctions
           result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-scan-node")
         elsif path == "storage-delete-node-key" 
           result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-node-keys")
-        elsif path == "storage-delete-node-obj" 
-          result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-node-keys")
+        elsif path == "storage-delete-obj" 
+          result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-obj")
         end
      
         {
