@@ -27,7 +27,15 @@ class LambdaBase
     end
   end
 
-
+  def has_permission
+    allowed = @config.fetch("cognito-groups-allowed", "").split(",")
+    @cognito_groups.each do |group|
+      allowed.each do |g|
+        return true if g == group
+      end
+    end
+    false
+  end
 
   # Handle GET or POST event structures passed in via the ALB
   def get_params_from_event(event)
@@ -115,7 +123,8 @@ class LambdaBase
       IS_PROD: LambdaBase.is_prod,
       IS_STAGE: LambdaBase.is_stage,
       USERNAME: @cognito_username,
-      GROUPS: @cognito_groups.join(",")
+      GROUPS: @cognito_groups.join(","),
+      HASPERM: has_permission
     }
   end
 

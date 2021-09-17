@@ -1,5 +1,5 @@
 <p>
-  <span title="{{USERNAME}}: [{{GROUPS}}]">👤</span>
+  <span title="{{USERNAME}}: [{{GROUPS}}]; {{HASPERM}}">👤</span>
   <span>/</span>
   <a href="{{ADMINTOOL_HOME}}">Admin Tool Home</a>
 </p>
