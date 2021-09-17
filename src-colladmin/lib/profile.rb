@@ -496,7 +496,8 @@ class Collections < MerrittQuery
         mnemonic: c.mnemonic,
         harvest: c.harvest,
         aggregate_role: c.aggregate_role,
-        primary_node: c.primary_node
+        primary_node: c.primary_node,
+        node_status: c.primary_node.to_s.empty? ? 'FAIL' : 'PASS'
       })
     end
     arr
@@ -511,7 +512,7 @@ class Collections < MerrittQuery
 
     profiles = IngestProfileAction.new(@config, "", {}).get_profile_list
     profiles.profiles.each do |p|
-      context = p.getValue(:context)
+      context = p.getValue(:profileID)
       next if context.nil?
       next if context.empty?
       context.sub!(%r[_content$], '')

@@ -10,12 +10,17 @@ class AdminObjectsQuery < AdminQuery
     "Admin Objects: #{@aggrole}"
   end
 
+  def agg_table
+    return "inv.inv_owners" if @aggrole == "MRT-owner"
+    "inv.inv_collections"
+  end
+
   def get_sql
     %{
       select 
         o.id, 
         o.ark, 
-        alt.ark as altark,
+        (select ark from #{agg_table} where inv_object_id=o.id) as altark,
         ifnull(own.name,'No name') as owner,
         own.ark as ownerark,
         (
@@ -36,28 +41,12 @@ class AdminObjectsQuery < AdminQuery
         erc_what, 
         o.created,
         case
-          when o.ark != ifnull(alt.ark, '') then 'FAIL'
+          when o.ark != ifnull((select ark from #{agg_table} where inv_object_id=o.id), '') then 'FAIL'
           when o.aggregate_role is null then 'INFO'
-          when own.ark != 'ark:/13030/j2rn30xp' then 'INFO'
           else 'PASS'
         end as status 
       from 
         inv.inv_objects o
-      left join
-        (
-          select
-            inv_object_id,
-            ark
-          from
-            inv.inv_collections
-          union
-          select
-            inv_object_id,
-            ark
-          from
-            inv.inv_owners 
-        ) as alt
-        on o.id = alt.inv_object_id
       inner join inv.inv_owners own
         on own.id = o.inv_owner_id
       where 

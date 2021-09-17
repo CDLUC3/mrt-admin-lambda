@@ -3,6 +3,7 @@ $(document).ready(function(){
 });
 
 function init() {
+  $("p.buttons").show();
   $("button.store-obj-node").on("click", function(){
     var ark = $(this).attr("data-ark");
     var nodenum = $(this).attr("data-node-num");

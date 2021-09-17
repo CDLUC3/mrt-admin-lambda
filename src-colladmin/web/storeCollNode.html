@@ -1,0 +1,103 @@
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <script	src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.css"></link>
+    <link rel="stylesheet" type="text/css" href="api-table.css"/>
+    <script type="text/javascript" src="coll-lambda.base.js"></script>
+    <script type="text/javascript" src="api-table.js"></script>
+    <script type="text/javascript" src="storage.js"></script>
+    <script src="sorttable.js" type="text/javascript"></script>
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  </head>
+  <body>
+    <div class="form-body">
+    <h1>Manage Storage Nodes for {{COLLNAME}}</h1>
+    {{{COLLADMINNAV}}}
+    {{{BUTTONS}}}
+    <div>
+      <h2>Collection Ingest Processing Status</h2>
+      <div class="indent">
+        <label for="ingest-status">Current Status: </label>
+        <output id="ingest-status">{{ingest_paused}}</output>
+        <input 
+          type="button" 
+          name="pause" 
+          value="Pause Ingest {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}" 
+          onclick="javascript:document.location='https://cdluc3.github.io/mrt-doc/diagrams/store-admin-pause-ing-for-coll'"
+        />
+        <input 
+          type="button" 
+          name="unpause" 
+          value="Unpause Ingest {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}" 
+          onclick="javascript:document.location='https://cdluc3.github.io/mrt-doc/diagrams/store-admin-pause-ing-for-coll'"
+        />
+      </div>
+      <h2>Storage Nodes for Collection</h2>
+      <p>Primary Node (from Collection Profile): {{PRIMARY_NODE}}</p>
+      <div>
+        <table class="sortable results">
+          <thead>
+            <tr>
+              <th>Role</th>
+              <th>Node Num</th>
+              <th>Node Name</th>
+              <th>Access Mode</th>
+              <th>Count</th>
+              <th>% Repl</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#CNODES}}
+            <tr>
+              <th>{{role}}</th>
+              <th>{{number}}</th>
+              <td>{{name}}</td>
+              <td>{{access_mode}}</td>
+              <td>{{count}}</td>
+              <td>{{percent}}</td>
+              <td>
+                <button 
+                  title="Trigger the re-audit of all objects in the collection."
+                  onclick="javascript:document.location='https://cdluc3.github.io/mrt-doc/diagrams/store-admin-force-audit'"
+                >Re-Audit {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}</button>
+                <button 
+                  zzdisabled="{{primary}}" 
+                  title="Delete all objects in the collection from this SECONDARY node."
+                  onclick="javascript:document.location='https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-node'"
+                >Delete Coll from Node {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}</button>
+                <button
+                 title="Make this storage node the primary node for a collection.  The node must be ONLINE (not nearline) and replication must be 100% complete. The collection profile must have this node marked as primary."
+                 onclick="javascript:document.location='https://cdluc3.github.io/mrt-doc/diagrams/store-admin-change-primary-node'"
+                 >Make Primary {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}</button>
+                <button 
+                  title="Temporarily redirect UI traffic to this SECONDAY node.  The node must be ONLINE (not nearline) and replication must be 100% complete."
+                  onclick="javascript:document.location='https://cdluc3.github.io/mrt-doc/diagrams/store-admin-reroute-ui'"
+                  >Make UI Primary {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}</button>
+              </td>
+            </tr>
+            {{/CNODES}}
+          </tbody>
+        </table>  
+      </div>
+      <h2>Add Secondary Storage Node for this collection</h2>
+      <div class="indent">
+        <label>Storage Node:</label>
+        <select id="storagenode" name="storagenode">
+          <option>-- Choose Node --</option>
+          {{#NODES}}
+          <option value="{{number}}">{{number}}: {{description}}</option>
+          {{/NODES}}
+        </select>
+        <div>
+          <button
+            onclick="javascript:document.location='https://cdluc3.github.io/mrt-doc/diagrams/store-admin-add-node'"
+          >Add Storage Node to this Collection {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  </body>
+</html>

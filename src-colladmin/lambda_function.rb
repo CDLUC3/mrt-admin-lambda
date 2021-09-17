@@ -222,25 +222,19 @@ module LambdaFunctions
         map["artifact_#{artifact}"] = true
         map['COLLS'] = AdminProfileAction.new(@config, "adminprofiles", myparams).get_profile_list
       elsif path == '/web/storeCollNodes.html'
+        colls = Collections.new(@config)
+        colls.merge_profiles
+        map['COLLS'] = colls.collections_select
+      elsif path == '/web/storeCollNode.html'
         coll = myparams.fetch("coll", "")
-        if coll.empty?
-          colls = Collections.new(@config)
-          colls.merge_profiles
-          map['STORE_COLLS'] = {
-            COLLS: colls.collections_select
-          }
-        else
-          name = myparams.fetch("name", "")
-          primary_node = myparams.fetch("primary_node", "")
-          map['COLLNAME'] = CGI.unescape(name)
-          map['PRIMARY_NODE'] = primary_node
-          map['STORE_COLL'] = {
-            COLL: coll.to_i,
-            ingest_paused: false,
-            NODES: CollectionNodes.new(@config, coll.to_i, primary_node).collnodes
-          }          
-          map['NODES'] = Nodes.new(@config).nodes
-        end
+        name = myparams.fetch("name", "")
+        primary_node = myparams.fetch("primary_node", "")
+        map['COLLNAME'] = CGI.unescape(name)
+        map['PRIMARY_NODE'] = primary_node
+        map['COLL'] = coll.to_i
+        map['ingest_paused'] = false
+        map['CNODES'] = CollectionNodes.new(@config, coll.to_i, primary_node).collnodes         
+        map['NODES'] = Nodes.new(@config).nodes
       elsif path == '/web/storeNodes.html'
         map['NODES'] = Nodes.new(@config).nodes
       elsif path == '/web/storeNodeDeletes.html'
