@@ -37,9 +37,13 @@ function showPrompt(message, params) {
       if ('message' in data) {
         alert(data.message);
       }
-      if ('location' in data) {
-        alert(params);
-        window.location = data.location;
+      if ('redirect_location' in data) {
+        var msg = "Endpoint Params:";
+        Object.keys(params).forEach(function(k){
+          msg += "- " + k + ": " + params[k] + "\n";
+        });
+        alert(msg);
+        window.location = data['redirect_location'];
       }
     },
     error: function( xhr, status ) {

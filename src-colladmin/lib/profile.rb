@@ -324,6 +324,7 @@ class IngestProfile < MerrittJson
     arr.append("")
     arr.append("")
     arr.append("")
+    arr.append("status")
     arr
   end
 
@@ -340,6 +341,7 @@ class IngestProfile < MerrittJson
     arr.append("Tier")
     arr.append("Harvest")
     arr.append("DB Desc (if diff)")
+    arr.append("Status")
     arr
   end
 
@@ -360,6 +362,7 @@ class IngestProfile < MerrittJson
     dbdescription = @collection.nil? ? '' : @collection.dbdescription
     dbdescription = dbdescription == getValue(:profileDescription) ? "-" : dbdescription
     arr.append(dbdescription)
+    arr.append(getValue(:profileID) == "#{getValue(:context)}_content" ? 'PASS' : 'FAIL')
     arr
   end
 end

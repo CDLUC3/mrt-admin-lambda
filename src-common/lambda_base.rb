@@ -156,13 +156,8 @@ class LambdaBase
 
   def self.jsredirect(path)
     { 
-      statusCode: 200, 
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type' => 'application/json; charset=utf-8'
-      },
-      body: {location: path}.to_json
-    }
+      redirect_location: path
+    }.to_json
   end
 
   def self.error(status, message, return_page = false)

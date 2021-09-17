@@ -187,8 +187,8 @@ class ObjectQuery < MerrittQuery
   def normalize_search_string(search_string)
     arr = []
     search_string.split("\n").each do |s|
-      ns = normalize(s)
-      arr.push(ns) unless ns.empty?
+      next if s.empty?
+      arr.push(normalize(s))
     end
     arr
   end
