@@ -13,7 +13,7 @@ module LambdaFunctions
         config_file = 'config/database.ssm.yml'
         config_block = ENV.key?('MERRITT_ADMIN_CONFIG') ? ENV['MERRITT_ADMIN_CONFIG'] : 'default'
         config = Uc3Ssm::ConfigResolver.new.resolve_file_values(file: config_file, resolve_key: config_block, return_key: config_block)
-        collHandler = Handler.new(config)
+        collHandler = Handler.new(config, event)
         respath = event.fetch("path", "")
         return LambdaBase.redirect("/web#{respath}") if respath =~ %r[^/index.html.*]
         myparams = collHandler.get_params_from_event(event)
@@ -55,8 +55,8 @@ module LambdaFunctions
       end
     end
 
-    def initialize(config)
-      super(config)
+    def initialize(config, event)
+      super(config, event)
     end
      
     #def template_parameters(path, myparams)

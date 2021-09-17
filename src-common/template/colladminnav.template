@@ -1,0 +1,7 @@
+<p>
+  <span title="{{USERNAME}}: [{{GROUPS}}]">👤</span>
+  <span> / </span>
+  <a href="{{ADMINTOOL_HOME}}">Admin Tool Home</a>
+  <span> / </span>
+  <a href="{{COLLADMIN_ADMIN}}">CollAdmin Tool Home</a>
+</p>

@@ -50,7 +50,7 @@ module LambdaFunctions
           file: config_file, 
           return_key: config_block
         })
-        collHandler = LambdaFunctions::Handler.new(config)
+        collHandler = LambdaFunctions::Handler.new(config, event)
         respath = event.fetch("path", "")
         myparams = collHandler.get_params_from_event(event)
         return collHandler.web_assets("/web/favicon.ico", myparams) if respath =~ %r[^/(favicon.ico).*]
@@ -171,8 +171,8 @@ module LambdaFunctions
 
     end
 
-    def initialize(config)
-      super(config)
+    def initialize(config, event)
+      super(config, event)
     end
 
     def self.merritt_admin_owner

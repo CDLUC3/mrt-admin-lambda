@@ -4,12 +4,30 @@ require 'yaml'
 require 'uc3-ssm'
 require 'mustache'
 require 'base64'
+require 'jwt'
 
 class LambdaBase
 
-  def initialize(config)
+  def initialize(config, event)
     @config =  config
+    @cognito_username = ""
+    @cognito_groups = []
+    read_cognito_token(event)
   end
+
+  def read_cognito_token(event)
+    cognito_token = event.fetch('headers',{}).fetch('x-amzn-oidc-accesstoken','')
+    return if cognito_token.empty?
+    begin
+      jtoken = JWT::decode(cognito_token, nil, false, { :algorithm => 'RS256' })
+      @cognito_username = jtoken[0].fetch('username', '')
+      @cognito_groups = jtoken[0].fetch("cognito:groups", [])
+    rescue => e 
+      puts e
+    end
+  end
+
+
 
   # Handle GET or POST event structures passed in via the ALB
   def get_params_from_event(event)
@@ -96,6 +114,8 @@ class LambdaBase
       NOT_DOCKER: !LambdaBase.is_docker,
       IS_PROD: LambdaBase.is_prod,
       IS_STAGE: LambdaBase.is_stage,
+      USERNAME: @cognito_username,
+      GROUPS: @cognito_groups.join(",")
     }
   end
 
@@ -105,6 +125,8 @@ class LambdaBase
     if path =~ %r[^/web/.*\.html]
       p = default_template_parameters
       p['BUTTONS'] = File.open("template/buttons.template").read
+      p['ADMINNAV'] = Mustache.render(File.open("template/adminnav.template").read, p)
+      p['COLLADMINNAV'] = Mustache.render(File.open("template/colladminnav.template").read, p)
       return p
     end
     return {} if path == 'web/sorttable.js'
