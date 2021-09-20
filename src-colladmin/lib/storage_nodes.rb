@@ -145,7 +145,9 @@ class Nodes < MerrittQuery
                 on n.id = inio.inv_node_id
                 and inio.role = 'primary'
               group by 
-                number, description
+                number, 
+                description, 
+                access_mode
               order by
                 pcount desc
           }

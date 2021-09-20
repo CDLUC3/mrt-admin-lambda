@@ -145,6 +145,8 @@ class QueryFactory
       ReportRetrieve.new(self, path, myparams)    
     elsif path == 'filelist'
       ObjectIdFilesQuery.new(self, path, myparams)    
+    elsif path == 'obj_audit_status'
+      ObjectsAuditStatusQuery.new(self, path, myparams)    
     else
       puts("path #{path} not matched")
       AdminQuery.new(self, path, myparams)

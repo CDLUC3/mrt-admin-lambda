@@ -64,4 +64,13 @@ class ObjectIdFilesQuery < AdminQuery
     ['ark', '', '', 'name', 'bytes', 'datetime', '']
   end
 
+  def get_alternative_queries
+    [
+      {
+        label: "Storage Management for Object", 
+        url: "#{LambdaBase.colladmin_root_url}/web/storeObjects.html?mode=id&objlist=#{@id}"
+      },
+    ]
+  end
+
 end

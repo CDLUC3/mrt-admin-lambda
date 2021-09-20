@@ -116,7 +116,7 @@ class AuditStatusQuery < AdminQuery
   end
 
   def get_types(results)
-    ['', 'dataint', 'status']
+    ['astatus', 'dataint', 'status']
   end
 
   def init_status

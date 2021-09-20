@@ -627,6 +627,8 @@ function format(cell, v, type, merritt_path) {
         makeLink(cell, 'Add', colladmin_home + "?path=cognito-add-user-to-group" + param);
       }
     }
+  } else if (type == 'astatus') {
+    makeLink(cell, v, admintool_home + "?path=obj_audit_status&status="+v);
   } else {
     cell.text(v);
   }
