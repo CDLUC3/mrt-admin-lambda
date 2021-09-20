@@ -17,22 +17,16 @@ class ObjectIdFilesQuery < AdminQuery
         f.pathname,
         f.full_size,
         f.created,
-        (
-          select 
-            group_concat(n.number)
-          from
-            inv.inv_audits a
-          inner join
-            inv.inv_nodes n
-          on
-            n.id = a.inv_node_id
-          where
-            a.inv_object_id = o.id
-          and 
-            a.inv_version_id = v.id
-          and
-            a.inv_file_id = f.id
-        )
+        group_concat(n.number) as nodelist,
+        ifnull(
+          group_concat(
+            case 
+              when a.status = 'verified' then null
+              else n.number
+            end
+          ),
+          ''
+        ) as unverified
       from 
         inv.inv_objects o 
       inner join inv.inv_versions v
@@ -40,10 +34,24 @@ class ObjectIdFilesQuery < AdminQuery
       inner join inv.inv_files f
         on o.id = f.inv_object_id
         and v.id = f.inv_version_id
+      left join inv.inv_audits a
+        on 
+          o.id = a.inv_object_id
+        and
+          f.id = a.inv_file_id        
+      inner join inv.inv_nodes n
+        on n.id = a.inv_node_id
       where 
         o.id = ?
       and
         f.billable_size = f.full_size
+      group by  
+        o.ark,
+        v.number,
+        f.source,
+        f.pathname,
+        f.full_size,
+        f.created
       order by 
         f.created desc,
         source,
@@ -57,11 +65,11 @@ class ObjectIdFilesQuery < AdminQuery
   end
 
   def get_headers(results)
-    ['Ark', 'Version', 'Source', 'Path', 'File Size', 'Created', 'Nodes']
+    ['Ark', 'Version', 'Source', 'Path', 'File Size', 'Created', 'Nodes', 'Unverified']
   end
 
   def get_types(results)
-    ['ark', '', '', 'name', 'bytes', 'datetime', '']
+    ['ark', '', '', 'name', 'bytes', 'datetime', '', '']
   end
 
   def get_alternative_queries
