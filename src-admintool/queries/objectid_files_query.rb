@@ -68,7 +68,7 @@ class ObjectIdFilesQuery < AdminQuery
     [
       {
         label: "Storage Management for Object", 
-        url: "#{LambdaBase.colladmin_root_url}/web/storeObjects.html?mode=id&objlist=#{@id}"
+        url: "#{LambdaBase.colladmin_root_url}/web/storeObjectNodes.html?id=#{@id}"
       },
     ]
   end

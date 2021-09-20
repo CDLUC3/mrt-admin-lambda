@@ -13,9 +13,8 @@
   </head>
   <body>
     <div class="form-body">
-    <h1>Manage Object Storage Nodes for {{ARK}}</h1>
+    <h1>Manage Object Storage Nodes for {{ID}}</h1>
     {{{COLLADMINNAV}}}
-    <p><a href="{{ADMINTOOL_HOME}}">Admin Tool Home</a> / <a href="{{COLLADMIN_ADMIN}}">CollAdmin Tool Home</a></p>
     <table class="sortable results">
       <thead>
         <tr>
@@ -23,6 +22,9 @@
           <th>Node Num</th>
           <th>Node Name</th>
           <th>Access Mode</th>
+          <th>Obj Created</th>
+          <th>Last Replicated</th>
+          <th>Unverified</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -33,6 +35,9 @@
           <td>{{number}}</td>
           <td>{{name}}</td>
           <td>{{access_mode}}</td>
+          <td>{{created}}</td>
+          <td>{{replicated}}</td>
+          <td>{{unverified}}</td>
           <td>
             {{#secondary}}
             <button 

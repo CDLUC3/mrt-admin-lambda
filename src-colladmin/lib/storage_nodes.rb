@@ -318,7 +318,7 @@ class ObjectIdObjectQuery < ObjectQuery
 end
 
 class ObjectNodes < MerrittQuery
-  def initialize(config, ark)
+  def initialize(config, id)
     super(config)
     @nodes = []
     run_query(
@@ -327,7 +327,21 @@ class ObjectNodes < MerrittQuery
           inio.role,
           n.number,
           n.description,
-          n.access_mode
+          n.access_mode,
+          o.created,
+          inio.created as replicated,
+          (
+            select 
+              count(*) 
+            from 
+              inv_audits a
+            where 
+              a.inv_object_id = o.id
+            and 
+              a.inv_node_id = n.id
+            and 
+              status != 'verified'
+          ) as unverified
         from
           inv_objects o
         inner join inv_nodes_inv_objects inio
@@ -335,12 +349,12 @@ class ObjectNodes < MerrittQuery
         inner join inv_nodes n
           on inio.inv_node_id = n.id
         where
-          o.ark = ?
+          o.id = ?
         order by
           role,
           number
       },
-      [ark]
+      [id]
     ).each do |r|
       @nodes.push({
         role: r[0],
@@ -348,7 +362,10 @@ class ObjectNodes < MerrittQuery
         name: r[2],
         access_mode: r[3],
         primary: r[0] == 'primary',
-        secondary: r[0] == 'secondary'
+        secondary: r[0] == 'secondary',
+        created: r[4].strftime("%Y-%m-%d %T"),
+        replicated: r[5].strftime("%Y-%m-%d %T"),
+        unverified: r[6]
       })
     end
   end

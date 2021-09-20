@@ -256,9 +256,9 @@ module LambdaFunctions
         map['OBJS'] = objects
         map['OBJSCNT'] = objects.length
       elsif path == '/web/storeObjectNodes.html'
-        ark = CGI.unescape(myparams.fetch("ark",""))
-        map['ARK'] = ark
-        map['OBJNODES'] = ObjectNodes.new(@config, ark).nodes
+        id = myparams.fetch("id","0").to_i
+        map['ID'] = id
+        map['OBJNODES'] = ObjectNodes.new(@config, id).nodes
       end
       map
     end

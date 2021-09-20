@@ -50,10 +50,10 @@
       <caption>{{OBJSCNT}} Objects</caption>
       <thead>
         <tr>
+          <th>Object Id</th>
           <th>Ark</th>
           <th>Collection</th>
           <th>Owner</th>
-          <th>Object Id</th>
           <th>Local Id</th>
           <th>Title</th>
           <th>Created</th>
@@ -63,10 +63,10 @@
       <tbody>
         {{#OBJS}}
         <tr>
+          <td><a href="{{ADMINTOOL_HOME}}?path=filelist&id={{id}}">{{id}}</a></td>
           <th>{{ark}}</th>
           <td>{{coll}}</td>
           <td>{{owner}}</td>
-          <td>{{id}}</td>
           <td>{{localid}}</td>
           <td>{{title}}</td>
           <td>{{created}}</td>
@@ -81,7 +81,7 @@
               onclick="javascript:document.location='https://cdluc3.github.io/mrt-doc/diagrams/store-admin-force-audit'"
             >Re-audit {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}</button>
             <button title=""
-              onclick="javascript:document.location='storeObjectNodes.html?ark={{ark}}'"
+              onclick="javascript:document.location='storeObjectNodes.html?id={{id}}'"
             >Object Nodes {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}</button>
           </td>
         </tr>
