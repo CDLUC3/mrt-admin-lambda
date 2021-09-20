@@ -6,15 +6,24 @@ require 'mustache'
 require 'base64'
 require 'jwt'
 
+class PermissionDeniedError < StandardError
+  def initialize(msg)
+    super(msg)
+  end
+end
+
+
+
 class LambdaBase
 
   def initialize(config, event)
     @config =  config
+    @groups_allowed = @config.fetch("cognito-groups-allowed", "")
     @cognito_username = ""
     @cognito_groups = []
     read_cognito_token(event)
   end
-
+  
   def read_cognito_token(event)
     cognito_token = event.fetch('headers',{}).fetch('x-amzn-oidc-accesstoken','')
     return if cognito_token.empty?
@@ -27,10 +36,15 @@ class LambdaBase
     end
   end
 
+  def check_permission
+    unless @groups_allowed == "NA"
+      raise PermissionDeniedError.new "User #{@cognito_username} is not allowed to access this app.  Contact the Merritt Team." unless has_permission
+    end
+  end
+
   def has_permission
-    allowed = @config.fetch("cognito-groups-allowed", "").split(",")
     @cognito_groups.each do |group|
-      allowed.each do |g|
+      @groups_allowed.split(",").each do |g|
         return true if g == group
       end
     end

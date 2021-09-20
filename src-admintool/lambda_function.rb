@@ -14,6 +14,8 @@ module LambdaFunctions
         config_block = ENV.key?('MERRITT_ADMIN_CONFIG') ? ENV['MERRITT_ADMIN_CONFIG'] : 'default'
         config = Uc3Ssm::ConfigResolver.new.resolve_file_values(file: config_file, resolve_key: config_block, return_key: config_block)
         collHandler = Handler.new(config, event)
+        collHandler.check_permission
+
         respath = event.fetch("path", "")
         return LambdaBase.redirect("/web#{respath}") if respath =~ %r[^/index.html.*]
         myparams = collHandler.get_params_from_event(event)
@@ -41,6 +43,9 @@ module LambdaFunctions
           statusCode: 200,
           body: result.to_json
         }
+      rescue PermissionDeniedError => e
+        puts(e.message)
+        return LambdaBase.error(401, e.message, false)
       rescue => e
         puts(e.message)
         puts(e.backtrace)

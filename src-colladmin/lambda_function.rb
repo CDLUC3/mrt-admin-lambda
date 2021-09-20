@@ -51,6 +51,8 @@ module LambdaFunctions
           return_key: config_block
         })
         collHandler = LambdaFunctions::Handler.new(config, event)
+        collHandler.check_permission
+  
         respath = event.fetch("path", "")
         myparams = collHandler.get_params_from_event(event)
         return collHandler.web_assets("/web/favicon.ico", myparams) if respath =~ %r[^/(favicon.ico).*]
@@ -163,10 +165,13 @@ module LambdaFunctions
           statusCode: 200,
           body: result
         }
+      rescue PermissionDeniedError => e
+        puts(e.message)
+        return LambdaBase.error(401, e.message, false)
       rescue => e
         puts(e.message)
         puts(e.backtrace)
-        LambdaBase.error(500, e.message, false)
+        return LambdaBase.error(500, e.message, false)
       end
 
     end
