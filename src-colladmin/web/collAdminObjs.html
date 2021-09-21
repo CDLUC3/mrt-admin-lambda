@@ -30,22 +30,24 @@
           <th class="datetime">Created</th>
           <th>Key</th>
           <th>Ark (database)</th>
-          <th class="name">{{artifact}} Name (matching string)</th>
-          <th class="name">Disp Name</th>
+          <th class="name">profile/inv_objects Name</th>
+          <th class="name">{{artifact}} Name</th>
           <th class="name">Path to Admin Profile</th>
+          <th class="dataint">Child Count</th>
           <th>Actions</th>
           <th class="status">Status</th>
         </tr>
       </thead>
       <tbody>
        {{#NEWOBJS}}
-        <tr class="status-{{status}}">
+        <tr class="status-{{adsub_status}}">
           <th class="datetime">{{created}}</th>
           <th>{{key}}</th>
           <th>{{ark}}</th>
           <td class="name">{{name}}</td>
           <td class="name">{{dispname}}</td>
           <td class="name">{{path}}</td>
+          <td class="dataint">{{child_count}}</td>
           <td>
             {{#noark}}
             <input 
@@ -58,7 +60,7 @@
             />
             {{/noark}}
           </td>
-          <td class="status status-{{status}}">{{status}}</td>
+          <td class="status status-{{adsub_status}}">{{adsub_status}}</td>
         </tr>
         {{/NEWOBJS}}
       </tbody>

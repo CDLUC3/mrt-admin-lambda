@@ -13,6 +13,7 @@ class AdminProfile < MerrittJson
     @dispname = ""
     @mnemonic = ""
     @harvest = ""
+    @child_count = 0
   end
 
   def path
@@ -47,6 +48,10 @@ class AdminProfile < MerrittJson
     @harvest
   end
 
+  def child_count
+    @child_count
+  end
+
   def toggle_harvest
     @harvest == 'none' ? 'public' : 'none'
   end
@@ -64,6 +69,19 @@ class AdminProfile < MerrittJson
 
   def status
     return 'FAIL' if path.empty? || ark.empty?
+    return 'WARN' if dispname.empty? || mnemonic.empty?
+    return 'INFO' unless dispname == name
+    return 'PASS'
+  end
+
+  def adsub_status
+    return 'SKIP' unless path.empty? || ark.empty?
+    return 'WARN' if ark.empty? 
+    return 'INFO'
+  end
+
+  def addb_status
+    return 'SKIP' if path.empty? || ark.empty?
     return 'WARN' if dispname.empty? || mnemonic.empty?
     return 'INFO' unless dispname == name
     return 'PASS'
@@ -94,6 +112,7 @@ class AdminProfile < MerrittJson
     # the following will only be set in specific circumstances
     @mnemonic = rec.fetch(:mnemonic, "")
     @harvest = rec.fetch(:harvest, "none")
+    @child_count = rec.fetch(:child_count, 0)
     self
   end
 
@@ -160,6 +179,7 @@ class AdminProfile < MerrittJson
       dispname,
       ark,
       role,
+      child_count,
       status
     ]
   end
@@ -223,6 +243,7 @@ class AdminProfileList < MerrittJson
       "Disp Name",
       "Ark (database)",
       "Role (database)",
+      "Child Count",
       "Status"
     ]
   end
@@ -236,6 +257,7 @@ class AdminProfileList < MerrittJson
       "name",
       "ark",
       "",
+      "dataint",
       "status"
     ]
   end
@@ -274,12 +296,13 @@ class AdminObjects < MerrittQuery
           id: r[0],
           ark: r[1],
           name: r[2],
-          created: r[3].to_s[0,10],
+          created: r[3].strftime("%Y-%m-%d %T"),
           role: r[4],
+          child_count: r[5],
           # the following are only set for collections
-          dispname: r[5].nil? ? "" : r[5],
-          mnemonic: r[6].nil? ? "" : r[6],
-          harvest: r[7].nil? ? "none" : r[7],
+          dispname: r[6].nil? ? "" : r[6],
+          mnemonic: r[7].nil? ? "" : r[7],
+          harvest: r[8].nil? ? "none" : r[8],
           selected: r[1] == selobj
         }) 
     end
@@ -292,7 +315,8 @@ class AdminObjects < MerrittQuery
         ark,
         ifnull(erc_what,'--'),
         created,
-        aggregate_role
+        aggregate_role,
+        0 as child_count
       from 
         inv_objects o
       where
@@ -310,6 +334,17 @@ class AdminObjects < MerrittQuery
         ifnull(o.erc_what,'--'),
         o.created,
         o.aggregate_role,
+        ifnull(
+          (
+            select
+              count(*)
+            from
+              inv_objects oo
+            where
+              oo.inv_owner_id = own.id
+          ),
+          0
+        ) as child_count,
         own.name as dispname
       from 
         inv_objects o
@@ -330,6 +365,17 @@ class AdminObjects < MerrittQuery
         ifnull(o.erc_what,'--'),
         o.created,
         o.aggregate_role,
+        ifnull(
+          (
+            select
+              count(*)
+            from
+              inv_collections_inv_objects icio
+            where
+              icio.inv_collection_id = c.id
+          ),
+          0
+        ) as child_count,
         c.name as dispname,
         c.mnemonic,
         c.harvest_privilege

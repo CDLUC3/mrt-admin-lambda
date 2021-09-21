@@ -227,7 +227,7 @@ module LambdaFunctions
         profiles = AdminProfileAction.new(@config, "adminprofiles", myparams).get_profile_list
         map['NEWOBJS'] = []
         profiles.each do |p|
-          map['NEWOBJS'].append(p) if p.ark.empty? || p.path.empty?
+          map['NEWOBJS'].append(p) unless p.adsub_status == 'SKIP'
         end
        elsif path == '/web/artifactProperties.html'
         artifact = myparams.fetch("type", "")
@@ -236,7 +236,7 @@ module LambdaFunctions
         profiles = AdminProfileAction.new(@config, "adminprofiles", myparams).get_profile_list
         map['COLLS'] = []
         profiles.each do |p|
-          map['COLLS'].append(p) unless p.ark.empty? || p.path.empty?
+          map['COLLS'].append(p) unless p.addb_status == 'SKIP'
         end
       elsif path == '/web/storeCollNodes.html'
         colls = Collections.new(@config)
