@@ -51,6 +51,10 @@ module LambdaFunctions
           return_key: config_block
         })
         collHandler = LambdaFunctions::Handler.new(config, event, context.client_context)
+        # Read the notes in LambdaBase for a description of how authentication is performed
+        # A unique exception will be called if the user/client cannot authenticate
+        # The Collection Admin tool also has code in place that can manage particiation in Cognito user groups. 
+        # See cognito_action.rb for details.
         collHandler.check_permission
   
         respath = event.fetch("path", "")

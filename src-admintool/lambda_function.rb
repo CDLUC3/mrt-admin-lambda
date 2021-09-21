@@ -14,6 +14,8 @@ module LambdaFunctions
         config_block = ENV.key?('MERRITT_ADMIN_CONFIG') ? ENV['MERRITT_ADMIN_CONFIG'] : 'default'
         config = Uc3Ssm::ConfigResolver.new.resolve_file_values(file: config_file, resolve_key: config_block, return_key: config_block)
         collHandler = Handler.new(config, event, context.client_context)
+        # Read the notes in LambdaBase for a description of how authentication is performed
+        # A unique exception will be called if the user/client cannot authenticate
         collHandler.check_permission
 
         respath = event.fetch("path", "")
