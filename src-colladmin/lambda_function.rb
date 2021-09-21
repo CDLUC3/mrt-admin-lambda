@@ -224,12 +224,20 @@ module LambdaFunctions
         artifact = myparams.fetch("type", "")
         map['artifact'] = artifact
         map["artifact_#{artifact}"] = true
-        map['NEWOBJS'] = AdminProfileAction.new(@config, "adminprofiles", myparams).get_profile_list
-      elsif path == '/web/artifactProperties.html'
+        profiles = AdminProfileAction.new(@config, "adminprofiles", myparams).get_profile_list
+        map['NEWOBJS'] = []
+        profiles.each do |p|
+          map['NEWOBJS'].append(p) if p.ark.empty? || p.path.empty?
+        end
+       elsif path == '/web/artifactProperties.html'
         artifact = myparams.fetch("type", "")
         map['artifact'] = artifact
         map["artifact_#{artifact}"] = true
-        map['COLLS'] = AdminProfileAction.new(@config, "adminprofiles", myparams).get_profile_list
+        profiles = AdminProfileAction.new(@config, "adminprofiles", myparams).get_profile_list
+        map['COLLS'] = []
+        profiles.each do |p|
+          map['COLLS'].append(p) unless p.ark.empty? || p.path.empty?
+        end
       elsif path == '/web/storeCollNodes.html'
         colls = Collections.new(@config)
         colls.merge_profiles
