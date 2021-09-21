@@ -2,7 +2,7 @@ class MerrittQuery
     def initialize(config)
       @config = config
       dbconf = config.fetch('dbconf', {})
-      @client = LambdaBase.new(config, {}).get_mysql
+      @client = LambdaBase.new(config).get_mysql
     end
 
     def run_query(sql, arr = []) 

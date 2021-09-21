@@ -13,7 +13,7 @@ module LambdaFunctions
         config_file = 'config/database.ssm.yml'
         config_block = ENV.key?('MERRITT_ADMIN_CONFIG') ? ENV['MERRITT_ADMIN_CONFIG'] : 'default'
         config = Uc3Ssm::ConfigResolver.new.resolve_file_values(file: config_file, resolve_key: config_block, return_key: config_block)
-        collHandler = Handler.new(config, event)
+        collHandler = Handler.new(config, event, context.client_context)
         collHandler.check_permission
 
         respath = event.fetch("path", "")
@@ -60,8 +60,8 @@ module LambdaFunctions
       end
     end
 
-    def initialize(config, event)
-      super(config, event)
+    def initialize(config, event, context)
+      super(config, event, context)
     end
      
     #def template_parameters(path, myparams)

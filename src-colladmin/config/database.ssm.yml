@@ -32,6 +32,7 @@ default:
   cognito-groups-to-manage: "{!SSM: colladmin/cognito-groups-to-manage !DEFAULT: NA}"
   # Value to be checked against Cognito token - passively provided by ALB
   cognito-groups-allowed: "{!SSM: colladmin/cognito-groups-allowed !DEFAULT: NA}"
+  context: "{!SSM: admintool/context !DEFAULT: NA}"
 
 # use personal credentials when configuring a local environment
 # set up a script to set these variables
@@ -63,6 +64,7 @@ docker:
   s3-consistency-reports: "consistency-reports"
   user-pool: "NA"
   cognito-users-arn: "NA"
-  cognito-groups-allowed: "NONE"
-  cognito-groups-to-manage: "NONE"
+  cognito-groups-allowed: "NA"
+  cognito-groups-to-manage: "NA"
+  context: "NA"
 

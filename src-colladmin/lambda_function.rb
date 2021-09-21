@@ -50,7 +50,7 @@ module LambdaFunctions
           file: config_file, 
           return_key: config_block
         })
-        collHandler = LambdaFunctions::Handler.new(config, event)
+        collHandler = LambdaFunctions::Handler.new(config, event, context.client_context)
         collHandler.check_permission
   
         respath = event.fetch("path", "")
@@ -176,8 +176,8 @@ module LambdaFunctions
 
     end
 
-    def initialize(config, event)
-      super(config, event)
+    def initialize(config, event, context)
+      super(config, event, context)
     end
 
     def self.merritt_admin_owner

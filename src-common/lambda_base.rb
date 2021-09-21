@@ -12,21 +12,24 @@ class PermissionDeniedError < StandardError
   end
 end
 
-
-
 class LambdaBase
 
-  def initialize(config, event)
+  def initialize(config, event = {}, client_context = {})
     @config =  config
     @groups_allowed = @config.fetch("cognito-groups-allowed", "")
     @cognito_username = ""
     @cognito_groups = []
+    @context_valid = false
+    @client_context = client_context
     read_cognito_token(event)
   end
   
   def read_cognito_token(event)
     cognito_token = event.fetch('headers',{}).fetch('x-amzn-oidc-accesstoken','')
-    return if cognito_token.empty?
+    if cognito_token.empty?
+      read_context
+      return
+    end
     begin
       jtoken = JWT::decode(cognito_token, nil, false, { :algorithm => 'RS256' })
       @cognito_username = jtoken[0].fetch('username', '')
@@ -36,7 +39,18 @@ class LambdaBase
     end
   end
 
+  def read_context
+    return if @client_context.nil?
+    code = @client_context.fetch("custom", {}).fetch("context_code", "")
+    return if code.empty?
+    return unless code == @config.fetch("context", "")
+    puts "Authenticated through client context"
+    @context_valid = true
+  end
+
   def check_permission
+    return if @context_valid
+    puts "Check: #{@cognito_username}: #{@cognito_groups.join(',')}"
     unless @groups_allowed == "NA"
       raise PermissionDeniedError.new "User #{@cognito_username} is not allowed to access this app.  Contact the Merritt Team." unless has_permission
     end
