@@ -13,8 +13,16 @@
   </head>
   <body>
     <div class="form-body">
-    <h1>Manage Object Storage Nodes for Object <a href="{{ADMINTOOL_HOME}}?path=filelist&id={{id}}">{{id}}</a></h1>
+    <h1>Manage Object Storage Nodes for Object <a href="{{ADMINTOOL_HOME}}?path=filelist&id={{ID}}">{{ID}}</a></h1>
     {{{COLLADMINNAV}}}
+    <div>
+      <ul>
+        <li>
+          <a href="{{COLLADMIN_ROOT}}/web/storeObjects.html?mode=id&objlist={{ID}}">Object Actions</a>
+        </li>
+      </ul>
+    </div>
+
     <table class="sortable results">
       <thead>
         <tr>

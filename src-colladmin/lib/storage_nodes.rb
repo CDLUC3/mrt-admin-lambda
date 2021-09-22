@@ -206,7 +206,7 @@ class ObjectQuery < MerrittQuery
         own.name as owner,
         o.id,
         o.ark,
-        loc.local_id,
+        group_concat(loc.local_id) as localids,
         o.erc_what,
         o.created
       from
@@ -255,7 +255,7 @@ class ObjectQuery < MerrittQuery
         ark: r[3],
         localid: r[4],
         title: r[5],
-        created: r[6]
+        created: r[6].nil? ? "" : r[6].strftime("%Y-%m-%d %T")
       })
     end
     objects
@@ -363,8 +363,8 @@ class ObjectNodes < MerrittQuery
         access_mode: r[3],
         primary: r[0] == 'primary',
         secondary: r[0] == 'secondary',
-        created: r[4].strftime("%Y-%m-%d %T"),
-        replicated: r[5].strftime("%Y-%m-%d %T"),
+        created: r[4].nil? ? '' : r[4].strftime("%Y-%m-%d %T"),
+        replicated: r[5].nil? ? '' : r[5].strftime("%Y-%m-%d %T"),
         unverified: r[6]
       })
     end
