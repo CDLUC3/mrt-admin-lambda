@@ -23,7 +23,7 @@ class MerrittQuery
       stmt = @client.prepare(sql)
       stmt.execute(*arr)
       {message: success_msg}
-   end
+    end
 
 end  
 

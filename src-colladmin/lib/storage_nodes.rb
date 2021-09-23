@@ -206,7 +206,14 @@ class ObjectQuery < MerrittQuery
         own.name as owner,
         o.id,
         o.ark,
-        group_concat(loc.local_id) as localids,
+        (
+          select 
+            group_concat(loc.local_id)
+          from
+            inv_localids loc
+          where 
+            o.ark = loc.inv_object_ark
+        ) as localids,
         o.erc_what,
         o.created
       from
@@ -217,8 +224,6 @@ class ObjectQuery < MerrittQuery
         on icio.inv_object_id = o.id
       inner join inv_collections c
         on c.id = icio.inv_collection_id
-      left join inv_localids loc
-        on o.ark = loc.inv_object_ark
       where
         #{get_where}
         #{owner_clause}
@@ -294,7 +299,15 @@ class LocalidObjectQuery < ObjectQuery
 
   def get_where
     %{
-      loc.local_id in (#{get_placeholders})
+      exists (
+        select 1
+        from
+          inv_localids loc
+        where
+          o.ark = loc.inv_object_ark
+        and
+          loc.local_id in (#{get_placeholders})
+      )
     }
   end
  
@@ -325,6 +338,7 @@ class ObjectNodes < MerrittQuery
       %{
         select
           inio.role,
+          n.id,
           n.number,
           n.description,
           n.access_mode,
@@ -341,7 +355,17 @@ class ObjectNodes < MerrittQuery
               a.inv_node_id = n.id
             and 
               status != 'verified'
-          ) as unverified
+          ) as unverified,
+          (
+            select 
+              max(verified) 
+            from 
+              inv_audits a
+            where 
+              a.inv_object_id = o.id
+            and 
+              a.inv_node_id = n.id
+          ) as last_verified
         from
           inv_objects o
         inner join inv_nodes_inv_objects inio
@@ -358,14 +382,16 @@ class ObjectNodes < MerrittQuery
     ).each do |r|
       @nodes.push({
         role: r[0],
-        number: r[1],
-        name: r[2],
-        access_mode: r[3],
+        nodeid: r[1],
+        number: r[2],
+        name: r[3],
+        access_mode: r[4],
         primary: r[0] == 'primary',
         secondary: r[0] == 'secondary',
-        created: r[4].nil? ? '' : r[4].strftime("%Y-%m-%d %T"),
-        replicated: r[5].nil? ? '' : r[5].strftime("%Y-%m-%d %T"),
-        unverified: r[6]
+        created: r[5].nil? ? '' : r[5].strftime("%Y-%m-%d %T"),
+        replicated: r[6].nil? ? '' : r[6].strftime("%Y-%m-%d %T"),
+        unverified: r[7],
+        last_verified: r[8].nil? ? '' : r[8].strftime("%Y-%m-%d %T"),
       })
     end
   end

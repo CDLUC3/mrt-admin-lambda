@@ -4,7 +4,7 @@ $(document).ready(function(){
 
 function init() {
   $("p.buttons").show();
-  $("button.store-obj-node").on("click", function(){
+  $("button.storage-del-object-from-node").on("click", function(){
     var ark = $(this).attr("data-ark");
     var nodenum = $(this).attr("data-node-num");
     var nodename = $(this).attr("data-node-name");
@@ -18,6 +18,26 @@ function init() {
     }
     showPrompt(message, params);
   });
+  $("button.storage-force-audit-for-object").on("click", function(){
+    var objid = $(this).attr("data-id");
+    var nodeid = $(this).attr("data-node-id");
+    params = {
+      path: 'storage-force-audit-for-object',
+      objid: objid,
+      nodeid: nodeid
+    }
+    invoke(params);
+  });
+  $("button.storage-rerun-audit-for-object").on("click", function(){
+    var objid = $(this).attr("data-id");
+    var nodeid = $(this).attr("data-node-id");
+    params = {
+      path: 'storage-rerun-audit-for-object',
+      objid: objid,
+      nodeid: nodeid
+    }
+    invoke(params);
+  });
 }
 
 function showPrompt(message, params) {
@@ -29,6 +49,10 @@ function showPrompt(message, params) {
     }
   }
   params['reason'] = reason;
+  invoke(params);
+}
+
+function invoke(params) {
   $.ajax({
     dataType: "json",
     method: "POST",

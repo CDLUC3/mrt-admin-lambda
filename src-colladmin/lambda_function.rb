@@ -16,6 +16,7 @@ require_relative 'actions/ldap_action'
 require_relative 'actions/post_to_ingest_action'
 require_relative 'actions/post_to_ingest_multipart_action.rb'
 require_relative 'actions/cognito_action.rb'
+require_relative 'actions/storage_action.rb'
 
 # Handle GET or POST event structures pass in via the ALB
 def get_params_from_event(event)
@@ -136,9 +137,11 @@ module LambdaFunctions
         elsif path == "pause-ingest-for-collection" 
           result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-pause-ing-for-coll")
         elsif path == "storage-force-audit-for-object" 
-          result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-force-audit")
-        elsif path == "storage-force-audit-for-collection" 
-          result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-force-audit")
+          return LambdaBase.error(405, "Not yet supported", false) if LambdaBase.is_prod
+          result = StorageAction.new(config, path, myparams).perform_action
+        elsif path == "storage-rerun-audit-for-object" 
+          return LambdaBase.error(405, "Not yet supported", false) if LambdaBase.is_prod
+          result = StorageAction.new(config, path, myparams).perform_action
         elsif path == "storage-force-replic-for-object" 
           result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-force-replic")
         elsif path == "storage-force-replic-for-collection" 
