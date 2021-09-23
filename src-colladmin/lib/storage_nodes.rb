@@ -115,7 +115,13 @@ class CollectionNodes < MerrittQuery
             name: r[2],
             access_mode: r[3],
             count: r[4],
-            percent: percent
+            percent: percent,
+            primary: r[0] == 'primary',
+            secondary: r[0] == 'secondary',
+            online: r[3] == 'on-line',
+            nearline: r[3] == 'near-line',
+            is100: percent == 100,
+            not100: percent != 100
           })
       end
   end

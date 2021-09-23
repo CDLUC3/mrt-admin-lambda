@@ -59,25 +59,36 @@
               <td>{{count}}</td>
               <td>{{percent}}</td>
               <td>
+                {{#secondary}}
                 <button 
                   class="colladmin storage-del-node-for-collection"
-                  disabled="{{primary}}" 
                   title="Delete all objects in the collection from this SECONDARY node."
                   onclick="javascript:document.location='https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-node'"
                 >Delete Coll from Node 🚧</button>
+                {{/secondary}}
+
+                {{#secondary}}
+                {{#online}}
                 <button
+                  {{#not100}}disabled="Y"{{/not100}}
                   class="colladmin storage-change-primary-for-collection"
-                  disabled="{{primary}}" 
                   title="Make this storage node the primary node for a collection.  The node must be ONLINE (not nearline) and replication must be 100% complete. The collection profile must have this node marked as primary."
                   onclick="javascript:document.location='https://cdluc3.github.io/mrt-doc/diagrams/store-admin-change-primary-node'"
-                 >Make Primary 🚧</button>
+                >Make Primary 🚧</button>
+                {{/online}}
+                {{/secondary}}
+
+                {{#secondary}}
+                {{#online}}
                 <button 
+                  {{#not100}}disabled="Y"{{/not100}}
                   class="colladmin storage-reroute-ui-for-collection"
-                  disabled="{{primary}}" 
                   title="Temporarily redirect UI traffic to this SECONDAY node.  The node must be ONLINE (not nearline) and replication must be 100% complete."
                   onclick="javascript:document.location='https://cdluc3.github.io/mrt-doc/diagrams/store-admin-reroute-ui'"
-                  >Make UI Primary 🚧</button>
-              </td>
+                >Make UI Primary 🚧</button>
+                {{/online}}
+                {{/secondary}}
+               </td>
             </tr>
             {{/CNODES}}
           </tbody>
