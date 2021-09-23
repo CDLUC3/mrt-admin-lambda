@@ -259,3 +259,7 @@ input.button:disabled {
 div.indent {
   margin-left: 100px;
 }
+
+button.colladmin {
+  line-height: 20px;
+}

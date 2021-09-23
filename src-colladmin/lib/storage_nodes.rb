@@ -215,7 +215,35 @@ class ObjectQuery < MerrittQuery
             o.ark = loc.inv_object_ark
         ) as localids,
         o.erc_what,
-        o.created
+        o.created,
+        (
+          select 
+            replicated 
+          from 
+            inv_nodes_inv_objects inio
+          where 
+            inio.inv_object_id = o.id
+          and
+            inio.role = 'primary' 
+        ) as last_replicated,
+        (
+          select 
+            count(*) 
+          from 
+            inv_audits a
+          where 
+            a.inv_object_id = o.id
+          and 
+            status != 'verified'
+        ) as unverified,
+        (
+          select 
+            max(verified) 
+          from 
+            inv_audits a
+          where 
+            a.inv_object_id = o.id
+        ) as last_verified
       from
         inv_objects o
       inner join inv_owners own
@@ -260,7 +288,10 @@ class ObjectQuery < MerrittQuery
         ark: r[3],
         localid: r[4],
         title: r[5],
-        created: r[6].nil? ? "" : r[6].strftime("%Y-%m-%d %T")
+        created: r[6].nil? ? "" : r[6].strftime("%Y-%m-%d %T"),
+        last_replicated: r[7].nil? ? "" : r[7].strftime("%Y-%m-%d %T"),
+        unverified: r[8].nil? ? 0 : r[8],
+        last_verified: r[9].nil? ? "" : r[9].strftime("%Y-%m-%d %T")
       })
     end
     objects

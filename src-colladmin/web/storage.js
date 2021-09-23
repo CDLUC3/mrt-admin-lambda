@@ -38,6 +38,15 @@ function init() {
     }
     invoke(params);
   });
+  $("button.storage-force-replic-for-object").on("click", function(){
+    var objid = $(this).attr("data-id");
+    var nodeid = $(this).attr("data-node-id");
+    params = {
+      path: 'storage-force-replic-for-object',
+      objid: objid
+    }
+    invoke(params);
+  });
 }
 
 function showPrompt(message, params) {

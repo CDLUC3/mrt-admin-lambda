@@ -40,13 +40,16 @@
             <td></td>
             <td></td>
             <td>
-              <button title=""
-                onclick="javascript:document.location='https://cdluc3.github.io/mrt-doc/diagrams/store-admin-scan-node'"
-              >Queue Scan {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}</button>
               <button 
-                title="" 
+                title="Initiate a scan of a storage node"
+                class="colladmin storage-scan-node"
+                onclick="javascript:document.location='https://cdluc3.github.io/mrt-doc/diagrams/store-admin-scan-node'"
+              >Queue Scan 🚧</button>
+              <button 
+                class="colladmin storage-review"
+                title="Review the untracked storage keys discovered in the last storage scan" 
                 onclick="javascript:document.location='storeNodeDeletes.html'"
-              >Review Deletes {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}</button>
+              >Review Deletes 🚧</button>
             </td>
           </tr>
           {{/NODES}}

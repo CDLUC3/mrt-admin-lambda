@@ -31,7 +31,7 @@
           <th>Node Name</th>
           <th>Access Mode</th>
           <th>Obj Created</th>
-          <th>Last Replicated</th>
+          <th>Replic Created</th>
           <th>Num Unverified</th>
           <th>Last Audited</th>
           <th>Actions</th>
@@ -53,13 +53,13 @@
               data-id="{{ID}}"
               data-node-id="{{nodeid}}"
               title="Re-run all audits for this node."
-              class="storage-force-audit-for-object"
+              class="colladmin storage-force-audit-for-object"
             >Re-audit All Files {{#IS_PROD}}🚧{{/IS_PROD}}</button>
             <button 
               data-id="{{ID}}"
               data-node-id="{{nodeid}}"
               title="Re-run the unverified audits for this node."
-              class="storage-rerun-audit-for-object"
+              class="colladmin storage-rerun-audit-for-object"
             >Re-audit Unverified {{#IS_PROD}}🚧{{/IS_PROD}}</button>
             {{#secondary}}
             <button 
@@ -67,7 +67,7 @@
               data-node-num="{{number}}"
               data-node-name="{{name}}"
               title="Delete a secondary copy of an object.  Cannot be run on the primary node."
-              class="storage-del-object-from-node"
+              class="colladmin storage-del-object-from-node"
             >Delete Object from Node 🚧</button>
             {{/secondary}}
           </td>

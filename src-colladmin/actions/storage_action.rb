@@ -56,6 +56,23 @@ class StorageAction < AdminAction
       ).to_json
       return LambdaBase.jsredirect("#{LambdaBase.colladmin_root_url}/web/storeObjectNodes.html?id=#{objid}")
     end
+    if @path == "storage-force-replic-for-object"
+      MerrittQuery.new(@config).run_update(
+        %{
+          update 
+            inv_nodes_inv_objects inio
+          set
+            replicated = null
+          where 
+            inv_object_id = ?
+          and
+            role = 'primary'
+        }, 
+        [objid],
+        "Replication triggered for object"
+      ).to_json
+      return LambdaBase.jsredirect("#{LambdaBase.colladmin_root_url}/web/storeObjects.html?mode=id&objlist=#{objid}")
+    end
   end
 
 end

@@ -60,18 +60,23 @@
               <td>{{percent}}</td>
               <td>
                 <button 
-                  zzdisabled="{{primary}}" 
+                  class="colladmin storage-del-node-for-collection"
+                  disabled="{{primary}}" 
                   title="Delete all objects in the collection from this SECONDARY node."
                   onclick="javascript:document.location='https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-node'"
-                >Delete Coll from Node {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}</button>
+                >Delete Coll from Node 🚧</button>
                 <button
-                 title="Make this storage node the primary node for a collection.  The node must be ONLINE (not nearline) and replication must be 100% complete. The collection profile must have this node marked as primary."
-                 onclick="javascript:document.location='https://cdluc3.github.io/mrt-doc/diagrams/store-admin-change-primary-node'"
-                 >Make Primary {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}</button>
+                  class="colladmin storage-change-primary-for-collection"
+                  disabled="{{primary}}" 
+                  title="Make this storage node the primary node for a collection.  The node must be ONLINE (not nearline) and replication must be 100% complete. The collection profile must have this node marked as primary."
+                  onclick="javascript:document.location='https://cdluc3.github.io/mrt-doc/diagrams/store-admin-change-primary-node'"
+                 >Make Primary 🚧</button>
                 <button 
+                  class="colladmin storage-reroute-ui-for-collection"
+                  disabled="{{primary}}" 
                   title="Temporarily redirect UI traffic to this SECONDAY node.  The node must be ONLINE (not nearline) and replication must be 100% complete."
                   onclick="javascript:document.location='https://cdluc3.github.io/mrt-doc/diagrams/store-admin-reroute-ui'"
-                  >Make UI Primary {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}</button>
+                  >Make UI Primary 🚧</button>
               </td>
             </tr>
             {{/CNODES}}
@@ -89,8 +94,9 @@
         </select>
         <div>
           <button
+            class="colladmin storage-add-node-for-collection"
             onclick="javascript:document.location='https://cdluc3.github.io/mrt-doc/diagrams/store-admin-add-node'"
-          >Add Storage Node to this Collection {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}</button>
+          >Add Storage Node to this Collection 🚧</button>
         </div>
       </div>
     </div>

@@ -143,9 +143,8 @@ module LambdaFunctions
           return LambdaBase.error(405, "Not yet supported", false) if LambdaBase.is_prod
           result = StorageAction.new(config, path, myparams).perform_action
         elsif path == "storage-force-replic-for-object" 
-          result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-force-replic")
-        elsif path == "storage-force-replic-for-collection" 
-          result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-force-replic")
+          return LambdaBase.error(405, "Not yet supported", false) if LambdaBase.is_prod
+          result = StorageAction.new(config, path, myparams).perform_action
         elsif path == "storage-add-node-for-collection" 
           result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-add-node")
         elsif path == "storage-del-node-for-collection" 
@@ -158,7 +157,9 @@ module LambdaFunctions
           result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-reroute-ui")
         elsif path == "storage-scan-node" 
           result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-scan-node")
-        elsif path == "storage-delete-node-key" 
+        elsif path == "storage-review" 
+          result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-scan-node")
+         elsif path == "storage-delete-node-key" 
           result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-node-keys")
         elsif path == "storage-delete-obj" 
           result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-obj")
