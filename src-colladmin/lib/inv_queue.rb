@@ -9,6 +9,10 @@ class InvQueueEntry < MerrittJson
   def initialize(json)
     super()
     addProperty(
+      :queueNode, 
+      MerrittJsonProperty.new("Queue Node").lookupValue(json, "que", "queueNode")
+    )
+    addProperty(
       :manifestURL, 
       MerrittJsonProperty.new("Manifest URL").lookupValue(json, "que", "manifestURL")
     )
@@ -19,6 +23,10 @@ class InvQueueEntry < MerrittJson
     addProperty(
       :qstatus, 
       MerrittJsonProperty.new("QStatus").lookupValue(json, "que", "status")
+    )
+    addProperty(
+      :queueId, 
+      MerrittJsonProperty.new("Queue ID").lookupValue(json, "que", "iD")
     )
     qs = getValue(:qstatus, "")
     st = 'INFO'

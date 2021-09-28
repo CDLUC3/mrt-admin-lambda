@@ -9,6 +9,10 @@ class AccQueueEntry < MerrittJson
  def initialize(json)
     super()
     addProperty(
+      :queueNode, 
+      MerrittJsonProperty.new("Queue Node").lookupValue(json, "que", "queueNode")
+    )
+    addProperty(
       :token, 
       MerrittJsonProperty.new("Token").lookupValue(json, "que", "token")
     )
@@ -31,6 +35,10 @@ class AccQueueEntry < MerrittJson
     addProperty(
       :qstatus, 
       MerrittJsonProperty.new("QStatus").lookupValue(json, "que", "status")
+    )
+    addProperty(
+      :queueId, 
+      MerrittJsonProperty.new("Queue ID").lookupValue(json, "que", "iD")
     )
     qs = getValue(:qstatus, "")
     st = 'INFO'
