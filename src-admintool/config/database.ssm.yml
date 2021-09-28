@@ -12,6 +12,7 @@ default:
   s3-bucket: "{!SSM: admintool/s3-bucket}"
   s3-consistency-reports: "{!SSM: admintool/s3-consistency-reports}"
   cognito-groups-allowed: "{!SSM: admintool/cognito-groups-allowed !DEFAULT: NA}"
+  context: "{!SSM: admintool/context !DEFAULT: NA}"
 
 # use personal credentials when configuring a local environment
 # set up a script to set these variables
@@ -30,3 +31,4 @@ docker:
   s3-consistency-reports: ""
   # Value to be checked against Cognito token - passively provided by ALB
   cognito-groups-allowed: "NONE"
+  context: "NA"

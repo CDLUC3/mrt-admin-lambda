@@ -57,6 +57,7 @@ class LambdaBase
     return if @client_context.nil?
     code = @client_context.fetch("custom", {}).fetch("context_code", "")
     return if code.empty?
+    puts @config.fetch("context", "")
     return unless code == @config.fetch("context", "")
     puts "Authenticated through client context"
     @context_valid = true
