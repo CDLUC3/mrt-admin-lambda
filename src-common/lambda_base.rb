@@ -259,6 +259,24 @@ class LambdaBase
     ENV.fetch('SSM_ROOT_PATH', '')
   end
    
+  def self.ssm_path_node(pos)
+    arr = ENV.fetch('SSM_ROOT_PATH', '').split("/")
+    return "" unless pos < arr.length
+    arr[pos]
+  end
+
+  def self.tag_environment
+    self.ssm_path_node(3)
+  end
+
+  def self.tag_program
+    self.ssm_path_node(1)
+  end
+
+  def self.tag_service
+    self.ssm_path_node(2)
+  end
+
   def self.is_docker
     LambdaBase.get_environment == "docker"
   end

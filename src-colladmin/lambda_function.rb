@@ -19,6 +19,7 @@ require_relative 'actions/post_to_ingest_action'
 require_relative 'actions/post_to_ingest_multipart_action.rb'
 require_relative 'actions/cognito_action.rb'
 require_relative 'actions/storage_action.rb'
+require_relative 'actions/tag_action.rb'
 
 # Handle GET or POST event structures pass in via the ALB
 def get_params_from_event(event)
@@ -138,6 +139,8 @@ module LambdaFunctions
           result = CognitoAction.new(config, path, myparams).get_data
         elsif path == "cognito-add-user-to-group" 
           result = CognitoAction.new(config, path, myparams).get_data
+        elsif path == "instances" 
+          result = TagAction.new(config, path, myparams).get_data
         elsif path == "unpause-ingest-for-collection" 
           result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-pause-ing-for-coll")
         elsif path == "pause-ingest-for-collection" 
