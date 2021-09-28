@@ -4,6 +4,7 @@ require_relative 'actions/action'
 require_relative 'actions/forward_to_ingest_action'
 require_relative 'actions/ingest_queue_action'
 require_relative 'actions/inventory_queue_action'
+require_relative 'actions/access_queue_action'
 require_relative 'actions/ingest_state_action'
 require_relative 'actions/ingest_profile_action'
 require_relative 'actions/admin_profile_action'
@@ -80,6 +81,8 @@ module LambdaFunctions
           result = IngestQueueAction.new(config, path, myparams).get_data
         elsif path == "inv-queues" 
           result = InventoryQueueAction.new(config, path, myparams).get_data
+        elsif path == "acc-queues" 
+          result = AccessQueueAction.new(config, path, myparams).get_data
         elsif path == "batch" 
           result = IngestBatchAction.new(config, path, myparams).get_data
         elsif path == "job" 
