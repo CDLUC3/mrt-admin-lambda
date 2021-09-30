@@ -1,6 +1,66 @@
 require_relative 'action'
 require 'aws-sdk-ec2'
 
+class Ec2Info
+  def initialize(inst)
+    @state = inst.state.name
+    @type = inst.instance_type
+    inst.tags.each do |tag|
+      @name = tag.value if tag.key == 'Name'
+      @subservice = tag.value if tag.key == 'Subservice'
+    end
+  end
+
+  def name
+    @name
+  end
+
+  def self.table_headers
+    [
+      "Name",
+      "Subservice",
+      "Type",
+      "State",
+      "Endpoint"
+    ]
+  end
+
+  def self.table_types
+    [
+      "",
+      "",
+      "",
+      "",
+      "endpoint"
+    ]
+  end
+
+  def urls
+    res = {}
+    return res unless @state == "running"
+    res
+  end
+
+  def format_urls
+    str = ""
+    urls.each do |k,v|
+      str = "#{str};;" unless str.empty?
+      str = "#{str}#{k};#{@name};#{v}"
+    end
+    str
+  end
+
+  def table_row
+    [
+      @name,
+      @subservice,
+      @type,
+      @state,
+      format_urls
+    ]
+  end
+end
+
 class TagAction < AdminAction
 
   def initialize(config, path, myparams)
@@ -10,7 +70,10 @@ class TagAction < AdminAction
       region: region, 
     )
     @title = "Merritt EC2 Instances"
-    @instances = []
+    @instances = {}
+    @name = myparams.fetch("name", "")
+    @label = myparams.fetch("label", "")
+    @list_servers = @name.empty?
 
     data = @ec2.describe_instances({
       filters: [
@@ -31,13 +94,8 @@ class TagAction < AdminAction
 
     data.reservations.each do |res|
       res.instances.each do |inst|
-        instance = {}
-        @instances.append(instance)
-        instance[:state] = inst.state.name
-        instance[:type] = inst.instance_type
-        inst.tags.each do |tag|
-          instance[:name] = tag.value if tag.key == 'Name'
-        end
+        ec2 = Ec2Info.new(inst)
+        @instances[ec2.name] = ec2
       end
     end
   end
@@ -47,24 +105,30 @@ class TagAction < AdminAction
   end
 
   def table_headers
-    [
-      "Name",
-      "Type",
-      "State",
-      "State Endpoint"
-    ]
+    Ec2Info.table_headers
   end
 
   def table_types
-    [
-      "name",
-      "",
-      "",
-      ""
-    ]
+    Ec2Info.table_types
+  end
+
+  def endpoint_call
+    return unless @instances[@name]
+    ec2 = @instances[@name]
+    url = ec2.urls.fetch(@label, "")
+    return "No Url found" if url.empty?
+    cli = HTTPClient.new
+    resp = cli.get(url)
+    unless resp.status == 200
+      { 
+        message: "Status #{resp.status} for #{url}" 
+      }.to_json
+    end
+    resp.body
   end
 
   def get_data
+    return endpoint_call unless @list_servers
     evaluate_status(table_types, get_table_rows)
     {
       format: 'report',
@@ -85,19 +149,14 @@ class TagAction < AdminAction
 
   def get_table_rows
     rows = []
-    @instances.each do |inst|
-      rows.append([
-        inst[:name],
-        inst[:type],
-        inst[:state],
-        ""
-      ])
+    @instances.keys.sort.each do |k|
+      rows.append(@instances[k].table_row)
     end
     rows
   end
 
   def hasTable
-    true
+    @list_servers
   end
 
   def get_alternative_queries

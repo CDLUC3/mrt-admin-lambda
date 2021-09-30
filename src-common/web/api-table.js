@@ -629,6 +629,13 @@ function format(cell, v, type, merritt_path) {
     }
   } else if (type == 'astatus') {
     makeLink(cell, v, admintool_home + "?path=obj_audit_status&status="+v);
+  } else if (type == 'endpoint') {
+    var arr = v.split(";");
+    var atext = arr.length > 0 ? arr[0] : "";
+    var name = arr.length > 1 ? arr[1] : "";
+    var title = arr.length > 2 ? arr[2] : "";
+    makeLink(cell, atext, colladmin_root + "?path=instances&name="+name+"&label="+atext);
+    cell.attr("title", title);
   } else {
     cell.text(v);
   }

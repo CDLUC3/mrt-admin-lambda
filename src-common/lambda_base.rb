@@ -253,6 +253,10 @@ class LambdaBase
     end
   end
 
+  def self.ssm_root_path
+    ENV.fetch('SSM_ROOT_PATH', 'na')
+  end
+
   def self.get_environment
     c = ENV.fetch('MERRITT_ADMIN_CONFIG', 'default')
     return c unless c == "default"

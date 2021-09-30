@@ -1,0 +1,10 @@
+admintool:
+  api-path:
+    description: Path to access the Merritt Admin Tool (Query Tool)
+  cognito-groups-allowed:
+    description: Comma separated list of the Cognito User Groups that can access the application
+  demo-entry:
+    description: This illustrates a variable that has not been set
+# skip error checking for dev-only special nodes
+loy:
+  skip: true
