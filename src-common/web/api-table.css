@@ -263,3 +263,11 @@ div.indent {
 button.colladmin {
   line-height: 20px;
 }
+
+ul span.endpoint {
+  display:none;
+}
+
+ul:hover span.endpoint {
+  display:inline;
+}
