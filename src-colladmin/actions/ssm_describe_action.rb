@@ -10,6 +10,7 @@ class SsmInfo
     @subservice = arr[4]
     @type = inst.nil? ? "" : inst.type
     @description = ""
+    @deprecated = ""
     @modified = inst.nil? ? "" : inst.last_modified_date.to_s
     @skip = false
   end
@@ -18,6 +19,7 @@ class SsmInfo
     return "SKIP" if @skip
     return "FAIL" if @modified.empty?
     return "WARN" if @description.empty?
+    return "INFO" unless @deprecated.empty?
     "PASS"
   end
 
@@ -27,6 +29,10 @@ class SsmInfo
 
   def set_description(description)
     @description = description
+  end
+
+  def set_deprecated(deprecated)
+    @deprecated = deprecated
   end
 
   def name
@@ -39,6 +45,7 @@ class SsmInfo
       "Type",
       "Subservice",
       "Description",
+      "Deprecated",
       "Modified",
       "Status"
     ]
@@ -50,6 +57,7 @@ class SsmInfo
       "",
       "",
       "name",
+      "",
       "datetime",
       "status"
     ]
@@ -61,6 +69,7 @@ class SsmInfo
       @type,
       @subservice,
       @description,
+      @deprecated,
       @modified,
       status
     ]
@@ -106,6 +115,7 @@ class SsmDescribeAction < AdminAction
     if reg.key?("description")
       p = @parameters.fetch(path, SsmInfo.new(path))
       p.set_description(reg["description"])
+      p.set_deprecated(reg.fetch("deprecated", ""))
       p.set_skip(reg.fetch("skip", false))
       @parameters[path] = p
       return

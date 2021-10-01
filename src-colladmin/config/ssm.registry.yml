@@ -1,10 +1,126 @@
+access:
+  port:
+    description: Question - should we define an access port separately from store?
 admintool:
   api-path:
     description: Path to access the Merritt Admin Tool (Query Tool)
   cognito-groups-allowed:
     description: Comma separated list of the Cognito User Groups that can access the application
-  demo-entry:
-    description: This illustrates a variable that has not been set
+  context:
+    description: Client context string passed when invoking a lambda from a server (vs http)
+  s3-bucket:
+    description: Name of the S3 bucket to store consistency reports
+  s3-consistency-reports:
+    description: Root path to store consistency report data within an S3 bucket
+  site-url:
+    description: Path to access the Merritt Admin Tool (Query Tool)
+    deprecated: Obsolete. This was used when hosting the admin tool on Cloudfront.
+batch:
+  email:
+    description: Default email distribution for reports run on the Merritt batch server.
+billing:
+  db-host: 
+    description: Hostname for the Merritt billing database server.
+  db-name: 
+    description: Database name for the Merritt billing database.
+  readonly: &dbcred
+    db-password:
+      description: Role specific database password
+    db-user:
+      description: Role specific database username
+  readwrite:
+    <<: *dbcred
+cloud:
+collad-ldap:
+  host: Hostname for the ldap server accessed from the Collection Admin Tool
+  deprecated: Consider renaming to colladmin/ldap/host
+colladmin:
+  api-path:
+    description: Path to access the Merritt Collection Admin Tool
+  cognito-groups-allowed:
+    description: Comma separated list of the Cognito User Groups that can access the application
+  cognito-groups-to-manage:
+    description: Comma separated list of the Cognito User Groups (non SAML) that can be managed from the Collection Admin Tool
+  ingest-services:
+    description: URLs to the running ingest instances
+    deprecated: Consider performing an ec2 tag lookup instead
+  user-pool:
+    description: Cognito user pool name for user management
+cognitio-users:
+  lambda-arn-base: ARN to the Cognito User Management Lambda that runs outside the VPC
+ingest:
+  port:
+    description: Microservice port
+inv:
+  db-host: 
+    description: Hostname for the Merritt inventory database server.
+  db-name: 
+    description: Database name for the Merritt inventory database.
+  readonly: &dbcred
+    <<: *dbcred
+  readwrite:
+    <<: *dbcred
+inventory:
+  port:
+    description: Microservice port
+ldap:
+  accounts:
+    admin:
+      password:
+        description: LDAP admin password
+      user:
+        description: LDAP admin username
+    guest:
+      password:
+        description: Merritt guest password
+      user:
+        description: Merritt guest username 
+  ark-minter-url:
+    description: Url to ark minting service (using "noid")
+    deprecated: What does "noid" mean?
+  collad-host:
+    description: LDAP server Hostname
+    deprecated: Likely unused
+  group_base:
+    description: LDAP identifier for Merritt Classes
+  host:
+    description: LDAP hostname alias
+  inst_base:
+    description: LDAP identifier for CDL
+  port:
+    description: Port number for the LDAP server
+  user-base:
+    description: LDAP identifier for Merritt Users
+oai:
+  port:
+    description: Microservice port
+replic:
+  port:
+    description: Microservice port
+store:
+  port:
+    description: Microservice port
+sword:
+  port:
+    description: Microservice port
+ui:
+  atom-credential:
+    description: Credential for access Merritt atom feed
+  atom-dir:
+    description: Location for assembling Merritt atom feed
+    deprecated: Is this used?  May be needed when eliminating the ui private repo
+  dir:
+    description: Runtime dir for the deployed ui instance
+    deprecated: Check how this is used.  May be needed when eliminating the ui private repo
+  port:
+    description: TBD - define port, not currently used
+  master_key:
+    description: Rails key for deployed ui
+  nuxeo-base:
+    description: Base url for accessing nuxeo feeds
+    deprecated: Is this used?  May be needed when eliminating the ui private repo
+
+
 # skip error checking for dev-only special nodes
 loy:
   skip: true
