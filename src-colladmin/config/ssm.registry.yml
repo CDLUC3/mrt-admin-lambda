@@ -14,6 +14,19 @@ admintool:
     description: Comma separated list of the Cognito User Groups that can access the application
   context:
     description: Client context string passed when invoking a lambda from a server (vs http)
+  ecr-image:
+    description: "DEV Only: base name of the ecr image used to deploy the lambda"
+    skip: true
+  ecr-registry:
+    description: "DEV Only: ecr registry name used to deploy the lambda"
+    skip: true
+  lambda-arn-base:
+    description: "DEV Only: base arn name for the lambda to which code will be deployed"
+    skip: true
+  merritt-path:
+    description: "DEV Only: used to assist in computing the path to Merritt for a particular environment"
+    skip: true
+    deprecated: The build should not need this value
   s3-bucket:
     description: Name of the S3 bucket to store consistency reports
   s3-consistency-reports:
@@ -38,6 +51,9 @@ billing:
     <<: *dbcred
 cloud:
 cognito-users:
+  ecr-image:
+    description: "DEV Only: base name of the ecr image used to deploy the lambda"
+    skip: true
   lambda-arn-base: 
     description: ARN to the Cognito User Management Lambda that runs outside the VPC
 collad-ldap:
@@ -51,9 +67,15 @@ colladmin:
     description: Comma separated list of the Cognito User Groups that can access the application
   cognito-groups-to-manage:
     description: Comma separated list of the Cognito User Groups (non SAML) that can be managed from the Collection Admin Tool
+  ecr-image:
+    description: "DEV Only: base name of the ecr image used to deploy the lambda"
+    skip: true
   ingest-services:
     description: URLs to the running ingest instances
     deprecated: Consider performing an ec2 tag lookup instead
+  lambda-arn-base:
+    description: "DEV Only: base arn name for the lambda to which code will be deployed"
+    skip: true
   user-pool:
     description: Cognito user pool name for user management
 ingest:
