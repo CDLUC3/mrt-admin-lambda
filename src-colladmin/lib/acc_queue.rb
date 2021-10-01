@@ -88,7 +88,7 @@ class AccQueueEntry < MerrittJson
   end
 end
 
-class InventoryQueue < MerrittJson
+class AccQueue < MerrittJson
   def initialize(queueList, body)
     data = JSON.parse(body)
     data = fetchHashVal(data, 'que:queueState')
@@ -124,7 +124,7 @@ class AccQueueList < MerrittJson
       begin
         qjson = HttpGetJson.new(@ingest_server, "admin/queue-acc#{node}")
         next unless qjson.status == 200
-        InventoryQueue.new(self, qjson.body)
+        AccQueue.new(self, qjson.body)
       rescue => e
         puts(e.message)
         puts(e.backtrace)

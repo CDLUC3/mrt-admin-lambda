@@ -33,6 +33,20 @@ $(".set_sla_name").on("click", function(){
     ark: $(this).attr("data")
   });
 });
+$(".create_owner_record").on("click", function(){
+  do_action({
+    path: "create_owner_record",
+    ark: $(this).attr("data"),
+    id: $(this).attr("data-id")
+  });
+});
+$(".create_coll_record").on("click", function(){
+  do_action({
+    path: "create_coll_record",
+    ark: $(this).attr("data"),
+    id: $(this).attr("data-id")
+  });
+});
 $("p.buttons").show();
 showCounts();
 }

@@ -34,7 +34,7 @@ class IngestQueueAction < ForwardToIngestAction
     [
       {
         label: 'Completed Ingests', 
-        url: "#{LambdaBase.admintool_home}?path=recent_ingests"
+        url: "#{LambdaBase.admintool_url}?path=recent_ingests"
       }
     ]
   end

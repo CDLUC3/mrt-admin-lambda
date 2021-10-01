@@ -4,6 +4,7 @@ require_relative 'merritt_query'
 class AdminProfile < MerrittJson
   def initialize(artifact)
     super()
+    @id = ""
     @artifact = artifact
     @path = ""
     @created = ""
@@ -13,11 +14,16 @@ class AdminProfile < MerrittJson
     @dispname = ""
     @mnemonic = ""
     @harvest = ""
+    @nocoid = false
     @child_count = 0
   end
 
   def path
     @path
+  end
+
+  def id
+    @id
   end
 
   def created
@@ -38,6 +44,14 @@ class AdminProfile < MerrittJson
 
   def dispname
     @dispname
+  end
+
+  def nocoid
+    @nocoid
+  end
+
+  def hascoid
+    !@nocoid
   end
 
   def mnemonic
@@ -82,7 +96,9 @@ class AdminProfile < MerrittJson
 
   def addb_status
     return 'SKIP' if path.empty? || ark.empty?
-    return 'WARN' if dispname.empty? || mnemonic.empty?
+    return 'FAIL' if nocoid
+    return 'WARN' if dispname.empty? 
+    return 'WARN' if mnemonic.empty? && @artifact == "collection"
     return 'INFO' unless dispname == name
     return 'PASS'
   end
@@ -103,12 +119,14 @@ class AdminProfile < MerrittJson
   end
 
   def load_from_db(rec)
+    @id = rec.fetch(:id, "")
     @ark = rec.fetch(:ark, "")
     @name = rec.fetch(:name, "")
     @role = rec.fetch(:role, "")
     @created = rec.fetch(:created, "").to_s[0,10]
     # the following varies based on obj type
     @dispname = rec.fetch(:dispname, "")
+    @nocoid = rec.fetch(:nocoid, false)
     # the following will only be set in specific circumstances
     @mnemonic = rec.fetch(:mnemonic, "")
     @harvest = rec.fetch(:harvest, "none")
@@ -301,9 +319,11 @@ class AdminObjects < MerrittQuery
           child_count: r[5],
           # the following are only set for collections
           dispname: r[6].nil? ? "" : r[6],
-          mnemonic: r[7].nil? ? "" : r[7],
-          harvest: r[8].nil? ? "none" : r[8],
-          selected: r[1] == selobj
+          coid: r[7].nil? ? "" : r[7],
+          mnemonic: r[8].nil? ? "" : r[8],
+          harvest: r[9].nil? ? "none" : r[9],
+          selected: r[1] == selobj,
+          nocoid: r[7].nil?
         }) 
     end
   end
@@ -345,7 +365,8 @@ class AdminObjects < MerrittQuery
           ),
           0
         ) as child_count,
-        own.name as dispname
+        own.name as dispname,
+        own.id as coid
       from 
         inv_objects o
       left join inv_owners own
@@ -377,6 +398,7 @@ class AdminObjects < MerrittQuery
           0
         ) as child_count,
         c.name as dispname,
+        c.id as coid,
         c.mnemonic,
         c.harvest_privilege
       from 

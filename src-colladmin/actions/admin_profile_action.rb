@@ -73,7 +73,26 @@ class AdminProfileAction < ForwardToIngestAction
   def perform_action
     ark = @myparams.fetch("ark", "")
     return {message: "No ark provided"}.to_json if ark.empty?
+
+    # Actions that do not assume a profile is complete
+    if @path == "create_owner_record"
+      id = @myparams.fetch("id", "").to_i
+      return MerrittQuery.new(@config).run_update(
+        "insert into inv_owners(inv_object_id, ark) values(?, ?)", 
+        [id, ark], 
+        "Insert successful, reload page to see result"
+      ).to_json
+    elsif @path == "create_coll_record"
+      id = @myparams.fetch("id", "").to_i
+      return MerrittQuery.new(@config).run_update(
+        "insert into inv_collections(inv_object_id, ark) values(?, ?)", 
+        [id, ark], 
+        "Insert successful, reload page to see result"
+      ).to_json
+    end
+
     p = get_profile(ark)
+
     return {message: "Ark #{ark} not found"}.to_json if p.nil?
     if @path == "toggle_harvest"
       return MerrittQuery.new(@config).run_update(

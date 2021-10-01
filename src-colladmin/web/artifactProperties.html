@@ -84,22 +84,46 @@
             />
             {{/set_coll_name}}
             {{#set_own_name}}
-            <input 
-              type="button" 
-              class="button set_own_name" 
-              data="{{ark}}" 
-              value="Set Owner Name {{#IS_PROD}}🚧{{/IS_PROD}}"
-              title="Set inv_owners.name to the name in the profile."
-            />
+              {{#nocoid}}
+              <input 
+                type="button" 
+                class="button create_owner_record" 
+                data="{{ark}}" 
+                data-id="{{id}}" 
+                value="Create Owner Table Record {{#IS_PROD}}🚧{{/IS_PROD}}"
+                title="Insert ark into the Owner Table."
+              />
+              {{/nocoid}}
+              {{#hascoid}}
+              <input 
+                type="button" 
+                class="button set_own_name" 
+                data="{{ark}}" 
+                value="Set Owner Name {{#IS_PROD}}🚧{{/IS_PROD}}"
+                title="Set inv_owners.name to the name in the profile."
+              />
+              {{/hascoid}}
             {{/set_own_name}}
             {{#set_sla_name}}
-            <input 
-              type="button" 
-              class="button set_sla_name" 
-              data="{{ark}}" 
-              value="Set SLA Name {{#IS_PROD}}🚧{{/IS_PROD}}"
-              title="Set inv_collections.name to the name in the profile."
-            />
+              {{#nocoid}}
+              <input 
+                type="button" 
+                class="button create_coll_record" 
+                data="{{ark}}" 
+                data-id="{{id}}" 
+                value="Create Collection Table Record for SLA {{#IS_PROD}}🚧{{/IS_PROD}}"
+                title="Insert ark into the Collection Table."
+              />
+              {{/nocoid}}
+              {{#hascoid}}
+              <input 
+                type="button" 
+                class="button set_sla_name" 
+                data="{{ark}}" 
+                value="Set SLA Name {{#IS_PROD}}🚧{{/IS_PROD}}"
+                title="Set inv_collections.name to the name in the profile."
+              />
+              {{/hascoid}}
             {{/set_sla_name}}
            </td>
           <td class="status status-{{addb_status}}">{{addb_status}}</td>

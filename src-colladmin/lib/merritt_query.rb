@@ -21,7 +21,7 @@ class MerrittQuery
 
     def run_update(sql, arr = [], success_msg) 
       stmt = @client.prepare(sql)
-      stmt.execute(*arr)
+      res = stmt.execute(*arr)
       {message: success_msg}
     end
 

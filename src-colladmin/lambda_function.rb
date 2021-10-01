@@ -120,7 +120,7 @@ module LambdaFunctions
             statusCode: 200,
             body: result
           }
-        elsif path == "toggle_harvest" || path == "set_mnemonic" || path == "set_coll_name" || path == "set_sla_name" || path == "set_own_name" 
+        elsif path == "toggle_harvest" || path == "set_mnemonic" || path == "set_coll_name" || path == "set_sla_name" || path == "set_own_name" || path == "create_owner_record" || path == "create_coll_record"
           return LambdaBase.error(405, "Not yet supported", false) if LambdaBase.is_prod
           apa = AdminProfileAction.new(config, path, myparams)
           result = apa.perform_action
