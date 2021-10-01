@@ -1,3 +1,9 @@
+# Each yaml node is presumed to be prefixed with an SSM_ROOT_PATH for a given environment.
+# 
+# This file uses 3 special keywords
+# - description: the descriptive text that will appear in the report
+# - deprecated: create a deprecation comment indicating that a value will be changed, renamed, or removed
+# - skip: skip any error checking for a node and its children when generating the report
 access:
   port:
     description: Question - should we define an access port separately from store?
@@ -31,9 +37,13 @@ billing:
   readwrite:
     <<: *dbcred
 cloud:
+cognito-users:
+  lambda-arn-base: 
+    description: ARN to the Cognito User Management Lambda that runs outside the VPC
 collad-ldap:
-  host: Hostname for the ldap server accessed from the Collection Admin Tool
-  deprecated: Consider renaming to colladmin/ldap/host
+  host: 
+    description: Hostname for the ldap server accessed from the Collection Admin Tool
+    deprecated: Consider renaming to colladmin/ldap/host
 colladmin:
   api-path:
     description: Path to access the Merritt Collection Admin Tool
@@ -46,8 +56,6 @@ colladmin:
     deprecated: Consider performing an ec2 tag lookup instead
   user-pool:
     description: Cognito user pool name for user management
-cognitio-users:
-  lambda-arn-base: ARN to the Cognito User Management Lambda that runs outside the VPC
 ingest:
   port:
     description: Microservice port
@@ -56,7 +64,7 @@ inv:
     description: Hostname for the Merritt inventory database server.
   db-name: 
     description: Database name for the Merritt inventory database.
-  readonly: &dbcred
+  readonly: 
     <<: *dbcred
   readwrite:
     <<: *dbcred
@@ -75,7 +83,7 @@ ldap:
         description: Merritt guest password
       user:
         description: Merritt guest username 
-  ark-minter-url:
+  ark_minter_url:
     description: Url to ark minting service (using "noid")
     deprecated: What does "noid" mean?
   collad-host:
@@ -85,7 +93,7 @@ ldap:
     description: LDAP identifier for Merritt Classes
   host:
     description: LDAP hostname alias
-  inst_base:
+  inst-base:
     description: LDAP identifier for CDL
   port:
     description: Port number for the LDAP server
@@ -119,7 +127,6 @@ ui:
   nuxeo-base:
     description: Base url for accessing nuxeo feeds
     deprecated: Is this used?  May be needed when eliminating the ui private repo
-
 
 # skip error checking for dev-only special nodes
 loy:
