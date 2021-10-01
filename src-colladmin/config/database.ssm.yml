@@ -33,6 +33,24 @@ default:
   # Value to be checked against Cognito token - passively provided by ALB
   cognito-groups-allowed: "{!SSM: colladmin/cognito-groups-allowed !DEFAULT: NA}"
   context: "{!SSM: admintool/context !DEFAULT: NA}"
+  # Provide state endpoints for specific subservices - not applicable for docker
+  endpoints:
+    ingest: 
+      state: "{!SSM: ingest/port}/state?t=json"
+    store: 
+      state: "{!SSM: store/port}/state?t=json"
+    access: 
+      state: "{!SSM: store/port}/state?t=json"
+    inventory: 
+      state: "{!SSM: inventory/port}/mrtinv/state?t=json"
+    audit: 
+      state: "{!SSM: audit/port}/mrtaudit/state?t=json"
+    replic: 
+      state: "{!SSM: replic/port}/mrtreplic/state?t=json"
+    # sword: 
+    #   state: "{!SSM: sword/port}/mrtrsword/servicedocument"
+    oai: 
+      state: "{!SSM: oai/port}/mrtoai/state?t=json"
 
 # use personal credentials when configuring a local environment
 # set up a script to set these variables
@@ -67,4 +85,6 @@ docker:
   cognito-groups-allowed: "NA"
   cognito-groups-to-manage: "NA"
   context: "NA"
+  # Provide state endpoints for specific subservices - not applicable for docker
+  endpoints:
 

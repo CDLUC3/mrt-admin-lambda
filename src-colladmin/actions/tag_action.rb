@@ -2,7 +2,8 @@ require_relative 'action'
 require 'aws-sdk-ec2'
 
 class Ec2Info
-  def initialize(inst)
+  def initialize(config, inst)
+    @config = config
     @state = inst.state.name
     @type = inst.instance_type
     inst.tags.each do |tag|
@@ -38,6 +39,10 @@ class Ec2Info
   def urls
     res = {}
     return res unless @state == "running"
+
+    @config.fetch("endpoints", {}).fetch(@subservice, {}).each do |k,v|
+      res[k] = "http://#{@name}.cdlib.org:#{v}"
+    end
     res
   end
 
@@ -94,7 +99,7 @@ class TagAction < AdminAction
 
     data.reservations.each do |res|
       res.instances.each do |inst|
-        ec2 = Ec2Info.new(inst)
+        ec2 = Ec2Info.new(config, inst)
         @instances[ec2.name] = ec2
       end
     end

@@ -8,7 +8,7 @@ class SsmInfo
     @name = name
     arr = @name.split("/")
     @subservice = arr[4]
-    @type = inst.nil? ? "" : inst.data_type
+    @type = inst.nil? ? "" : inst.type
     @description = ""
     @modified = inst.nil? ? "" : inst.last_modified_date.to_s
     @skip = false
