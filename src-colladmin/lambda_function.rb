@@ -149,13 +149,10 @@ module LambdaFunctions
         elsif path == "pause-ingest-for-collection" 
           result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-pause-ing-for-coll")
         elsif path == "storage-force-audit-for-object" 
-          return LambdaBase.error(405, "Not yet supported", false) if LambdaBase.is_prod
           result = StorageAction.new(config, path, myparams).perform_action
         elsif path == "storage-rerun-audit-for-object" 
-          return LambdaBase.error(405, "Not yet supported", false) if LambdaBase.is_prod
           result = StorageAction.new(config, path, myparams).perform_action
         elsif path == "storage-force-replic-for-object" 
-          return LambdaBase.error(405, "Not yet supported", false) if LambdaBase.is_prod
           result = StorageAction.new(config, path, myparams).perform_action
         elsif path == "storage-add-node-for-collection" 
           result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-add-node")
