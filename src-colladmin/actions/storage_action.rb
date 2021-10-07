@@ -35,7 +35,7 @@ class StorageAction < AdminAction
         [objid, nodeid],
         "Audit reset for object"
       ).to_json
-      return LambdaBase.jsredirect("#{LambdaBase.colladmin_root_url}/web/storeObjectNodes.html?id=#{objid}")
+      #return LambdaBase.jsredirect("#{LambdaBase.colladmin_root_url}/web/storeObjectNodes.html?id=#{objid}")
     end
     if @path == "storage-rerun-audit-for-object"
       MerrittQuery.new(@config).run_update(
@@ -54,7 +54,7 @@ class StorageAction < AdminAction
         [objid, nodeid],
         "Audit reset for object"
       ).to_json
-      return LambdaBase.jsredirect("#{LambdaBase.colladmin_root_url}/web/storeObjectNodes.html?id=#{objid}")
+      #return LambdaBase.jsredirect("#{LambdaBase.colladmin_root_url}/web/storeObjectNodes.html?id=#{objid}")
     end
     if @path == "storage-force-replic-for-object"
       MerrittQuery.new(@config).run_update(
@@ -71,7 +71,7 @@ class StorageAction < AdminAction
         [objid],
         "Replication triggered for object"
       ).to_json
-      return LambdaBase.jsredirect("#{LambdaBase.colladmin_root_url}/web/storeObjects.html?mode=id&objlist=#{objid}")
+      #return LambdaBase.jsredirect("#{LambdaBase.colladmin_root_url}/web/storeObjects.html?mode=id&objlist=#{objid}")
     end
   end
 

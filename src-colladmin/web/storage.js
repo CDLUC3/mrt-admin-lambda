@@ -40,7 +40,7 @@ function init() {
   });
   $("button.storage-force-replic-for-object").on("click", function(){
     var objid = $(this).attr("data-id");
-    var nodeid = $(this).attr("data-node-id");
+    $(this).parents("tr").find("button").attr("disabled", true);
     params = {
       path: 'storage-force-replic-for-object',
       objid: objid
@@ -62,6 +62,11 @@ function showPrompt(message, params) {
 }
 
 function invoke(params) {
+  var msg = "Endpoint Params:";
+  Object.keys(params).forEach(function(k){
+    msg += "- " + k + ": " + params[k] + "\n";
+  });
+  alert(msg);
   $.ajax({
     dataType: "json",
     method: "POST",
@@ -72,11 +77,6 @@ function invoke(params) {
         alert(data.message);
       }
       if ('redirect_location' in data) {
-        var msg = "Endpoint Params:";
-        Object.keys(params).forEach(function(k){
-          msg += "- " + k + ": " + params[k] + "\n";
-        });
-        alert(msg);
         window.location = data['redirect_location'];
       }
     },
