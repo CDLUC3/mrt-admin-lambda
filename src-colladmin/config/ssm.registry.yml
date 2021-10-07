@@ -81,6 +81,40 @@ colladmin:
 ingest:
   port:
     description: Microservice port
+  ezid-user:
+    description: Merritt's EZID username
+  ezid-password:
+    description: Merritt's EZID password
+  zoo:
+    IngestQNames:
+      description: Zookeeper queue names used by Ingest workers
+  config:
+    access.1:
+      description: URL endpoint for Access
+      deprecated: Can this be removed?
+    admin:
+      description: Email addresses for Ingest admins
+    identifier:
+      description: Description of Ingest service
+    ingestQueuePath: 
+      description: Path location of Ingest working area
+    localID:
+      description: URL endpoint for Local ID service
+    mail-host:
+      description: SMTP server hostname
+    name:
+      description: Name of Ingest servie
+      deprecated: Duplicate of identifier?
+    numThreads:
+      description: Number of threads in pool for request processing
+    PollingInterval:
+      description: Zookeeper queue polling Interval in seconds
+    QueueHoldFile:
+      description: Filename that defines an Ingest pause
+    store.1:
+      description: URL endpoint for Storage service
+    target:
+      description: URL endpoint for Merritt UI
 inv:
   db-host: 
     description: Hostname for the Merritt inventory database server.
