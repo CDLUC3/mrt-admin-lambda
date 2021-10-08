@@ -1,0 +1,31 @@
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <script	src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.css"></link>
+    <link rel="stylesheet" type="text/css" href="api-table.css"/>
+    <script type="text/javascript" src="coll-lambda.base.js"></script>
+    <script type="text/javascript" src="api-table.js"></script>
+    <script type="text/javascript" src="storage.js"></script>
+    <script src="sorttable.js" type="text/javascript"></script>
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  </head>
+  <body>
+    <div class="form-body">
+    <h1>Manage Audit and Replic Queues</h1>
+    {{{COLLADMINNAV}}}
+    <h2>Audit Queue</h2>
+    <div>
+      <a href="{{ADMINTOOL_HOME}}?path=audit_size">View Audit Queue</a>
+    </div>
+    <div>
+      <button 
+      title="Clear Audit Batches Older than 2 days"
+      class="colladmin storage-clear-audit-batch"
+    >Clear Audit Batches</button>
+</div>
+    <h2>Replic Queue</h2>
+  </div>
+  </body>
+</html>

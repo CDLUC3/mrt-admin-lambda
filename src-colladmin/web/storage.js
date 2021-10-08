@@ -47,6 +47,12 @@ function init() {
     }
     invoke(params);
   });
+  $("button.storage-clear-audit-batch").on("click", function(){
+    params = {
+      path: 'storage-clear-audit-batch'
+    }
+    invoke(params);
+  });
 }
 
 function showPrompt(message, params) {

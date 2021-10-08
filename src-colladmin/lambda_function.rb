@@ -154,6 +154,8 @@ module LambdaFunctions
           result = StorageAction.new(config, path, myparams).perform_action
         elsif path == "storage-force-replic-for-object" 
           result = StorageAction.new(config, path, myparams).perform_action
+        elsif path == "storage-clear-audit-batch" 
+          result = StorageAction.new(config, path, myparams).perform_action
         elsif path == "storage-add-node-for-collection" 
           result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-add-node")
         elsif path == "storage-del-node-for-collection" 

@@ -21,7 +21,7 @@ class StorageAction < AdminAction
     nodeid = @myparams.fetch("nodeid", "0").to_i
 
     if @path == "storage-force-audit-for-object"
-      MerrittQuery.new(@config).run_update(
+      return MerrittQuery.new(@config).run_update(
         %{
           update 
             inv_audits
@@ -35,10 +35,9 @@ class StorageAction < AdminAction
         [objid, nodeid],
         "Audit reset for object"
       ).to_json
-      #return LambdaBase.jsredirect("#{LambdaBase.colladmin_root_url}/web/storeObjectNodes.html?id=#{objid}")
     end
     if @path == "storage-rerun-audit-for-object"
-      MerrittQuery.new(@config).run_update(
+      return MerrittQuery.new(@config).run_update(
         %{
           update 
             inv_audits
@@ -54,10 +53,9 @@ class StorageAction < AdminAction
         [objid, nodeid],
         "Audit reset for object"
       ).to_json
-      #return LambdaBase.jsredirect("#{LambdaBase.colladmin_root_url}/web/storeObjectNodes.html?id=#{objid}")
     end
     if @path == "storage-force-replic-for-object"
-      MerrittQuery.new(@config).run_update(
+      return MerrittQuery.new(@config).run_update(
         %{
           update 
             inv_nodes_inv_objects inio
@@ -71,7 +69,23 @@ class StorageAction < AdminAction
         [objid],
         "Replication triggered for object"
       ).to_json
-      #return LambdaBase.jsredirect("#{LambdaBase.colladmin_root_url}/web/storeObjects.html?mode=id&objlist=#{objid}")
+    end
+    if @path == "storage-clear-audit-batch"
+      return MerrittQuery.new(@config).run_update(
+        %{
+          UPDATE 
+            inv_audits
+          SET 
+            status='unknown',
+            verified=null
+          WHERE 
+            status='processing'
+          AND 
+            verified < date_add(now(), INTERVAL -2 DAY)
+        }, 
+        [],
+        "Audit Batches Cleared"
+      ).to_json
     end
   end
 
