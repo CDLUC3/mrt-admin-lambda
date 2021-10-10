@@ -97,6 +97,8 @@ class QueryFactory
       AuditProcessedSizeIterativeQuery.new(self, path, myparams)
     elsif path == 'replication_needed'
       ReplicationNeededQuery.new(self, path, myparams)
+    elsif path == 'replication_initiated'
+      ReplicationInitiatedQuery.new(self, path, myparams)
     elsif path == 'replic_processed'
       ReplicProcessedQuery.new(self, path, myparams)
     elsif path == 'wasabi'

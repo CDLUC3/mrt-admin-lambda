@@ -86,26 +86,28 @@ class ReplicProcessedQuery < AdminQuery
     %{
       select
         ? as title,
-        (
-          select
-            count(*)
-          from
-            inv.inv_nodes_inv_objects
-          where
-            replicated >= ?
-          and
-            replicated < ?
-         ) as pcount
-        ;
-      }
+        count(inio.inv_object_id) as objs,
+        ifnull(sum(os.billable_size),0) as bytes
+      from
+        inv.inv_nodes_inv_objects inio
+      inner join 
+        object_size os
+      on 
+        os.inv_object_id = inio.inv_object_id
+      where
+        replicated >= ?
+      and
+        replicated < ?
+      ;
+    }
   end
 
   def get_headers(results)
-    ['Time Frame', 'Objects Processed']
+    ['Time Frame', 'Objects Processed', 'Bytes Replicated']
   end
 
   def get_types(results)
-    ['', 'dataint']
+    ['', 'dataint', 'bytes']
   end
 
 end
