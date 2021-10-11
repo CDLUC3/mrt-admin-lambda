@@ -85,7 +85,7 @@ class ConsistencyReplicationReqQuery < AdminQuery
   end
 
   def get_headers(results)
-    ['Object Count', 'Byte Count', '> 2 days', '1-2 days', '< 1 day', 'Status']
+    ['Object Count', 'Bytes* (All Versions)', '> 2 days', '1-2 days', '< 1 day', 'Status']
   end
 
   def get_types(results)

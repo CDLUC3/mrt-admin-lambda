@@ -228,6 +228,8 @@ class AdminQuery < AdminTask
           s.role='secondary'
         and
           p.inv_object_id = s.inv_object_id
+        and 
+          s.version_number = o.version_number
       )  
     }
   end

@@ -103,7 +103,7 @@ class ReplicProcessedQuery < AdminQuery
   end
 
   def get_headers(results)
-    ['Time Frame', 'Objects Processed', 'Bytes Replicated']
+    ['Time Frame', 'Objects Processed', 'Bytes in Replicated Objects*']
   end
 
   def get_types(results)
