@@ -2,10 +2,13 @@ require_relative 'action'
 require 'aws-sdk-ec2'
 
 class Ec2Info
+  # See https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/EC2/Client.html#describe_instances-instance_method
   def initialize(config, inst)
     @config = config
     @state = inst.state.name
     @type = inst.instance_type
+    @publicip = inst.public_ip_address
+    @az = inst.placement.availability_zone
     inst.tags.each do |tag|
       @name = tag.value if tag.key == 'Name'
       @subservice = tag.value if tag.key == 'Subservice'
@@ -22,12 +25,16 @@ class Ec2Info
       "Subservice",
       "Type",
       "State",
+      "IP",
+      "AZ",
       "Endpoint"
     ]
   end
 
   def self.table_types
     [
+      "",
+      "",
       "",
       "",
       "",
@@ -61,6 +68,8 @@ class Ec2Info
       @subservice,
       @type,
       @state,
+      @publicip,
+      @az,
       format_urls
     ]
   end
