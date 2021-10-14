@@ -102,7 +102,6 @@ module LambdaFunctions
         elsif path == "submissions/unpause" 
           result = PostToIngestAction.new(config, path, myparams, "admin/submissions/thaw").get_data
         elsif path == "submit-profile" 
-          return LambdaBase.error(405, "Not yet supported", false) if LambdaBase.is_prod
           params = {
             file: File.new("/var/task/dummy.README"),
             type: "file",
@@ -121,7 +120,6 @@ module LambdaFunctions
             body: result
           }
         elsif path == "toggle_harvest" || path == "set_mnemonic" || path == "set_coll_name" || path == "set_sla_name" || path == "set_own_name" || path == "create_owner_record" || path == "create_coll_record"
-          return LambdaBase.error(405, "Not yet supported", false) if LambdaBase.is_prod
           apa = AdminProfileAction.new(config, path, myparams)
           result = apa.perform_action
         elsif path == "createProfile/profile" 
