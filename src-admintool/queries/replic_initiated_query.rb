@@ -10,6 +10,10 @@ class ReplicationInitiatedQuery < AdminQuery
   def get_sql
     %{
       select 
+        case
+          when o.ark = 'ark:/13030/m5q57br8' then 'Wasabi Issue 477'
+          else 'Default'
+        end as category,
         inio.inv_object_id,
         o.ark,
         o.version_number,
@@ -40,6 +44,7 @@ class ReplicationInitiatedQuery < AdminQuery
       and 
         inio.replicated < '1971-01-01'
       group by
+        category,
         inio.inv_object_id,
         o.ark,
         o.version_number,
@@ -50,11 +55,11 @@ class ReplicationInitiatedQuery < AdminQuery
   end
 
   def get_headers(results)
-    ['Object Id', 'Ark', 'Version', 'Obj Created', 'Obj Modifed', 'Bytes','Sec Count', 'Ver Min', 'Ver Max']
+    ['Category', 'Object Id', 'Ark', 'Version', 'Obj Created', 'Obj Modifed', 'Bytes','Sec Count', 'Ver Min', 'Ver Max']
   end
 
   def get_types(results)
-    ['objlist', 'ark', 'dataint', 'datetime', 'datetime', 'bytes','dataint','dataint','dataint']
+    ['', 'objlist', 'ark', 'dataint', 'datetime', 'datetime', 'bytes','dataint','dataint','dataint']
   end
 
 end
