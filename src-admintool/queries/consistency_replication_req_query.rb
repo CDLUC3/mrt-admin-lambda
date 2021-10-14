@@ -14,6 +14,12 @@ class ConsistencyReplicationReqQuery < AdminQuery
   def get_sql
     %{
       select
+        case
+          when u.inv_object_id = (
+            select id from inv.inv_objects where ark = 'ark:/13030/m5q57br8'
+          ) then 'Wasabi Issue 477'
+          else 'Default'
+        end as category,
         count(u.inv_object_id) as obj,
         sum(os.billable_size) as fbytes,
         ifnull(
@@ -51,6 +57,15 @@ class ConsistencyReplicationReqQuery < AdminQuery
           0
         ) as day0,   
         case
+          when 
+            sum(
+              case
+                when u.inv_object_id = (
+                  select id from inv.inv_objects where ark = 'ark:/13030/m5q57br8'
+                ) then 1
+                else 0
+              end
+            ) > 0 then 'INFO'
           when count(distinct u.inv_object_id) = 0 then 'PASS'
           when 
             sum(
@@ -80,16 +95,18 @@ class ConsistencyReplicationReqQuery < AdminQuery
       ) as u
       inner join object_size os
         on os.inv_object_id = u.inv_object_id
+      group by 
+        category
       ;
     }
   end
 
   def get_headers(results)
-    ['Object Count', 'Bytes* (All Versions)', '> 2 days', '1-2 days', '< 1 day', 'Status']
+    ['Category', 'Object Count', 'Bytes* (All Versions)', '> 2 days', '1-2 days', '< 1 day', 'Status']
   end
 
   def get_types(results)
-    ['dataint', 'bytes', 'dataint', 'dataint', 'dataint', 'status']
+    ['', 'dataint', 'bytes', 'dataint', 'dataint', 'dataint', 'status']
   end
 
   def bytes_unit
