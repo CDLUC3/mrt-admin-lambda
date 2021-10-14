@@ -7,7 +7,7 @@ class ReplicationNeededQuery < ObjectsQuery
         distinct p.inv_object_id
       #{sqlfrag_replic_needed}
       and
-        o.created < date_add(now(), INTERVAL -#{@days} DAY)
+        o.modified < date_add(now(), INTERVAL -#{@days} DAY)
       limit #{get_limit} offset #{get_offset};
     }
     stmt = @client.prepare(subsql)

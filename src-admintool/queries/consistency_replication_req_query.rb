@@ -25,7 +25,7 @@ class ConsistencyReplicationReqQuery < AdminQuery
         ifnull(
           sum(
             case
-              when u.created < date_add(now(), INTERVAL -2 DAY)
+              when u.modified < date_add(now(), INTERVAL -2 DAY)
                 then 1
               else 0
             end
@@ -35,9 +35,9 @@ class ConsistencyReplicationReqQuery < AdminQuery
         ifnull(
           sum(
             case
-              when u.created < date_add(now(), INTERVAL -2 DAY)
+              when u.modified < date_add(now(), INTERVAL -2 DAY)
                 then 0
-              when u.created < date_add(now(), INTERVAL -1 DAY) 
+              when u.modified < date_add(now(), INTERVAL -1 DAY) 
                 then 1
               else 0
             end
@@ -47,9 +47,9 @@ class ConsistencyReplicationReqQuery < AdminQuery
         ifnull(
           sum(
             case
-              when u.created < date_add(now(), INTERVAL -2 DAY)
+              when u.modified < date_add(now(), INTERVAL -2 DAY)
                 then 0
-              when u.created < date_add(now(), INTERVAL -1 DAY) 
+              when u.modified < date_add(now(), INTERVAL -1 DAY) 
                 then 0
               else 1
             end
@@ -70,7 +70,7 @@ class ConsistencyReplicationReqQuery < AdminQuery
           when 
             sum(
               case
-                when u.created < date_add(now(), INTERVAL -2 DAY)
+                when u.modified < date_add(now(), INTERVAL -2 DAY)
                   then 1
                 else 0
               end
@@ -78,9 +78,9 @@ class ConsistencyReplicationReqQuery < AdminQuery
           when 
             sum(
               case
-                when u.created < date_add(now(), INTERVAL -2 DAY)
+                when u.modified < date_add(now(), INTERVAL -2 DAY)
                   then 0
-                when u.created < date_add(now(), INTERVAL -1 DAY) 
+                when u.modified < date_add(now(), INTERVAL -1 DAY) 
                   then 1
                 else 0
               end
@@ -90,7 +90,8 @@ class ConsistencyReplicationReqQuery < AdminQuery
       from (
         select 
           p.inv_object_id,
-          o.created
+          o.created,
+          o.modified
         #{sqlfrag_replic_needed}
       ) as u
       inner join object_size os
