@@ -103,8 +103,14 @@ class AdminProfile < MerrittJson
     return 'PASS'
   end
 
-  def noark
-    @ark.empty?
+  def submittable
+    return false unless @ark.empty?
+    return false if @ark == LambdaFunctions::Handler.merritt_curatorial
+    return false if @ark == LambdaFunctions::Handler.merritt_system 
+    return false if @ark == LambdaFunctions::Handler.merritt_admin_coll_sla
+    return false if @ark == LambdaFunctions::Handler.merritt_admin_coll_owners 
+    # Only allow submission for profiles newer than 2 years old
+    Time.new(@created) > Time.new - 2 * 365 * 24 * 60 * 60 
   end
 
   def load_from_json(json)

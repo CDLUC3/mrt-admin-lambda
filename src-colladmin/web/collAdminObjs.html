@@ -23,6 +23,7 @@
         <li><a href="/web/artifactProperties.html?type={{artifact}}">Update Inventory Database Config for {{artifact}}</a></li>
       </ul>
     </div>
+    <div>Submit Administrative Objects for new Admin profiles deployed to Merritt.  Admin Object Submission has been disabled for any profiles older than 2 years.</div>
     <div>
     <table id="data-table" class="sortable results">
       <thead>
@@ -49,7 +50,7 @@
           <td class="name">{{path}}</td>
           <td class="dataint">{{child_count}}</td>
           <td>
-            {{#noark}}
+            {{#submittable}}
             <input 
               type="button" 
               class="submit-admin" 
@@ -58,7 +59,7 @@
               value="Submit Admin Object"
               title="Submit Admin object (containing dummy content) using the new profile.  This will initialize the inventory database collection/owner objects."
             />
-            {{/noark}}
+            {{/submittable}}
           </td>
           <td class="status status-{{adsub_status}}">{{adsub_status}}</td>
         </tr>
