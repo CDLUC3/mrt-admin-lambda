@@ -1,3 +1,4 @@
+require 'date'
 class MerrittJsonProperty
   # Define property
   # Optionally set the value
@@ -18,6 +19,16 @@ class MerrittJsonProperty
       if @value == ""
         @value = {}
       end
+    end
+    self
+  end
+
+  def lookupTimeValue(source, namespace, jsonkey, defval = nil)
+    lookupValue(source, namespace, jsonkey, defval)
+    begin
+      @value = DateTime.parse(@value).to_time
+    rescue StandardError => e
+      puts "Time format error"
     end
     self
   end
@@ -50,7 +61,12 @@ class MerrittJson
     return defval unless @propertyHash.key?(symbol)
     @propertyHash[symbol].value
   end
-   
+
+  def getTimeValue(symbol, defval = "")
+    return defval unless @propertyHash.key?(symbol)
+    @propertyHash[symbol].value
+  end
+
   def getLabel(symbol)
     return "N/A" unless @propertyHash.key?(symbol)
     @propertyHash[symbol].label

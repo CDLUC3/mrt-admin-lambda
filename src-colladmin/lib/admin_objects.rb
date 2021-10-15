@@ -110,7 +110,7 @@ class AdminProfile < MerrittJson
     return false if @ark == LambdaFunctions::Handler.merritt_admin_coll_sla
     return false if @ark == LambdaFunctions::Handler.merritt_admin_coll_owners 
     # Only allow submission for profiles newer than 2 years old
-    Time.new(@created) > Time.new - 2 * 365 * 24 * 60 * 60 
+    Time.new(@created) > (DateTime.now - 365 * 2).to_time 
   end
 
   def load_from_json(json)

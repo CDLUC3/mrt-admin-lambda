@@ -30,7 +30,7 @@ class AccQueueEntry < MerrittJson
     )
     addProperty(
       :date, 
-      MerrittJsonProperty.new("Date").lookupValue(json, "que", "date")
+      MerrittJsonProperty.new("Date").lookupTimeValue(json, "que", "date")
     )
     addProperty(
       :qstatus, 
@@ -41,9 +41,25 @@ class AccQueueEntry < MerrittJson
       MerrittJsonProperty.new("Queue ID").lookupValue(json, "que", "iD")
     )
     qs = getValue(:qstatus, "")
+    qt = getValue(:date, "")
     st = 'INFO'
-    st = 'FAIL' if (qs == "Failed")
-    st = 'PASS' if (qs == "Completed")
+    if (qs == "Completed")
+      st = 'PASS'
+    elsif (qs == "Consumed")
+      if (qt < (DateTime.now - 3).to_time)
+        st = 'SKIP'
+      elsif (qt < (DateTime.now - 1).to_time)
+        st = 'WARN'
+      else
+        st = 'INFO'        
+      end
+    elsif (qs == "Failed")
+      if (qt < (DateTime.now - 3).to_time)
+        st = 'SKIP'
+      else
+        st = 'FAIL'
+      end
+    end
     addProperty(
       :status, 
       MerrittJsonProperty.new("Status", st)

@@ -1,4 +1,5 @@
 require_relative 'merritt_json'
+
 class InvQueueEntry < MerrittJson
   @@placeholder = nil
   def self.placeholder
@@ -18,7 +19,7 @@ class InvQueueEntry < MerrittJson
     )
     addProperty(
       :date, 
-      MerrittJsonProperty.new("Date").lookupValue(json, "que", "date")
+      MerrittJsonProperty.new("Date").lookupTimeValue(json, "que", "date")
     )
     addProperty(
       :qstatus, 
@@ -29,9 +30,25 @@ class InvQueueEntry < MerrittJson
       MerrittJsonProperty.new("Queue ID").lookupValue(json, "que", "iD")
     )
     qs = getValue(:qstatus, "")
+    qt = getValue(:date, "")
     st = 'INFO'
-    st = 'FAIL' if (qs == "Failed")
-    st = 'PASS' if (qs == "Completed")
+    if (qs == "Completed")
+      st = 'PASS'
+    elsif (qs == "Consumed")
+      if (qt < (DateTime.now - 2).to_time)
+        st = 'FAIL'
+      elsif (qt < (DateTime.now - 1).to_time)
+        st = 'WARN'
+      else
+        st = 'INFO'        
+      end
+    elsif (qs == "Failed")
+      if (qt < (DateTime.now - 14).to_time)
+        st = 'SKIP'
+      else
+        st = 'FAIL'
+      end
+    end
     addProperty(
       :status, 
       MerrittJsonProperty.new("Status", st)

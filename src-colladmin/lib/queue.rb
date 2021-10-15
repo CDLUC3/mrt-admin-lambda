@@ -26,7 +26,7 @@ class QueueEntry < MerrittJson
     )
     addProperty(
       :date, 
-      MerrittJsonProperty.new("Date").lookupValue(json, "que", "date")
+      MerrittJsonProperty.new("Date").lookupTimeValue(json, "que", "date")
     )
     addProperty(
       :user, 

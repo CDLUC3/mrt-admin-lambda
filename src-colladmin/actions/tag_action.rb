@@ -72,7 +72,7 @@ class Ec2Info
       return "" unless @name == srvr
       return "" if threshold.nil?
       threshold = threshold.to_i / 1000000
-      return "Large Assembly Server: #{srvr}; Threshold: #{threshold}M"
+      return "Large Assembly Server, Threshold: #{threshold}M"
     end
     ""
   end
