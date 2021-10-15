@@ -81,6 +81,7 @@ class AccQueueEntry < MerrittJson
       type = 'status' if sym == :status
       type = 'name' if sym == :token
       type = 'bytes' if sym == :bytes
+      type = 'datetime' if sym == :date
       arr.append(type)
     end
     arr

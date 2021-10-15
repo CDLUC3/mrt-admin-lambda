@@ -68,6 +68,7 @@ class InvQueueEntry < MerrittJson
     InvQueueEntry.placeholder.getPropertyList.each do |sym|
       type = ''
       type = 'status' if sym == :status
+      type = 'datetime' if sym == :date
       arr.append(type)
     end
     arr

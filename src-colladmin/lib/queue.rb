@@ -81,6 +81,7 @@ class QueueEntry < MerrittJson
       type = 'qbatch' if sym == :bid
       type = 'qjob' if sym == :job
       type = 'status' if sym == :status
+      type = 'datetime' if sym == :date
       arr.append(type)
     end
     arr
