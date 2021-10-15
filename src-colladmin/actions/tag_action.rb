@@ -1,5 +1,6 @@
 require_relative 'action'
 require 'aws-sdk-ec2'
+require 'aws-sdk-ssm'
 
 class Ec2Info
   # See https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/EC2/Client.html#describe_instances-instance_method
@@ -27,7 +28,8 @@ class Ec2Info
       "State",
       "IP",
       "AZ",
-      "Endpoint"
+      "Endpoint",
+      "Notes"
     ]
   end
 
@@ -39,7 +41,8 @@ class Ec2Info
       "",
       "",
       "",
-      "endpoint"
+      "endpoint",
+      ""
     ]
   end
 
@@ -62,7 +65,19 @@ class Ec2Info
     str
   end
 
-  def table_row
+  def notes(action)
+    if @subservice == "access"
+      srvr = action.get_ssm('store/zoo/AccessLarge')
+      threshold = action.get_ssm('store/zoo/AccessQSize')
+      return "" unless @name == srvr
+      return "" if threshold.nil?
+      threshold = threshold.to_i / 1000000
+      return "Large Assembly Server: #{srvr}; Threshold: #{threshold}M"
+    end
+    ""
+  end
+
+  def table_row(action)
     [
       @name,
       @subservice,
@@ -70,7 +85,8 @@ class Ec2Info
       @state,
       @publicip,
       @az,
-      format_urls
+      format_urls,
+      notes(action)
     ]
   end
 end
@@ -81,6 +97,9 @@ class TagAction < AdminAction
     super(config, path, myparams)
     region = ENV['AWS_REGION'] || 'us-west-2'
     @ec2 = Aws::EC2::Client.new(
+      region: region, 
+    )
+    @ssm = Aws::SSM::Client.new(
       region: region, 
     )
     @title = "Merritt EC2 Instances"
@@ -112,6 +131,13 @@ class TagAction < AdminAction
         @instances[ec2.name] = ec2
       end
     end
+  end
+
+  def get_ssm(key)
+    val = @ssm.get_parameter({name: "#{LambdaBase.ssm_root_path}#{key}"})[:parameter][:value]
+    return val
+  rescue StandardError => e
+    ""
   end
 
   def get_title
@@ -164,7 +190,7 @@ class TagAction < AdminAction
   def get_table_rows
     rows = []
     @instances.keys.sort.each do |k|
-      rows.append(@instances[k].table_row)
+      rows.append(@instances[k].table_row(self))
     end
     rows
   end
