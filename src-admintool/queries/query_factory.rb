@@ -133,6 +133,8 @@ class QueryFactory
       ObjectsFileCopiesNeededQuery.new(self, path, myparams)    
     elsif path == 'object_copies_needed'
       ObjectsObjectCopiesNeededQuery.new(self, path, myparams)    
+    elsif path == 'mult_coll'
+      MultipleCollectionsQuery.new(self, path, myparams)    
     elsif path == 'object_mult_coll'
       ObjectsMultipleCollQuery.new(self, path, myparams)    
     elsif path == 'admin_obj'

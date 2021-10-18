@@ -26,7 +26,7 @@ class ConsistencyPrimaryNodeQuery < AdminQuery
             icin.inv_collection_id = c.id
         ),
         case
-          when n.number = 4001 then 'WARN'
+          when n.number = 4001 then 'SKIP'
           when n.number = 5001 then 'INFO'
           else 'FAIL'
         end as status

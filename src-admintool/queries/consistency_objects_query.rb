@@ -86,14 +86,14 @@ class ConsistencyObjectsQuery < AdminQuery
             case
               when age.inv_object_id = (
                 select id from inv.inv_objects where ark = 'ark:/13030/m5v45qp2'
-              ) then 'WARN'
+              ) then 'INFO'
               when #{@copies} != 2 then 'FAIL'
-              when c.mnemonic = 'oneshare_dataup' then 'WARN'
-              when c.mnemonic = 'dataone_dash' then 'WARN'
-              when ifnull(c.mnemonic, '') = '' then 'WARN'
+              when c.mnemonic = 'oneshare_dataup' then 'INFO'
+              when c.mnemonic = 'dataone_dash' then 'INFO'
+              when ifnull(c.mnemonic, '') = '' then 'INFO'
               when age.inv_object_id = (
                 select id from inv.inv_objects where ark = 'ark:/13030/m5q57br8'
-              ) then 'WARN'
+              ) then 'INFO'
               else 'FAIL'
             end
           when ifnull(
