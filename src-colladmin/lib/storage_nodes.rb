@@ -144,23 +144,25 @@ class Nodes < MerrittQuery
                   else description
                 end as description,
                 access_mode,
-                count(inio.inv_object_id) as pcount 
+                count(inio.inv_object_id) as pcount, 
+                format(count(inio.inv_object_id), 0) as pcount_fmt 
               from 
                 inv_nodes n
               left join inv_nodes_inv_objects inio
                 on n.id = inio.inv_node_id
-                and inio.role = 'primary'
               group by 
                 number, 
                 description, 
                 access_mode
+              having
+                count(inio.inv_object_id) > 0
               order by
                 pcount desc
           }
       ).each do |r|
         @nodes.push({
           number: r[0],
-          description: "#{r[1]} (#{r[3]})",
+          description: "#{r[1]} (#{r[4]})",
           access_mode: r[2]
         })
       end
@@ -168,6 +170,78 @@ class Nodes < MerrittQuery
 
   def nodes
       @nodes
+  end
+
+end
+
+class Scans < MerrittQuery
+  def initialize(config)
+      super(config)
+      @scans = []
+      run_query(
+          %{
+              select 
+                number,
+                case
+                  when description is null then 'No description'
+                  else description
+                end as description,
+                access_mode,
+                count(inio.inv_object_id) as pcount, 
+                format(count(inio.inv_object_id), 0) as pcount_fmt,
+                s.created,
+                s.updated,
+                s.scan_status,
+                s.scan_type,
+                s.keys_processed,
+                (
+                  select
+                    max(created)
+                  from
+                    inv_storage_scans ls
+                  where
+                    n.id = ls.inv_node_id
+                ) as latest_scan
+              from 
+                inv_nodes n
+              inner join inv_storage_scans s
+                on n.id = s.inv_node_id
+              left join inv_nodes_inv_objects inio
+                on n.id = inio.inv_node_id
+              group by 
+                number, 
+                description, 
+                access_mode,
+                created,
+                updated,
+                scan_status,
+                scan_type,
+                keys_processed
+              having
+                count(inio.inv_object_id) > 0
+              order by
+                pcount desc,
+                created desc
+          }
+      ).each do |r|
+        @scans.push({
+          number: r[0],
+          description: "#{r[1]} (#{r[4]})",
+          access_mode: r[2],
+          created: r[5].nil? ? "" : r[5].strftime("%Y-%m-%d %T"),
+          updated: r[6].nil? ? "" : r[6].strftime("%Y-%m-%d %T"),
+          scan_status: r[7],
+          scan_type: r[8],
+          keys_processed: r[9],
+          complete: r[7] == 'completed',
+          latest: r[5] == r[10],
+          rclass: r[5] == r[10] ? "latest" : ""
+        })
+      end
+  end
+
+  def scans
+      @scans
   end
 
 end

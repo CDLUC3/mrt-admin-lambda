@@ -271,3 +271,7 @@ ul span.endpoint {
 ul:hover span.endpoint {
   display:inline;
 }
+
+tr.latest td, tr.latest th {
+  background-color: #EEEEEE;
+}

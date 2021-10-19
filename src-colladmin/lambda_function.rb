@@ -267,6 +267,8 @@ module LambdaFunctions
         map['NODES'] = Nodes.new(@config).nodes
       elsif path == '/web/storeNodes.html'
         map['NODES'] = Nodes.new(@config).nodes
+      elsif path == '/web/storeScans.html'
+        map['SCANS'] = LambdaBase.is_prod ? [] : Scans.new(@config).scans
       elsif path == '/web/storeNodeDeletes.html'
       elsif path == '/web/storeObjects.html'
         objlist = CGI.unescape(myparams.fetch("objlist",""))
