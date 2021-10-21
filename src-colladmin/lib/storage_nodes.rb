@@ -136,40 +136,140 @@ class Nodes < MerrittQuery
       super(config)
       @nodes = []
       run_query(
-          %{
-              select 
-                number,
-                case
-                  when description is null then 'No description'
-                  else description
-                end as description,
-                access_mode,
-                count(inio.inv_object_id) as pcount, 
-                format(count(inio.inv_object_id), 0) as pcount_fmt 
-              from 
-                inv_nodes n
-              left join inv_nodes_inv_objects inio
-                on n.id = inio.inv_node_id
-              group by 
-                number, 
-                description, 
-                access_mode
-              having
-                count(inio.inv_object_id) > 0
-              order by
-                pcount desc
-          }
+        LambdaBase.is_prod ? node_query : node_scan_query
       ).each do |r|
         @nodes.push({
           number: r[0],
           description: "#{r[1]} (#{r[4]})",
-          access_mode: r[2]
+          access_mode: r[2],
+          scan_status: r[5],
+          created: r[6].nil? ? "" : r[6].strftime("%Y-%m-%d %T"),
+          updated: r[7].nil? ? "" : r[7].strftime("%Y-%m-%d %T"),
+          num_review: r[8],
+          num_deletes: r[9],
+          num_maints: r[10],
+          keys_processed: r[11],
+          percent: r[3] == 0 ? '' : 100 * (r[11].nil? ? 0 : r[11]) / r[3]
         })
       end
   end
 
   def nodes
       @nodes
+  end
+
+  def node_query
+    %{
+      select 
+        number,
+        case
+          when description is null then 'No description'
+          else description
+        end as description,
+        access_mode,
+        (
+          select 
+            count(inio.inv_object_id)
+          from 
+            inv_nodes_inv_objects inio
+          where 
+            n.id = inio.inv_node_id
+        ) as pcount, 
+        (
+          select 
+            format(count(inio.inv_object_id), 0)
+          from 
+            inv_nodes_inv_objects inio
+          where 
+            n.id = inio.inv_node_id
+        ) as pcount_fmt,
+        '' as scan_status,
+        null as created,
+        null as updated,
+        0 as num_review,
+        0 as num_deletes,
+        0 as num_maints,
+        0 as keys_processed
+      from 
+        inv_nodes n
+      order by
+        pcount desc
+    }
+  end
+
+  def node_scan_query
+    %{
+      select 
+        number,
+        case
+          when description is null then 'No description'
+          else description
+        end as description,
+        access_mode,
+        (
+          select 
+            count(inio.inv_object_id)
+          from 
+            inv_nodes_inv_objects inio
+          where 
+            n.id = inio.inv_node_id
+        ) as pcount, 
+        (
+          select 
+            format(count(inio.inv_object_id), 0)
+          from 
+            inv_nodes_inv_objects inio
+          where 
+            n.id = inio.inv_node_id
+        ) as pcount_fmt,
+        iss.scan_status,
+        iss.created,
+        iss.updated,
+        (
+          select
+            count(*)
+          from
+            inv_storage_maints ism
+          where
+            n.id = ism.inv_node_id
+          and
+            maint_status = 'review' 
+        ) as num_review,
+        (
+          select
+            count(*)
+          from
+            inv_storage_maints ism
+          where
+            n.id = ism.inv_node_id
+          and
+            maint_status = 'delete' 
+        ) as num_deletes,
+        (
+          select
+            count(*)
+          from
+            inv_storage_maints ism
+          where
+            n.id = ism.inv_node_id
+        ) as num_maints,
+        iss.keys_processed
+      from 
+        inv_nodes n
+      left join inv_storage_scans iss
+        on n.id = iss.inv_node_id
+      and
+        iss.created = (
+          select 
+            max(created)
+          from 
+            inv_storage_scans iss2
+          where
+            n.id = iss2.inv_node_id
+        )
+      order by
+        pcount desc
+    }
   end
 
 end
