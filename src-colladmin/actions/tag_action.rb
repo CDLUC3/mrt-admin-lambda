@@ -74,6 +74,9 @@ class Ec2Info
       threshold = threshold.to_i / 1000000
       return "Large Assembly Server, Threshold: #{threshold}M"
     end
+    if @subservice == "ui"
+      return "ui05 is a preview server" if LambdaBase.is_prod
+    end
     ""
   end
 

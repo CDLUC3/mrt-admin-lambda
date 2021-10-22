@@ -291,6 +291,13 @@ module LambdaFunctions
         id = myparams.fetch("id","0").to_i
         map['ID'] = id
         map['OBJNODES'] = ObjectNodes.new(@config, id).nodes
+        objects = ObjectQuery.query_factory(
+          @config,
+          "id",
+          id.to_s,
+          ""
+        ).objects
+        map['OBJS'] = objects
       end
       map
     end

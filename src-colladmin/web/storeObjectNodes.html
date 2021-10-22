@@ -15,14 +15,60 @@
     <div class="form-body">
     <h1>Manage Object Storage Nodes for Object <a href="{{ADMINTOOL_HOME}}?path=filelist&id={{ID}}">{{ID}}</a></h1>
     {{{COLLADMINNAV}}}
-    <div>
-      <ul>
-        <li>
-          <a href="{{COLLADMIN_ROOT}}/web/storeObjects.html?mode=id&objlist={{ID}}">Object Actions</a>
-        </li>
-      </ul>
-    </div>
 
+    <h2>Object Actions</h2>
+    <table class="sortable results">
+      <thead>
+        <tr>
+          <th>Object Id</th>
+          <th>Ark</th>
+          <th>Collection</th>
+          <th>Owner</th>
+          <th>Local Id</th>
+          <th>Title</th>
+          <th>Created</th>
+          <th>Last Replicated</th>
+          <th>Num Unverified</th>
+          <th>Last Verified</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#OBJS}}
+        <tr>
+          <td><a href="{{ADMINTOOL_HOME}}?path=filelist&id={{id}}">{{id}}</a></td>
+          <th>{{ark}}</th>
+          <td>{{coll}}</td>
+          <td>{{owner}}</td>
+          <td>{{localid}}</td>
+          <td>{{title}}</td>
+          <td>{{created}}</td>
+          <td>{{last_replicated}}</td>
+          <td>{{unverified}}</td>
+          <td>{{last_verified}}</td>
+          <td>
+            <button 
+              title="View node specific details for the object"
+              class="colladmin"
+              onclick="javascript:document.location='storeObjectNodes.html?id={{id}}'"
+            >Object Nodes</button>
+            <button 
+              title="Delete an object from Merritt"
+              class="colladmin storage-delete-obj"
+              onclick="javascript:document.location='https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-node-obj'"
+            >Delete Object 🚧</button>
+            <button 
+              data-id="{{id}}"
+              title="Trigger re-replication of an object."
+              class="colladmin storage-force-replic-for-object"
+            >Trigger Replication</button>
+          </td>
+        </tr>
+        {{/OBJS}}
+      </tbody>      
+    </table>
+
+    <h2>Object Node Actions</h2>
     <table class="sortable results">
       <thead>
         <tr>
