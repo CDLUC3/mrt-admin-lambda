@@ -37,7 +37,7 @@ class ObjectsQuery < AdminQuery
         ) as collection_id,
         (
           select 
-            group_concat(mnemonic)
+            group_concat(ifnull(mnemonic,name))
           from
             inv.inv_collections 
           where 
