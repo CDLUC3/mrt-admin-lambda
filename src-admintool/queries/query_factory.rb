@@ -79,6 +79,8 @@ class QueryFactory
       CollectionsByTimeCumulativeQuery.new(self, path, myparams, 'billable_size', '')
     elsif path == 'collection_details'
       CollectionDetailsQuery.new(self, path, myparams, 'inv_collection_id')
+    elsif path == 'collection_info'
+      CollectionInfoQuery.new(self, path, myparams, 'inv_collection_id')
     elsif path == 'collection_group_details'
       CollectionDetailsQuery.new(self, path, myparams, 'ogroup')
     elsif path == 'invoices'

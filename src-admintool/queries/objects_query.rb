@@ -87,7 +87,7 @@ class ObjectsQuery < AdminQuery
   end
 
   def get_types(results)
-    ['objlist', 'ark', 'name', '', '', '', 'coll', 'mnemonic', 'dataint', 'bytes', 'datetime']
+    ['objlist', 'ark', 'name', '', '', '', 'colllist', 'list', 'dataint', 'bytes', 'datetime']
   end
 
   def get_alternative_queries

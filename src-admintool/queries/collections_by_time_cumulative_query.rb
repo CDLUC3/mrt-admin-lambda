@@ -16,7 +16,7 @@ class CollectionsByTimeCumulativeQuery < AdminQuery
     end
 
     @headers = ['Group', 'Collection Id', 'Collection Name']
-    @types = ['ogroup', 'coll', 'name']
+    @types = ['ogroup', 'colllist', 'name']
     @ranges.each do |range|
       @headers.push(range[1])
       @types.push(@colclass)

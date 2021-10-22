@@ -514,6 +514,16 @@ function format(cell, v, type, merritt_path) {
     makeLink(cell, v, admintool_home + "?path=collections_by_mime_group&mime="+v);
   } else if (type == 'coll' && Number(v) > 0){
     makeLink(cell, v, admintool_home + "?path=collection_details&coll="+v);
+  } else if (type == 'colllist' && v != '' && v != '0'){
+    var arr = v.split(",");
+    if (arr.length == 1) {
+      makeLink(cell, v, admintool_home + "?path=collection_info&coll="+v);
+    } else {
+      var ul = makeUl(cell);
+      $.each(arr, function(i,txt){
+        makeLiLink(ul, txt, admintool_home + "?path=collection_info&coll="+txt);
+      });  
+    }
   } else if (type == 'coll-date' && Number(v) > 0){
     makeLink(cell, v, admintool_home + "?path=objects_recent_coll&coll="+v);
   } else if (type == 'ogroup' && !v.startsWith('ZZ')){
@@ -562,6 +572,8 @@ function format(cell, v, type, merritt_path) {
     var b = arr[0];
     var j = arr.length > 1 ? arr[1] : "";
     makeLink(cell, j, colladmin_home + "?path=manifest&batch="+b+"&job="+j);
+  } else if (type == 'snodes') {
+    makeLink(cell, v, colladmin_root + "/web/storeCollNode.html?coll="+v+"&name="+v);
   } else if (type == 'mnemonic'){
     makeLink(cell, v, merritt_path + "/m/" + v);
   } else if (type == 'ark'){
@@ -578,10 +590,15 @@ function format(cell, v, type, merritt_path) {
   } else if (type == 'profile'){
     makeLink(cell, v, colladmin_home + "?path=profiles&profile=" + encodeURIComponent(v));
   } else if (type == 'list' && v != ''){
-    var ul = makeUl(cell);
-    $.each(v.split(","), function(i,txt){
-      makeLi(ul, txt);
-    });
+    var arr = v.split(",");
+    if (arr.length == 1) {
+      cell.text(v);
+    } else {
+      var ul = makeUl(cell);
+      $.each(arr, function(i,txt){
+        makeLi(ul, txt);
+      });  
+    }
     cell.addClass("hasdata");
   } else if (type == 'vallist' && (""+v).match(/^list:/)){
     var ul = makeUl(cell);
