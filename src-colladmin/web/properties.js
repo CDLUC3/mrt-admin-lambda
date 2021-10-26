@@ -62,7 +62,7 @@ $.ajax({
     if ('message' in data) {
       alert(data.message);
     }
-    window.location.reload()
+    window.location.reload();
   },
   error: function( xhr, status ) {
     alert(xhr.responseText);

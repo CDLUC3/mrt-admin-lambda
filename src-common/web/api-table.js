@@ -685,6 +685,8 @@ function ajax_invoke(p) {
       }
       if ('redirect_location' in data) {
         window.location = data['redirect_location'];
+      } else {
+        window.location.reload();
       }
     },
     error: function( xhr, status ) {
