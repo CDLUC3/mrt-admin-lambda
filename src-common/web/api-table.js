@@ -658,6 +658,10 @@ function format(cell, v, type, merritt_path) {
       li.append(" ");
       li.append($("<span/>").addClass("endpoint").text(title));
     });
+  } else if (type == 'qdelete'  && v != '') {
+    makeLink(cell, 'Delete', colladmin_home + "?path=queue-delete&queue-path="+v);
+  } else if (type == 'requeue'  && v != '') {
+    makeLink(cell, 'Requeue', colladmin_home + "?path=requeue&queue-path="+v);
   } else {
     cell.text(v);
   }

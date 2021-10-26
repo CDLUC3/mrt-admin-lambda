@@ -1,5 +1,5 @@
-require_relative 'merritt_json'
-class AccQueueEntry < MerrittJson
+require_relative 'queue_json'
+class AccQueueEntry < QueueJson
   @@placeholder = nil
   def self.placeholder
     @@placeholder = AccQueueEntry.new({}) if @@placeholder.nil?
@@ -64,6 +64,14 @@ class AccQueueEntry < MerrittJson
       :status, 
       MerrittJsonProperty.new("Status", st)
     )
+    addProperty(
+      :qdelete, 
+      MerrittJsonProperty.new("Queue Del", get_queue_path(false))
+    )
+    addProperty(
+      :requeue, 
+      MerrittJsonProperty.new("Requeue", get_queue_path(true))
+    )
   end
 
   def self.table_headers
@@ -82,6 +90,8 @@ class AccQueueEntry < MerrittJson
       type = 'name' if sym == :token
       type = 'bytes' if sym == :bytes
       type = 'datetime' if sym == :date
+      type = 'qdelete' if sym == :qdelete
+      type = 'requeue' if sym == :requeue
       arr.append(type)
     end
     arr
