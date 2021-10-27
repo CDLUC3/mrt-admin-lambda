@@ -231,7 +231,7 @@ class Nodes < MerrittQuery
           from
             inv_storage_maints ism
           where
-            n.id = ism.inv_node_id
+            iss.id = ism.inv_storage_scan_id
           and
             maint_status = 'review' 
         ) as num_review,
@@ -241,7 +241,7 @@ class Nodes < MerrittQuery
           from
             inv_storage_maints ism
           where
-            n.id = ism.inv_node_id
+            iss.id = ism.inv_storage_scan_id
           and
             maint_status = 'delete' 
         ) as num_deletes,
@@ -251,7 +251,7 @@ class Nodes < MerrittQuery
           from
             inv_storage_maints ism
           where
-            n.id = ism.inv_node_id
+            iss.id = ism.inv_storage_scan_id
         ) as num_maints,
         iss.keys_processed
       from 
@@ -259,9 +259,9 @@ class Nodes < MerrittQuery
       left join inv_storage_scans iss
         on n.id = iss.inv_node_id
       and
-        iss.created = (
+        iss.id = (
           select 
-            max(created)
+            max(id)
           from 
             inv_storage_scans iss2
           where

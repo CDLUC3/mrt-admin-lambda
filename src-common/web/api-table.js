@@ -658,6 +658,12 @@ function format(cell, v, type, merritt_path) {
       li.append(" ");
       li.append($("<span/>").addClass("endpoint").text(title));
     });
+  } else if (type == 'qdelete'  && v != '') {
+    p = colladmin_root + "/lambda?path=queue-delete&queue-path="+v;
+    makeLink(cell, 'Delete', "javascript:ajax_invoke('"+encodeURIComponent(p)+"')");
+  } else if (type == 'requeue'  && v != '') {
+    p = colladmin_root + "/lambda?path=requeue&queue-path="+v;
+    makeLink(cell, 'Requeue', "javascript:ajax_invoke('"+encodeURIComponent(p)+"')");
   } else {
     cell.text(v);
   }
@@ -666,6 +672,27 @@ function format(cell, v, type, merritt_path) {
 function cognitoUserAdmin(u,g) {
   alert(u);
   alert(g);
+}
+
+function ajax_invoke(p) {
+  $.ajax({
+    dataType: "json",
+    method: "GET",
+    url: decodeURIComponent(p),
+    success: function(data) {
+      if ('message' in data) {
+        alert(data.message);
+      }
+      if ('redirect_location' in data) {
+        window.location = data['redirect_location'];
+      } else {
+        window.location.reload();
+      }
+    },
+    error: function( xhr, status ) {
+      alert(xhr.responseText);
+    }
+  });
 }
 
 

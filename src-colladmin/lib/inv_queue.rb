@@ -1,6 +1,6 @@
-require_relative 'merritt_json'
+require_relative 'queue_json'
 
-class InvQueueEntry < MerrittJson
+class InvQueueEntry < QueueJson
   @@placeholder = nil
   def self.placeholder
     @@placeholder = InvQueueEntry.new({}) if @@placeholder.nil?
@@ -53,6 +53,15 @@ class InvQueueEntry < MerrittJson
       :status, 
       MerrittJsonProperty.new("Status", st)
     )
+
+    addProperty(
+      :qdelete, 
+      MerrittJsonProperty.new("Queue Del", get_queue_path(false))
+    )
+    addProperty(
+      :requeue, 
+      MerrittJsonProperty.new("Requeue", get_queue_path(true))
+    )
   end
 
   def self.table_headers
@@ -69,6 +78,8 @@ class InvQueueEntry < MerrittJson
       type = ''
       type = 'status' if sym == :status
       type = 'datetime' if sym == :date
+      type = 'qdelete' if sym == :qdelete
+      type = 'requeue' if sym == :requeue
       arr.append(type)
     end
     arr

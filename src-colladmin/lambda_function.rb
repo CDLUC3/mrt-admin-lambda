@@ -142,6 +142,14 @@ module LambdaFunctions
           result = TagAction.new(config, path, myparams).get_data
         elsif path == "ssm-describe" 
           result = SsmDescribeAction.new(config, path, myparams).get_data
+        elsif path == "queue-delete"
+          return LambdaBase.error(405, "Not yet supported") if LambdaBase.is_prod
+          qp = CGI.unescape(collHandler.get_key_val(myparams, 'queue-path', 'na'))
+          result = PostToIngestAction.new(config, path, myparams, "admin/deleteq#{qp}").get_data
+        elsif path == "requeue"
+          return LambdaBase.error(405, "Not yet supported") if LambdaBase.is_prod
+          qp = CGI.unescape(collHandler.get_key_val(myparams, 'queue-path', 'na'))
+          result = PostToIngestAction.new(config, path, myparams, "admin/requeue#{qp}").get_data
         elsif path == "unpause-ingest-for-collection" 
           result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-pause-ing-for-coll")
         elsif path == "pause-ingest-for-collection" 

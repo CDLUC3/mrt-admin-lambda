@@ -1,5 +1,6 @@
-require_relative 'merritt_json'
-class QueueEntry < MerrittJson
+require_relative 'queue_json'
+
+class QueueEntry < QueueJson
   @@placeholder = nil
   def self.placeholder
     @@placeholder = QueueEntry.new({}) if @@placeholder.nil?
@@ -60,6 +61,14 @@ class QueueEntry < MerrittJson
       :status, 
       MerrittJsonProperty.new("Status", st)
     )
+    addProperty(
+      :qdelete, 
+      MerrittJsonProperty.new("Queue Del", get_queue_path(false))
+    )
+    addProperty(
+      :requeue, 
+      MerrittJsonProperty.new("Requeue", get_queue_path(true))
+    )
   end
 
   def checkFilter(filter)
@@ -82,6 +91,8 @@ class QueueEntry < MerrittJson
       type = 'qjob' if sym == :job
       type = 'status' if sym == :status
       type = 'datetime' if sym == :date
+      type = 'qdelete' if sym == :qdelete
+      type = 'requeue' if sym == :requeue
       arr.append(type)
     end
     arr

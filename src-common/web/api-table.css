@@ -275,3 +275,13 @@ ul:hover span.endpoint {
 tr.latest td, tr.latest th {
   background-color: #EEEEEE;
 }
+
+td.qdelete a, td.requeue a {
+  display: block;
+  text-align: center;
+  border-radius: 5px;
+  font-weight: bold;
+  border: thin solid black;
+  background-color: #EEEEEE;
+  text-decoration: none;
+}
