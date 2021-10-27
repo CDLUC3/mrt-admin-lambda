@@ -7,7 +7,7 @@ class QueueJson < MerrittJson
     if (st == "Consumed")
       st = "consume"
     elsif (st == "Completed")
-      # return "" if requeue
+      return "" if requeue
       st = "complete"
     elsif (st == "Failed")
       st = "fail"
