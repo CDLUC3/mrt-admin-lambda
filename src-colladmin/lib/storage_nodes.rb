@@ -149,7 +149,7 @@ class Nodes < MerrittQuery
           num_deletes: r[9],
           num_maints: r[10],
           keys_processed: r[11],
-          percent: r[3] == 0 ? '' : 100 * (r[11].nil? ? 0 : r[11]) / r[3]
+          percent: r[3] == 0 ? '' : sprintf("%.1f", 100 * (r[11].nil? ? 0 : r[11]) / r[3])
         })
       end
   end
@@ -169,17 +169,21 @@ class Nodes < MerrittQuery
         access_mode,
         (
           select 
-            count(inio.inv_object_id)
+            ifnull(sum(os.file_count), 0)
           from 
             inv_nodes_inv_objects inio
+          inner join billing.object_size os
+            on os.inv_object_id = inio.inv_object_id
           where 
             n.id = inio.inv_node_id
         ) as pcount, 
         (
           select 
-            format(count(inio.inv_object_id), 0)
+            format(ifnull(sum(os.file_count), 0), 0)
           from 
             inv_nodes_inv_objects inio
+          inner join billing.object_size os
+            on os.inv_object_id = inio.inv_object_id
           where 
             n.id = inio.inv_node_id
         ) as pcount_fmt,
@@ -208,17 +212,21 @@ class Nodes < MerrittQuery
         access_mode,
         (
           select 
-            count(inio.inv_object_id)
+            ifnull(sum(os.file_count), 0)
           from 
             inv_nodes_inv_objects inio
+          inner join billing.object_size os
+            on os.inv_object_id = inio.inv_object_id
           where 
             n.id = inio.inv_node_id
         ) as pcount, 
         (
           select 
-            format(count(inio.inv_object_id), 0)
+            format(ifnull(sum(os.file_count), 0), 0)
           from 
             inv_nodes_inv_objects inio
+          inner join billing.object_size os
+            on os.inv_object_id = inio.inv_object_id
           where 
             n.id = inio.inv_node_id
         ) as pcount_fmt,
@@ -288,7 +296,7 @@ class Scans < MerrittQuery
                 end as description,
                 access_mode,
                 count(inio.inv_object_id) as pcount, 
-                format(count(inio.inv_object_id), 0) as pcount_fmt,
+                format(sum(os.file_count), 0) as pcount_fmt,
                 s.created,
                 s.updated,
                 s.scan_status,
@@ -308,6 +316,8 @@ class Scans < MerrittQuery
                 on n.id = s.inv_node_id
               left join inv_nodes_inv_objects inio
                 on n.id = inio.inv_node_id
+              inner join billing.object_size os
+                on inio.inv_object_id = os.inv_object_id
               group by 
                 number, 
                 description, 
