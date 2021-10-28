@@ -143,11 +143,11 @@ module LambdaFunctions
         elsif path == "ssm-describe" 
           result = SsmDescribeAction.new(config, path, myparams).get_data
         elsif path == "queue-delete"
-          return LambdaBase.error(405, "Not yet supported") if LambdaBase.is_prod
+          # return LambdaBase.error(405, "Not yet supported") if LambdaBase.is_prod
           qp = CGI.unescape(collHandler.get_key_val(myparams, 'queue-path', 'na'))
           result = PostToIngestAction.new(config, path, myparams, "admin/deleteq#{qp}").get_data
         elsif path == "requeue"
-          return LambdaBase.error(405, "Not yet supported") if LambdaBase.is_prod
+          # return LambdaBase.error(405, "Not yet supported") if LambdaBase.is_prod
           qp = CGI.unescape(collHandler.get_key_val(myparams, 'queue-path', 'na'))
           result = PostToIngestAction.new(config, path, myparams, "admin/requeue#{qp}").get_data
         elsif path == "unpause-ingest-for-collection" 
