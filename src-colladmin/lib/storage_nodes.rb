@@ -161,32 +161,14 @@ class Nodes < MerrittQuery
   def node_query
     %{
       select 
-        number,
+        n.number,
         case
           when description is null then 'No description'
           else description
         end as description,
         access_mode,
-        (
-          select 
-            ifnull(sum(os.file_count), 0)
-          from 
-            inv_nodes_inv_objects inio
-          inner join billing.object_size os
-            on os.inv_object_id = inio.inv_object_id
-          where 
-            n.id = inio.inv_node_id
-        ) as pcount, 
-        (
-          select 
-            format(ifnull(sum(os.file_count), 0), 0)
-          from 
-            inv_nodes_inv_objects inio
-          inner join billing.object_size os
-            on os.inv_object_id = inio.inv_object_id
-          where 
-            n.id = inio.inv_node_id
-        ) as pcount_fmt,
+        nc.file_count as pcount, 
+        format(nc.file_count, 0) as pcount_fmt,
         '' as scan_status,
         null as created,
         null as updated,
@@ -196,6 +178,8 @@ class Nodes < MerrittQuery
         0 as keys_processed
       from 
         inv_nodes n
+      inner join billing.node_counts nc 
+        on n.id = nc.inv_node_id
       order by
         pcount desc
     }
@@ -204,32 +188,14 @@ class Nodes < MerrittQuery
   def node_scan_query
     %{
       select 
-        number,
+        n.number,
         case
           when description is null then 'No description'
           else description
         end as description,
         access_mode,
-        (
-          select 
-            ifnull(sum(os.file_count), 0)
-          from 
-            inv_nodes_inv_objects inio
-          inner join billing.object_size os
-            on os.inv_object_id = inio.inv_object_id
-          where 
-            n.id = inio.inv_node_id
-        ) as pcount, 
-        (
-          select 
-            format(ifnull(sum(os.file_count), 0), 0)
-          from 
-            inv_nodes_inv_objects inio
-          inner join billing.object_size os
-            on os.inv_object_id = inio.inv_object_id
-          where 
-            n.id = inio.inv_node_id
-        ) as pcount_fmt,
+        nc.file_count as pcount, 
+        format(nc.file_count, 0) as pcount_fmt,
         iss.scan_status,
         iss.created,
         iss.updated,
@@ -264,6 +230,8 @@ class Nodes < MerrittQuery
         iss.keys_processed
       from 
         inv_nodes n
+      inner join billing.node_counts nc
+        on n.id = nc.inv_node_id
       left join inv_storage_scans iss
         on n.id = iss.inv_node_id
       and
@@ -289,14 +257,14 @@ class Scans < MerrittQuery
       run_query(
           %{
               select 
-                number,
+                n.number,
                 case
                   when description is null then 'No description'
                   else description
                 end as description,
                 access_mode,
-                count(inio.inv_object_id) as pcount, 
-                format(sum(os.file_count), 0) as pcount_fmt,
+                nc.file_count as pcount, 
+                format(nc.file_count, 0) as pcount_fmt,
                 s.created,
                 s.updated,
                 s.scan_status,
@@ -314,10 +282,8 @@ class Scans < MerrittQuery
                 inv_nodes n
               inner join inv_storage_scans s
                 on n.id = s.inv_node_id
-              left join inv_nodes_inv_objects inio
-                on n.id = inio.inv_node_id
-              inner join billing.object_size os
-                on inio.inv_object_id = os.inv_object_id
+              inner join billing.node_counts nc
+                on n.id = nc.inv_node_id
               group by 
                 number, 
                 description, 
@@ -327,8 +293,6 @@ class Scans < MerrittQuery
                 scan_status,
                 scan_type,
                 keys_processed
-              having
-                count(inio.inv_object_id) > 0
               order by
                 pcount desc,
                 created desc
