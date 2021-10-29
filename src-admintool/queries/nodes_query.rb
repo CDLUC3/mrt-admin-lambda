@@ -10,27 +10,28 @@ class NodesQuery < AdminQuery
   def get_sql
     %{
       select
-        number,
-        description,
-        count(inio.id) as total,
-        sum(case when role ='primary' then 1 else 0 end),
-        sum(case when role ='secondary' then 1 else 0 end)
+        n.number,
+        n.description,
+        nc.object_count,
+        nc.object_count_primary,
+        nc.object_count_secondary,
+        nc.file_count,
+        nc.billable_size
       from
         inv.inv_nodes n
-      inner join inv.inv_nodes_inv_objects inio
-        on n.id = inio.inv_node_id
-      group by number, description
+      left join node_counts nc
+        on n.id = nc.inv_node_id
       order by
-        total desc;
+        n.number;
     }
   end
 
   def get_headers(results)
-    ['Node Number', 'Description', 'Total Obj', 'Primary', 'Secondary']
+    ['Node Number', 'Description', 'Total Obj', 'Primary Obj', 'Secondary Obj', 'File Count', 'Billable Size']
   end
 
   def get_types(results)
-    ['node', '', 'dataint', 'dataint', 'dataint']
+    ['node', 'name', 'dataint', 'dataint', 'dataint', 'dataint', 'bytes']
   end
 
   def get_filter_col
@@ -39,6 +40,10 @@ class NodesQuery < AdminQuery
 
   def get_group_col
     nil
+  end
+
+  def bytes_unit
+    "1000000000000"
   end
 
 end

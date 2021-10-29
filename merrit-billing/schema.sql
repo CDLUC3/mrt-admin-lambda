@@ -91,3 +91,32 @@ CREATE TABLE ingests_completed (
   INDEX ingest_date(ingest_date)
 );
   
+/*
+DROP TABLE IF EXISTS node_counts;
+*/
+CREATE TABLE node_counts (
+  inv_node_id int,
+  number int,
+  object_count bigint,
+  object_count_primary bigint,
+  object_count_secondary bigint,
+  file_count bigint,
+  billable_size bigint,
+  index node_id(inv_node_id)
+);
+
+/*
+DROP TABLE IF EXISTS daily_node_counts;
+*/
+CREATE TABLE daily_node_counts (
+  as_of_date date,
+  inv_node_id int,
+  number int,
+  object_count bigint,
+  object_count_primary bigint,
+  object_count_secondary bigint,
+  file_count bigint,
+  billable_size bigint,
+  index node_id(inv_node_id),
+  INDEX as_of_date(as_of_date)
+);
