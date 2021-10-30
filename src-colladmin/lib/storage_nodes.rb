@@ -140,16 +140,20 @@ class Nodes < MerrittQuery
       ).each do |r|
         @nodes.push({
           number: r[0],
-          description: "#{r[1]} (#{r[4]})",
+          description: "#{r[1]} (#{MerrittQuery.num_format(r[3])})",
           access_mode: r[2],
-          scan_status: r[5],
-          created: r[6].nil? ? "" : r[6].strftime("%Y-%m-%d %T"),
-          updated: r[7].nil? ? "" : r[7].strftime("%Y-%m-%d %T"),
-          num_review: r[8],
-          num_deletes: r[9],
-          num_maints: r[10],
-          keys_processed: r[11],
-          percent: r[3] == 0 ? '' : sprintf("%.1f", 100 * (r[11].nil? ? 0 : r[11]) / r[3])
+          scan_status: r[4],
+          created: r[5].nil? ? "" : r[5].strftime("%Y-%m-%d %T"),
+          updated: r[6].nil? ? "" : r[6].strftime("%Y-%m-%d %T"),
+          num_review: r[7],
+          num_deletes: r[8],
+          num_maints: r[9],
+          keys_processed: r[10],
+          num_review_fmt: MerrittQuery.num_format(r[7]),
+          num_deletes_fmt: MerrittQuery.num_format(r[8]),
+          num_maints_fmt: MerrittQuery.num_format(r[9]),
+          keys_processed_fmt: MerrittQuery.num_format(r[10]),
+          percent: r[3] == 0 ? '' : sprintf("%.1f", 100 * (r[10].nil? ? 0 : r[10]) / r[3])
         })
       end
   end
@@ -168,7 +172,6 @@ class Nodes < MerrittQuery
         end as description,
         access_mode,
         nc.file_count as pcount, 
-        format(nc.file_count, 0) as pcount_fmt,
         '' as scan_status,
         null as created,
         null as updated,
@@ -195,7 +198,6 @@ class Nodes < MerrittQuery
         end as description,
         access_mode,
         nc.file_count as pcount, 
-        format(nc.file_count, 0) as pcount_fmt,
         iss.scan_status,
         iss.created,
         iss.updated,
@@ -264,7 +266,6 @@ class Scans < MerrittQuery
                 end as description,
                 access_mode,
                 nc.file_count as pcount, 
-                format(nc.file_count, 0) as pcount_fmt,
                 s.created,
                 s.updated,
                 s.scan_status,
@@ -300,16 +301,17 @@ class Scans < MerrittQuery
       ).each do |r|
         @scans.push({
           number: r[0],
-          description: "#{r[1]} (#{r[4]})",
+          description: "#{r[1]} (#{MerrittQuery.num_format(r[3])})",
           access_mode: r[2],
-          created: r[5].nil? ? "" : r[5].strftime("%Y-%m-%d %T"),
-          updated: r[6].nil? ? "" : r[6].strftime("%Y-%m-%d %T"),
-          scan_status: r[7],
-          scan_type: r[8],
-          keys_processed: r[9],
-          complete: r[7] == 'completed',
-          latest: r[5] == r[10],
-          rclass: r[5] == r[10] ? "latest" : ""
+          created: r[4].nil? ? "" : r[4].strftime("%Y-%m-%d %T"),
+          updated: r[5].nil? ? "" : r[5].strftime("%Y-%m-%d %T"),
+          scan_status: r[6],
+          scan_type: r[7],
+          keys_processed: r[8],
+          keys_processed_fmt: MerrittQuery.num_format(r[8]),
+          complete: r[6] == 'completed',
+          latest: r[4] == r[9],
+          rclass: r[4] == r[9] ? "latest" : ""
         })
       end
   end

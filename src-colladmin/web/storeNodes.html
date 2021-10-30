@@ -48,10 +48,10 @@
             <td>{{scan_status}}</td>
             <td>{{created}}</td>
             <td>{{updated}}</td>
-            <td>{{keys_processed}}</td>
+            <td class="dataint" data="{{keys_processed}}">{{keys_processed_fmt}}</td>
             <td>{{percent}}</td>
-            <td>{{num_review}}</td>
-            <td>{{num_deletes}}</td>
+            <td class="dataint" data="{{num_review}}">{{num_review_fmt}}</td>
+            <td class="dataint" data="{{num_deletes}}">{{num_deletes_fmt}}</td>
             <td>
               <button 
                 title="Initiate a scan of a storage node"
