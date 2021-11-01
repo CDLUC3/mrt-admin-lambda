@@ -66,6 +66,10 @@ class AdminProfile < MerrittJson
     @child_count
   end
 
+  def child_count_fmt
+    MerrittQuery.num_format(@child_count)
+  end
+
   def toggle_harvest
     @harvest == 'none' ? 'public' : 'none'
   end
