@@ -227,6 +227,10 @@ module LambdaFunctions
 
     def template_parameters(path, myparams)
       map = super(path, myparams)
+      map['COLL_LAMBDABASE_JS'] = Mustache.render(File.open("template/coll-lambda.base.js").read, p)
+      map['PROFILE_JS'] = Mustache.render(File.open("template/profile.js").read, p)
+      map['PROPERTIES_JS'] = Mustache.render(File.open("template/properties.js").read, p)
+      map['STORAGE_JS'] = Mustache.render(File.open("template/storage.js").read, p)
       if path == '/web/collProfile.html'
         map['OWNERS'] = Owners.new(@config).objs_select
         map['NODES'] = Nodes.new(@config).nodes

@@ -66,11 +66,12 @@ module LambdaFunctions
       super(config, event, context)
     end
      
-    #def template_parameters(path, myparams)
-    #  map = super(path, myparams)
-    #  # Add app specific overrides here
-    #  map
-    #end
+    def template_parameters(path, myparams)
+      map = super(path, myparams)
+      map['ARKFORM_JS'] = Mustache.render(File.open("template/arkform.js").read, p)
+      map['LAMBDABASE_JS'] = Mustache.render(File.open("template/lambda.base.js").read, p)
+      map
+    end
   end
 
 end

@@ -172,13 +172,13 @@ class LambdaBase
   end
 
   def template_parameters(path, myparams)
-    return default_template_parameters if path == '/web/lambda.base.js'
-    return default_template_parameters if path == '/web/coll-lambda.base.js'
     if path =~ %r[^/web/.*\.html]
       p = default_template_parameters
       p['BUTTONS'] = File.open("template/buttons.template").read
       p['ADMINNAV'] = Mustache.render(File.open("template/adminnav.template").read, p)
       p['COLLADMINNAV'] = Mustache.render(File.open("template/colladminnav.template").read, p)
+      p['APITABLE_CSS'] = Mustache.render(File.open("template/api-table.css").read, p)
+      p['APITABLE_JS'] = Mustache.render(File.open("template/api-table.js").read, p)
       return p
     end
     return {} if path == 'web/sorttable.js'
@@ -210,7 +210,7 @@ class LambdaBase
       'Content-Type' => ctype
     }
 
-    headers['Cache-Control'] = 'no-store' unless path =~ %r[^/web/(favicon.ico|sortable.js).*]
+    headers['Cache-Control'] = 'no-store' unless path =~ %r[^/web/(favicon.ico|sorttable.js).*]
     { 
       statusCode: 200, 
       headers: headers,
