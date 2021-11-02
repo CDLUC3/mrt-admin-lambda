@@ -25,9 +25,14 @@
     {{{COLLADMINNAV}}}
     <div>
       <button 
-      class="colladmin stop-all-scans"
+      class="colladmin storage-cancel-all-scans"
       title="Tell Replication to Stop All Storage Scans" 
-   >Stop All Storage Scans 🚧</button>
+   >Stop All Storage Scans</button>
+   <div>
+    <button 
+    class="colladmin storage-allow-all-scans"
+    title="Tell Replication to Stop All Storage Scans" 
+   >Allow All Storage Scans</button>
 
     </div>
     <div>
@@ -64,23 +69,29 @@
               <button 
                 title="Initiate a scan of a storage node"
                 class="colladmin storage-scan-node"
-                onclick="javascript:document.location='https://cdluc3.github.io/mrt-doc/diagrams/store-admin-scan-node'"
-              >Queue Scan 🚧</button>
+                data-node-num="{{number}}"
+                data-scan-id="{{inv_scan_id}}"
+                data-node-name="{{description}}"
+              >Queue Scan</button>
               <button 
                 title="Cancel a scan of a storage node (db)"
-                class="colladmin cancel-storage-scan-node"
-                onclick="javascript:document.location='https://cdluc3.github.io/mrt-doc/diagrams/store-admin-scan-node'"
-              >Cancel Scan 🚧</button>
+                class="colladmin storage-cancel-scan-node"
+                data-node-num="{{number}}"
+                data-scan-id="{{inv_scan_id}}"
+                data-node-name="{{description}}"
+              >Cancel Scan</button>
               <button 
                 title="Resume a scan of a storage node"
-                class="colladmin resume-storage-scan-node"
-                onclick="javascript:document.location='https://cdluc3.github.io/mrt-doc/diagrams/store-admin-scan-node'"
-              >Resume Scan 🚧</button>
+                class="colladmin storage-resume-scan-node"
+                data-node-num="{{number}}"
+                data-scan-id="{{inv_scan_id}}"
+                data-node-name="{{description}}"
+              >Resume Scan</button>
               <button 
-                class="colladmin storage-review"
+                class="colladmin storage-review-scan-node"
                 title="Review the untracked storage keys discovered in the last storage scan" 
-                onclick="javascript:document.location='storeNodeDeletes.html'"
-              >Review Deletes 🚧</button>
+                onclick="javascript:document.location='storeNodeReview.html?nodenum={{number}}&scanid={{inv_scan_id}}'"
+              >Review Mismatches</button>
             </td>
           </tr>
           {{/NODES}}

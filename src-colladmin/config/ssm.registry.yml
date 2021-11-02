@@ -73,6 +73,8 @@ colladmin:
   ingest-services:
     description: URLs to the running ingest instances
     deprecated: Consider performing an ec2 tag lookup instead
+  replic-service:
+    description: URL to a replic instance for storage admin actions
   lambda-arn-base:
     description: "DEV Only: base arn name for the lambda to which code will be deployed"
     skip: true

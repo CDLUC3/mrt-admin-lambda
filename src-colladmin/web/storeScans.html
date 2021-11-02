@@ -54,14 +54,13 @@
               <button 
                 class="colladmin storage-review"
                 title="Review the untracked storage keys discovered in the last storage scan" 
-                onclick="javascript:document.location='storeNodeDeletes.html'"
-              >Review Deletes 🚧</button>
+                onclick="javascript:document.location='storeNodeReview.html?nodenum={{number}}&nodename={{description}}'"
+              >Review Mismatches</button>
               {{/complete}}
               {{#latest}}
               <button 
                 class="colladmin cancel-scan"
                 title="Latest scan for a node" 
-                onclick="javascript:document.location='storeNodeDeletes.html'"
               >Cancel Scan 🚧</button>
               {{/latest}}
             </td>

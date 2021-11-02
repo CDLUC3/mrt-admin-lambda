@@ -21,6 +21,7 @@ require_relative 'actions/cognito_action.rb'
 require_relative 'actions/storage_action.rb'
 require_relative 'actions/tag_action.rb'
 require_relative 'actions/ssm_describe_action.rb'
+require_relative 'actions/replication_action.rb'
 
 # Handle GET or POST event structures pass in via the ALB
 def get_params_from_event(event)
@@ -173,11 +174,18 @@ module LambdaFunctions
         elsif path == "storage-reroute-ui-for-collection" 
           result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-reroute-ui")
         elsif path == "storage-scan-node" 
-          result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-scan-node")
-        elsif path == "storage-review" 
-          result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-scan-node")
-         elsif path == "storage-delete-node-key" 
-          result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-node-keys")
+          result = ReplicationAction.new(config, path, myparams).perform_action
+        elsif path == "storage-cancel-all-scans" 
+          result = ReplicationAction.new(config, path, myparams).perform_action
+        elsif path == "storage-allow-all-scans" 
+          result = ReplicationAction.new(config, path, myparams).perform_action
+        elsif path == "storage-cancel-scan-node" 
+          result = ReplicationAction.new(config, path, myparams).perform_action
+        elsif path == "storage-resume-scan-node" 
+          result = ReplicationAction.new(config, path, myparams).perform_action
+        elsif path == "storage-delete-node-key" 
+          return LambdaBase.error(405, "Not yet supported") if LambdaBase.is_prod
+          result = ReplicationAction.new(config, path, myparams).perform_action
         elsif path == "storage-delete-obj" 
           result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-obj")
         end
@@ -278,10 +286,26 @@ module LambdaFunctions
         map['CNODES'] = CollectionNodes.new(@config, coll.to_i, primary_node).collnodes         
         map['NODES'] = Nodes.new(@config).nodes
       elsif path == '/web/storeNodes.html'
+        nodenum = myparams.fetch("nodenum", "0").to_i
+        nodename = CGI.unescape(myparams.fetch("nodename", ""))
+        map['nodenum'] = nodenum
+        map['nodename'] = nodename
         map['NODES'] = Nodes.new(@config).nodes
       elsif path == '/web/storeScans.html'
         map['SCANS'] = LambdaBase.is_prod ? [] : Scans.new(@config).scans
-      elsif path == '/web/storeNodeDeletes.html'
+      elsif path == '/web/storeNodeReview.html'
+        nodenum = myparams.fetch("nodenum", "0").to_i
+        scanid = myparams.fetch("scanid", "0").to_i
+        map['scan_limit'] = myparams.fetch("limit", "100").to_i
+        map['scan_limit'] = 1000 if map['scan_limit'] > 1000
+        map['scan_offset'] = myparams.fetch("offset", "0").to_i
+        map['scan_offset'] = 0 if map['scan_offset'] < 0
+        map['nodenum'] = nodenum
+        map['scanid'] = scanid
+        map['REVIEW'] = ScanReview.new(@config, scanid, map['scan_limit'], map['scan_offset']).review_items
+        map['scan_count'] = map['REVIEW'].length
+        map['scan_next'] = (map['scan_count'] == map['scan_limit']) ? map['scan_offset'] + map['scan_limit'] : false
+        map['scan_prev'] = (map['scan_offset'] > 0) ? (map['scan_offset'] > map['scan_limit'] ? map['scan_offset'] - map['scan_limit'] : 0) : false
       elsif path == '/web/storeObjects.html'
         objlist = CGI.unescape(myparams.fetch("objlist",""))
         mode = myparams.fetch("mode", "")

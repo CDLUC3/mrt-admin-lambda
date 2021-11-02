@@ -21,8 +21,21 @@
   </head>
   <body>
     <div class="form-body">
-    <h1>Review Storage Node Deletes</h1>
+    <h1>Review Storage Node Mismatches for {{nodenum}}: Scan {{scanid}}</h1>
     {{{COLLADMINNAV}}}
+    <h4>
+      {{#scan_prev}}
+      <a href="storeNodeReview.html?nodenum={{nodenum}}&scanid={{scanid}}&limit={{scan_limit}}&offset={{scan_prev}}">
+        Previous {{scan_limit}} ({{scan_prev}})
+      </a>
+      {{/scan_prev}}
+      - {{scan_count}} Files ({{scan_offset}}) -
+      {{#scan_next}}
+      <a href="storeNodeReview.html?nodenum={{nodenum}}&scanid={{scanid}}&limit={{scan_limit}}&offset={{scan_next}}">
+        Next {{scan_limit}} ({{scan_next}})
+      </a>
+      {{/scan_next}}
+    </h4>
     <p>TODO: Need to figure out how specific deletes could be approved/rejected/partially processed.</p>
     <p>
       <button
@@ -35,13 +48,29 @@
       <table class="sortable results">
         <thead>
           <tr>
-            <th>Node/Bucket</th>
-            <th>File Path</th>
+            <th>Node</th>
             <th>Ark</th>
-            <th>Actions</th>
+            <th>Key</th>
+            <th>File Created</th>
+            <th>Size</th>
+            <th>Maint Status</th>
+            <th>Maint Type</th>
+            <th>Note</th>
           </tr>
         </thead>
         <tbody>
+          {{#REVIEW}}
+          <tr>
+            <th>{{num}}</th>
+            <th class="name">{{ark}}</th>
+            <th class="name">{{key}}</th>
+            <td>{{file_created}}</td>
+            <td class="bytes" data="{{size}}">{{size_fmt}}</td>
+            <td>{{maint_status}}</td>
+            <td>{{maint_type}}</td>
+            <td>{{note}}</td>
+          </tr>
+          {{/REVIEW}}
         </tbody>
       </table>
     </div>
