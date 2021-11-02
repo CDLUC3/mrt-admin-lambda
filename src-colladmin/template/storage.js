@@ -55,31 +55,25 @@ function init() {
   });
   $("button.storage-scan-node").on("click", function(){
     var nodenum = $(this).attr("data-node-num");
-    var nodename = $(this).attr("data-node-name");
     params = {
       path: 'storage-scan-node',
-      nodename: nodename,
       nodenum: nodenum
     }
     invoke(params, true);
   });
   $("button.storage-cancel-scan-node").on("click", function(){
-    var nodenum = $(this).attr("data-node-num");
-    var nodename = $(this).attr("data-node-name");
+    var scanid = $(this).attr("data-scan-id");
     params = {
       path: 'storage-cancel-scan-node',
-      nodename: nodename,
-      nodenum: nodenum
+      scanid: scanid
     }
     invoke(params, true);
   });
   $("button.storage-resume-scan-node").on("click", function(){
-    var nodenum = $(this).attr("data-node-num");
-    var nodename = $(this).attr("data-node-name");
+    var scanid = $(this).attr("data-scan-id");
     params = {
       path: 'storage-resume-scan-node',
-      nodename: nodename,
-      nodenum: nodenum
+      scanid: scanid
     }
     invoke(params, true);
   });
