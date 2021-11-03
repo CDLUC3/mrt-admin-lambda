@@ -237,6 +237,7 @@ module LambdaFunctions
       map = super(path, myparams)
       map['COLL_LAMBDABASE_JS'] = Mustache.render(File.open("template/coll-lambda.base.js").read, p)
       map['PROFILE_JS'] = Mustache.render(File.open("template/profile.js").read, p)
+      map['SUBPROFILE_JS'] = Mustache.render(File.open("template/subprofile.js").read, p)
       map['PROPERTIES_JS'] = Mustache.render(File.open("template/properties.js").read, p)
       map['STORAGE_JS'] = Mustache.render(File.open("template/storage.js").read, p)
       if path == '/web/collProfile.html'
