@@ -66,21 +66,30 @@
             <td class="dataint" data="{{num_review}}">{{num_review_fmt}}</td>
             <td class="dataint" data="{{num_deletes}}">{{num_deletes_fmt}}</td>
             <td>
+              {{#not_running}}
               <button 
                 title="Initiate a scan of a storage node"
                 class="colladmin storage-scan-node"
                 data-node-num="{{number}}"
               >Queue Scan</button>
+              {{/not_running}}
+              
+              {{#running}}
               <button 
                 title="Cancel a scan of a storage node (db)"
                 class="colladmin storage-cancel-scan-node"
                 data-scan-id="{{inv_scan_id}}"
               >Cancel Scan</button>
+              {{/running}}
+
+              {{#not_complete}}
               <button 
                 title="Resume a scan of a storage node"
                 class="colladmin storage-resume-scan-node"
                 data-scan-id="{{inv_scan_id}}"
               >Resume Scan</button>
+              {{/not_complete}}
+              
               <button 
                 class="colladmin storage-review-scan-node"
                 title="Review the untracked storage keys discovered in the last storage scan" 

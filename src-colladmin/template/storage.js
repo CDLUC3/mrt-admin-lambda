@@ -54,7 +54,7 @@ function init() {
     invoke(params, false);
   });
   $("button.storage-scan-node").on("click", function(){
-    var nodenum = $(this).attr("data-node-num");
+    var nodenum = $(this).attr("disabled", true).attr("data-node-num");
     params = {
       path: 'storage-scan-node',
       nodenum: nodenum
@@ -62,7 +62,7 @@ function init() {
     invoke(params, true);
   });
   $("button.storage-cancel-scan-node").on("click", function(){
-    var scanid = $(this).attr("data-scan-id");
+    var scanid = $(this).attr("disabled", true).attr("data-scan-id");
     params = {
       path: 'storage-cancel-scan-node',
       scanid: scanid
@@ -70,7 +70,7 @@ function init() {
     invoke(params, true);
   });
   $("button.storage-resume-scan-node").on("click", function(){
-    var scanid = $(this).attr("data-scan-id");
+    var scanid = $(this).attr("disabled", true).attr("data-scan-id");
     params = {
       path: 'storage-resume-scan-node',
       scanid: scanid
@@ -78,12 +78,14 @@ function init() {
     invoke(params, true);
   });
   $("button.storage-cancel-all-scans").on("click", function(){
+    $(this).attr("disabled", true);
     params = {
       path: 'storage-cancel-all-scans'
     }
     invoke(params, true);
   });
   $("button.storage-allow-all-scans").on("click", function(){
+    $(this).attr("disabled", true);
     params = {
       path: 'storage-allow-all-scans'
     }

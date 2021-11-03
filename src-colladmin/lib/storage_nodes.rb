@@ -143,6 +143,10 @@ class Nodes < MerrittQuery
           description: "#{r[1]} (#{MerrittQuery.num_format(r[3])})",
           access_mode: r[2],
           scan_status: r[4],
+          complete: r[4] == 'completed',
+          not_complete: r[4] != 'completed',
+          running: r[4] == 'started' || r[4] == 'pending',
+          not_running: r[4] != 'started' && r[4] != 'pending',
           created: r[5].nil? ? "" : r[5].strftime("%Y-%m-%d %T"),
           updated: r[6].nil? ? "" : r[6].strftime("%Y-%m-%d %T"),
           inv_scan_id: r[7],
@@ -314,6 +318,9 @@ class Scans < MerrittQuery
           keys_processed: r[8],
           keys_processed_fmt: MerrittQuery.num_format(r[8]),
           complete: r[6] == 'completed',
+          not_complete: r[6] != 'completed',
+          running: r[6] == 'started' || r[6] == 'pending',
+          not_running: r[6] != 'started' && r[6] != 'pending',
           latest: r[4] == r[9],
           rclass: r[4] == r[9] ? "latest" : ""
         })
