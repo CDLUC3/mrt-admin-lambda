@@ -180,8 +180,11 @@ function statusCheck() {
   if ($("#collection-sla:enabled").val() == "") {
     $("#collection-sla").parents("p.proval").addClass("error");
   }
-  if (!$("#notification").val().match(/^((.+)@([^,@]+\.[^,@]+),)*(.+)@([^,@]+\.[^,@]+)$/)) {
-    $("#notification").parents("p.proval").addClass("error");
+  
+  if ($("#notification").is("*")) {
+    if (!$("#notification").val().match(/^((.+)@([^,@]+\.[^,@]+),)*(.+)@([^,@]+\.[^,@]+)$/)) {
+      $("#notification").parents("p.proval").addClass("error");
+    }  
   }
   $("#profile-button").attr("disabled", $(".collsec p.proval.error").length > 0);
 }

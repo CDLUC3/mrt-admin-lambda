@@ -145,12 +145,14 @@ class Nodes < MerrittQuery
           scan_status: r[4],
           complete: r[4] == 'completed',
           not_complete: r[4] != 'completed',
+          not_empty: !r[4].nil?,
           running: r[4] == 'started' || r[4] == 'pending',
           not_running: r[4] != 'started' && r[4] != 'pending',
           created: r[5].nil? ? "" : r[5].strftime("%Y-%m-%d %T"),
           updated: r[6].nil? ? "" : r[6].strftime("%Y-%m-%d %T"),
           inv_scan_id: r[7],
           num_review: r[8],
+          has_review: r[8] > 0,
           num_deletes: r[9],
           num_maints: r[10],
           keys_processed: r[11],
@@ -286,22 +288,23 @@ class Scans < MerrittQuery
                     inv_storage_scans ls
                   where
                     n.id = ls.inv_node_id
-                ) as latest_scan
+                ) as latest_scan,
+                (
+                  select
+                    count(*)
+                  from
+                    inv_storage_maints ism
+                  where
+                    s.id = ism.inv_storage_scan_id
+                  and
+                    maint_status = 'review' 
+                ) as num_review
               from 
                 inv_nodes n
               inner join inv_storage_scans s
                 on n.id = s.inv_node_id
               inner join billing.node_counts nc
                 on n.id = nc.inv_node_id
-              group by 
-                number, 
-                description, 
-                access_mode,
-                created,
-                updated,
-                scan_status,
-                scan_type,
-                keys_processed
               order by
                 pcount desc,
                 created desc
@@ -319,10 +322,14 @@ class Scans < MerrittQuery
           keys_processed_fmt: MerrittQuery.num_format(r[8]),
           complete: r[6] == 'completed',
           not_complete: r[6] != 'completed',
+          not_empty: !r[6].nil?,
           running: r[6] == 'started' || r[6] == 'pending',
           not_running: r[6] != 'started' && r[6] != 'pending',
           latest: r[4] == r[9],
-          rclass: r[4] == r[9] ? "latest" : ""
+          rclass: r[4] == r[9] ? "latest" : "",
+          num_review: r[10],
+          num_review_fmt: MerrittQuery.num_format(r[10]),
+          has_review: r[10] > 0
         })
       end
   end

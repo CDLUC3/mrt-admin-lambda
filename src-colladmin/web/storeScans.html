@@ -35,6 +35,7 @@
             <th>Scan Status</th>
             <th>Scan Type</th>
             <th>Keys Processed</th>
+            <th>Num Review</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -49,20 +50,42 @@
             <td>{{scan_status}}</td>
             <td>{{scan_type}}</td>
             <td class="dataint" data="{{keys_processed}}">{{keys_processed_fmt}}</td>
+            <td class="dataint" data="{{num_review}}">{{num_review_fmt}}</td>
             <td>
               {{#complete}}
+              {{#has_review}}
               <button 
                 class="colladmin storage-review"
                 title="Review the untracked storage keys discovered in the last storage scan" 
                 onclick="javascript:document.location='storeNodeReview.html?nodenum={{number}}&nodename={{description}}'"
               >Review Mismatches</button>
+              {{/has_review}}
               {{/complete}}
+
               {{#latest}}
+
+              {{#running}}
               <button 
-                class="colladmin cancel-scan"
-                title="Latest scan for a node" 
-              >Cancel Scan 🚧</button>
+                title="Cancel a scan of a storage node (db)"
+                class="colladmin storage-cancel-scan-node"
+                data-scan-id="{{inv_scan_id}}"
+              >Cancel Scan</button>
+              {{/running}}
+
+              {{#not_complete}}
+              {{#not_running}}
+              {{#not_empty}}
+              <button 
+                title="Resume a scan of a storage node"
+                class="colladmin storage-resume-scan-node"
+                data-scan-id="{{inv_scan_id}}"
+              >Resume Scan</button>
+              {{/not_empty}}
+              {{/not_running}}
+              {{/not_complete}}
+
               {{/latest}}
+
             </td>
           </tr>
           {{/SCANS}}

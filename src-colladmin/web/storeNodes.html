@@ -83,18 +83,24 @@
               {{/running}}
 
               {{#not_complete}}
+              {{#not_running}}
+              {{#not_empty}}
               <button 
                 title="Resume a scan of a storage node"
                 class="colladmin storage-resume-scan-node"
                 data-scan-id="{{inv_scan_id}}"
               >Resume Scan</button>
+              {{/not_empty}}
+              {{/not_running}}
               {{/not_complete}}
               
+              {{#has_review}}
               <button 
                 class="colladmin storage-review-scan-node"
                 title="Review the untracked storage keys discovered in the last storage scan" 
                 onclick="javascript:document.location='storeNodeReview.html?nodenum={{number}}&scanid={{inv_scan_id}}'"
               >Review Mismatches</button>
+              {{/has_review}}
             </td>
           </tr>
           {{/NODES}}
