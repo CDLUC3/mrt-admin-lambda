@@ -48,9 +48,10 @@
             <th>Scan Started</th>
             <th>Scan Updated</th>
             <th>Keys Processed</th>
-            <th>% Complete</th>
             <th>Num to Review</th>
             <th>Num to Delete</th>
+            <th>Matches Processed</th>
+            <th>% Complete</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -64,9 +65,10 @@
             <td>{{created}}</td>
             <td>{{updated}}</td>
             <td class="dataint" data="{{keys_processed}}">{{keys_processed_fmt}}</td>
-            <td>{{percent}}</td>
             <td class="dataint" data="{{num_review}}">{{num_review_fmt}}</td>
             <td class="dataint" data="{{num_deletes}}">{{num_deletes_fmt}}</td>
+            <td class="dataint" data="{{matches_processed}}">{{matches_processed_fmt}}</td>
+            <td>{{percent}}</td>
             <td>
               {{#not_running}}
               <button 

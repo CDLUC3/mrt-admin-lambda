@@ -218,6 +218,8 @@ BEGIN
   inner join inv.inv_objects o
     on o.id = f.inv_object_id
   where
+    f.billable_size = f.full_size
+  and
     o.modified > @lastupdated
   group by
     inv_object_id

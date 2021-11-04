@@ -138,9 +138,12 @@ class Nodes < MerrittQuery
       run_query(
         LambdaBase.is_prod ? node_query : node_scan_query
       ).each do |r|
+        expected_count = r[3]
+        keys_proc = r[10]
+        match_proc = r[10] - r[9]
         @nodes.push({
           number: r[0],
-          description: "#{r[1]} (#{MerrittQuery.num_format(r[3])})",
+          description: "#{r[1]} (#{MerrittQuery.num_format(expected_count)})",
           access_mode: r[2],
           scan_status: r[4],
           complete: r[4] == 'completed',
@@ -154,12 +157,14 @@ class Nodes < MerrittQuery
           has_review: r[7] > 0,
           num_deletes: r[8],
           num_maints: r[9],
-          keys_processed: r[10],
+          keys_processed: keys_proc,
+          matches_processed: match_proc,
           num_review_fmt: MerrittQuery.num_format(r[7]),
           num_deletes_fmt: MerrittQuery.num_format(r[8]),
           num_maints_fmt: MerrittQuery.num_format(r[9]),
-          keys_processed_fmt: MerrittQuery.num_format(r[10]),
-          percent: r[3] == 0 ? '' : sprintf("%.1f", 100 * (r[10].nil? ? 0 : r[10]) / r[3]),
+          keys_processed_fmt: MerrittQuery.num_format(keys_proc),
+          matches_processed_fmt: MerrittQuery.num_format(match_proc),
+          percent: expected_count == 0 ? '' : sprintf("%.1f", 100 * (match_proc) / expected_count),
           inv_scan_id: r[11]
         })
       end
@@ -237,7 +242,7 @@ class Nodes < MerrittQuery
           where
             n.id = ism.inv_node_id
         ) as num_maints,
-        iss.keys_processed,
+        ifnull(iss.keys_processed, 0) as keys_processed,
         iss.id as inv_scan_id
       from 
         inv_nodes n
