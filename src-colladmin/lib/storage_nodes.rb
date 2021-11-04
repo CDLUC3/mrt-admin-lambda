@@ -150,17 +150,16 @@ class Nodes < MerrittQuery
           not_running: r[4] != 'started' && r[4] != 'pending',
           created: r[5].nil? ? "" : r[5].strftime("%Y-%m-%d %T"),
           updated: r[6].nil? ? "" : r[6].strftime("%Y-%m-%d %T"),
-          inv_scan_id: r[7],
-          num_review: r[8],
-          has_review: r[8] > 0,
-          num_deletes: r[9],
-          num_maints: r[10],
-          keys_processed: r[11],
-          num_review_fmt: MerrittQuery.num_format(r[8]),
-          num_deletes_fmt: MerrittQuery.num_format(r[9]),
-          num_maints_fmt: MerrittQuery.num_format(r[10]),
-          keys_processed_fmt: MerrittQuery.num_format(r[11]),
-          percent: r[3] == 0 ? '' : sprintf("%.1f", 100 * (r[11].nil? ? 0 : r[11]) / r[3])
+          num_review: r[7],
+          has_review: r[7] > 0,
+          num_deletes: r[8],
+          num_maints: r[9],
+          keys_processed: r[10],
+          num_review_fmt: MerrittQuery.num_format(r[7]),
+          num_deletes_fmt: MerrittQuery.num_format(r[8]),
+          num_maints_fmt: MerrittQuery.num_format(r[9]),
+          keys_processed_fmt: MerrittQuery.num_format(r[10]),
+          percent: r[3] == 0 ? '' : sprintf("%.1f", 100 * (r[10].nil? ? 0 : r[10]) / r[3])
         })
       end
   end
@@ -178,11 +177,10 @@ class Nodes < MerrittQuery
           else description
         end as description,
         access_mode,
-        nc.file_count as pcount, 
+        nc.file_count + nc.object_count as pcount, 
         '' as scan_status,
         null as created,
         null as updated,
-        0 as inv_scan_id,
         0 as num_review,
         0 as num_deletes,
         0 as num_maints,
@@ -205,18 +203,17 @@ class Nodes < MerrittQuery
           else description
         end as description,
         access_mode,
-        nc.file_count as pcount, 
+        nc.file_count + nc.object_count as pcount, 
         iss.scan_status,
         iss.created,
         iss.updated,
-        iss.id as inv_scan_id,
         (
           select
             count(*)
           from
             inv_storage_maints ism
           where
-            iss.id = ism.inv_storage_scan_id
+            n.id = ism.inv_node_id
           and
             maint_status = 'review' 
         ) as num_review,
@@ -226,7 +223,7 @@ class Nodes < MerrittQuery
           from
             inv_storage_maints ism
           where
-            iss.id = ism.inv_storage_scan_id
+            n.id = ism.inv_node_id
           and
             maint_status = 'delete' 
         ) as num_deletes,
@@ -236,7 +233,7 @@ class Nodes < MerrittQuery
           from
             inv_storage_maints ism
           where
-            iss.id = ism.inv_storage_scan_id
+            n.id = ism.inv_node_id
         ) as num_maints,
         iss.keys_processed
       from 
@@ -275,7 +272,7 @@ class Scans < MerrittQuery
                   else description
                 end as description,
                 access_mode,
-                nc.file_count as pcount, 
+                nc.file_count + nc.object_count as pcount, 
                 s.created,
                 s.updated,
                 s.scan_status,
@@ -298,7 +295,8 @@ class Scans < MerrittQuery
                     s.id = ism.inv_storage_scan_id
                   and
                     maint_status = 'review' 
-                ) as num_review
+                ) as num_review,
+                s.id
               from 
                 inv_nodes n
               inner join inv_storage_scans s
@@ -329,7 +327,8 @@ class Scans < MerrittQuery
           rclass: r[4] == r[9] ? "latest" : "",
           num_review: r[10],
           num_review_fmt: MerrittQuery.num_format(r[10]),
-          has_review: r[10] > 0
+          has_review: r[10] > 0,
+          inv_scan_id: r[11]
         })
       end
   end
@@ -341,52 +340,84 @@ class Scans < MerrittQuery
 end
 
 class ScanReview < MerrittQuery
-  def initialize(config, scanid, limit, offset)
-      super(config)
-      @review_items = []
-      run_query(
-          %{
-            select
-              ism.s3key,
-              ism.file_created,
-              ism.size,
-              ism.maint_status,
-              ism.maint_type,
-              ism.note,
-              n.number
-            from
-              inv_storage_maints ism
-            inner join inv_nodes n
-              on n.id = ism.inv_node_id
-            where
-              ism.inv_storage_scan_id = ?
-            limit ?
-            offset ?
-            ;
-          },
-          [
-            scanid,
-            limit,
-            offset
-          ]
-      ).each do |r|
-        k = r[0].nil? ? "" : r[0]
-        m = k.match(%r{(ark:/[0-9]+/[0-9a-z]+)([^0-9a-z].*)})
-        ark = m.nil? ? "" : m[1]
-        key = m.nil? ? k : m[2]          
-        @review_items.push({
-          s3key: k,
-          ark: ark,
-          key: key,
-          file_created: r[1].nil? ? "" : r[1].strftime("%Y-%m-%d %T"),
-          size: r[2],
-          size_fmt: MerrittQuery.num_format(r[2]),
-          maint_status: r[3],
-          maint_type: r[4],
-          note: r[5],
-          num: r[6]
-        })
-      end
+
+  def initialize(config)
+    super(config)
+    @review_items = []
+  end
+
+  def query
+    %{
+      select
+        ism.s3key,
+        ism.file_created,
+        ism.size,
+        ism.maint_status,
+        ism.maint_type,
+        ism.note,
+        n.number
+      from
+        inv_storage_maints ism
+      inner join inv_nodes n
+        on n.id = ism.inv_node_id
+    }
+  end
+
+  def scanid_query(scanid, limit, offset)
+    run_query(
+      %{
+        #{query}
+        where
+          ism.inv_storage_scan_id = ?
+        limit ?
+        offset ?
+        ;
+      },
+      [
+        scanid,
+        limit,
+        offset
+      ]
+    )
+  end
+
+  def process_resuts(res)
+    res.each do |r|
+      k = r[0].nil? ? "" : r[0]
+      m = k.match(%r{(ark:/[0-9]+/[0-9a-z]+)([^0-9a-z].*)})
+      ark = m.nil? ? "" : m[1]
+      key = m.nil? ? k : m[2]          
+      @review_items.push({
+        s3key: k,
+        ark: ark,
+        key: key,
+        file_created: r[1].nil? ? "" : r[1].strftime("%Y-%m-%d %T"),
+        size: r[2],
+        size_fmt: MerrittQuery.num_format(r[2]),
+        maint_status: r[3],
+        maint_type: r[4],
+        note: r[5],
+        num: r[6]
+      })
+    end
+  end
+
+  def nodenum_query(nodenum, limit, offset)
+    run_query(
+      %{
+        #{query}
+        where
+          n.number = ?
+        limit ?
+        offset ?
+        ;
+      },
+      [
+        nodenum,
+        limit,
+        offset
+      ]
+    )
   end
 
   def review_items

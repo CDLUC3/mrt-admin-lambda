@@ -183,6 +183,8 @@ module LambdaFunctions
           result = ReplicationAction.new(config, path, myparams).perform_action
         elsif path == "storage-resume-scan-node" 
           result = ReplicationAction.new(config, path, myparams).perform_action
+        elsif path == "replication-state" 
+          result = ReplicationAction.new(config, path, myparams).perform_action
         elsif path == "storage-delete-node-key" 
           return LambdaBase.error(405, "Not yet supported") if LambdaBase.is_prod
           result = ReplicationAction.new(config, path, myparams).perform_action
@@ -303,7 +305,17 @@ module LambdaFunctions
         map['scan_offset'] = 0 if map['scan_offset'] < 0
         map['nodenum'] = nodenum
         map['scanid'] = scanid
-        map['REVIEW'] = ScanReview.new(@config, scanid, map['scan_limit'], map['scan_offset']).review_items
+        rev = ScanReview.new(@config)
+        if scanid == 0
+          rev.process_resuts(
+            rev.nodenum_query(nodenum, map['scan_limit'], map['scan_offset'])
+          )
+        else
+          rev.process_resuts(
+            rev.scanid_query(scanid, map['scan_limit'], map['scan_offset'])
+          )
+        end
+        map['REVIEW'] = rev.review_items
         map['scan_count'] = map['REVIEW'].length
         map['scan_next'] = (map['scan_count'] == map['scan_limit']) ? map['scan_offset'] + map['scan_limit'] : false
         map['scan_prev'] = (map['scan_offset'] > 0) ? (map['scan_offset'] > map['scan_limit'] ? map['scan_offset'] - map['scan_limit'] : 0) : false
