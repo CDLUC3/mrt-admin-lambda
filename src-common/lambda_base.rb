@@ -57,15 +57,12 @@ class LambdaBase
     return if @client_context.nil?
     code = @client_context.fetch("custom", {}).fetch("context_code", "")
     return if code.empty?
-    puts @config.fetch("context", "")
     return unless code == @config.fetch("context", "")
-    puts "Authenticated through client context"
     @context_valid = true
   end
 
   def check_permission
     return if @context_valid
-    puts "Check: #{@cognito_username}: #{@cognito_groups.join(',')}"
     unless @groups_allowed == "NA"
       raise PermissionDeniedError.new "User #{@cognito_username} is not allowed to access this app.  Contact the Merritt Team." unless has_permission
     end
@@ -133,7 +130,6 @@ class LambdaBase
   end
   
   def web_asset?(path)
-    puts(path)
     path =~ %r[^/web/] ? true : false
   end
 

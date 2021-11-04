@@ -60,6 +60,7 @@ function init() {
       nodenum: nodenum
     }
     invoke(params, true);
+    window.location.reload();
   });
   $("button.storage-cancel-scan-node").on("click", function(){
     var scanid = $(this).attr("disabled", true).attr("data-scan-id");
@@ -68,6 +69,7 @@ function init() {
       scanid: scanid
     }
     invoke(params, true);
+    window.location.reload();
   });
   $("button.storage-resume-scan-node").on("click", function(){
     var scanid = $(this).attr("disabled", true).attr("data-scan-id");
@@ -76,13 +78,14 @@ function init() {
       scanid: scanid
     }
     invoke(params, true);
+    window.location.reload();
   });
   $("button.storage-cancel-all-scans").on("click", function(){
     $(this).attr("disabled", true);
     params = {
       path: 'storage-cancel-all-scans'
     }
-    invoke(params, true);
+    invoke(params, true); 
   });
   $("button.storage-allow-all-scans").on("click", function(){
     $(this).attr("disabled", true);
@@ -98,12 +101,14 @@ function init() {
     invoke(params, true);
   });
 
-  invoke(
-    {
-      path: "replication-state",
-    },
-    false
-  );
+  if ($("button.storage-cancel-all-scans").is("*")) {
+    invoke(
+      {
+        path: "replication-state",
+      },
+      false
+    );
+  }
 }
 
 function showPrompt(message, params) {

@@ -159,7 +159,8 @@ class Nodes < MerrittQuery
           num_deletes_fmt: MerrittQuery.num_format(r[8]),
           num_maints_fmt: MerrittQuery.num_format(r[9]),
           keys_processed_fmt: MerrittQuery.num_format(r[10]),
-          percent: r[3] == 0 ? '' : sprintf("%.1f", 100 * (r[10].nil? ? 0 : r[10]) / r[3])
+          percent: r[3] == 0 ? '' : sprintf("%.1f", 100 * (r[10].nil? ? 0 : r[10]) / r[3]),
+          inv_scan_id: r[11]
         })
       end
   end
@@ -184,7 +185,8 @@ class Nodes < MerrittQuery
         0 as num_review,
         0 as num_deletes,
         0 as num_maints,
-        0 as keys_processed
+        0 as keys_processed,
+        0 as inv_scan_id
       from 
         inv_nodes n
       inner join billing.node_counts nc 
@@ -235,7 +237,8 @@ class Nodes < MerrittQuery
           where
             n.id = ism.inv_node_id
         ) as num_maints,
-        iss.keys_processed
+        iss.keys_processed,
+        iss.id as inv_scan_id
       from 
         inv_nodes n
       inner join billing.node_counts nc
