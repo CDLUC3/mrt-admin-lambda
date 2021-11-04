@@ -91,7 +91,19 @@ function init() {
     }
     invoke(params, true);
   });
+  $("button.replication-state").on("click", function(){
+    params = {
+      path: 'replication-state'
+    }
+    invoke(params, true);
+  });
 
+  invoke(
+    {
+      path: "replication-state",
+    },
+    false
+  );
 }
 
 function showPrompt(message, params) {
@@ -106,12 +118,16 @@ function showPrompt(message, params) {
   invoke(params, false);
 }
 
+function scanEnabled(b) {
+  $("button.storage-cancel-all-scans").attr("disabled", !b);
+  $("button.storage-scan-node").attr("disabled", !b);
+  $("button.storage-cancel-scan-node").attr("disabled", !b);
+  $("button.storage-resume-scan-node").attr("disabled", !b);
+  $("button.storage-allow-all-scans").attr("disabled", b);
+}
+
+
 function invoke(params, showRes) {
-  var msg = "Endpoint Params:";
-  Object.keys(params).forEach(function(k){
-    msg += "- " + k + ": " + params[k] + "\n";
-  });
-  alert(msg);
   $.ajax({
     dataType: "json",
     method: "POST",
@@ -119,7 +135,13 @@ function invoke(params, showRes) {
     data: params,
     success: function(data) {
       if ('message' in data) {
-        alert(data.message);
+        if (data.message == "Scan Allowed: true") {
+          scanEnabled(true);
+        } else if (data.message == "Scan Allowed: false") {
+          scanEnabled(false);
+        } else {
+          alert(data.message);
+        }
       } else if (showRes) {
         alert(JSON.stringify(data));
       }

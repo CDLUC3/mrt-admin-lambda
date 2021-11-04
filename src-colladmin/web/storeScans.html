@@ -23,6 +23,20 @@
     <div class="form-body">
     <h1>Manage Storage Scans</h1>
     {{{COLLADMINNAV}}}
+    <h4>Enable/Disable Scanning</h4>
+    <div>
+      <button 
+        disabled="true"
+        class="colladmin storage-cancel-all-scans"
+        title="Tell Replication to Stop All Storage Scans" 
+      >Stop All Storage Scans</button>
+      <button 
+        disabled="true"
+        class="colladmin storage-allow-all-scans"
+        title="Tell Replication to Stop All Storage Scans" 
+      >Allow All Storage Scans</button>
+    </div>
+    <h4>Storage Scan Status</h4>
     <div>
       <table class="sortable results">
         <thead>
@@ -55,9 +69,9 @@
               {{#complete}}
               {{#has_review}}
               <button 
-                class="colladmin storage-review"
+                class="colladmin storage-review-scan-node"
                 title="Review the untracked storage keys discovered in the last storage scan" 
-                onclick="javascript:document.location='storeNodeReview.html?nodenum={{number}}&nodename={{description}}'"
+                onclick="javascript:document.location='storeNodeReview.html?nodenum={{number}}&scanid={{inv_scan_id}}'"
               >Review Mismatches</button>
               {{/has_review}}
               {{/complete}}
