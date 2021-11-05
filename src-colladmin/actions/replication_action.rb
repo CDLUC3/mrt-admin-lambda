@@ -40,7 +40,48 @@ class ReplicationAction < AdminAction
       endpoint = "scan/restart/#{scanid}?t=json"
     elsif @path == "storage-delete-node-key" 
       maintid = @myparams.fetch("maintid", "0").to_i
-      endpoint = "scandelete/#{maintid}?t=json"
+      return MerrittQuery.new(@config).run_update(
+        %{
+          UPDATE 
+            inv_storage_maints
+          SET 
+            maint_status='delete'
+          WHERE 
+            id = ?
+        }, 
+        [maintid],
+        "Maint Status set to delete"
+      ).to_json
+      # TODO - trigger the following with method=DELETE
+      # endpoint = "scandelete/#{maintid}?t=json"
+    elsif @path == "storage-hold-node-key" 
+      maintid = @myparams.fetch("maintid", "0").to_i
+      return MerrittQuery.new(@config).run_update(
+        %{
+          UPDATE 
+            inv_storage_maints
+          SET 
+            maint_status='hold'
+          WHERE 
+            id = ?
+        }, 
+        [maintid],
+        "Maint Status set to hold"
+      ).to_json
+    elsif @path == "storage-review-node-key" 
+      maintid = @myparams.fetch("maintid", "0").to_i
+      return MerrittQuery.new(@config).run_update(
+        %{
+          UPDATE 
+            inv_storage_maints
+          SET 
+            maint_status='review'
+          WHERE 
+            id = ?
+        }, 
+        [maintid],
+        "Maint Status set to review"
+      ).to_json
     elsif @path == "replication-state" 
       endpoint = 'state?t=json'
       post = false

@@ -186,7 +186,11 @@ module LambdaFunctions
         elsif path == "replication-state" 
           result = ReplicationAction.new(config, path, myparams).perform_action
         elsif path == "storage-delete-node-key" 
-          return LambdaBase.error(405, "Not yet supported") if LambdaBase.is_prod
+          # return LambdaBase.error(405, "Not yet supported") if LambdaBase.is_prod
+          result = ReplicationAction.new(config, path, myparams).perform_action
+        elsif path == "storage-hold-node-key" 
+          result = ReplicationAction.new(config, path, myparams).perform_action
+        elsif path == "storage-review-node-key" 
           result = ReplicationAction.new(config, path, myparams).perform_action
         elsif path == "storage-delete-obj" 
           result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-obj")
@@ -299,13 +303,14 @@ module LambdaFunctions
       elsif path == '/web/storeNodeReview.html'
         nodenum = myparams.fetch("nodenum", "0").to_i
         scanid = myparams.fetch("scanid", "0").to_i
+        maint_status = myparams.fetch("maint_status", "review")
         map['scan_limit'] = myparams.fetch("limit", "100").to_i
         map['scan_limit'] = 1000 if map['scan_limit'] > 1000
         map['scan_offset'] = myparams.fetch("offset", "0").to_i
         map['scan_offset'] = 0 if map['scan_offset'] < 0
         map['nodenum'] = nodenum
         map['scanid'] = scanid
-        rev = ScanReview.new(@config)
+        rev = ScanReview.new(@config, maint_status)
         if scanid == 0
           rev.process_resuts(
             rev.nodenum_query(nodenum, map['scan_limit'], map['scan_offset'])

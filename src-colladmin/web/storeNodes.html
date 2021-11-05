@@ -103,7 +103,20 @@
                 class="colladmin storage-review-scan-node"
                 title="Review the untracked storage keys discovered in the last storage scan" 
                 onclick="javascript:document.location='storeNodeReview.html?nodenum={{number}}'"
-              >Review Mismatches</button>
+              >Review: Review</button>
+
+              <button 
+                class="colladmin storage-review-scan-node"
+                title="Review the untracked storage keys marked for hold" 
+                onclick="javascript:document.location='storeNodeReview.html?nodenum={{number}}&maint_status=hold'"
+              >Review: Hold</button>
+
+              <button 
+                class="colladmin storage-review-scan-node"
+                title="Review the untracked storage keys marked for delete" 
+                onclick="javascript:document.location='storeNodeReview.html?nodenum={{number}}&maint_status=delete'"
+              >Review: Delete</button>
+
               {{/has_review}}
             </td>
           </tr>

@@ -100,6 +100,30 @@ function init() {
     }
     invoke(params, true);
   });
+  $("button.storage-delete-node-key").on("click", function(){
+    var maintid = $(this).attr("disabled", true).attr("data-maint-id");
+    params = {
+      path: 'storage-delete-node-key',
+      maintid: maintid
+    }
+    invoke(params, true);
+  });
+  $("button.storage-hold-node-key").on("click", function(){
+    var maintid = $(this).attr("disabled", true).attr("data-maint-id");
+    params = {
+      path: 'storage-hold-node-key',
+      maintid: maintid
+    }
+    invoke(params, true);
+  });
+  $("button.storage-review-node-key").on("click", function(){
+    var maintid = $(this).attr("disabled", true).attr("data-maint-id");
+    params = {
+      path: 'storage-review-node-key',
+      maintid: maintid
+    }
+    invoke(params, true);
+  });
 
   if ($("button.storage-cancel-all-scans").is("*")) {
     invoke(

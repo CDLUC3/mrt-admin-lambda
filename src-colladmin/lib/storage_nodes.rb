@@ -349,8 +349,9 @@ end
 
 class ScanReview < MerrittQuery
 
-  def initialize(config)
+  def initialize(config, maint_status)
     super(config)
+    @maint_status = maint_status
     @review_items = []
   end
 
@@ -363,11 +364,14 @@ class ScanReview < MerrittQuery
         ism.maint_status,
         ism.maint_type,
         ism.note,
-        n.number
+        n.number,
+        ism.id
       from
         inv_storage_maints ism
       inner join inv_nodes n
         on n.id = ism.inv_node_id
+      where
+        maint_status = ?
     }
   end
 
@@ -375,13 +379,14 @@ class ScanReview < MerrittQuery
     run_query(
       %{
         #{query}
-        where
+        and
           ism.inv_storage_scan_id = ?
         limit ?
         offset ?
         ;
       },
       [
+        @maint_status,
         scanid,
         limit,
         offset
@@ -405,7 +410,8 @@ class ScanReview < MerrittQuery
         maint_status: r[3],
         maint_type: r[4],
         note: r[5],
-        num: r[6]
+        num: r[6],
+        maintid: r[7]
       })
     end
   end
@@ -414,13 +420,14 @@ class ScanReview < MerrittQuery
     run_query(
       %{
         #{query}
-        where
+        and
           n.number = ?
         limit ?
         offset ?
         ;
       },
       [
+        @maint_status, 
         nodenum,
         limit,
         offset
