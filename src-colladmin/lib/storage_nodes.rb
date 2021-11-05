@@ -352,7 +352,27 @@ class ScanReview < MerrittQuery
   def initialize(config, maint_status)
     super(config)
     @maint_status = maint_status
+    @sqlparams = []
+    if @maint_status != 'all'
+      @sqlparams.append(@maint_status)
+    end
     @review_items = []
+  end
+
+  def sqlparams(id, limit, offset)
+    sqlp = []
+    if @maint_status != 'all'
+      sqlp.append(@maint_status)
+    end
+    sqlp.append(id)
+    sqlp.append(limit)
+    sqlp.append(offset)
+    sqlp
+  end
+
+  def where
+    return "1 = 1 " if @maint_status == 'all'
+    return "maint_status = ? "
   end
 
   def query
@@ -371,7 +391,7 @@ class ScanReview < MerrittQuery
       inner join inv_nodes n
         on n.id = ism.inv_node_id
       where
-        maint_status = ?
+        #{where}
     }
   end
 
@@ -385,12 +405,21 @@ class ScanReview < MerrittQuery
         offset ?
         ;
       },
-      [
-        @maint_status,
-        scanid,
-        limit,
-        offset
-      ]
+      sqlparams(scanid, limit, offset)
+    )
+  end
+
+  def nodenum_query(nodenum, limit, offset)
+    run_query(
+      %{
+        #{query}
+        and
+          n.number = ?
+        limit ?
+        offset ?
+        ;
+      },
+      sqlparams(nodenum, limit, offset)
     )
   end
 
@@ -414,25 +443,6 @@ class ScanReview < MerrittQuery
         maintid: r[7]
       })
     end
-  end
-
-  def nodenum_query(nodenum, limit, offset)
-    run_query(
-      %{
-        #{query}
-        and
-          n.number = ?
-        limit ?
-        offset ?
-        ;
-      },
-      [
-        @maint_status, 
-        nodenum,
-        limit,
-        offset
-      ]
-    )
   end
 
   def review_items

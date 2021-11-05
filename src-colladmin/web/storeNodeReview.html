@@ -22,8 +22,13 @@
   <body>
     <div class="form-body">
     <h1>Review Storage Node Mismatches for {{nodenum}}: Scan {{scanid}}</h1>
-    {{{COLLADMINNAV}}}
+    <p>
+    {{{COLLADMINNAV2}}}
+    <span> / </span>
+    <a href='/web/storeNodes.html'>Storage Nodes</a>
+    </p>
     <h4>
+      {{count}} Files: 
       {{#scan_prev}}
       <a href="storeNodeReview.html?nodenum={{nodenum}}&scanid={{scanid}}&limit={{scan_limit}}&offset={{scan_prev}}">
         Previous {{scan_limit}} ({{scan_prev}})

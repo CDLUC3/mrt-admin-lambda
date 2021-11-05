@@ -241,11 +241,11 @@ module LambdaFunctions
 
     def template_parameters(path, myparams)
       map = super(path, myparams)
-      map['COLL_LAMBDABASE_JS'] = Mustache.render(File.open("template/coll-lambda.base.js").read, p)
-      map['PROFILE_JS'] = Mustache.render(File.open("template/profile.js").read, p)
-      map['SUBPROFILE_JS'] = Mustache.render(File.open("template/subprofile.js").read, p)
-      map['PROPERTIES_JS'] = Mustache.render(File.open("template/properties.js").read, p)
-      map['STORAGE_JS'] = Mustache.render(File.open("template/storage.js").read, p)
+      map['COLL_LAMBDABASE_JS'] = Mustache.render(File.open("template/coll-lambda.base.js").read, map)
+      map['PROFILE_JS'] = Mustache.render(File.open("template/profile.js").read, map)
+      map['SUBPROFILE_JS'] = Mustache.render(File.open("template/subprofile.js").read, map)
+      map['PROPERTIES_JS'] = Mustache.render(File.open("template/properties.js").read, map)
+      map['STORAGE_JS'] = Mustache.render(File.open("template/storage.js").read, map)
       if path == '/web/collProfile.html'
         map['OWNERS'] = Owners.new(@config).objs_select
         map['NODES'] = Nodes.new(@config).nodes
@@ -301,6 +301,7 @@ module LambdaFunctions
       elsif path == '/web/storeScans.html'
         map['SCANS'] = LambdaBase.is_prod ? [] : Scans.new(@config).scans
       elsif path == '/web/storeNodeReview.html'
+        map['count'] = myparams.fetch("count", "")
         nodenum = myparams.fetch("nodenum", "0").to_i
         scanid = myparams.fetch("scanid", "0").to_i
         maint_status = myparams.fetch("maint_status", "review")

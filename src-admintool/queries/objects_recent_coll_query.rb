@@ -13,7 +13,17 @@ class ObjectsRecentCollQuery < ObjectsQuery
   end
 
   def get_where
-    'where c.id = ?'
+    %{
+      where exists (
+        select 1
+        from 
+          inv.inv_collections_inv_objects icio
+        where
+          o.id = icio.inv_object_id
+        and 
+          icio.inv_collection_id = ?
+      )
+    }
   end
 
 end

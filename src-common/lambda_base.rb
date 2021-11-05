@@ -169,13 +169,14 @@ class LambdaBase
 
   def template_parameters(path, myparams)
     if path =~ %r[^/web/.*\.html]
-      p = default_template_parameters
-      p['BUTTONS'] = File.open("template/buttons.template").read
-      p['ADMINNAV'] = Mustache.render(File.open("template/adminnav.template").read, p)
-      p['COLLADMINNAV'] = Mustache.render(File.open("template/colladminnav.template").read, p)
-      p['APITABLE_CSS'] = Mustache.render(File.open("template/api-table.css").read, p)
-      p['APITABLE_JS'] = Mustache.render(File.open("template/api-table.js").read, p)
-      return p
+      map = default_template_parameters
+      map['BUTTONS'] = File.open("template/buttons.template").read
+      map['ADMINNAV'] = Mustache.render(File.open("template/adminnav.template").read, map)
+      map['COLLADMINNAV'] = Mustache.render(File.open("template/colladminnav.template").read, map)
+      map['COLLADMINNAV2'] = Mustache.render(File.open("template/colladminnav2.template").read, map)
+      map['APITABLE_CSS'] = Mustache.render(File.open("template/api-table.css").read, map)
+      map['APITABLE_JS'] = Mustache.render(File.open("template/api-table.js").read, map)
+      return map
     end
     return {} if path == 'web/sorttable.js'
     return default_template_parameters if path =~ %r[^/web/.*\.js]

@@ -35,7 +35,7 @@ class CollectionsByTimeQuery < AdminQuery
       end
     end
     @headers = ['Group', 'Collection Id', 'Collection Name']
-    @types = ['ogroup', 'coll', 'name']
+    @types = ['ogroup', 'colllist', 'name']
     @ranges.each do |range|
       @headers.push(range[0])
       @types.push(@colclass)

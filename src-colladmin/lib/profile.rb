@@ -317,7 +317,7 @@ class IngestProfile < MerrittJson
       arr.append(type)
     end
     arr.append("")
-    arr.append("coll")
+    arr.append("colllist")
     arr.append("")
     arr.append("")
     arr.append("")

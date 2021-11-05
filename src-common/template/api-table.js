@@ -515,6 +515,7 @@ function format(cell, v, type, merritt_path) {
   } else if (type == 'coll' && Number(v) > 0){
     makeLink(cell, v, admintool_home + "?path=collection_details&coll="+v);
   } else if (type == 'colllist' && v != '' && v != '0'){
+    v = "" + v;
     var arr = v.split(",");
     if (arr.length == 1) {
       makeLink(cell, v, admintool_home + "?path=collection_info&coll="+v);
