@@ -3,15 +3,15 @@ class FilesByNameCollQuery < FilesQuery
     super(query_factory, path, myparams)
     @file = CGI.unescape(get_param('file', ''))
     @file = (@file == '') ? '' : "producer/#{@file}"
-    @coll = get_param('coll', '')
+    @mnemonic = get_param('mnemonic', '')
   end
 
   def get_title
-    "Object(s) by Filename/Coll: #{@file} in #{@coll}"
+    "Object(s) by Filename/Coll: #{@file} in #{@mnemonic}"
   end
 
   def get_params
-    [@file, @coll]
+    [@file, @mnemonic]
   end
 
   def get_where
