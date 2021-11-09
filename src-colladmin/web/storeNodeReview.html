@@ -21,7 +21,7 @@
   </head>
   <body>
     <div class="form-body">
-    <h1>Review Storage Node Mismatches for {{nodenum}}: Scan {{scanid}}</h1>
+    <h1>Review Storage Node with Status {{maint_status}} for {{nodenum}}: Scan {{scanid}}</h1>
     <p>
     {{{COLLADMINNAV2}}}
     <span> / </span>
@@ -78,19 +78,19 @@
             <td>
               <button 
                 title="Mark untracked file for delete"
-                class="colladmin storage-delete-node-key"
+                class="colladmin storage-delete-node-key maint-delete-{{maint_status}}"
                 data-maint-id="{{maintid}}"
               >Mark for Delete</button>
               
               <button 
                 title="Mark untracked file for hold"
-                class="colladmin storage-hold-node-key"
+                class="colladmin storage-hold-node-key maint-hold-{{maint_status}}"
                 data-maint-id="{{maintid}}"
               >Mark for Hold</button>
 
               <button 
                 title="Mark untracked file for review"
-                class="colladmin storage-review-node-key"
+                class="colladmin storage-review-node-key maint-review-{{maint_status}}"
                 data-maint-id="{{maintid}}"
               >Mark for Review</button>
             </td>

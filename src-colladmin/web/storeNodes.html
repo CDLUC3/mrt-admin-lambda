@@ -98,32 +98,29 @@
               {{/not_running}}
               {{/not_complete}}
               
-              {{#has_review}}
               <button 
-                class="colladmin storage-review-scan-node"
+                class="colladmin storage-review-scan-node maints-{{num_maints}}"
                 title="Review the storage keys requiring maintenance" 
                 onclick="javascript:document.location='storeNodeReview.html?nodenum={{number}}&maint_status=all&count={{num_maints}}'"
               >Review: All</button>
 
               <button 
-                class="colladmin storage-review-scan-node"
+                class="colladmin storage-review-scan-node maints-{{num_review}}"
                 title="Review the untracked storage keys discovered in the last storage scan" 
                 onclick="javascript:document.location='storeNodeReview.html?nodenum={{number}}&maint_status=review&count={{num_review}}'"
               >Review: Review</button>
 
               <button 
-                class="colladmin storage-review-scan-node"
+                class="colladmin storage-review-scan-node maints-{{num_holds}}"
                 title="Review the untracked storage keys marked for hold" 
-                onclick="javascript:document.location='storeNodeReview.html?nodenum={{number}}&maint_status=hold&count={{num_hold}}'"
+                onclick="javascript:document.location='storeNodeReview.html?nodenum={{number}}&maint_status=hold&count={{num_holds}}'"
               >Review: Hold</button>
 
               <button 
-                class="colladmin storage-review-scan-node"
+                class="colladmin storage-review-scan-node maints-{{num_deletes}}"
                 title="Review the untracked storage keys marked for delete" 
-                onclick="javascript:document.location='storeNodeReview.html?nodenum={{number}}&maint_status=delete&count={{num_delete}}'"
+                onclick="javascript:document.location='storeNodeReview.html?nodenum={{number}}&maint_status=delete&count={{num_deletes}}'"
               >Review: Delete</button>
-
-              {{/has_review}}
             </td>
           </tr>
           {{/NODES}}

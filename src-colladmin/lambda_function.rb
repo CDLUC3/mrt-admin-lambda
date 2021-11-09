@@ -305,6 +305,7 @@ module LambdaFunctions
         nodenum = myparams.fetch("nodenum", "0").to_i
         scanid = myparams.fetch("scanid", "0").to_i
         maint_status = myparams.fetch("maint_status", "review")
+        map['maint_status'] = maint_status
         map['scan_limit'] = myparams.fetch("limit", "100").to_i
         map['scan_limit'] = 1000 if map['scan_limit'] > 1000
         map['scan_offset'] = myparams.fetch("offset", "0").to_i

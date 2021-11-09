@@ -285,3 +285,11 @@ td.qdelete a, td.requeue a {
   background-color: #EEEEEE;
   text-decoration: none;
 }
+
+button.maints-0,
+button.maint-delete-delete,
+button.maint-review-review,
+button.maint-hold-hold
+{
+  display: none;
+}

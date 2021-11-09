@@ -66,15 +66,11 @@
             <td class="dataint" data="{{keys_processed}}">{{keys_processed_fmt}}</td>
             <td class="dataint" data="{{num_review}}">{{num_review_fmt}}</td>
             <td>
-              {{#complete}}
-              {{#has_review}}
               <button 
-                class="colladmin storage-review-scan-node"
+                class="colladmin storage-review-scan-node maints-{{num_review}}"
                 title="Review the untracked storage keys discovered in the last storage scan" 
                 onclick="javascript:document.location='storeNodeReview.html?nodenum={{number}}&scanid={{inv_scan_id}}&count={{num_review}}'"
               >Review Mismatches</button>
-              {{/has_review}}
-              {{/complete}}
 
               {{#latest}}
 
