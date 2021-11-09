@@ -21,21 +21,12 @@
   </head>
   <body>
     <div class="form-body">
-    <h1>Manage Storage Scans</h1>
-    {{{COLLADMINNAV}}}
-    <h4>Enable/Disable Scanning</h4>
-    <div>
-      <button 
-        disabled="true"
-        class="colladmin storage-cancel-all-scans"
-        title="Tell Replication to Stop All Storage Scans" 
-      >Stop All Storage Scans</button>
-      <button 
-        disabled="true"
-        class="colladmin storage-allow-all-scans"
-        title="Tell Replication to Stop All Storage Scans" 
-      >Allow All Storage Scans</button>
-    </div>
+    <h1>Manage Storage Scans for node {{nodenum}}</h1>
+    <p>
+      {{{COLLADMINNAV2}}}
+      <span> / </span>
+      <a href='/web/storeNodes.html'>Storage Nodes</a>
+    </p>
     <h4>Storage Scan Status</h4>
     <div>
       <table class="sortable results">

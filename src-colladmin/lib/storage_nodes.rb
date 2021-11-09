@@ -165,7 +165,7 @@ class Nodes < MerrittQuery
           num_maints_fmt: MerrittQuery.num_format(r[10]),
           keys_processed_fmt: MerrittQuery.num_format(keys_proc),
           matches_processed_fmt: MerrittQuery.num_format(match_proc),
-          percent: expected_count == 0 ? '' : sprintf("%.1f", 100 * (match_proc) / expected_count),
+          percent: expected_count == 0 ? '' : sprintf("%.1f", 1000 * (match_proc) / expected_count / 10.0),
           inv_scan_id: r[12]
         })
       end
@@ -252,7 +252,7 @@ class Nodes < MerrittQuery
 end
 
 class Scans < MerrittQuery
-  def initialize(config)
+  def initialize(config, nodenum)
       super(config)
       @scans = []
       run_query(
@@ -295,10 +295,13 @@ class Scans < MerrittQuery
                 on n.id = s.inv_node_id
               inner join billing.node_counts nc
                 on n.id = nc.inv_node_id
+              where 
+                n.number = ?
               order by
                 pcount desc,
                 created desc
-          }
+          },
+          [nodenum]
       ).each do |r|
         @scans.push({
           number: r[0],

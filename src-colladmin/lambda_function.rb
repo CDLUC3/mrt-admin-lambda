@@ -299,7 +299,9 @@ module LambdaFunctions
         map['nodename'] = nodename
         map['NODES'] = Nodes.new(@config).nodes
       elsif path == '/web/storeScans.html'
-        map['SCANS'] = LambdaBase.is_prod ? [] : Scans.new(@config).scans
+        nodenum = myparams.fetch("nodenum", "0").to_i
+        map['nodenum'] = nodenum
+        map['SCANS'] = Scans.new(@config, nodenum).scans
       elsif path == '/web/storeNodeReview.html'
         map['count'] = myparams.fetch("count", "")
         nodenum = myparams.fetch("nodenum", "0").to_i

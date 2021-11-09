@@ -289,7 +289,8 @@ td.qdelete a, td.requeue a {
 button.maints-0,
 button.maint-delete-delete,
 button.maint-review-review,
-button.maint-hold-hold
+button.maint-hold-hold,
+span.scan-0
 {
   display: none;
 }

@@ -68,7 +68,7 @@
             <td class="dataint" data="{{num_review}}">{{num_review_fmt}}</td>
             <td class="dataint" data="{{num_deletes}}">{{num_deletes_fmt}}</td>
             <td class="dataint" data="{{matches_processed}}">{{matches_processed_fmt}}</td>
-            <td>{{percent}}</td>
+            <td class="dataint">{{percent}}</td>
             <td>
               {{#not_running}}
               <button 
@@ -97,7 +97,13 @@
               {{/not_empty}}
               {{/not_running}}
               {{/not_complete}}
-              
+
+              <button 
+                class="colladmin storage-review-scan-node maints-{{num_maints}}"
+                title="Review the storage keys requiring maintenance" 
+                onclick="javascript:document.location='storeScans.html?nodenum={{number}}'"
+              >Scan History</button>
+
               <button 
                 class="colladmin storage-review-scan-node maints-{{num_maints}}"
                 title="Review the storage keys requiring maintenance" 
