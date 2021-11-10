@@ -2,6 +2,14 @@ $(document).ready(function(){
   init();
 });
 
+function getMaintIdList() {
+  var maintidlist = [];
+  $("input.maintid").each(function(){
+    maintidlist.push($(this).val());
+  });
+  return maintidlist.join(',');
+}
+
 function init() {
   $("p.buttons").show();
   $("button.storage-del-object-from-node").on("click", function(){
@@ -108,6 +116,21 @@ function init() {
     }
     invoke(params, true);
   });
+  $("button.storage-delete-node-page").on("click", function(){
+    params = {
+      path: 'storage-delete-node-page',
+      maintidlist: getMaintIdList()
+    }
+    invoke(params, true);
+  });
+  $("button.storage-perform-delete-node-key").on("click", function(){
+    var maintid = $(this).attr("disabled", true).attr("data-maint-id");
+    params = {
+      path: 'storage-perform-delete-node-key',
+      maintid: maintid
+    }
+    invoke(params, true);
+  });
   $("button.storage-hold-node-key").on("click", function(){
     var maintid = $(this).attr("disabled", true).attr("data-maint-id");
     params = {
@@ -116,11 +139,25 @@ function init() {
     }
     invoke(params, true);
   });
+  $("button.storage-hold-node-page").on("click", function(){
+    params = {
+      path: 'storage-hold-node-page',
+      maintidlist: getMaintIdList()
+    }
+    invoke(params, true);
+  });
   $("button.storage-review-node-key").on("click", function(){
     var maintid = $(this).attr("disabled", true).attr("data-maint-id");
     params = {
       path: 'storage-review-node-key',
       maintid: maintid
+    }
+    invoke(params, true);
+  });
+  $("button.storage-review-node-page").on("click", function(){
+    params = {
+      path: 'storage-review-node-page',
+      maintidlist: getMaintIdList()
     }
     invoke(params, true);
   });

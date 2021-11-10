@@ -6,6 +6,7 @@ require_relative '../lib/profile'
 require_relative '../lib/admin_objects'
 require_relative '../lib/storage_nodes'
 require_relative '../lib/merritt_query'
+require_relative '../lib/http_delete_json'
 
 class ReplicationAction < AdminAction
   def initialize(config, path, myparams)
@@ -18,7 +19,7 @@ class ReplicationAction < AdminAction
 
   def perform_action
     endpoint = ''
-    post = true
+    method = :post
     if @path == "storage-scan-node"
       nodeid = @myparams.fetch("nodenum", "0").to_i
       endpoint = "scan/start/#{nodeid}?t=json"
@@ -47,13 +48,38 @@ class ReplicationAction < AdminAction
           SET 
             maint_status='delete'
           WHERE 
+            maint_status != 'removed'
+          and
             id = ?
         }, 
         [maintid],
         "Maint Status set to delete"
       ).to_json
-      # TODO - trigger the following with method=DELETE
-      # endpoint = "scandelete/#{maintid}?t=json"
+    elsif @path == "storage-delete-node-page" 
+      maintidlist = [];
+      placeholders = [];
+      @myparams.fetch("maintidlist", "").split(",").each do |id| 
+        maintidlist.append(id.to_i)
+        placeholders.append("?")
+      end
+      return MerrittQuery.new(@config).run_update(
+        %{
+          UPDATE 
+            inv_storage_maints
+          SET 
+            maint_status='delete'
+          WHERE 
+            maint_status != 'removed'
+          and
+            id in (#{placeholders.join(',')})
+        }, 
+        maintidlist,
+        "Maint Status set to delete for #{maintidlist.length} items"
+      ).to_json
+    elsif @path == "storage-perform-delete-node-key" 
+      maintid = @myparams.fetch("maintid", "0").to_i
+      method = :delete
+      endpoint = "scandelete/#{maintid}?t=json"
     elsif @path == "storage-hold-node-key" 
       maintid = @myparams.fetch("maintid", "0").to_i
       return MerrittQuery.new(@config).run_update(
@@ -63,10 +89,33 @@ class ReplicationAction < AdminAction
           SET 
             maint_status='hold'
           WHERE 
+            maint_status != 'removed'
+          and
             id = ?
         }, 
         [maintid],
         "Maint Status set to hold"
+      ).to_json
+    elsif @path == "storage-hold-node-page" 
+      maintidlist = [];
+      placeholders = [];
+      @myparams.fetch("maintidlist", "").split(",").each do |id| 
+        maintidlist.append(id.to_i)
+        placeholders.append("?")
+      end
+      return MerrittQuery.new(@config).run_update(
+        %{
+          UPDATE 
+            inv_storage_maints
+          SET 
+            maint_status='hold'
+          WHERE 
+            maint_status != 'removed'
+          and
+            id in (#{placeholders.join(',')})
+        }, 
+        maintidlist,
+        "Maint Status set to hold for #{maintidlist.length} items"
       ).to_json
     elsif @path == "storage-review-node-key" 
       maintid = @myparams.fetch("maintid", "0").to_i
@@ -77,20 +126,50 @@ class ReplicationAction < AdminAction
           SET 
             maint_status='review'
           WHERE 
+            maint_status != 'removed'
+          and
             id = ?
         }, 
         [maintid],
         "Maint Status set to review"
       ).to_json
+    elsif @path == "storage-review-node-page" 
+      maintidlist = [];
+      placeholders = [];
+      @myparams.fetch("maintidlist", "").split(",").each do |id| 
+        maintidlist.append(id.to_i)
+        placeholders.append("?")
+      end
+      return MerrittQuery.new(@config).run_update(
+        %{
+          UPDATE 
+            inv_storage_maints
+          SET 
+            maint_status='review'
+          WHERE 
+            maint_status != 'removed'
+          and
+            id in (#{placeholders.join(',')})
+        }, 
+        maintidlist,
+        "Maint Status set to review for #{maintidlist.length} items"
+      ).to_json
     elsif @path == "replication-state" 
       endpoint = 'state?t=json'
-      post = false
+      method = :get
     else
       return {message: "No action"}.to_json
     end
 
     begin
-      qjson = post ? HttpPostJson.new(get_replic_server, endpoint) : HttpGetJson.new(get_replic_server, endpoint)
+      qjson = nil
+      if method == :post
+        qjson = HttpPostJson.new(get_replic_server, endpoint)
+      elsif method == :delete
+        qjson = HttpDeleteJson.new(get_replic_server, endpoint)
+      else 
+        qjson = HttpGetJson.new(get_replic_server, endpoint)
+      end
       return { message: "Status #{qjson.status} for #{endpoint}" }.to_json unless qjson.status == 200
       return parseReplicResponse(qjson.body).to_json unless qjson.body.empty?
       { message: "No response for #{endpoint}" }.to_json
@@ -111,6 +190,10 @@ class ReplicationAction < AdminAction
     elsif @path == "storage-cancel-all-scans" || @path == "storage-allow-all-scans" || @path == "replication-state"
     {
       message: "Scan Allowed: #{resp.fetch("repsvc:replicationServiceState", {}).fetch("repsvc:allowScan", "na")}"
+    }
+    elsif @path == "storage-perform-delete-node-key" 
+    {
+      message: "Node/Key State: #{resp.fetch("repmnt:invStorageMaint", {}).fetch("repmnt:maintStatus", "na")}"
     }
     else
       resp

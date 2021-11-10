@@ -144,11 +144,9 @@ module LambdaFunctions
         elsif path == "ssm-describe" 
           result = SsmDescribeAction.new(config, path, myparams).get_data
         elsif path == "queue-delete"
-          # return LambdaBase.error(405, "Not yet supported") if LambdaBase.is_prod
           qp = CGI.unescape(collHandler.get_key_val(myparams, 'queue-path', 'na'))
           result = PostToIngestAction.new(config, path, myparams, "admin/deleteq#{qp}").get_data
         elsif path == "requeue"
-          # return LambdaBase.error(405, "Not yet supported") if LambdaBase.is_prod
           qp = CGI.unescape(collHandler.get_key_val(myparams, 'queue-path', 'na'))
           result = PostToIngestAction.new(config, path, myparams, "admin/requeue#{qp}").get_data
         elsif path == "unpause-ingest-for-collection" 
@@ -186,11 +184,19 @@ module LambdaFunctions
         elsif path == "replication-state" 
           result = ReplicationAction.new(config, path, myparams).perform_action
         elsif path == "storage-delete-node-key" 
-          # return LambdaBase.error(405, "Not yet supported") if LambdaBase.is_prod
+          result = ReplicationAction.new(config, path, myparams).perform_action
+        elsif path == "storage-delete-node-page" 
+          result = ReplicationAction.new(config, path, myparams).perform_action
+        elsif path == "storage-perform-delete-node-key" 
+          return LambdaBase.error(405, "Not yet supported") if LambdaBase.is_prod
           result = ReplicationAction.new(config, path, myparams).perform_action
         elsif path == "storage-hold-node-key" 
           result = ReplicationAction.new(config, path, myparams).perform_action
+        elsif path == "storage-hold-node-page" 
+          result = ReplicationAction.new(config, path, myparams).perform_action
         elsif path == "storage-review-node-key" 
+          result = ReplicationAction.new(config, path, myparams).perform_action
+        elsif path == "storage-review-node-page" 
           result = ReplicationAction.new(config, path, myparams).perform_action
         elsif path == "storage-delete-obj" 
           result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-obj")
@@ -308,6 +314,7 @@ module LambdaFunctions
         scanid = myparams.fetch("scanid", "0").to_i
         maint_status = myparams.fetch("maint_status", "review")
         map['maint_status'] = maint_status
+        map['is_delete'] = maint_status == 'delete'
         map['scan_limit'] = myparams.fetch("limit", "100").to_i
         map['scan_limit'] = 1000 if map['scan_limit'] > 1000
         map['scan_offset'] = myparams.fetch("offset", "0").to_i

@@ -26,29 +26,53 @@
     {{{COLLADMINNAV2}}}
     <span> / </span>
     <a href='/web/storeNodes.html'>Storage Nodes</a>
+    <span> / </span>
+    <a href='/web/storeNodeReview.html?nodenum={{nodenum}}&maint_status=all'>Review Node {{nodenum}}</a>
     </p>
-    <h4>
+    <p>
+      <ul>
+        <li><a href='/web/storeNodeReview.html?nodenum={{nodenum}}&maint_status=review'>Review Node Review for {{nodenum}}</a></li>
+        <li><a href='/web/storeNodeReview.html?nodenum={{nodenum}}&maint_status=hold'>Review Node Hold for {{nodenum}}</a></li>
+        <li><a href='/web/storeNodeReview.html?nodenum={{nodenum}}&maint_status=delete'>Review Node Delete for {{nodenum}}</a></li>
+      </ul>
+    </p>
+    <h4>Pagination</h4>
+    <div>
       {{count}} Files: 
       {{#scan_prev}}
-      <a href="storeNodeReview.html?nodenum={{nodenum}}&scanid={{scanid}}&limit={{scan_limit}}&offset={{scan_prev}}">
+      <a href="storeNodeReview.html?nodenum={{nodenum}}&scanid={{scanid}}&limit={{scan_limit}}&offset={{scan_prev}}&maint_status={{maint_status}}">
         Previous {{scan_limit}} ({{scan_prev}})
       </a>
       {{/scan_prev}}
       - {{scan_count}} Files ({{scan_offset}}) -
       {{#scan_next}}
-      <a href="storeNodeReview.html?nodenum={{nodenum}}&scanid={{scanid}}&limit={{scan_limit}}&offset={{scan_next}}">
+      <a href="storeNodeReview.html?nodenum={{nodenum}}&scanid={{scanid}}&limit={{scan_limit}}&offset={{scan_next}}&maint_status={{maint_status}}">
         Next {{scan_limit}} ({{scan_next}})
       </a>
       {{/scan_next}}
-    </h4>
-    <p>TODO: Need to figure out how specific deletes could be approved/rejected/partially processed.</p>
-    <p>
-      <button
-        title="initiate the delete for a set of untracked storage keys that are not in the inventory database"
-        class="colladmin storage-delete-node-key"
-        onclick="javascript:document.location='https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-node-keys'"
-      >Delete Key (will appear in listing) 🚧</button>
-    </p>
+    </div>
+    <h4>Page Actions</h4>
+    <div>
+      <button 
+      title="Mark page for delete"
+        class="colladmin storage-delete-node-page maint-delete-{{maint_status}}"
+      >Mark page for Delete</button>
+      <button 
+      title="Mark page for hold"
+        class="colladmin storage-hold-node-page maint-hold-{{maint_status}}"
+      >Mark page for Hold</button>
+      <button 
+      title="Mark page for review"
+        class="colladmin storage-review-node-page maint-review-{{maint_status}}"
+      >Mark page for Review</button>
+      {{#is_delete}}
+      <button 
+      title="Process ALL keys marked for delete"
+        class="colladmin storage-perform-delete-node-all"
+      >Delete ALL marked for delete 🚧{{#IS_PROD}}🚧{{/IS_PROD}}</button>
+      {{/is_delete}}
+    </div>
+    <h4>Node Key List</h4>
     <div>
       <table class="sortable results">
         <thead>
@@ -67,7 +91,7 @@
         <tbody>
           {{#REVIEW}}
           <tr>
-            <th>{{num}}</th>
+            <th>{{num}}<input type="hidden" class="maintid" value="{{maintid}}"/></th>
             <th class="name">{{ark}}</th>
             <th class="name">{{key}}</th>
             <td>{{file_created}}</td>
@@ -93,6 +117,14 @@
                 class="colladmin storage-review-node-key maint-review-{{maint_status}}"
                 data-maint-id="{{maintid}}"
               >Mark for Review</button>
+
+              {{#is_delete}}
+              <button 
+                title="Initiate delete of mismatched item"
+                class="colladmin storage-perform-delete-node-key"
+                data-maint-id="{{maintid}}"
+              >Delete from Cloud Storage {{#IS_PROD}}🚧{{/IS_PROD}}</button>
+              {{/is_delete}}
             </td>
           </tr>
           {{/REVIEW}}

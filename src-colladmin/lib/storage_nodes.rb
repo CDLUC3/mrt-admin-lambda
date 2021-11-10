@@ -426,7 +426,8 @@ class ScanReview < MerrittQuery
         maint_type: r[4],
         note: r[5],
         num: r[6],
-        maintid: r[7]
+        maintid: r[7],
+        is_delete: r[3] == 'delete'
       })
     end
   end

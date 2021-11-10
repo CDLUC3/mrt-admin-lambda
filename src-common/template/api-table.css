@@ -290,7 +290,15 @@ button.maints-0,
 button.maint-delete-delete,
 button.maint-review-review,
 button.maint-hold-hold,
+button.maint-delete-removed,
+button.maint-review-removed,
+button.maint-hold-removed,
 span.scan-0
 {
   display: none;
+}
+
+button.storage-perform-delete-node-key,
+button.storage-perform-delete-node-all {
+  color: red;
 }
