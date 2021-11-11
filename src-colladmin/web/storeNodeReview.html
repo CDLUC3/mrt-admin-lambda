@@ -67,9 +67,10 @@
       >Mark page for Review</button>
       {{#is_delete}}
       <button 
-      title="Process ALL keys marked for delete"
-        class="colladmin storage-perform-delete-node-all"
-      >Delete ALL marked for delete 🚧{{#IS_PROD}}🚧{{/IS_PROD}}</button>
+      title="Process BATCH of keys marked for delete"
+        class="colladmin storage-perform-delete-node-batch"
+        data-node-num="{{nodenum}}"
+      >Delete BATCH of keys marked for delete{{#IS_PROD}}🚧{{/IS_PROD}}</button>
       {{/is_delete}}
     </div>
     <h4>Node Key List</h4>

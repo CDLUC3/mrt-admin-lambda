@@ -27,139 +27,139 @@ function init() {
     showPrompt(message, params);
   });
   $("button.storage-force-audit-for-object").on("click", function(){
-    var objid = $(this).attr("data-id");
-    var nodeid = $(this).attr("data-node-id");
     params = {
       path: 'storage-force-audit-for-object',
-      objid: objid,
-      nodeid: nodeid
+      objid: $(this).attr("data-id"),
+      nodeid: $(this).attr("data-node-id")
     }
-    invoke(params, false);
+    invoke(params, false, false);
   });
   $("button.storage-rerun-audit-for-object").on("click", function(){
-    var objid = $(this).attr("data-id");
-    var nodeid = $(this).attr("data-node-id");
     params = {
       path: 'storage-rerun-audit-for-object',
-      objid: objid,
-      nodeid: nodeid
+      objid: $(this).attr("data-id"),
+      nodeid: $(this).attr("data-node-id")
     }
-    invoke(params, false);
+    invoke(params, false, false);
   });
   $("button.storage-force-replic-for-object").on("click", function(){
-    var objid = $(this).attr("data-id");
     $(this).parents("tr").find("button").attr("disabled", true);
     params = {
       path: 'storage-force-replic-for-object',
-      objid: objid
+      objid: $(this).attr("data-id")
     }
-    invoke(params, false);
+    invoke(params, false, false);
   });
   $("button.storage-clear-audit-batch").on("click", function(){
     params = {
       path: 'storage-clear-audit-batch'
     }
-    invoke(params, false);
+    invoke(params, false, false);
   });
   $("button.storage-scan-node").on("click", function(){
-    var nodenum = $(this).attr("disabled", true).attr("data-node-num");
+    $(this).attr("disabled", true);
     params = {
       path: 'storage-scan-node',
-      nodenum: nodenum
+      nodenum: $(this).attr("data-node-num")
     }
-    invoke(params, true);
-    window.location.reload();
+    invoke(params, true, true);
   });
   $("button.storage-cancel-scan-node").on("click", function(){
-    var scanid = $(this).attr("disabled", true).attr("data-scan-id");
+    $(this).attr("disabled", true);
     params = {
       path: 'storage-cancel-scan-node',
-      scanid: scanid
+      scanid: $(this).attr("data-scan-id")
     }
-    invoke(params, true);
-    window.location.reload();
+    invoke(params, true, true);
   });
   $("button.storage-resume-scan-node").on("click", function(){
-    var scanid = $(this).attr("disabled", true).attr("data-scan-id");
+    $(this).attr("disabled", true);
     params = {
       path: 'storage-resume-scan-node',
-      scanid: scanid
+      scanid: $(this).attr("data-scan-id")
     }
-    invoke(params, true);
-    window.location.reload();
+    invoke(params, true, true);
   });
   $("button.storage-cancel-all-scans").on("click", function(){
     $(this).attr("disabled", true);
     params = {
       path: 'storage-cancel-all-scans'
     }
-    invoke(params, true); 
+    invoke(params, true, false); 
   });
   $("button.storage-allow-all-scans").on("click", function(){
     $(this).attr("disabled", true);
     params = {
       path: 'storage-allow-all-scans'
     }
-    invoke(params, true);
+    invoke(params, true, false);
   });
   $("button.replication-state").on("click", function(){
     params = {
       path: 'replication-state'
     }
-    invoke(params, true);
+    invoke(params, true, false);
   });
   $("button.storage-delete-node-key").on("click", function(){
-    var maintid = $(this).attr("disabled", true).attr("data-maint-id");
+    $(this).attr("disabled", true);
     params = {
       path: 'storage-delete-node-key',
-      maintid: maintid
+      maintid: $(this).attr("data-maint-id")
     }
-    invoke(params, true);
+    invoke(params, true, false);
   });
   $("button.storage-delete-node-page").on("click", function(){
     params = {
       path: 'storage-delete-node-page',
       maintidlist: getMaintIdList()
     }
-    invoke(params, true);
+    invoke(params, true, true);
   });
   $("button.storage-perform-delete-node-key").on("click", function(){
-    var maintid = $(this).attr("disabled", true).attr("data-maint-id");
+    $(this).attr("disabled", true);
     params = {
       path: 'storage-perform-delete-node-key',
-      maintid: maintid
+      maintid: $(this).attr("data-maint-id")
     }
-    invoke(params, true);
+    invoke(params, true, true);
+  });
+  $("button.storage-perform-delete-node-batch").on("click", function(){
+    $(this).attr("disabled", true);
+    params = {
+      path: 'storage-perform-delete-node-batch',
+      nodenum: $(this).attr("data-node-num")
+    }
+    invoke(params, true, true);
   });
   $("button.storage-hold-node-key").on("click", function(){
-    var maintid = $(this).attr("disabled", true).attr("data-maint-id");
+    $(this).attr("disabled", true);
     params = {
       path: 'storage-hold-node-key',
-      maintid: maintid
+      maintid: $(this).attr("data-maint-id")
     }
-    invoke(params, true);
+    invoke(params, true, false);
   });
   $("button.storage-hold-node-page").on("click", function(){
     params = {
       path: 'storage-hold-node-page',
       maintidlist: getMaintIdList()
     }
-    invoke(params, true);
+    invoke(params, true, true);
   });
   $("button.storage-review-node-key").on("click", function(){
-    var maintid = $(this).attr("disabled", true).attr("data-maint-id");
+    $(this).attr("disabled", true);
     params = {
       path: 'storage-review-node-key',
-      maintid: maintid
+      maintid: $(this).attr("data-maint-id")
     }
-    invoke(params, true);
+    invoke(params, true, false);
   });
   $("button.storage-review-node-page").on("click", function(){
     params = {
       path: 'storage-review-node-page',
       maintidlist: getMaintIdList()
     }
-    invoke(params, true);
+    invoke(params, true, true);
   });
 
   if ($("button.storage-cancel-all-scans").is("*")) {
@@ -193,7 +193,7 @@ function scanEnabled(b) {
 }
 
 
-function invoke(params, showRes) {
+function invoke(params, showRes, reload) {
   $.ajax({
     dataType: "json",
     method: "POST",
@@ -213,6 +213,9 @@ function invoke(params, showRes) {
       }
       if ('redirect_location' in data) {
         window.location = data['redirect_location'];
+      }
+      if (reload) {
+        window.location.reload();
       }
     },
     error: function( xhr, status ) {

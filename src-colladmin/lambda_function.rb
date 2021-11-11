@@ -190,6 +190,9 @@ module LambdaFunctions
         elsif path == "storage-perform-delete-node-key" 
           return LambdaBase.error(405, "Not yet supported") if LambdaBase.is_prod
           result = ReplicationAction.new(config, path, myparams).perform_action
+        elsif path == "storage-perform-delete-node-batch" 
+          return LambdaBase.error(405, "Not yet supported") if LambdaBase.is_prod
+          result = ReplicationAction.new(config, path, myparams).perform_action
         elsif path == "storage-hold-node-key" 
           result = ReplicationAction.new(config, path, myparams).perform_action
         elsif path == "storage-hold-node-page" 
@@ -309,10 +312,10 @@ module LambdaFunctions
         map['nodenum'] = nodenum
         map['SCANS'] = Scans.new(@config, nodenum).scans
       elsif path == '/web/storeNodeReview.html'
-        map['count'] = myparams.fetch("count", "")
         nodenum = myparams.fetch("nodenum", "0").to_i
         scanid = myparams.fetch("scanid", "0").to_i
         maint_status = myparams.fetch("maint_status", "review")
+        map['count'] = nodenum == 0 ? "na" : ScanReviewCounts.new(@config, nodenum, maint_status).mcount
         map['maint_status'] = maint_status
         map['is_delete'] = maint_status == 'delete'
         map['scan_limit'] = myparams.fetch("limit", "100").to_i

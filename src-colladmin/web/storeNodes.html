@@ -107,25 +107,25 @@
               <button 
                 class="colladmin storage-review-scan-node maints-{{num_maints}}"
                 title="Review the storage keys requiring maintenance" 
-                onclick="javascript:document.location='storeNodeReview.html?nodenum={{number}}&maint_status=all&count={{num_maints}}'"
+                onclick="javascript:document.location='storeNodeReview.html?nodenum={{number}}&maint_status=all'"
               >Review: All</button>
 
               <button 
                 class="colladmin storage-review-scan-node maints-{{num_review}}"
                 title="Review the untracked storage keys discovered in the last storage scan" 
-                onclick="javascript:document.location='storeNodeReview.html?nodenum={{number}}&maint_status=review&count={{num_review}}'"
+                onclick="javascript:document.location='storeNodeReview.html?nodenum={{number}}&maint_status=review'"
               >Review: Review</button>
 
               <button 
                 class="colladmin storage-review-scan-node maints-{{num_holds}}"
                 title="Review the untracked storage keys marked for hold" 
-                onclick="javascript:document.location='storeNodeReview.html?nodenum={{number}}&maint_status=hold&count={{num_holds}}'"
+                onclick="javascript:document.location='storeNodeReview.html?nodenum={{number}}&maint_status=hold'"
               >Review: Hold</button>
 
               <button 
                 class="colladmin storage-review-scan-node maints-{{num_deletes}}"
                 title="Review the untracked storage keys marked for delete" 
-                onclick="javascript:document.location='storeNodeReview.html?nodenum={{number}}&maint_status=delete&count={{num_deletes}}'"
+                onclick="javascript:document.location='storeNodeReview.html?nodenum={{number}}&maint_status=delete'"
               >Review: Delete</button>
             </td>
           </tr>

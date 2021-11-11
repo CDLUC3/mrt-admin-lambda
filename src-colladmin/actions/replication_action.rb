@@ -17,6 +17,48 @@ class ReplicationAction < AdminAction
     @config.fetch('replic-service', '')
   end
 
+  def update_maint
+    %{
+      UPDATE 
+        inv_storage_maints
+      SET 
+        maint_status= ?
+      WHERE 
+        maint_status != 'removed'
+      and
+        id = ?
+    }
+  end
+
+  def maintidlist_params(status)
+    maintidlist = [status];
+    @myparams.fetch("maintidlist", "").split(",").each do |id| 
+      maintidlist.append(id.to_i)
+    end
+    maintidlist
+  end
+
+  def maintidlist_placeholders
+    placeholders = [];
+    @myparams.fetch("maintidlist", "").split(",").each do |id| 
+      placeholders.append("?")
+    end
+    placeholders.join(",")
+  end
+
+  def maintidlist_update
+    %{
+      UPDATE 
+        inv_storage_maints
+      SET 
+        maint_status= ?
+      WHERE 
+        maint_status != 'removed'
+      and
+        id in (#{maintidlist_placeholders})
+    }
+  end
+
   def perform_action
     endpoint = ''
     method = :post
@@ -42,117 +84,77 @@ class ReplicationAction < AdminAction
     elsif @path == "storage-delete-node-key" 
       maintid = @myparams.fetch("maintid", "0").to_i
       return MerrittQuery.new(@config).run_update(
-        %{
-          UPDATE 
-            inv_storage_maints
-          SET 
-            maint_status='delete'
-          WHERE 
-            maint_status != 'removed'
-          and
-            id = ?
-        }, 
-        [maintid],
+        update_maint, 
+        ['delete', maintid],
         "Maint Status set to delete"
       ).to_json
     elsif @path == "storage-delete-node-page" 
-      maintidlist = [];
-      placeholders = [];
-      @myparams.fetch("maintidlist", "").split(",").each do |id| 
-        maintidlist.append(id.to_i)
-        placeholders.append("?")
-      end
       return MerrittQuery.new(@config).run_update(
-        %{
-          UPDATE 
-            inv_storage_maints
-          SET 
-            maint_status='delete'
-          WHERE 
-            maint_status != 'removed'
-          and
-            id in (#{placeholders.join(',')})
-        }, 
-        maintidlist,
-        "Maint Status set to delete for #{maintidlist.length} items"
+        maintidlist_update, 
+        maintidlist_params('delete'),
+        "Maint Status set to delete for block of items"
       ).to_json
     elsif @path == "storage-perform-delete-node-key" 
       maintid = @myparams.fetch("maintid", "0").to_i
       method = :delete
       endpoint = "scandelete/#{maintid}?t=json"
+    elsif @path == "storage-perform-delete-node-batch" 
+      nodenum = @myparams.fetch("nodenum", "0").to_i
+      num_deleted = 0
+      MerrittQuery.new(@config).run_query(
+        %{
+          select
+            ism.id
+          from
+            inv_storage_maints ism
+          inner join
+            inv_nodes n
+          on
+            n.id = ism.inv_node_id
+          where
+            n.number = ?
+          and
+            maint_status = 'delete'
+          limit 50
+          ;
+        },
+        [nodenum]
+      ).each do |r|
+        endpoint = "scandelete/#{r[0]}?t=json"
+        qjson = HttpDeleteJson.new(get_replic_server, endpoint)
+        if qjson.status == 200
+          resp = JSON.parse(qjson.body)
+          num_deleted = num_deleted + 1 if resp.fetch("repmnt:invStorageMaint", {}).fetch("repmnt:maintStatus", "na") == "removed"
+        end
+      end
+      return {
+        num_deleted: num_deleted
+      }.to_json
     elsif @path == "storage-hold-node-key" 
       maintid = @myparams.fetch("maintid", "0").to_i
       return MerrittQuery.new(@config).run_update(
-        %{
-          UPDATE 
-            inv_storage_maints
-          SET 
-            maint_status='hold'
-          WHERE 
-            maint_status != 'removed'
-          and
-            id = ?
-        }, 
-        [maintid],
+        update_maint, 
+        ['hold', maintid],
         "Maint Status set to hold"
       ).to_json
     elsif @path == "storage-hold-node-page" 
-      maintidlist = [];
-      placeholders = [];
-      @myparams.fetch("maintidlist", "").split(",").each do |id| 
-        maintidlist.append(id.to_i)
-        placeholders.append("?")
-      end
       return MerrittQuery.new(@config).run_update(
-        %{
-          UPDATE 
-            inv_storage_maints
-          SET 
-            maint_status='hold'
-          WHERE 
-            maint_status != 'removed'
-          and
-            id in (#{placeholders.join(',')})
-        }, 
-        maintidlist,
-        "Maint Status set to hold for #{maintidlist.length} items"
+        maintidlist_update, 
+        maintidlist_params('hold'),
+        "Maint Status set to hold for block of items"
       ).to_json
     elsif @path == "storage-review-node-key" 
       maintid = @myparams.fetch("maintid", "0").to_i
       return MerrittQuery.new(@config).run_update(
-        %{
-          UPDATE 
-            inv_storage_maints
-          SET 
-            maint_status='review'
-          WHERE 
-            maint_status != 'removed'
-          and
-            id = ?
-        }, 
-        [maintid],
+        update_maint, 
+        ['review', maintid],
         "Maint Status set to review"
       ).to_json
     elsif @path == "storage-review-node-page" 
-      maintidlist = [];
-      placeholders = [];
-      @myparams.fetch("maintidlist", "").split(",").each do |id| 
-        maintidlist.append(id.to_i)
-        placeholders.append("?")
-      end
       return MerrittQuery.new(@config).run_update(
-        %{
-          UPDATE 
-            inv_storage_maints
-          SET 
-            maint_status='review'
-          WHERE 
-            maint_status != 'removed'
-          and
-            id in (#{placeholders.join(',')})
-        }, 
-        maintidlist,
-        "Maint Status set to review for #{maintidlist.length} items"
+        maintidlist_update, 
+        maintidlist_params('review'),
+        "Maint Status set to review for block of items"
       ).to_json
     elsif @path == "replication-state" 
       endpoint = 'state?t=json'

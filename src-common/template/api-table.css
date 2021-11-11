@@ -299,6 +299,6 @@ span.scan-0
 }
 
 button.storage-perform-delete-node-key,
-button.storage-perform-delete-node-all {
+button.storage-perform-delete-node-batch {
   color: red;
 }

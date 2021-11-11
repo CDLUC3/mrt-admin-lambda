@@ -333,6 +333,51 @@ class Scans < MerrittQuery
 
 end
 
+class ScanReviewCounts < MerrittQuery
+
+  def initialize(config, nodenum, maint_status)
+    super(config)
+    @maint_status = maint_status
+    sqlparams = []
+    if @maint_status != 'all'
+      sqlparams.append(@maint_status)
+    end
+    sqlparams.append(nodenum)
+    @mcount = 0
+    run_query(
+      query,
+      sqlparams
+    ).each do |r|
+      @mcount = r[0]
+    end
+  end
+
+  def where
+    return "1 = 1 " if @maint_status == 'all'
+    return "maint_status = ? "
+  end
+
+  def query
+    %{
+      select
+        count(*) as mcount
+      from
+        inv_storage_maints ism
+      inner join inv_nodes n
+        on n.id = ism.inv_node_id
+      where
+        #{where}
+      and
+        n.number = ?
+      ;
+    }
+  end
+
+  def mcount
+    @mcount
+  end
+end
+
 class ScanReview < MerrittQuery
 
   def initialize(config, maint_status)
