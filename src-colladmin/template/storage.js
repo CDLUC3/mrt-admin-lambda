@@ -161,6 +161,10 @@ function init() {
     }
     invoke(params, true, true);
   });
+  $("button.storage-delete-obj").on("click", function(){
+    var reason = confirm("Please provide a reason for the delete?");
+    alert("This function is not yet implemented.");
+  });
 
   if ($("button.storage-cancel-all-scans").is("*")) {
     invoke(

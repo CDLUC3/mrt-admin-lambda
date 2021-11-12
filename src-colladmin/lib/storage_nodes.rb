@@ -344,11 +344,13 @@ class ScanReviewCounts < MerrittQuery
     end
     sqlparams.append(nodenum)
     @mcount = 0
+    @msize = 0
     run_query(
       query,
       sqlparams
     ).each do |r|
       @mcount = r[0]
+      @msize = (r[1] / 1000000).to_i
     end
   end
 
@@ -360,7 +362,8 @@ class ScanReviewCounts < MerrittQuery
   def query
     %{
       select
-        count(*) as mcount
+        count(ism.id) as mcount,
+        sum(ism.size) as msize
       from
         inv_storage_maints ism
       inner join inv_nodes n
@@ -375,6 +378,19 @@ class ScanReviewCounts < MerrittQuery
 
   def mcount
     @mcount
+  end
+
+  def mcount_fmt
+    MerrittQuery.num_format(@mcount)
+  end
+
+  def msize
+    @msize
+  end
+  
+  def msize_fmt
+    return "#{MerrittQuery.num_format(@msize)} MB" if @msize < 1000
+    "#{MerrittQuery.num_format(@msize/1000)} GB"
   end
 end
 

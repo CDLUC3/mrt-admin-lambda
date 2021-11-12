@@ -38,7 +38,7 @@
     </p>
     <h4>Pagination</h4>
     <div>
-      {{count}} Files: 
+      {{mcount_fmt}} Files ({{size_fmt}}): 
       {{#scan_prev}}
       <a href="storeNodeReview.html?nodenum={{nodenum}}&scanid={{scanid}}&limit={{scan_limit}}&offset={{scan_prev}}&maint_status={{maint_status}}">
         Previous {{scan_limit}} ({{scan_prev}})
