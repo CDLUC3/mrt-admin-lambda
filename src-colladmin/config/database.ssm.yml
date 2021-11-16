@@ -54,9 +54,9 @@ default:
   replic-service: "{!SSM: colladmin/replic-service}"
   scan-use-keylist:
   - node: 9501
-    keylist: 7001:scanlist/9502-210913.log 
+    keylist: 7001:scanlist/9501.log 
   - node: 9502
-    keylist: 7001:scanlist/9502-210913.log 
+    keylist: 7001:scanlist/9502.log 
 
 # use personal credentials when configuring a local environment
 # set up a script to set these variables
