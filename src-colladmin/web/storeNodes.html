@@ -70,6 +70,7 @@
             <td class="dataint" data="{{matches_processed}}">{{matches_processed_fmt}}</td>
             <td class="dataint">{{percent}}</td>
             <td>
+              {{#not_skip}}
               {{#not_running}}
               <button 
                 title="Initiate a scan of a storage node"
@@ -97,6 +98,11 @@
               {{/not_empty}}
               {{/not_running}}
               {{/not_complete}}
+              {{/not_skip}}
+
+              {{#skip}}
+              <scan>Scan Disabled for Node</scan>
+              {{/skip}}
 
               <button 
                 class="colladmin storage-review-scan-node maints-{{num_maints}}"

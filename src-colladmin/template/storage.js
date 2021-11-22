@@ -125,11 +125,12 @@ function init() {
   });
   $("button.storage-perform-delete-node-batch").on("click", function(){
     $(this).attr("disabled", true);
+    var nodenum = $(this).attr("data-node-num");
     params = {
       path: 'storage-perform-delete-node-batch',
-      nodenum: $(this).attr("data-node-num")
+      nodenum: nodenum
     }
-    invoke(params, true, true);
+    showConfirm("Are you sure you want to remove ALL files marked for DELETE from node " + nodenum + "?", params);
   });
   $("button.storage-hold-node-key").on("click", function(){
     $(this).attr("disabled", true);
@@ -186,6 +187,12 @@ function showPrompt(message, params) {
   }
   params['reason'] = reason;
   invoke(params, false);
+}
+
+function showConfirm(message, params) {
+  if (window.confirm(message)) {
+    invoke(params, false);  
+  }
 }
 
 function scanEnabled(b) {

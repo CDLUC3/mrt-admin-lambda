@@ -134,15 +134,17 @@ end
 class Nodes < MerrittQuery
   def initialize(config)
       super(config)
+      skiplist = @config.fetch("disable-scan-nodenums", "").split(",")
       @nodes = []
       run_query(
         node_scan_query
       ).each do |r|
+        nodenum = r[0]
         expected_count = r[3]
         keys_proc = r[11]
         match_proc = r[11] - r[10]
         @nodes.push({
-          number: r[0],
+          number: nodenum,
           description: "#{r[1]} (#{MerrittQuery.num_format(expected_count)})",
           access_mode: r[2],
           scan_status: r[4],
@@ -166,7 +168,9 @@ class Nodes < MerrittQuery
           keys_processed_fmt: MerrittQuery.num_format(keys_proc),
           matches_processed_fmt: MerrittQuery.num_format(match_proc),
           percent: expected_count == 0 ? '' : sprintf("%.1f", 1000 * (match_proc) / expected_count / 10.0),
-          inv_scan_id: r[12]
+          inv_scan_id: r[12],
+          not_skip: !skiplist.include?(nodenum.to_s),
+          skip: skiplist.include?(nodenum.to_s)
         })
       end
   end

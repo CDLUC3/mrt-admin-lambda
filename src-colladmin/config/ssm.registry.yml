@@ -80,6 +80,13 @@ colladmin:
     skip: true
   user-pool:
     description: Cognito user pool name for user management
+  scan-use-keylist:
+    node: 
+      description: Node number using an inventory keylist
+    keylist:
+      description: "node:path of the inventory file to drive the scan for a specific node"
+  disable-scan-nodenums:
+    description: "Disable scan buttons for a comma separated list of node numbers"
 ingest:
   port:
     description: Microservice port

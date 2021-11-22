@@ -100,36 +100,8 @@ class ReplicationAction < AdminAction
       endpoint = "scandelete/#{maintid}?t=json"
     elsif @path == "storage-perform-delete-node-batch" 
       nodenum = @myparams.fetch("nodenum", "0").to_i
-      num_deleted = 0
-      MerrittQuery.new(@config).run_query(
-        %{
-          select
-            ism.id
-          from
-            inv_storage_maints ism
-          inner join
-            inv_nodes n
-          on
-            n.id = ism.inv_node_id
-          where
-            n.number = ?
-          and
-            maint_status = 'delete'
-          limit 50
-          ;
-        },
-        [nodenum]
-      ).each do |r|
-        endpoint = "scandelete/#{r[0]}?t=json"
-        qjson = HttpDeleteJson.new(get_replic_server, endpoint)
-        if qjson.status == 200
-          resp = JSON.parse(qjson.body)
-          num_deleted = num_deleted + 1 if resp.fetch("repmnt:invStorageMaint", {}).fetch("repmnt:maintStatus", "na") == "removed"
-        end
-      end
-      return {
-        num_deleted: num_deleted
-      }.to_json
+      method = :delete
+      endpoint = "scandelete-list/#{nodenum}?t=json"
     elsif @path == "storage-hold-node-key" 
       maintid = @myparams.fetch("maintid", "0").to_i
       return MerrittQuery.new(@config).run_update(
