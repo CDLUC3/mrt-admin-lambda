@@ -4,8 +4,8 @@ $(document).ready(function(){
 
 function getMaintIdList() {
   var maintidlist = [];
-  $("input.maintid").each(function(){
-    maintidlist.push($(this).val());
+  $(".maintid").each(function(){
+    maintidlist.push($(this).text());
   });
   return maintidlist.join(',');
 }
@@ -177,6 +177,12 @@ function init() {
     alert('CSV will be generated on S3 for Node ' + nodenum + ".\nThis may take a moment.\nA maximum of 1M records will be exported.");    
   });
 
+  $("button.storage-apply-csv").on("click", function(){
+    $("div.page-actions button").attr("disabled", true);
+    var nodenum = $(this).attr("data-node-num");
+    apply_csv_changes(nodenum);
+  });
+
   if ($("button.storage-cancel-all-scans").is("*")) {
     invoke(
       {
@@ -185,6 +191,39 @@ function init() {
       false
     );
   }
+}
+
+async function apply_csv_changes(nodenum) {
+  var [fileHandle] = await window.showOpenFilePicker();
+  const file = await fileHandle.getFile();
+  const contents = await file.text();
+  var arr = contents.csvToArray();
+  var total_changes = 0;
+  for(var i=1, ib=1; ib < arr.length; i = i + 1000) {
+    var changes = []
+    for(ib = i; ib < i + 1000 && ib < arr.length; ib++) {
+      var row = arr[ib];
+      if (row == null) continue;
+      if (row.length < 12) continue;
+      if (row[8] != nodenum) continue;
+      if (row[11] == '') continue;
+      if (row[10] == row[11]) continue;
+      changes.push([
+        row[9], 
+        row[11]
+      ]);
+    }
+    if (changes.length > 0) {
+      var params = {
+        path: 'apply-review-changes',
+        nodenum: nodenum,
+        changes: JSON.stringify(changes)
+      }  
+      total_changes += changes.length;
+      invoke(params, false, false);
+    }
+  }
+  alert(total_changes + " changes submitted.\n\nReload page to review changes.");
 }
 
 function showPrompt(message, params) {
@@ -229,6 +268,8 @@ function invoke(params, showRes, reload) {
         } else {
           alert(data.message);
         }
+      } else if ('log' in data) {
+        console.log(data.log);
       } else if (showRes) {
         alert(JSON.stringify(data));
       }

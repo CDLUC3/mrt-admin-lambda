@@ -203,6 +203,8 @@ module LambdaFunctions
           result = ReplicationAction.new(config, path, myparams).perform_action
         elsif path == "storage-review-csv" 
           result = ReplicationAction.new(config, path, myparams).perform_action
+        elsif path == "apply-review-changes" 
+          result = ReplicationAction.new(config, path, myparams).perform_action
         elsif path == "storage-delete-obj" 
           result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-obj")
         end

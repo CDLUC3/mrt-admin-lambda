@@ -1,6 +1,7 @@
 <html>
   <head>
     <meta charset="utf-8"/>
+    <script src="//storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/csv-to-array/csvToArray.v2.1.js"></script>
     <script	src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
     <link rel="stylesheet" type="text/css" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.css"></link>
@@ -60,7 +61,14 @@
         class="colladmin storage-review-csv"
         data-node-num="{{nodenum}}"
       >Download Review List as CSV</button>
-      {{/is_review}}
+
+      <button 
+        title="Apply Changes from CSV"
+        class="colladmin storage-apply-csv"
+        data-node-num="{{nodenum}}"
+      >Apply Changes from CSV</button>
+
+       {{/is_review}}
 
       <button 
         title="Mark page for delete"
@@ -108,7 +116,7 @@
           {{#REVIEW}}
           <tr>
             <th>{{num}}</th>
-            <th>{{maintid}}</th>
+            <th class="maintid">{{maintid}}</th>
             <th class="name">{{ark}}</th>
             <th class="name">{{ver}}</th>
             <th class="name">{{type}}</th>

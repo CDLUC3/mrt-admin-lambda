@@ -51,7 +51,7 @@ class ReplicationAction < AdminAction
       UPDATE 
         inv_storage_maints
       SET 
-        maint_status= ?
+        maint_status = ?
       WHERE 
         maint_status != 'removed'
       and
@@ -154,6 +154,40 @@ class ReplicationAction < AdminAction
     elsif @path == "replication-state" 
       endpoint = 'state?t=json'
       method = :get
+    elsif @path == "apply-review-changes"
+      nodenum = @myparams.fetch("nodenum", "0").to_i
+      count = 0
+      JSON.parse(@myparams.fetch("changes", "[]")).each do |change|
+        if change.length == 2
+          maintid = change[0].to_i
+          status = change[1]
+          MerrittQuery.new(@config).run_update(
+            %{
+              update
+                inv_storage_maints
+              set
+                maint_status = ?
+              where
+                id = ?
+              and
+                maint_status != 'removed'
+              and
+                inv_node_id = (
+                  select 
+                    id
+                  from
+                    inv_nodes
+                  where
+                    number = ?
+                )
+            }, 
+            [status, maintid, nodenum],
+            "Maint Status updated"
+          ) 
+          count = count + 1            
+        end
+      end
+      return {log: "#{count} review records updated"}.to_json
     else
       return {message: "No action"}.to_json
     end
