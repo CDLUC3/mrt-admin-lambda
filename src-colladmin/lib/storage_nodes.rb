@@ -452,6 +452,8 @@ class ScanReview < MerrittQuery
         #{query}
         and
           ism.inv_storage_scan_id = ?
+        order by 
+          ism.s3key
         limit ?
         offset ?
         ;
@@ -466,6 +468,8 @@ class ScanReview < MerrittQuery
         #{query}
         and
           n.number = ?
+        order by 
+          ism.s3key
         limit ?
         offset ?
         ;
@@ -474,16 +478,42 @@ class ScanReview < MerrittQuery
     )
   end
 
+  def parse_key(k)
+    ark = ""
+    ver = ""
+    type = ""
+    path = k.nil? ? "" : k
+
+    m = path.match(%r{(ark:/[0-9a-z][0-9]+/[0-9a-z]+)([^0-9a-z].*)})
+    if m
+      ark = m[1]
+      path = m[2]
+    end
+
+    m = path.match(%r{\|([0-9]+)\|(.*)}) 
+    if m
+      ver = m[1]
+      path = m[2]
+    end
+
+    m = path.match(%r{(producer|system)/(.*)})
+    if m
+      type = m[1]
+      path = m[2]
+    end
+
+    return [ark, ver, type, path]
+  end
+
   def process_resuts(res)
     res.each do |r|
-      k = r[0].nil? ? "" : r[0]
-      m = k.match(%r{(ark:/[0-9]+/[0-9a-z]+)([^0-9a-z].*)})
-      ark = m.nil? ? "" : m[1]
-      key = m.nil? ? k : m[2]          
+      ark, ver, type, path = parse_key(r[0])
       @review_items.push({
-        s3key: k,
+        s3key: r[0],
         ark: ark,
-        key: key,
+        ver: ver,
+        type: type,
+        path: path,
         file_created: r[1].nil? ? "" : r[1].strftime("%Y-%m-%d %T"),
         size: r[2],
         size_fmt: MerrittQuery.num_format(r[2]),
@@ -505,6 +535,8 @@ class ScanReview < MerrittQuery
     CSV.generate do |csv|
       csv << [
         "ark_portion_of_key",
+        "version_portion_of_key",
+        "type_portion_of_key",
         "file_path_portion_of_key",
         "creation_date",
         "bytes",
@@ -517,7 +549,9 @@ class ScanReview < MerrittQuery
       @review_items.each do |item|
         csv << [
           item[:ark],
-          item[:key],
+          item[:ver],
+          item[:type],
+          item[:path],
           item[:file_created],
           item[:size],
           item[:maint_status],

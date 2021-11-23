@@ -91,8 +91,11 @@
         <thead>
           <tr>
             <th>Node</th>
+            <th>Maint Id</th>
             <th>Ark</th>
-            <th>Key</th>
+            <th>Ver</th>
+            <th>Type</th>
+            <th>Path</th>
             <th>File Created</th>
             <th>Size</th>
             <th>Maint Status</th>
@@ -104,9 +107,12 @@
         <tbody>
           {{#REVIEW}}
           <tr>
-            <th>{{num}}<input type="hidden" class="maintid" value="{{maintid}}"/></th>
+            <th>{{num}}</th>
+            <th>{{maintid}}</th>
             <th class="name">{{ark}}</th>
-            <th class="name">{{key}}</th>
+            <th class="name">{{ver}}</th>
+            <th class="name">{{type}}</th>
+            <th class="name">{{path}}</th>
             <td>{{file_created}}</td>
             <td class="bytes" data="{{size}}">{{size_fmt}}</td>
             <td>{{maint_status}}</td>
