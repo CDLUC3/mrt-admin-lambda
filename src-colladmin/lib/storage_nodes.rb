@@ -551,7 +551,8 @@ class ScanReview < MerrittQuery
         "nodenum",
         "maintid",
         "status",
-        "new_status"
+        "new_status",
+        "new_note"
       ]
       @review_items.each do |item|
         csv << [
@@ -566,6 +567,7 @@ class ScanReview < MerrittQuery
           item[:num],
           item[:maintid],
           item[:maint_status],
+          '',
           ''
         ]
       end

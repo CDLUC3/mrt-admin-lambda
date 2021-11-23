@@ -204,13 +204,20 @@ async function apply_csv_changes(nodenum) {
     for(ib = i; ib < i + 1000 && ib < arr.length; ib++) {
       var row = arr[ib];
       if (row == null) continue;
-      if (row.length < 12) continue;
-      if (row[8] != nodenum) continue;
-      if (row[11] == '') continue;
-      if (row[10] == row[11]) continue;
+      if (row.length < 13) continue;
+      var curnote = row[7]
+      var nnum = row[8]
+      var maintid = row[9]
+      var curstatus = row[10]
+      var newstatus = row[11]
+      var newnote = row[12]
+      if (nnum != nodenum) continue;
+      if (newstatus == '' && newnote == '') continue;
+      if (curstatus == newstatus && curnote == newnote) continue;
       changes.push([
-        row[9], 
-        row[11]
+        maintid, 
+        newstatus == '' ? curstatus : newstatus,
+        newnote == '' ? curnote : newnote
       ]);
     }
     if (changes.length > 0) {

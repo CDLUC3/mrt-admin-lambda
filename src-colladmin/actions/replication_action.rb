@@ -158,15 +158,17 @@ class ReplicationAction < AdminAction
       nodenum = @myparams.fetch("nodenum", "0").to_i
       count = 0
       JSON.parse(@myparams.fetch("changes", "[]")).each do |change|
-        if change.length == 2
+        if change.length == 3
           maintid = change[0].to_i
           status = change[1]
+          note = change[2]
           MerrittQuery.new(@config).run_update(
             %{
               update
                 inv_storage_maints
               set
-                maint_status = ?
+                maint_status = ?,
+                note = ?
               where
                 id = ?
               and
@@ -181,7 +183,7 @@ class ReplicationAction < AdminAction
                     number = ?
                 )
             }, 
-            [status, maintid, nodenum],
+            [status, note, maintid, nodenum],
             "Maint Status updated"
           ) 
           count = count + 1            
