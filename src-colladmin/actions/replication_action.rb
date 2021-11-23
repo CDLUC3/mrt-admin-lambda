@@ -128,6 +128,29 @@ class ReplicationAction < AdminAction
         maintidlist_params('review'),
         "Maint Status set to review for block of items"
       ).to_json
+    elsif @path == "storage-review-csv" 
+      nodenum = @myparams.fetch("nodenum", "0").to_i
+      rev = ScanReview.new(@config, "review")
+      rev.process_resuts(
+        rev.nodenum_query(nodenum, 1000000, 0)
+      )
+      key = "scan-review/#{nodenum}.csv"
+      @s3_client.put_object({
+        body: rev.to_csv,
+        bucket: @s3bucket,
+        key: "scan-review/#{nodenum}.csv",
+        content_type: 'text/csv'
+      })
+      signer = Aws::S3::Presigner.new
+      url, headers = signer.presigned_request(
+        :get_object, 
+        bucket: @s3bucket, 
+        key: key
+      )
+      return {
+        download_url: url,
+        label: "Review List for #{nodenum}"
+      }.to_json
     elsif @path == "replication-state" 
       endpoint = 'state?t=json'
       method = :get

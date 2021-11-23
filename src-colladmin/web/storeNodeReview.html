@@ -52,19 +52,31 @@
       {{/scan_next}}
     </div>
     <h4>Page Actions</h4>
-    <div>
+    <div class="page-actions">
+      {{#is_review}}
+      <span class="download-link"></span>
       <button 
-      title="Mark page for delete"
+        title="Download as CSV"
+        class="colladmin storage-review-csv"
+        data-node-num="{{nodenum}}"
+      >Download Review List as CSV</button>
+      {{/is_review}}
+
+      <button 
+        title="Mark page for delete"
         class="colladmin storage-delete-node-page maint-delete-{{maint_status}}"
       >Mark page for Delete</button>
+
       <button 
-      title="Mark page for hold"
+        title="Mark page for hold"
         class="colladmin storage-hold-node-page maint-hold-{{maint_status}}"
       >Mark page for Hold</button>
+
       <button 
-      title="Mark page for review"
+        title="Mark page for review"
         class="colladmin storage-review-node-page maint-review-{{maint_status}}"
       >Mark page for Review</button>
+
       {{#is_delete}}
       <button 
         title="Process deletes for node"

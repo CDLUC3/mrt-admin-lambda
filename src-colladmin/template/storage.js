@@ -166,6 +166,16 @@ function init() {
     var reason = confirm("Please provide a reason for the delete?");
     alert("This function is not yet implemented.");
   });
+  $("button.storage-review-csv").on("click", function(){
+    $("div.page-actions button").attr("disabled", true);
+    var nodenum = $(this).attr("data-node-num");
+    params = {
+      path: 'storage-review-csv',
+      nodenum: nodenum
+    }
+    invoke(params, false, false);
+    alert('CSV will be generated on S3 for Node ' + nodenum + ".\nThis may take a moment.\nA maximum of 1M records will be exported.");    
+  });
 
   if ($("button.storage-cancel-all-scans").is("*")) {
     invoke(
@@ -224,6 +234,13 @@ function invoke(params, showRes, reload) {
       }
       if ('redirect_location' in data) {
         window.location = data['redirect_location'];
+      }
+      if ('download_url' in data) {
+        var a = $("<a/>")
+          .text(data['label'])
+          .attr("href", data['download_url'])
+          .attr("target", "_blank");
+        $("span.download-link").empty().append(a);
       }
       if (reload) {
         window.location.reload();

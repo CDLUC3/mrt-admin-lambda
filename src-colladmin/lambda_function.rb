@@ -201,6 +201,8 @@ module LambdaFunctions
           result = ReplicationAction.new(config, path, myparams).perform_action
         elsif path == "storage-review-node-page" 
           result = ReplicationAction.new(config, path, myparams).perform_action
+        elsif path == "storage-review-csv" 
+          result = ReplicationAction.new(config, path, myparams).perform_action
         elsif path == "storage-delete-obj" 
           result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-obj")
         end
@@ -321,6 +323,8 @@ module LambdaFunctions
         map['size_fmt'] = nodenum == 0 ? "na" : maint_src.msize_fmt
         map['maint_status'] = maint_status
         map['is_delete'] = maint_status == 'delete'
+        map['is_review'] = maint_status == 'review'
+        map['is_hold'] = maint_status == 'hold'
         map['scan_limit'] = myparams.fetch("limit", "100").to_i
         map['scan_limit'] = 1000 if map['scan_limit'] > 1000
         map['scan_offset'] = myparams.fetch("offset", "0").to_i

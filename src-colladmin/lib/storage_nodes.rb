@@ -354,7 +354,7 @@ class ScanReviewCounts < MerrittQuery
       sqlparams
     ).each do |r|
       @mcount = r[0]
-      @msize = (r[1] / 1000000).to_i
+      @msize = r[1].nil? ? 0 : (r[1] / 1000000).to_i
     end
   end
 
@@ -501,6 +501,34 @@ class ScanReview < MerrittQuery
       @review_items
   end
 
+  def to_csv
+    CSV.generate do |csv|
+      csv << [
+        "ark_portion_of_key",
+        "file_path_portion_of_key",
+        "creation_date",
+        "bytes",
+        "status",
+        "maint_type",
+        "note",
+        "nodenum",
+        "maintid"
+      ]
+      @review_items.each do |item|
+        csv << [
+          item[:ark],
+          item[:key],
+          item[:file_created],
+          item[:size],
+          item[:maint_status],
+          item[:maint_type],
+          item[:note],
+          item[:num],
+          item[:maintid]
+        ]
+      end
+    end
+  end
 end
 
 class ObjectQuery < MerrittQuery

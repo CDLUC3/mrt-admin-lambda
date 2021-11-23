@@ -90,7 +90,7 @@ then
     --region us-west-2 \
     --output text \
     --timeout 180 \
-    --memory-size 512 \
+    --memory-size 1024 \
     --no-cli-pager \
     --environment "Variables={${VARS}}" 
 fi

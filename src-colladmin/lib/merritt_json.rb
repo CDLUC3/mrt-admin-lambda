@@ -1,4 +1,6 @@
 require 'date'
+require 'csv'
+
 class MerrittJsonProperty
   # Define property
   # Optionally set the value
