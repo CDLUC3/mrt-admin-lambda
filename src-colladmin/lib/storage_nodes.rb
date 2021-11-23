@@ -484,19 +484,25 @@ class ScanReview < MerrittQuery
     type = ""
     path = k.nil? ? "" : k
 
-    m = path.match(%r{(ark:/[0-9a-z][0-9]+/[0-9a-z]+)([^0-9a-z].*)})
+    m = path.match(%r{^(ark:/[0-9a-z][0-9]+/[0-9a-z]+)([^0-9a-z].*)})
     if m
       ark = m[1]
       path = m[2]
     end
 
-    m = path.match(%r{\|([0-9]+)\|(.*)}) 
+    m = path.match(%r{^\|([0-9]+)\|(.*)}) 
     if m
       ver = m[1]
       path = m[2]
     end
 
-    m = path.match(%r{(producer|system)/(.*)})
+    m = path.match(%r{^\|(manifest)$})
+    if m
+      type = "manifest"
+      path = ""
+    end
+
+    m = path.match(%r{^(producer|system)/(.*)})
     if m
       type = m[1]
       path = m[2]
@@ -540,11 +546,12 @@ class ScanReview < MerrittQuery
         "file_path_portion_of_key",
         "creation_date",
         "bytes",
-        "status",
         "maint_type",
         "note",
         "nodenum",
-        "maintid"
+        "maintid",
+        "status",
+        "new_status"
       ]
       @review_items.each do |item|
         csv << [
@@ -554,11 +561,12 @@ class ScanReview < MerrittQuery
           item[:path],
           item[:file_created],
           item[:size],
-          item[:maint_status],
           item[:maint_type],
           item[:note],
           item[:num],
-          item[:maintid]
+          item[:maintid],
+          item[:maint_status],
+          ''
         ]
       end
     end
