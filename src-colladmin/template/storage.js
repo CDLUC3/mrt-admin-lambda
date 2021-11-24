@@ -183,6 +183,17 @@ function init() {
     apply_csv_changes(nodenum);
   });
 
+  $("button.storage-add-node-for-collection").on("click", function(){
+    var nodenum = $(this).attr("data-node-num");
+    var coll = $(this).attr("data-collection");
+    params = {
+      path: 'storage-add-node-for-collection',
+      nodenum: nodenum,
+      coll: coll
+    }
+    invoke(params, true, true);
+  });
+ 
   if ($("button.storage-cancel-all-scans").is("*")) {
     invoke(
       {

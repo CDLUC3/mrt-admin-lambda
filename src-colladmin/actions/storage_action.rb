@@ -87,6 +87,32 @@ class StorageAction < AdminAction
         "Audit Batches Cleared"
       ).to_json
     end
+
+    nodenum = @myparams.fetch("nodenum", "0").to_i
+    coll = @myparams.fetch("coll", "0").to_i
+    if @path == "storage-add-node-for-collection"
+      return MerrittQuery.new(@config).run_update(
+        %{
+          INSERT INTO 
+            inv_collections_inv_nodes(
+              inv_collection_id,
+              inv_node_id
+            )
+          SELECT
+            ?,
+            (
+              select
+                id
+              from
+                inv_nodes
+              where
+                number = ?
+            )
+        }, 
+        [coll, nodenum],
+        "Node added to collection"
+      ).to_json
+    end
   end
 
 end

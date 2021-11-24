@@ -106,20 +106,29 @@
         </table>  
       </div>
       <h2>Add Secondary Storage Node for this collection</h2>
-      <div class="indent">
-        <label>Storage Node:</label>
-        <select id="storagenode" name="storagenode">
-          <option>-- Choose Node --</option>
-          {{#NODES}}
-          <option value="{{number}}">{{number}}: {{description}}</option>
-          {{/NODES}}
-        </select>
-        <div>
-          <button
-            class="colladmin storage-add-node-for-collection"
-            onclick="javascript:document.location='https://cdluc3.github.io/mrt-doc/diagrams/store-admin-add-node'"
-          >Add Storage Node to this Collection 🚧</button>
-        </div>
+      <div>
+        <table class="sortable results">
+          <thead>
+            <tr>
+              <th>Action</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#NODES}}
+            <tr>
+              <td>
+                <button
+                  data-node-num="{{number}}"
+                  data-collection="{{COLL}}"
+                  class="colladmin storage-add-node-for-collection"
+                >Add {{number}} {{#IS_PROD}}🚧{{/IS_PROD}}</button>
+              </td>
+              <td>{{number}}: {{description}}</td>
+            </tr>
+            {{/NODES}}              
+          </tbody>
+        </table>
       </div>
     </div>
   </div>

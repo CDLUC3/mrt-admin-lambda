@@ -162,7 +162,8 @@ module LambdaFunctions
         elsif path == "storage-clear-audit-batch" 
           result = StorageAction.new(config, path, myparams).perform_action
         elsif path == "storage-add-node-for-collection" 
-          result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-add-node")
+          return LambdaBase.error(405, "Not yet supported") if LambdaBase.is_prod
+          result = StorageAction.new(config, path, myparams).perform_action
         elsif path == "storage-del-node-for-collection" 
           result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-node")
         elsif path == "storage-del-object-from-node" 
@@ -304,7 +305,16 @@ module LambdaFunctions
         map['COLL'] = coll.to_i
         map['ingest_paused'] = false
         map['CNODES'] = CollectionNodes.new(@config, coll.to_i, primary_node).collnodes         
-        map['NODES'] = Nodes.new(@config).nodes
+        map['NODES'] = []
+        skips = {}
+        map['CNODES'].each do |coll|
+          n = coll[:number].to_s
+          skips[n] = true
+        end
+        Nodes.new(@config).nodes.each do |node|
+          n = node[:number].to_s
+          map['NODES'].append(node) unless skips[n]
+        end
       elsif path == '/web/storeNodes.html'
         nodenum = myparams.fetch("nodenum", "0").to_i
         nodename = CGI.unescape(myparams.fetch("nodename", ""))
