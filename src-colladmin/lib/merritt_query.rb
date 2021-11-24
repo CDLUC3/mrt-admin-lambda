@@ -2,11 +2,11 @@ class MerrittQuery
     def initialize(config)
       @config = config
       dbconf = config.fetch('dbconf', {})
-      @client = LambdaBase.new(config).get_mysql
     end
 
     def run_query(sql, arr = []) 
-       stmt = @client.prepare(sql)
+       client = LambdaBase.new(@config).get_mysql
+       stmt = client.prepare(sql)
        data = []
        stmt.execute(*arr).each do |r|
          rdata = []
@@ -20,8 +20,10 @@ class MerrittQuery
     end
 
     def run_update(sql, arr = [], success_msg) 
-      stmt = @client.prepare(sql)
+      client = LambdaBase.new(@config).get_mysql
+      stmt = client.prepare(sql)
       res = stmt.execute(*arr)
+      client.close
       {message: success_msg}
     end
 

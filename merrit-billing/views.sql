@@ -145,3 +145,24 @@ create view owner_collections_objects as
     inv_owner_id,
     inv_collection_id
 ;
+
+drop view if exists node_counts;
+create view node_counts as
+  select
+    inv_node_id,
+    number,
+    object_count,
+    object_count_primary,
+    object_count_secondary,
+    file_count,
+    billable_size
+  from 
+    daily_node_counts
+  where
+    as_of_date = (
+      select
+        max(as_of_date)
+      from 
+        daily_node_counts
+    )
+;
