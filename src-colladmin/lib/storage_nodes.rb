@@ -139,20 +139,25 @@ class Nodes < MerrittQuery
       run_query(
         node_scan_query
       ).each do |r|
+        status = r[4]
         nodenum = r[0]
         expected_count = r[3]
         keys_proc = r[11]
         match_proc = r[11] - r[10]
+        match_proc = 0 if status == "completed"
+        percent = ""
+        percent = sprintf("%.1f", 1000 * (match_proc) / expected_count / 10.0) if expected_count > 0
+        percent = "100.0" if status == "completed"
         @nodes.push({
           number: nodenum,
           description: "#{r[1]} (#{MerrittQuery.num_format(expected_count)})",
           access_mode: r[2],
-          scan_status: r[4],
-          complete: r[4] == 'completed',
-          not_complete: r[4] != 'completed',
-          not_empty: !r[4].nil?,
-          running: r[4] == 'started' || r[4] == 'pending',
-          not_running: r[4] != 'started' && r[4] != 'pending',
+          scan_status: status,
+          complete: status == 'completed',
+          not_complete: status != 'completed',
+          not_empty: !status.nil?,
+          running: status == 'started' || status == 'pending',
+          not_running: status != 'started' && status != 'pending',
           created: r[5].nil? ? "" : r[5].strftime("%Y-%m-%d %T"),
           updated: r[6].nil? ? "" : r[6].strftime("%Y-%m-%d %T"),
           num_review: r[7],
@@ -167,7 +172,7 @@ class Nodes < MerrittQuery
           num_maints_fmt: MerrittQuery.num_format(r[10]),
           keys_processed_fmt: MerrittQuery.num_format(keys_proc),
           matches_processed_fmt: MerrittQuery.num_format(match_proc),
-          percent: expected_count == 0 ? '' : sprintf("%.1f", 1000 * (match_proc) / expected_count / 10.0),
+          percent: percent,
           inv_scan_id: r[12],
           not_skip: !skiplist.include?(nodenum.to_s),
           skip: skiplist.include?(nodenum.to_s)

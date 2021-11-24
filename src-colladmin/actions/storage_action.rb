@@ -91,7 +91,7 @@ class StorageAction < AdminAction
     nodenum = @myparams.fetch("nodenum", "0").to_i
     coll = @myparams.fetch("coll", "0").to_i
     if @path == "storage-add-node-for-collection"
-      return MerrittQuery.new(@config).run_update(
+      res = MerrittQuery.new(@config).run_update(
         %{
           INSERT INTO 
             inv_collections_inv_nodes(
@@ -112,6 +112,30 @@ class StorageAction < AdminAction
         [coll, nodenum],
         "Node added to collection"
       ).to_json
+
+      MerrittQuery.new(@config).run_update(
+        %{
+          update 
+            inv_nodes_inv_objects inio
+          set
+            replicated = null
+          where 
+            role = 'primary'
+          and exists (
+            select 
+              1 
+            from
+              inv_collections_inv_objects icio
+            where 
+              icio.inv_collection_id = ?
+            and
+              icio.inv_object_id = inio.inv_object_id
+          )
+        }, 
+        [coll],
+        "Replication status reset for all objects in the collection"
+      ).to_json
+      return res
     end
   end
 

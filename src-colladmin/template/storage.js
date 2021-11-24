@@ -124,13 +124,14 @@ function init() {
     invoke(params, true, true);
   });
   $("button.storage-perform-delete-node-batch").on("click", function(){
-    $(this).attr("disabled", true);
     var nodenum = $(this).attr("data-node-num");
     params = {
       path: 'storage-perform-delete-node-batch',
       nodenum: nodenum
     }
-    showConfirm("Are you sure you want to remove ALL files marked for DELETE from node " + nodenum + "?", params);
+    if (showConfirm("Are you sure you want to remove ALL files marked for DELETE from node " + nodenum + "?", params)) {
+      $("div.page-actions button").attr("disabled", true);
+    }
   });
   $("button.storage-hold-node-key").on("click", function(){
     $(this).attr("disabled", true);
@@ -191,7 +192,7 @@ function init() {
       nodenum: nodenum,
       coll: coll
     }
-    invoke(params, true, true);
+    showConfirm("This will trigger a replication for all objects in the collection.\nDo you want to continue?", params);
   });
  
   if ($("button.storage-cancel-all-scans").is("*")) {
@@ -258,8 +259,10 @@ function showPrompt(message, params) {
 
 function showConfirm(message, params) {
   if (window.confirm(message)) {
-    invoke(params, false);  
+    invoke(params, false);
+    return true;
   }
+  return false;
 }
 
 function scanEnabled(b) {

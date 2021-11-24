@@ -220,6 +220,10 @@ class ReplicationAction < AdminAction
     {
       message: resp.fetch("repscan:invStorageScan", {}).fetch("repscan:scanStatus", "na")
     }
+    elsif @path == "storage-perform-delete-node-batch" 
+    {
+      message: resp.fetch("repscan:invStorageScan", {}).fetch("repscan:scanStatus", "na")
+    }
     elsif @path == "storage-cancel-all-scans" || @path == "storage-allow-all-scans" || @path == "replication-state"
     {
       message: "Scan Allowed: #{resp.fetch("repsvc:replicationServiceState", {}).fetch("repsvc:allowScan", "na")}"
