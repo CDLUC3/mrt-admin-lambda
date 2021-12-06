@@ -58,7 +58,7 @@ default:
   - node: 9502
     keylist: 7001:scanlist/9502.log 
   disable-scan-nodenums: "{!SSM: colladmin/disable-scan-nodenums !DEFAULT: 0}"
-
+  uc3inv_home: "{!SSM: admintool/uc3inv_home !DEFAULT: ''}"
 # use personal credentials when configuring a local environment
 # set up a script to set these variables
 docker:
@@ -94,4 +94,5 @@ docker:
   context: "NA"
   # Provide state endpoints for specific subservices - not applicable for docker
   endpoints:
+  uc3inv_home: ""
 

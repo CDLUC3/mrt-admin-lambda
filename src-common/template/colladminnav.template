@@ -1,5 +1,7 @@
 <p>
   <span title="{{USERNAME}}: [{{GROUPS}}]; {{HASPERM}}">👤</span>
+  <span>/</span>
+  <a href="{{UC3INV_HOME}}">Merritt Service Inventory</a>
   <span> / </span>
   <a href="{{ADMINTOOL_HOME}}">Admin Tool Home</a>
   <span> / </span>

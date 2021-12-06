@@ -34,6 +34,8 @@ admintool:
   site-url:
     description: Path to access the Merritt Admin Tool (Query Tool)
     deprecated: Obsolete. This was used when hosting the admin tool on Cloudfront.
+  uc3inv_home:
+    description: Path to UC3 Service Inventory
 batch:
   email:
     description: Default email distribution for reports run on the Merritt batch server.

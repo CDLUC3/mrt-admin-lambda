@@ -13,6 +13,7 @@ default:
   s3-consistency-reports: "{!SSM: admintool/s3-consistency-reports}"
   cognito-groups-allowed: "{!SSM: admintool/cognito-groups-allowed !DEFAULT: NA}"
   context: "{!SSM: admintool/context !DEFAULT: NA}"
+  uc3inv_home: "{!SSM: admintool/uc3inv_home !DEFAULT: ''}"
 
 # use personal credentials when configuring a local environment
 # set up a script to set these variables
@@ -32,3 +33,4 @@ docker:
   # Value to be checked against Cognito token - passively provided by ALB
   cognito-groups-allowed: "NONE"
   context: "NA"
+  uc3inv_home: ""
