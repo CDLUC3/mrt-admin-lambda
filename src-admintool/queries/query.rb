@@ -288,6 +288,35 @@ class AdminQuery < AdminTask
     }
   end
 
+  def sqlfrag_version_clobber
+    %{
+      select 
+        inv_object_id, 
+        number, 
+        count(*) 
+      from 
+        inv.inv_versions 
+      group by 
+        inv_object_id, 
+        number 
+      having 
+        count(*) > 1
+    }
+  end
+
+  def sqlfrag_version_gap
+    %{
+      select 
+        inv_object_id
+      from 
+        inv.inv_versions 
+      group by 
+        inv_object_id
+      having 
+        count(distinct number) != max(number)
+    }
+  end
+
   # since limit/offset have already been applied, do not slice the resulting array
   def paginate_data(fulldata)
     @known_total = fulldata.length

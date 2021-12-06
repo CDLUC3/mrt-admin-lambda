@@ -129,6 +129,12 @@ class QueryFactory
       ConsistencyFilesNoAuditQuery.new(self, path, myparams)
     elsif path == 'con_objects'
       ConsistencyObjectsQuery.new(self, path, myparams)
+    elsif path == 'con_versions'
+      ConsistencyVersionsQuery.new(self, path, myparams)
+    elsif path == 'obj_version_clobber'
+      ObjectsVersionClobberQuery.new(self, path, myparams)
+    elsif path == 'obj_version_gap'
+      ObjectsVersionGapQuery.new(self, path, myparams)
     elsif path == 'con_replic'
       ConsistencyReplicationReqQuery.new(self, path, myparams)    
     elsif path == 'file_copies_needed'
