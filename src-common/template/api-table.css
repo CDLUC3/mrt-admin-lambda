@@ -301,6 +301,7 @@ span.scan-0
 button.storage-perform-delete-node-key,
 button.storage-perform-delete-node-batch,
 button.storage-update-manifest,
+button.storage-rebuild-inventory,
 button.storage-delete-obj {
   color: red;
 }
