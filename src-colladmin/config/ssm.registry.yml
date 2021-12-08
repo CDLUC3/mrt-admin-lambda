@@ -5,8 +5,8 @@
 # - deprecated: create a deprecation comment indicating that a value will be changed, renamed, or removed
 # - skip: skip any error checking for a node and its children when generating the report
 access:
-  port:
-    description: Question - should we define an access port separately from store?
+#  port:
+#    description: Question - should we define an access port separately from store?
 admintool:
   api-path:
     description: Path to access the Merritt Admin Tool (Query Tool)
@@ -51,7 +51,49 @@ billing:
       description: Role specific database username
   readwrite:
     <<: *dbcred
+audit:
+  config:  
+    cleanup: &cleanup
+      msg:
+        description: "TBD: David"
+      subject:
+        description: "TBD: David"
+      to:
+        description: "TBD: David"
+    intervalDays:
+      description: "TBD: David"
+    log: &loglev
+      messageMaximumError:
+        description: "TBD: David"
+      messageMaximumLevel:
+        description: "TBD: David"
+    mail:
+      from:
+        description: "TBD: David"
+      smtp:
+        description: "TBD: David"
+    nodePath:
+      description: "TBD: David"
+    queueCapacity:
+      description: "TBD: David"
+    queueSleepMs:
+      description: "TBD: David"
+    sizeChecksumBuffer:
+      description: "TBD: David"
+    threadPool:
+      description: "TBD: David"
+  port:
+    description: Microservice Port
 cloud:
+  nodes: 
+    sdsc-accessKey:
+      description: "SDSC credential"
+    sdsc-secretKey:
+      description: "SDSC credential"
+    wasabi-accessKey:
+      description: "Wasabi credential"
+    wasabi-secretKey:
+      description: "Wasabi credential"
 cognito-users:
   ecr-image:
     description: "DEV Only: base name of the ecr image used to deploy the lambda"
@@ -74,19 +116,18 @@ colladmin:
     skip: true
   ingest-services:
     description: URLs to the running ingest instances
-    deprecated: Consider performing an ec2 tag lookup instead
+    deprecated: Consider performing an ec2 tag lookup instead since all instances are queried
   replic-service:
-    description: URL to a replic instance for storage admin actions
+    description: URL to replic instance for storage admin actions
+  storage-service:
+    description: URL to storage service for storage admin actions
+  inventory-service:
+    description: URL to inventory service for storage admin actions
   lambda-arn-base:
     description: "DEV Only: base arn name for the lambda to which code will be deployed"
     skip: true
   user-pool:
     description: Cognito user pool name for user management
-  scan-use-keylist:
-    node: 
-      description: Node number using an inventory keylist
-    keylist:
-      description: "node:path of the inventory file to drive the scan for a specific node"
   disable-scan-nodenums:
     description: "Disable scan buttons for a comma separated list of node numbers"
 ingest:
@@ -138,6 +179,23 @@ inv:
 inventory:
   port:
     description: Microservice port
+  config:
+    baseURI:
+      description: "TBD: David"
+    log:
+      <<: *loglev
+      path: 
+        description: "TBD: David"
+    zoo:
+      pollMilli:
+        description: "TBD: David"
+      threadCount:
+        description: "TBD: David"
+  zoo:
+    queueName:
+      description: "TBD: David"
+    queueService:
+      description: "TBD: David"
 ldap:
   accounts:
     admin:
@@ -170,11 +228,57 @@ oai:
   port:
     description: Microservice port
 replic:
+  config:  
+    baseURI:
+      description: "TBD: David"
+    cleanup: 
+      <<: *cleanup
+      from:
+        description: "TBD: David"
+    log:
+      <<: *loglev
+      path: 
+        description: "TBD: David"
+    nodePath:
+      description: "TBD: David"
+    threadPool:
+      description: "TBD: David"
+  scan: 
+    maxkeys: 
+      description: "TBD: David"
+    threadSleep:
+      description: "TBD: David"
   port:
     description: Microservice port
 store:
+  config:
+    baseURI:
+      description: "TBD: David"
+    log:
+      <<: *loglev
+      path: 
+        description: "TBD: David"
+    nodePath:
+      description: "TBD: David"
+    numThreadsLarge:
+      description: "TBD: Mark"
+    numThreadsSmall:
+      description: "TBD: Mark"
+    verifyOnRead:
+      description: "TBD: David"
+    verifyOnWrite:
+      description: "TBD: David"
+    PollingInterval:
+      description: "TBD: Mark?"
+    QueueHoldFile:
+      description: "TBD: Mark?"
   port:
     description: Microservice port
+  zoo:
+    AccessLarge:
+      description: "TBD: Mark"
+    AccessQSize:
+      description: "TBD: Mark"
 sword:
   port:
     description: Microservice port
@@ -187,13 +291,12 @@ ui:
   dir:
     description: Runtime dir for the deployed ui instance
     deprecated: Check how this is used.  May be needed when eliminating the ui private repo
-  port:
-    description: TBD - define port, not currently used
   master_key:
     description: Rails key for deployed ui
   nuxeo-base:
     description: Base url for accessing nuxeo feeds
     deprecated: Is this used?  May be needed when eliminating the ui private repo
+
 
 # skip error checking for dev-only special nodes
 loy:

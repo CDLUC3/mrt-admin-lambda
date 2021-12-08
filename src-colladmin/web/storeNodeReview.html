@@ -145,6 +145,14 @@
                 data-maint-id="{{maintid}}"
               >Mark for Review</button>
 
+              {{#objid}}
+              <button 
+                title="View node specific details for the object"
+                class="colladmin"
+                onclick="javascript:document.location='storeObjectNodes.html?id={{objid}}'"
+              >Object Nodes</button>
+              {{/objid}}              
+
               {{#is_delete}}
               <button 
                 title="Initiate delete of mismatched item"
