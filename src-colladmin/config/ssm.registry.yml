@@ -261,24 +261,24 @@ store:
     nodePath:
       description: "TBD: David"
     numThreadsLarge:
-      description: "TBD: Mark"
+      description: Thread pool size for Large Access workers
     numThreadsSmall:
-      description: "TBD: Mark"
+      description: Thread pool size for Small Access workers
     verifyOnRead:
       description: "TBD: David"
     verifyOnWrite:
       description: "TBD: David"
     PollingInterval:
-      description: "TBD: Mark?"
+      description: Zookeeper queue polling Interval in seconds
     QueueHoldFile:
-      description: "TBD: Mark?"
+      description: Filename that defines Access pause
   port:
     description: Microservice port
   zoo:
     AccessLarge:
-      description: "TBD: Mark"
+      description: Large content Access host
     AccessQSize:
-      description: "TBD: Mark"
+      description: Byte size threshold for AccessLarge host
 sword:
   port:
     description: Microservice port
