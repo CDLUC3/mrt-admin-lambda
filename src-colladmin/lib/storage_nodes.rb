@@ -441,11 +441,14 @@ class ScanReview < MerrittQuery
         ism.maint_type,
         ism.note,
         n.number,
-        ism.id
+        ism.id,
+        o.id as objid
       from
         inv_storage_maints ism
       inner join inv_nodes n
         on n.id = ism.inv_node_id
+      left join inv_objects o
+        on o.ark = substring(ism.s3key, 1, locate('|', ism.s3key) -1)
       where
         #{where}
     }
@@ -533,6 +536,7 @@ class ScanReview < MerrittQuery
         note: r[5],
         num: r[6],
         maintid: r[7],
+        objid: r[8],
         is_delete: r[3] == 'delete'
       })
     end
