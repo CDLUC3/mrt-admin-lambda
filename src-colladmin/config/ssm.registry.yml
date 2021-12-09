@@ -55,33 +55,33 @@ audit:
   config:  
     cleanup: &cleanup
       msg:
-        description: "TBD: David"
+        description: "Audit Cleanup handling email message"
       subject:
-        description: "TBD: David"
+        description: "Audit Cleanup handling email subject"
       to:
-        description: "TBD: David"
+        description: "Audit Cleanup handling email delivery target"
     intervalDays:
-      description: "TBD: David"
+      description: "Minimum days sleep between processing blocks - zero none"
     log: &loglev
       messageMaximumError:
-        description: "TBD: David"
+        description: "Merritt Logging error message level"
       messageMaximumLevel:
-        description: "TBD: David"
+        description: "Merritt Logging standard message level"
     mail:
       from:
-        description: "TBD: David"
+        description: "audit report from"
       smtp:
-        description: "TBD: David"
+        description: "audit report smtp service"
     nodePath:
-      description: "TBD: David"
+      description: "NodeIO configuration name"
     queueCapacity:
-      description: "TBD: David"
+      description: "Audit process queue: block input entry numbers from inv db"
     queueSleepMs:
-      description: "TBD: David"
+      description: "Audit process queue: sleep time mS between requesting new entry block"
     sizeChecksumBuffer:
-      description: "TBD: David"
+      description: "Used for maximum memory buffer size for building digests - replaces file"
     threadPool:
-      description: "TBD: David"
+      description: "Number of concurrent threads for audit processing"
   port:
     description: Microservice Port
 cloud:
@@ -181,21 +181,21 @@ inventory:
     description: Microservice port
   config:
     baseURI:
-      description: "TBD: David"
+      description: "Example URI for inventory"
     log:
       <<: *loglev
       path: 
-        description: "TBD: David"
+        description: "file path to Merritt log directory"
     zoo:
       pollMilli:
-        description: "TBD: David"
+        description: "Zookeeper poll frequency"
       threadCount:
-        description: "TBD: David"
+        description: "Number of concurrent threads for inventory processing"
   zoo:
     queueName:
-      description: "TBD: David"
+      description: "Zookeeper name"
     queueService:
-      description: "TBD: David"
+      description: "Zookeper service(s)"
 ldap:
   accounts:
     admin:
@@ -230,44 +230,44 @@ oai:
 replic:
   config:  
     baseURI:
-      description: "TBD: David"
+      description: "Appears deprecated"
     cleanup: 
       <<: *cleanup
       from:
-        description: "TBD: David"
+        description: "Replic cleanup from"
     log:
       <<: *loglev
       path: 
-        description: "TBD: David"
+        description: "file path to directory for replic Merritt logging"
     nodePath:
-      description: "TBD: David"
+      description: "NodeIO configuration name"
     threadPool:
-      description: "TBD: David"
+      description: "Number of concurrent threads for replic processing"
   scan: 
     maxkeys: 
-      description: "TBD: David"
+      description: "scan: size of block for S3 keys to be processed"
     threadSleep:
-      description: "TBD: David"
+      description: "scan: mS sleep between input block of S3 keys"
   port:
     description: Microservice port
 store:
   config:
     baseURI:
-      description: "TBD: David"
+      description: "base URI for load this storage loadbalancer - used in state commands"
     log:
       <<: *loglev
       path: 
-        description: "TBD: David"
+        description: "file path to directory for store Merritt logging"
     nodePath:
-      description: "TBD: David"
+      description: "NodeIO configuration name"
     numThreadsLarge:
       description: Thread pool size for Large Access workers
     numThreadsSmall:
       description: Thread pool size for Small Access workers
     verifyOnRead:
-      description: "TBD: David"
+      description: "perform read digest validation on read"
     verifyOnWrite:
-      description: "TBD: David"
+      description: "perform read digest validation on write"
     PollingInterval:
       description: Zookeeper queue polling Interval in seconds
     QueueHoldFile:
