@@ -37,13 +37,7 @@ The Lambda code is deployed to the Ruby 2.7 environment.  A build process is req
 - This code relies on a set of SSM parameters to control the application.
 - https://github.com/CDLUC3/uc3-aws-cli contains the code for reading Merritt SSM parameters.
 - Lambda Image Push/Deploy variables
-  - ../admintool/lambda-arn-base - arn for the function
-  - ../admintool/merritt-path - Merritt system URL (for hyperlinks)
-  - ../admintool/ecr-registry - AWS ECR Registry name
-  - ../admintool/ecr-image - Name of image to be published to the registry
-- Colladmin Lambda deploy variables
-  - ../colladmin/lambda-arn-base
-  - ../colladmin/ecr-image
+
 ### Deploy the Lambda Code
 
 The following script should be run from a host that is authorized to 

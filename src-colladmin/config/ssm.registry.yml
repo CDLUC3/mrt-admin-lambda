@@ -14,15 +14,18 @@ admintool:
     description: Comma separated list of the Cognito User Groups that can access the application
   context:
     description: Client context string passed when invoking a lambda from a server (vs http)
-  ecr-image:
+  ecr-imagem:
     description: "DEV Only: base name of the ecr image used to deploy the lambda"
     skip: true
+    deprecated: No longer needed
   ecr-registry:
     description: "DEV Only: ecr registry name used to deploy the lambda"
     skip: true
+    deprecated: No longer needed
   lambda-arn-base:
     description: "DEV Only: base arn name for the lambda to which code will be deployed"
     skip: true
+    deprecated: No longer needed
   merritt-path:
     description: "DEV Only: used to assist in computing the path to Merritt for a particular environment"
     skip: true
@@ -98,8 +101,9 @@ cognito-users:
   ecr-image:
     description: "DEV Only: base name of the ecr image used to deploy the lambda"
     skip: true
+    deprecated: No longer needed
   lambda-arn-base: 
-    description: ARN to the Cognito User Management Lambda that runs outside the VPC
+    description: ARN to the Cognito User Management Lambda that runs outside the VPC, used by colladmin
 collad-ldap:
   host: 
     description: Hostname for the ldap server accessed from the Collection Admin Tool
@@ -114,6 +118,7 @@ colladmin:
   ecr-image:
     description: "DEV Only: base name of the ecr image used to deploy the lambda"
     skip: true
+    deprecated: No longer needed
   ingest-services:
     description: URLs to the running ingest instances
     deprecated: Consider performing an ec2 tag lookup instead since all instances are queried
@@ -126,6 +131,7 @@ colladmin:
   lambda-arn-base:
     description: "DEV Only: base arn name for the lambda to which code will be deployed"
     skip: true
+    deprecated: No longer needed
   user-pool:
     description: Cognito user pool name for user management
   disable-scan-nodenums:

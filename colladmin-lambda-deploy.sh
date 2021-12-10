@@ -15,17 +15,19 @@ check_ssm_root
 # Set ENV based on deploy env
 SSM_DEPLOY_PATH=${SSM_ROOT_PATH//dev/${DEPLOY_ENV}}
 
+# Get the ECR image to publish
+AWS_ACCOUNT_ID=`aws sts get-caller-identity| jq -r .Account` || die "AWS Account Not Found"
+FUNCTNAME=uc3-mrt-colladmin-lambda
+
 # Get the ARN for the lambda to publish
-LAMBDA_ARN_BASE=`get_ssm_value_by_name colladmin/lambda-arn-base`
+LAMBDA_ARN_BASE=arn:aws:lambda:${AWS_REGION}:${AWS_ACCOUNT_ID}:function:uc3-mrt-colladmin-img
 LAMBDA_ARN=${LAMBDA_ARN_BASE}-${DEPLOY_ENV}
 
 # Get the ECR image to publish
-ECR_REGISTRY=`get_ssm_value_by_name admintool/ecr-registry`
-ECR_IMAGE_NAME=`get_ssm_value_by_name colladmin/ecr-image`
-ECR_IMAGE_TAG=${ECR_REGISTRY}${ECR_IMAGE_NAME}:${DEPLOY_ENV}
+ECR_REGISTRY=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+ECR_IMAGE_TAG=${ECR_REGISTRY}/${FUNCTNAME}:${DEPLOY_ENV}
 
 # Get the URL for links to Merritt
-MERRITT_PATH=`get_ssm_value_by_name admintool/merritt-path`
 if [ $DEPLOY_ENV == 'stg' ]
 then
   MERRITT_PATH=http://merritt-stage.cdlib.org
@@ -33,18 +35,28 @@ elif [ $DEPLOY_ENV == 'prd' ]
 then
   MERRITT_PATH=http://merritt.cdlib.org
 fi
-docker build -t cdluc3/uc3-mrt-admin-common src-common || die "Image build failure"
-docker build -t ${ECR_IMAGE_TAG} src-colladmin || die "Image build failure"
 
-# To test: 
-#   docker run --rm -p 8090:8080 --name admintool -d ${ECR_IMAGE_TAG}
-
+# login to ecr
 aws ecr get-login-password --region us-west-2 | \
   docker login --username AWS \
     --password-stdin ${ECR_REGISTRY}
 
-# aws ecr create-repository --repository-name ${ECR_IMAGE_NAME}
+# build a ruby lambda container with mysql
+docker build -t ${ECR_REGISTRY}/mysql-ruby-lambda mysql-ruby-lambda || die "Image build failure for ${ECR_REGISTRY}/mysql-ruby-lambda"
 
+# aws ecr create-repository --repository-name mysql-ruby-lambda
+docker push ${ECR_REGISTRY}/mysql-ruby-lambda || die "Image push failure for ${ECR_REGISTRY}/mysql-ruby-lambda"
+
+# build common image for admintool and colladmin
+docker build --build-arg ECR_REGISTRY=${ECR_REGISTRY} -t ${ECR_REGISTRY}/uc3-mrt-admin-common src-common || die "Image build failure for ${ECR_REGISTRY}/uc3-mrt-admin-common"
+
+# aws ecr create-repository --repository-name uc3-mrt-admin-common
+docker push ${ECR_REGISTRY}/uc3-mrt-admin-common || die "Image push failure for ${ECR_REGISTRY}/uc3-mrt-admin-common"
+
+# build the admin tool
+docker build --build-arg ECR_REGISTRY=${ECR_REGISTRY} -t ${ECR_IMAGE_TAG} src-colladmin || die "Image build failure ${ECR_REGISTRY}/${ECR_IMAGE_TAG}"
+
+# aws ecr create-repository --repository-name ${FUNCTNAME}
 docker push ${ECR_IMAGE_TAG} || die "Image push failure"
 
 # deploy lambda code
