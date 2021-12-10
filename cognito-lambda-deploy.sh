@@ -9,28 +9,26 @@ source ~/.profile.d/uc3-aws-util.sh
 # Check that the SSM_ROOT_PATH has been initialized
 check_ssm_root
 
+AWS_ACCOUNT_ID=`aws sts get-caller-identity| jq -r .Account` || die "AWS Account Not Found"
+FUNCTNAME=uc3-mrt-cognitousers
+
 # Get the ARN for the lambda to publish
-LAMBDA_ARN_BASE=`get_ssm_value_by_name cognito-users/lambda-arn-base`
-LAMBDA_ARN=${LAMBDA_ARN_BASE}
+LAMBDA_ARN=arn:aws:lambda:${AWS_REGION}:${AWS_ACCOUNT_ID}:function:uc3-mrt-cognitousers-img-prd
 
 # Get the ECR image to publish
-ECR_REGISTRY=`get_ssm_value_by_name admintool/ecr-registry`
-ECR_IMAGE_NAME=`get_ssm_value_by_name cognito-users/ecr-image`
-# One deployment will support all domains - no tag included
-ECR_IMAGE_TAG=${ECR_REGISTRY}${ECR_IMAGE_NAME}:latest
+ECR_REGISTRY=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+ECR_IMAGE_TAG=${ECR_REGISTRY}/${FUNCTNAME}:latest
 
-docker build -t ${ECR_IMAGE_TAG} cognito-lambda-nonvpc || die "Image build failure"
-
-# To test: 
-#   docker run --rm -p 8090:8080 --name admintool -d ${ECR_IMAGE_TAG}
-
+# login to ecr
 aws ecr get-login-password --region us-west-2 | \
   docker login --username AWS \
     --password-stdin ${ECR_REGISTRY}
 
-# aws ecr create-repository --repository-name ${ECR_IMAGE_NAME}
+# build cognito lambda
+docker build --build-arg ECR_REGISTRY=${ECR_REGISTRY} -t ${ECR_IMAGE_TAG} cognito-lambda-nonvpc || die "Image build failure for ${ECR_IMAGE_TAG}"
 
-docker push ${ECR_IMAGE_TAG} || die "Image push failure"
+# aws ecr create-repository --repository-name ${FUNCTNAME}
+docker push ${ECR_IMAGE_TAG} || die "Image push failure for ${ECR_IMAGE_TAG}"
 
 # deploy lambda code
 aws lambda update-function-code \
