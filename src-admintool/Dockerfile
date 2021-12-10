@@ -3,10 +3,12 @@
 #   All rights reserved
 #*********************************************************************
 
+ARG ECR_REGISTRY=ecr_registry_not_set
+
 # This image has been built from an image that matches the Lambda Ruby runtime
 # MySql binary dependencies have been embedded into the image
 
-FROM cdluc3/uc3-mrt-admin-common
+FROM ${ECR_REGISTRY}/uc3-mrt-admin-common
 
 # Add Admin Tool Code to the image
 COPY . /var/task/
