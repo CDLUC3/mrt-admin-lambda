@@ -4,7 +4,7 @@
 #*********************************************************************
 
 # This image is intended to simulate an ALB fronting a Lambda
-# docker build -t cdluc3/simulate-lambda-alb .
+# docker build -t ${ECR_REGISTRY}/simulate-lambda-alb .
 
 FROM ruby:2.7
 

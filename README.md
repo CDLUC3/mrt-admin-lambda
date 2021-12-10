@@ -16,9 +16,9 @@ This code contains a generalized query tool for the Merritt team.
 
 [![Colladmin Tool Flow Chart](https://github.com/CDLUC3/mrt-doc/raw/main/diagrams/colladmin.mmd.svg)](https://cdluc3.github.io/mrt-doc/diagrams/colladmin)
 
-The Lambda deployment will pull database credentials from AWS SSM.  SSM Parameters will be explicitly granted to the Lambda.  The lambda will be packaged as a docker image built from [cdluce3/mysql-ruby-lambda](mysql-ruby-lambda).
+The Lambda deployment will pull database credentials from AWS SSM.  SSM Parameters will be explicitly granted to the Lambda.  The lambda will be packaged as a docker image built from [mysql-ruby-lambda](mysql-ruby-lambda).
 
-For testing purposes, another docker image will be run to simulate the ALB interface to the lambda.  See [cdluc3/simulate-lambda-alb](simulate-lambda-alb).  The files [docker-compose.yml](docker-compose.yml) and [admintool.yml](admintool.yml) will facilitate application testing.
+For testing purposes, another docker image will be run to simulate the ALB interface to the lambda.  See [simulate-lambda-alb](simulate-lambda-alb).  The files [docker-compose.yml](docker-compose.yml) and [admintool.yml](admintool.yml) will facilitate application testing.
 
 The Lambda code is deployed to the Ruby 2.7 environment.  A build process is required to prepare a deployment zip file for Lambda.
 

@@ -3,7 +3,7 @@
 #   All rights reserved
 #*********************************************************************
 # This image is based on an architecture that matches the Lambda Ruby runtime
-# docker build -t cdluc3/cognito-lambda-nonvpc .
+# docker build -t ${ECR_REGISTRY}/cognito-lambda-nonvpc .
 
 FROM public.ecr.aws/lambda/ruby:2.7
 
