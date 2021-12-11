@@ -2,7 +2,7 @@
 #   Copyright 2020 Regents of the University of California
 #   All rights reserved
 #*********************************************************************
-version: '3.7'
+version: '3.9'
 services:
   lambda-container:
     image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/uc3-mrt-colladmin-lambda
