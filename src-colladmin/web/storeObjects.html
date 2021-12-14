@@ -90,7 +90,47 @@
               class="colladmin"
               onclick="javascript:document.location='storeObjectNodes.html?id={{id}}'"
             >Object Nodes</button>
-            {{{OBJBUTTON}}}
+
+            <button 
+              title="Delete an object from Merritt"
+              class="colladmin storage-delete-obj"
+            >Delete Object 🚧</button>
+          
+            <button 
+              data-ark="{{ark}}"
+              title="Get Manifest"
+              class="colladmin storage-get-manifest"
+            >Get Manifest 🚧</button>
+          
+            <button 
+              data-ark="{{ark}}"
+              title="Get Manifest"
+              class="colladmin storage-get-augmented-manifest"
+            >Get Augmented Manifest 🚧</button>
+          
+            <button 
+              data-ark="{{ark}}"
+              title="Get Manifest"
+              class="colladmin storage-update-manifest"
+            >Update Manifest 🚧</button>
+          
+            <button 
+              data-ark="{{ark}}"
+              title="Get Manifest"
+              class="colladmin storage-rebuild-inventory"
+            >Rebuild Inventory 🚧</button>
+          
+            <button 
+              data-ark="{{ark}}"
+              title="Clear Scan Entries for Object"
+              class="colladmin storage-clear-scan-entries"
+            >Clear Scan Entries for Object 🚧</button>
+          
+            <button 
+              data-id="{{id}}"
+              title="Trigger re-replication of an object."
+              class="colladmin storage-force-replic-for-object"
+            >Trigger Replication</button>
           </td>
         </tr>
         {{/OBJS}}

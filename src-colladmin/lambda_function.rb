@@ -64,7 +64,9 @@ module LambdaFunctions
         collHandler.check_permission
   
         respath = event.fetch("path", "")
+        puts(respath)
         myparams = collHandler.get_params_from_event(event)
+        puts(myparams)
         return collHandler.web_assets("/web/favicon.ico", myparams) if respath =~ %r[^/(favicon.ico).*]
         return collHandler.web_assets(respath, myparams) if collHandler.web_asset?(respath)
 
@@ -255,7 +257,6 @@ module LambdaFunctions
 
     def template_parameters(path, myparams)
       map = super(path, myparams)
-      map['OBJBUTTON'] = Mustache.render(File.open("template/obj-button.html").read, map)
       map['COLL_LAMBDABASE_JS'] = Mustache.render(File.open("template/coll-lambda.base.js").read, map)
       map['PROFILE_JS'] = Mustache.render(File.open("template/profile.js").read, map)
       map['SUBPROFILE_JS'] = Mustache.render(File.open("template/subprofile.js").read, map)
