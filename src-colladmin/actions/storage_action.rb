@@ -161,6 +161,25 @@ class StorageAction < AdminAction
     if @path == "storage-get-augmented-manifest"
     end
 
+    if @path == "storage-get-ingest-checkm"
+      ver = @myparams.fetch("ver", "1").to_i
+      srvc = get_storage_service
+      endpoint = "/ingestlink/#{nodenum}/#{CGI.escape(ark)}/#{ver}"
+      return "<message>Storage service undefined</message>" if srvc.empty?
+      return "<message>Empty Ark</message>"if ark.empty?
+
+      begin
+        qxml = HttpGetXml.new(srvc, endpoint)
+        return "<message>Status #{qjson.status} for #{endpoint}</message>" unless qxml.status == 200
+        return qxml.body
+        return "<message>No response for #{endpoint}</message>"
+      rescue => e
+        puts(e.message)
+        puts(e.backtrace)
+        return "<message>Error #{e.message} for #{endpoint}</message>"
+      end
+    end
+
     if @path == "storage-clear-scan-entries"
     end
 

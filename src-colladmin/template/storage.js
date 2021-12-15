@@ -219,6 +219,21 @@ function init() {
     invoke(params, false, false);
   });
 
+  $("button.storage-get-ingest-checkm").on("click", function(){
+    var ark = $(this).attr("data-ark");
+    var nodenum = $(this).attr("data-node-num");
+    var ver = $(this).attr("data-version");
+    params = {
+      path: 'storage-get-ingest-checkm',
+      ark: ark,
+      ver: ver,
+      nodenum: nodenum
+    }
+    const RE=/[\/:]+/g;
+    fname = "ingest_manifest." + ark.replaceAll(RE, '_') + ".checkm";
+    invoke_text(params, fname);
+  });
+
   $("button.storage-update-manifest").on("click", function(){
     var nodenum = $(this).attr("data-node-num");
     var ark = $(this).attr("data-ark");
@@ -385,6 +400,28 @@ function invoke_xml(params, download_name) {
         alert(root.textContent);
         return;
       }
+      var blob = new Blob([data]);
+      let a = document.createElement('a');
+      a.href = window.URL.createObjectURL(blob);
+      a.download = download_name;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(a.href);
+    },
+    error: function( xhr, status ) {
+      alert(xhr.responseText);
+    }
+  });
+}
+
+function invoke_text(params, download_name) {
+  $.ajax({
+    dataType: "text",
+    method: "POST",
+    url: "{{COLLADMIN_ROOT}}/lambda",
+    data: params,
+    success: function(data) {
       var blob = new Blob([data]);
       let a = document.createElement('a');
       a.href = window.URL.createObjectURL(blob);

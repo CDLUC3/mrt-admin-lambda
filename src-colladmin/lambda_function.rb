@@ -178,6 +178,8 @@ module LambdaFunctions
           result = StorageAction.new(config, path, myparams).perform_action
         elsif path == "storage-get-augmented-manifest" 
           return LambdaBase.error(405, "Not yet supported") 
+        elsif path == "storage-get-ingest-checkm" 
+          result = StorageAction.new(config, path, myparams).perform_action
         elsif path == "storage-update-manifest" 
           return LambdaBase.error(405, "Not yet supported") 
         elsif path == "storage-del-node-for-collection" 
