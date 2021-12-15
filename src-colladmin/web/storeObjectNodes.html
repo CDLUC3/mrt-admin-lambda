@@ -112,20 +112,13 @@
               class="colladmin storage-rerun-audit-for-object"
             >Re-audit Unverified</button>
 
-            <button 
-              data-ark="{{ark}}"
-              data-node-id="{{nodeid}}"
-              title="Clear Scan Entries for Object"
-              class="colladmin storage-clear-scan-entries"
-            >Clear Scan Entries for Object {{#IS_PROD}}🚧{{/IS_PROD}}</button>
-
             {{#primary}}
             <button 
               data-ark="{{ark}}"
               data-node-num="{{number}}"
               title="Get Manifest"
               class="colladmin storage-get-manifest"
-            >Get Manifest {{#IS_PROD}}🚧{{/IS_PROD}}</button>
+            >Get Manifest</button>
           
             <button 
               data-ark="{{ark}}"
@@ -141,7 +134,21 @@
               class="colladmin storage-update-manifest"
             >Update Manifest 🚧</button>
           
+            <button 
+              data-ark="{{ark}}"
+              data-node-num="{{number}}"
+              title="Get Manifest"
+              class="colladmin storage-rebuild-inventory"
+            >Rebuild Inventory {{#IS_PROD}}🚧{{/IS_PROD}}</button>
+          
             {{/primary}}
+
+            <button 
+              data-ark="{{ark}}"
+              data-node-id="{{nodeid}}"
+              title="Clear Scan Entries for Object"
+              class="colladmin storage-clear-scan-entries"
+            >Clear Scan Entries for Object {{#IS_PROD}}🚧{{/IS_PROD}}</button>
 
             {{#secondary}}
 

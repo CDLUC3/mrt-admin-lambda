@@ -1,7 +1,7 @@
 require 'httpclient'
 
 class HttpPostJson
-    def initialize(ingest_server, endpoint)
+    def initialize(ingest_server, endpoint, data = {})
         url = "#{ingest_server}#{endpoint}"
         puts("POST #{url}")
         cli = HTTPClient.new( 
@@ -9,7 +9,7 @@ class HttpPostJson
                 "Content-Type": "*/*"
             }
         )
-        @resp = cli.post(url, {})
+        @resp = cli.post(url, data)
         puts(@resp.status)
         @resp    
     end

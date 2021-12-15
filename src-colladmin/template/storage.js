@@ -243,9 +243,11 @@ function init() {
 
   $("button.storage-rebuild-inventory").on("click", function(){
     var ark = $(this).attr("data-ark");
+    var nodenum = $(this).attr("data-node-num");
     params = {
       path: 'storage-rebuild-inventory',
-      ark: ark
+      ark: ark,
+      nodenum: nodenum
     }
     showConfirm("This will delete and rebuild inventory entries for the object.\nDo you want to continue?", params);
   });

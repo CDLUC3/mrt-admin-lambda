@@ -165,6 +165,25 @@ class StorageAction < AdminAction
     end
 
     if @path == "storage-rebuild-inventory"
+      # INV DELETE object/ARK
+      srvc = get_inventory_service
+      endpoint = "/object/#{CGI.escape(ark)}"
+      return {message: "Inventory service undefined"}.to_json if srvc.empty?
+      return {message: "Empty Ark"}.to_json if ark.empty?
+
+      qjson = HttpDeleteJson.new(srvc, endpoint)
+      return {message: "Inventory delete failed"}.to_json if qjson.status != 200
+      
+      endpoint = "/add"
+      data = {
+        "url" => "#{get_storage_service}/manifest/#{nodenum}/#{CGI.escape(ark)}",
+        "responseForm" => "json"
+      }
+
+      qjson = HttpPostMultipartJson.new(srvc, endpoint, data)
+      return {message: "Inventory recreate failed"}.to_json if qjson.status != 200
+
+      {message: "Inventory Delete and Recreate Successful"}.to_json
     end
 
     # if @path == "storage-update-manifest"

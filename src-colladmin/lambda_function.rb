@@ -169,15 +169,13 @@ module LambdaFunctions
           result = StorageAction.new(config, path, myparams).perform_action
           content_type = 'application/json; charset=utf-8'
         elsif path == "storage-get-manifest" 
-          return LambdaBase.error(405, "Not yet supported") if LambdaBase.is_prod
           result = StorageAction.new(config, path, myparams).perform_action
         elsif path == "storage-clear-scan-entries" 
           return LambdaBase.error(405, "Not yet supported") if LambdaBase.is_prod
           result = StorageAction.new(config, path, myparams).perform_action
         elsif path == "storage-rebuild-inventory" 
-          # INV DELETE object/ARK
-          # INV POST add?url=<storage>/manifest/PRIMNODE/ARK
-          return LambdaBase.error(405, "Not yet supported") 
+          return LambdaBase.error(405, "Not yet supported") if LambdaBase.is_prod
+          result = StorageAction.new(config, path, myparams).perform_action
         elsif path == "storage-get-augmented-manifest" 
           return LambdaBase.error(405, "Not yet supported") 
         elsif path == "storage-update-manifest" 
