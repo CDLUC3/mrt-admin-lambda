@@ -376,6 +376,13 @@ function invoke_xml(params, download_name) {
     url: "{{COLLADMIN_ROOT}}/lambda",
     data: params,
     success: function(data) {
+      var parser = new DOMParser();
+      var xmlDoc = parser.parseFromString(data, "text/xml");
+      var root = xmlDoc.documentElement;
+      if (root.tagName == "message") {
+        alert(root.textContent);
+        return;
+      }
       var blob = new Blob([data]);
       let a = document.createElement('a');
       a.href = window.URL.createObjectURL(blob);
