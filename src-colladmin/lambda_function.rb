@@ -76,6 +76,7 @@ module LambdaFunctions
         path = CGI.unescape(collHandler.get_key_val(myparams, 'path', 'na'))
         result = {message: "Path undefined"}.to_json
 
+        content_type = "application/json; charset=utf-8"
         if path == "profiles" 
           result = IngestProfileAction.new(config, path, myparams).get_data
         elsif path == "adminprofiles" 
@@ -166,6 +167,21 @@ module LambdaFunctions
         elsif path == "storage-add-node-for-collection" 
           return LambdaBase.error(405, "Not yet supported") if LambdaBase.is_prod
           result = StorageAction.new(config, path, myparams).perform_action
+          content_type = 'application/json; charset=utf-8'
+        elsif path == "storage-get-manifest" 
+          return LambdaBase.error(405, "Not yet supported") if LambdaBase.is_prod
+          result = StorageAction.new(config, path, myparams).perform_action
+        elsif path == "storage-clear-scan-entries" 
+          return LambdaBase.error(405, "Not yet supported") if LambdaBase.is_prod
+          result = StorageAction.new(config, path, myparams).perform_action
+        elsif path == "storage-rebuild-inventory" 
+          # INV DELETE object/ARK
+          # INV POST add?url=<storage>/manifest/PRIMNODE/ARK
+          return LambdaBase.error(405, "Not yet supported") 
+        elsif path == "storage-get-augmented-manifest" 
+          return LambdaBase.error(405, "Not yet supported") 
+        elsif path == "storage-update-manifest" 
+          return LambdaBase.error(405, "Not yet supported") 
         elsif path == "storage-del-node-for-collection" 
           result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-node")
         elsif path == "storage-del-object-from-node" 
@@ -215,7 +231,7 @@ module LambdaFunctions
         {
           headers: {
             'Access-Control-Allow-Origin': '*',
-            'Content-Type': 'application/json; charset=utf-8'
+            'Content-Type': content_type
           },
           statusCode: 200,
           body: result

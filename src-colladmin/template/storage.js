@@ -194,7 +194,62 @@ function init() {
     }
     showConfirm("This will trigger a replication for all objects in the collection.\nDo you want to continue?", params);
   });
- 
+
+  $("button.storage-get-manifest").on("click", function(){
+    var ark = $(this).attr("data-ark");
+    var nodenum = $(this).attr("data-node-num");
+    params = {
+      path: 'storage-get-manifest',
+      ark: ark,
+      nodenum: nodenum
+    }
+    const RE=/[\/:]+/g;
+    fname = "manifest." + ark.replaceAll(RE, '_') + ".xml";
+    invoke_xml(params, fname);
+  });
+
+  $("button.storage-get-augmented-manifest").on("click", function(){
+    var ark = $(this).attr("data-ark");
+    var nodenum = $(this).attr("data-node-num");
+    params = {
+      path: 'storage-get-augmented-manifest',
+      ark: ark,
+      nodenum: nodenum
+    }
+    invoke(params, false, false);
+  });
+
+  $("button.storage-update-manifest").on("click", function(){
+    var nodenum = $(this).attr("data-node-num");
+    var ark = $(this).attr("data-ark");
+    params = {
+      path: 'storage-update-manifest',
+      nodenum: nodenum,
+      ark: ark
+    }
+    showConfirm("This will trigger a replication for all objects in the collection.\nDo you want to continue?", params);
+  });
+
+  $("button.storage-clear-scan-entries").on("click", function(){
+    var ark = $(this).attr("data-ark");
+    var nodeid = $(this).attr("data-node-id");
+    params = {
+      path: 'storage-clear-scan-entries',
+      ark: ark,
+      nodeid: nodeid
+    }
+    showConfirm("This will delete scan results for this object in preparation for a future scan.\nDo you want to continue?", params);
+  });
+
+  $("button.storage-rebuild-inventory").on("click", function(){
+    var ark = $(this).attr("data-ark");
+    params = {
+      path: 'storage-rebuild-inventory',
+      ark: ark
+    }
+    showConfirm("This will delete and rebuild inventory entries for the object.\nDo you want to continue?", params);
+  });
+
   if ($("button.storage-cancel-all-scans").is("*")) {
     invoke(
       {
@@ -307,6 +362,28 @@ function invoke(params, showRes, reload) {
       if (reload) {
         window.location.reload();
       }
+    },
+    error: function( xhr, status ) {
+      alert(xhr.responseText);
+    }
+  });
+}
+
+function invoke_xml(params, download_name) {
+  $.ajax({
+    dataType: "text",
+    method: "POST",
+    url: "{{COLLADMIN_ROOT}}/lambda",
+    data: params,
+    success: function(data) {
+      var blob = new Blob([data]);
+      let a = document.createElement('a');
+      a.href = window.URL.createObjectURL(blob);
+      a.download = download_name;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(a.href);
     },
     error: function( xhr, status ) {
       alert(xhr.responseText);

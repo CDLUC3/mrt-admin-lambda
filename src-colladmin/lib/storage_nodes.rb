@@ -814,7 +814,9 @@ class ObjectNodes < MerrittQuery
               a.inv_object_id = o.id
             and 
               a.inv_node_id = n.id
-          ) as last_verified
+          ) as last_verified,
+          o.id as objid,
+          o.ark as ark
         from
           inv_objects o
         inner join inv_nodes_inv_objects inio
@@ -841,6 +843,8 @@ class ObjectNodes < MerrittQuery
         replicated: r[6].nil? ? '' : r[6].strftime("%Y-%m-%d %T"),
         unverified: r[7],
         last_verified: r[8].nil? ? '' : r[8].strftime("%Y-%m-%d %T"),
+        objid: r[9],
+        ark: r[10]
       })
     end
   end

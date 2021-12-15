@@ -89,8 +89,8 @@ class StorageAction < AdminAction
     end
 
     nodenum = @myparams.fetch("nodenum", "0").to_i
-    coll = @myparams.fetch("coll", "0").to_i
     if @path == "storage-add-node-for-collection"
+      coll = @myparams.fetch("coll", "0").to_i
       res = MerrittQuery.new(@config).run_update(
         %{
           INSERT INTO 
@@ -137,6 +137,47 @@ class StorageAction < AdminAction
       ).to_json
       return res
     end
+
+    ark = @myparams.fetch("ark", "")
+    if @path == "storage-get-manifest"
+      srvc = get_storage_service
+      endpoint = "/manifest/#{nodenum}/#{CGI.escape(ark)}"
+      return "<message>Storage service undefined</message>" if srvc.empty?
+      return "<message>Empty Ark</message>"if ark.empty?
+
+      begin
+        qxml = HttpGetXml.new(srvc, endpoint)
+        return "<message>Status #{qjson.status} for #{endpoint}</message>" unless qxml.status == 200
+        return qxml.body
+        return "<message>No response for #{endpoint}</message>"
+      rescue => e
+        puts(e.message)
+        puts(e.backtrace)
+        return "<message>Error #{e.message} for #{endpoint}</message>"
+      end
+  
+    end
+
+    if @path == "storage-get-augmented-manifest"
+    end
+
+    if @path == "storage-clear-scan-entries"
+    end
+
+    if @path == "storage-rebuild-inventory"
+    end
+
+    # if @path == "storage-update-manifest"
+    # end
+
+  end
+
+  def get_storage_service
+    @config.fetch('storage-service', '')
+  end
+
+  def get_inventory_service
+    @config.fetch('inventory-service', '')
   end
 
 end
