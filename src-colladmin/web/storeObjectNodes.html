@@ -59,37 +59,7 @@
               title="Delete an object from Merritt"
               class="colladmin storage-delete-obj"
             >Delete Object 🚧</button>
-          
-            <button 
-              data-ark="{{ark}}"
-              title="Get Manifest"
-              class="colladmin storage-get-manifest"
-            >Get Manifest 🚧</button>
-          
-            <button 
-              data-ark="{{ark}}"
-              title="Get Manifest"
-              class="colladmin storage-get-augmented-manifest"
-            >Get Augmented Manifest 🚧</button>
-          
-            <button 
-              data-ark="{{ark}}"
-              title="Get Manifest"
-              class="colladmin storage-update-manifest"
-            >Update Manifest 🚧</button>
-          
-            <button 
-              data-ark="{{ark}}"
-              title="Get Manifest"
-              class="colladmin storage-rebuild-inventory"
-            >Rebuild Inventory 🚧</button>
-          
-            <button 
-              data-ark="{{ark}}"
-              title="Clear Scan Entries for Object"
-              class="colladmin storage-clear-scan-entries"
-            >Clear Scan Entries for Object 🚧</button>
-          
+                    
             <button 
               data-id="{{id}}"
               title="Trigger re-replication of an object."
@@ -134,15 +104,64 @@
               title="Re-run all audits for this node."
               class="colladmin storage-force-audit-for-object"
             >Re-audit All Files</button>
+
             <button 
               data-id="{{ID}}"
               data-node-id="{{nodeid}}"
               title="Re-run the unverified audits for this node."
               class="colladmin storage-rerun-audit-for-object"
             >Re-audit Unverified</button>
-            {{#secondary}}
+
+            {{#primary}}
             <button 
-              data-ark="{{ARK}}"
+              data-ark="{{ark}}"
+              data-node-num="{{number}}"
+              title="Get Manifest"
+              class="colladmin storage-get-manifest"
+            >Get Manifest</button>
+          
+            <button 
+              data-ark="{{ark}}"
+              data-node-num="{{number}}"
+              title="Get Manifest"
+              class="colladmin storage-get-augmented-manifest"
+            >Get Augmented Manifest 🚧</button>
+
+            <button 
+              data-ark="{{ark}}"
+              data-node-num="{{number}}"
+              data-version="{{version}}"
+              title="Get Manifest"
+              class="colladmin storage-get-ingest-checkm"
+            >Get Ingest Checkm (v{{version}})</button>
+
+            <button 
+              data-ark="{{ark}}"
+              data-node-num="{{number}}"
+              title="Get Manifest"
+              class="colladmin storage-update-manifest"
+            >Update Manifest 🚧</button>
+          
+            <button 
+              data-ark="{{ark}}"
+              data-node-num="{{number}}"
+              title="Get Manifest"
+              class="colladmin storage-rebuild-inventory"
+            >Rebuild Inventory {{#IS_PROD}}🚧{{/IS_PROD}}</button>
+          
+            {{/primary}}
+
+            <button 
+              data-ark="{{ark}}"
+              data-node-id="{{nodeid}}"
+              title="Clear Scan Entries for Object"
+              class="colladmin storage-clear-scan-entries"
+            >Clear Scan Entries for Ark {{#IS_PROD}}🚧{{/IS_PROD}}</button>
+
+            {{#secondary}}
+
+            <button 
+              data-ark="{{ark}}"
               data-node-num="{{number}}"
               data-node-name="{{name}}"
               title="Delete a secondary copy of an object.  Cannot be run on the primary node."
