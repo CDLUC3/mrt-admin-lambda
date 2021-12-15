@@ -164,7 +164,7 @@ class StorageAction < AdminAction
     if @path == "storage-get-ingest-checkm"
       ver = @myparams.fetch("ver", "1").to_i
       srvc = get_storage_service
-      endpoint = "/ingestlink/#{nodenum}/#{CGI.escape(ark)}/#{ver}"
+      endpoint = "/ingestlink/#{nodenum}/#{CGI.escape(ark)}/#{ver}?presign=true"
       return "<message>Storage service undefined</message>" if srvc.empty?
       return "<message>Empty Ark</message>"if ark.empty?
 
@@ -181,6 +181,22 @@ class StorageAction < AdminAction
     end
 
     if @path == "storage-clear-scan-entries"
+      return {message: "Invalid ark: #{ark}"}.to_json unless ark =~ %r[^ark:/.+/.+]
+      res = MerrittQuery.new(@config).run_update(
+        %{
+          DELETE FROM
+            inv_storage_maints
+          WHERE
+            inv_node_id = ?
+          AND
+            s3key like concat(?,'%')
+          AND
+            maint_status != 'removed'
+        }, 
+        [nodeid, ark],
+        "Scan records deleted for #{ark}"
+      ).to_json
+      return res
     end
 
     if @path == "storage-rebuild-inventory"
