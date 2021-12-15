@@ -42,6 +42,7 @@ class BatchJob < MerrittJson
     @bid = bid
     @jid = jid
     @status = ""
+    @qstatus = ""
     @submitter = ""
     @title = ""
     @date = ""
@@ -51,6 +52,7 @@ class BatchJob < MerrittJson
   end
 
   def read_queue_object(qe)
+    @qstatus = qe.qstatus
     @status = qe.status
     @submitter = qe.user
     @title = qe.title
@@ -77,7 +79,8 @@ class BatchJob < MerrittJson
       'Date',
       'File Type',
       'Profile',
-      'DB Obj Cnt'
+      'DB Obj Cnt',
+      'Status'
     ]
   end
 
@@ -90,20 +93,22 @@ class BatchJob < MerrittJson
       '',
       '',
       '',
-      'jobnote'
+      'jobnote',
+      'status'
     ]
   end
 
   def to_table_row
     [
       "#{@bid}/#{@jid}",
-      @status,
+      @qstatus,
       @submitter,
       @title,
       @date,
       @fileType,
       @profile,
-      "#{@bid}/#{@jid}; #{@obj_cnt}" 
+      "#{@bid}/#{@jid}; #{@obj_cnt}",
+      @status
     ]
   end
 

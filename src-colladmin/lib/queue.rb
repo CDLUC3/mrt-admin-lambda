@@ -124,6 +124,10 @@ class QueueEntry < QueueJson
     getValue(:status)
   end
 
+  def qstatus
+    getValue(:qstatus)
+  end
+
   def user
     getValue(:user)
   end
