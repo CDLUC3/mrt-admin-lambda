@@ -1,7 +1,7 @@
 class ConsistencyFilesQuery < AdminQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
-    @copies = CGI.unescape(get_param('copies', '2')).to_i
+    @copies = get_param('copies', '2').to_i
   end
 
   def report_name
@@ -72,7 +72,7 @@ class ConsistencyFilesQuery < AdminQuery
         ),   
         case
           when count(*) = 0 then 'PASS'
-          when #{@copies} = 3 then 'PASS'
+          when #{@copies.to_i} = 3 then 'PASS'
           when ifnull(
             sum(
               case
@@ -87,7 +87,7 @@ class ConsistencyFilesQuery < AdminQuery
               when age.inv_object_id = (
                 select id from inv.inv_objects where ark = 'ark:/13030/m5v45qp2'
               ) then 'INFO'
-              when #{@copies} != 2 then 'FAIL'
+              when #{@copies.to_i} != 2 then 'FAIL'
               when c.mnemonic = 'oneshare_dataup' then 'INFO'
               when c.mnemonic = 'dataone_dash' then 'INFO'
               when ifnull(c.mnemonic, '') = '' then 'INFO'

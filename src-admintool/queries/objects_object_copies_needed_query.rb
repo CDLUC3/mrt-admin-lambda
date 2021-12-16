@@ -1,14 +1,14 @@
 class ObjectsObjectCopiesNeededQuery < ObjectsQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
-    @copies = CGI.unescape(get_param('copies', '2')).to_i
-    @days = CGI.unescape(get_param('days', '0')).to_i
+    @copies = get_param('copies', '2').to_i
+    @days = get_param('days', '0').to_i
     subsql = %{
       select
         distinct age.inv_object_id
       #{sqlfrag_object_copies(@copies)}
       where
-        age.init_created < date_add(now(), INTERVAL -#{@days} DAY)
+        age.init_created < date_add(now(), INTERVAL -#{@days.to_i} DAY)
       and not exists (
         select 1
         from 
@@ -29,7 +29,7 @@ class ObjectsObjectCopiesNeededQuery < ObjectsQuery
         and
           c.mnemonic in ('oneshare_dataup', 'dataone_dash')
       )
-      limit #{get_limit} offset #{get_offset};
+      limit #{get_limit.to_i} offset #{get_offset.to_i};
     }
     stmt = @client.prepare(subsql)
     results = stmt.execute()
@@ -42,7 +42,7 @@ class ObjectsObjectCopiesNeededQuery < ObjectsQuery
   end
 
   def get_title
-    "Objects with #{@copies} Copies (excluding known issues) - Older than #{@days} days (Limit #{get_limit})"
+    "Objects with #{@copies} Copies (excluding known issues) - Older than #{@days} days (Limit #{get_limit.to_i})"
   end
 
   def get_params

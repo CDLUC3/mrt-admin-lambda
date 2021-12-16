@@ -2,7 +2,7 @@ class CollectionsByMimeQuery < AdminQuery
   def initialize(query_factory, path, myparams, col)
     super(query_factory, path, myparams)
     @mime = get_param('mime', '')
-    @col = (col == 'mime_type' || col == 'mime_group') ? col : 'mime_type'
+    @col = verify_mime_col(col)
   end
 
   def get_params
@@ -29,7 +29,7 @@ class CollectionsByMimeQuery < AdminQuery
       from
         owner_coll_mime_use_details
       where
-        #{@col} = ?
+        #{verify_mime_col(@col)} = ?
       group by ogroup, inv_collection_id, mnemonic, collection_name
       order by ogroup, collection_name;
     }

@@ -2,7 +2,7 @@ class CollectionDetailsQuery < AdminQuery
   def initialize(query_factory, path, myparams, col)
     super(query_factory, path, myparams)
     @coll = get_param('coll', '')
-    @col = (col == 'inv_collection_id' || col == 'ogroup') ? col : 'inv_collection_id'
+    @col = verify_col_group(col)
   end
 
   def get_params
@@ -33,7 +33,7 @@ class CollectionDetailsQuery < AdminQuery
       where
         source = 'producer'
       and
-        #{@col} = ?
+        #{verify_col_group(@col)} = ?
       group by
         mime_group, mime_type
       union
@@ -47,7 +47,7 @@ class CollectionDetailsQuery < AdminQuery
       where
         source != 'producer'
       and
-        #{@col} = ?
+        #{verify_col_group(@col)} = ?
       order by
       mime_group, mime_type
     }

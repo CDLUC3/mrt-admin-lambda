@@ -173,11 +173,37 @@ class AdminQuery < AdminTask
     'DAY'
   end
 
+  def verify_col_group(col)
+    (col == 'inv_collection_id' || col == 'ogroup') ? col : 'inv_collection_id'
+  end
+
+  def verify_aggregate_role(role)
+    return role if role == 'MRT-none'
+    return role if role == 'MRT-owner'
+    return role if role == 'MRT-service-level-agreement'
+    return role if role == 'MRT-collection'
+    return 'n/a' if role == 'MRT-none' 
+    'Null_Value'   
+  end
+
+  def verify_day(day)
+    return day if day =~ %r[^\d\d\d\d-\d\d-\d\d$]
+    Time.new.strftime('%Y-%m-%d')
+  end
+
+  def verify_mime_col(col)
+    (col == 'mime_type' || col == 'mime_group') ? col : 'mime_type'
+  end
+
+  def verify_files_col(col)
+    (col == 'count_files' || col == 'billable_size') ? col : 'count_files'
+  end
+
   def get_limit
     @limit
   end
 
-  def get_offset
+   def get_offset
     @page * page_size
   end
 
@@ -252,7 +278,7 @@ class AdminQuery < AdminTask
           group by 
             inv_file_id 
           having 
-            count(*) = #{copies}
+            count(*) = #{copies.to_i}
         ) as copies
           on copies.inv_file_id = a.inv_file_id
         group by 
@@ -279,7 +305,7 @@ class AdminQuery < AdminTask
           group by 
             inv_object_id 
           having 
-            count(*) = #{copies}
+            count(*) = #{copies.to_i}
         ) as copies
           on copies.inv_object_id = inio.inv_object_id
         group by 

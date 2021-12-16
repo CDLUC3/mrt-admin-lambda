@@ -1,14 +1,14 @@
 class ReplicationNeededQuery < ObjectsQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
-    @days = CGI.unescape(get_param('days', '0')).to_i
+    @days = get_param('days', '0').to_i
     subsql = %{
       select
         distinct p.inv_object_id
       #{sqlfrag_replic_needed}
       and
-        o.modified < date_add(now(), INTERVAL -#{@days} DAY)
-      limit #{get_limit} offset #{get_offset};
+        o.modified < date_add(now(), INTERVAL -#{@days.to_i} DAY)
+      limit #{get_limit.to_i} offset #{get_offset.to_i};
     }
     stmt = @client.prepare(subsql)
     results = stmt.execute()
@@ -21,13 +21,14 @@ class ReplicationNeededQuery < ObjectsQuery
   end
 
   def get_title
-    "Objects - Replication Needed - Older than #{@days} days (Limit #{get_limit})"
+    "Objects - Replication Needed - Older than #{@days} days (Limit #{get_limit.to_i})"
   end
 
   def get_params
     @ids
   end
 
+  # @qs is generated from a database query, so it is sanitized
   def get_where
     "where o.id in (#{@qs.join(',')})"
   end

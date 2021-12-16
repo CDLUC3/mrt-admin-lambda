@@ -1,13 +1,7 @@
 class ObjectsQuery < AdminQuery
   def initialize(query_factory, path, myparams, sort='id')
     super(query_factory, path, myparams)
-    if sort == 'created'
-      @sort = 'o.created desc'
-    elsif sort == 'modified'
-        @sort = 'o.modified desc'
-    else
-      @sort = 'o.id asc'
-    end
+    @sort = sort
   end
 
   def get_title
@@ -16,6 +10,12 @@ class ObjectsQuery < AdminQuery
 
   def get_where
     ""
+  end
+
+  def get_object_sort(sort)
+    return 'o.created desc' if sort == 'created'
+    return 'o.modified desc' if sort == 'modified'
+    'o.id asc'
   end
 
   def get_sql
@@ -71,14 +71,14 @@ class ObjectsQuery < AdminQuery
         inv.inv_objects o
     } + get_where +
     %{  
-      order by #{@sort}
+      order by #{get_object_sort(@sort)}
     } + get_obj_limit_query
   end
 
   # disable the following if limit has already been applied
   def get_obj_limit_query
     %{
-      limit #{get_limit} offset #{get_offset};
+      limit #{get_limit.to_i} offset #{get_offset.to_i};
     }
   end
 

@@ -2,9 +2,9 @@ require 'date'
 class CollectionsByTimeQuery < AdminQuery
   def initialize(query_factory, path, myparams, col, source)
     super(query_factory, path, myparams)
-    @col = (col == 'count_files' || col == 'billable_size') ? col : 'count_files'
+    @col = verify_files_col(col)
     @colclass = (@col == 'billable_size') ? 'bytes' : 'dataint'
-    @source_clause = (source == 'producer') ? " and source='producer'" : ""
+    @source = source
     @interval = get_param('interval', '')
     @interval = (@interval == 'years' || @interval == 'days' || @interval == 'weeks') ? @interval : 'years'
     @ranges = []
@@ -72,7 +72,7 @@ class CollectionsByTimeQuery < AdminQuery
         oc.collection_name as ocname,
         (
           select
-            sum(#{@col})
+            sum(#{verify_files_col(@col)})
           from
             owner_coll_mime_use_details ocmud
           where
@@ -83,8 +83,12 @@ class CollectionsByTimeQuery < AdminQuery
             date_added >= ?
           and
             date_added < ?
-          #{@source_clause}
-        ) as sumval
+            #{
+              (@source == 'producer') ? 
+                " and source='producer'" : 
+                ""
+            }
+           ) as sumval
       from
         owner_collections oc
       group by
