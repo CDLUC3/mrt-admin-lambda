@@ -1,7 +1,7 @@
 class AdminObjectsFilesQuery < AdminQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
-    @aggrole = verify_aggregate_value(get_param('aggrole', 'Null_Value'))
+    @aggrole = verify_aggregate_role(get_param('aggrole', 'Null_Value'))
   end
 
   def get_title
@@ -33,7 +33,7 @@ class AdminObjectsFilesQuery < AdminQuery
         #{ 
           @aggrole == 'Null_Value' ? 
             "aggregate_role is null" : 
-            "aggregate_role = '#{verify_aggregate_value(@aggrole)}'"
+            "aggregate_role = '#{verify_aggregate_role(@aggrole)}'"
         }
       order by 
         created desc,
