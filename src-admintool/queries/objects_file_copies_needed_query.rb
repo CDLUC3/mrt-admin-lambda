@@ -8,7 +8,7 @@ class ObjectsFileCopiesNeededQuery < ObjectsQuery
         distinct age.inv_object_id
       #{sqlfrag_audit_files_copies(@copies)}
       where
-        age.init_created < date_add(now(), INTERVAL -#{@days} DAY)
+        age.init_created < date_add(now(), INTERVAL -#{@days.to_i} DAY)
       and not exists (
         select 1
         from 
@@ -29,7 +29,7 @@ class ObjectsFileCopiesNeededQuery < ObjectsQuery
         and
           c.mnemonic in ('oneshare_dataup', 'dataone_dash')
       )
-      limit #{get_limit} offset #{get_offset};
+      limit #{get_limit.to_i} offset #{get_offset.to_i};
     }
     stmt = @client.prepare(subsql)
     results = stmt.execute()
@@ -42,13 +42,14 @@ class ObjectsFileCopiesNeededQuery < ObjectsQuery
   end
 
   def get_title
-    "Objects with #{@copies} Copies - Older than #{@days} days (Limit #{get_limit})"
+    "Objects with #{@copies} Copies - Older than #{@days} days (Limit #{get_limit.to_i})"
   end
 
   def get_params
     @ids
   end
 
+  # @qs was generated from a database query, so it is sanitized
   def get_where
     "where o.id in (#{@qs.join(',')})"
   end

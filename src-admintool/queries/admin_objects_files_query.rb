@@ -1,9 +1,7 @@
 class AdminObjectsFilesQuery < AdminQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
-    @aggrole = get_param('aggrole', 'Null_Value')
-    @aggrole = "n/a" if @aggrole == 'MRT-none' #too many values to return
-    @where = @aggrole == 'Null_Value' ? "aggregate_role is null" : "aggregate_role = '#{@aggrole}'"
+    @aggrole = verify_aggregate_role(get_param('aggrole', 'Null_Value'))
   end
 
   def get_title
@@ -32,7 +30,11 @@ class AdminObjectsFilesQuery < AdminQuery
         on o.id = f.inv_object_id
         and v.id = f.inv_version_id
       where 
-        #{@where}
+        #{ 
+          @aggrole == 'Null_Value' ? 
+            "aggregate_role is null" : 
+            "aggregate_role = '#{verify_aggregate_role(@aggrole)}'"
+        }
       order by 
         created desc,
         source,

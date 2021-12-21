@@ -18,7 +18,7 @@ class AuditStatusTimeQuery < AdminQuery
       from
         inv.inv_audits
       where
-        verified > date_add(now(), INTERVAL ? #{@unit})
+        verified > date_add(now(), INTERVAL ? #{verify_interval_unit(@unit)})
       group by 
         status
       ;

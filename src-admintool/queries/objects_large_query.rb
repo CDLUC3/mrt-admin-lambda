@@ -10,7 +10,7 @@ class ObjectsLargeQuery < ObjectsQuery
         f.inv_object_id
       having
         sum(f.billable_size) > 1073741824
-      limit #{get_limit} offset #{get_offset};
+      limit #{get_limit.to_i} offset #{get_offset.to_i};
     }
     stmt = @client.prepare(subsql)
     results = stmt.execute()
@@ -30,6 +30,7 @@ class ObjectsLargeQuery < ObjectsQuery
     @ids
   end
 
+  # @qs was generated from a database query, so it is sanitized
   def get_where
     "where o.id in (#{@qs.join(',')})"
   end

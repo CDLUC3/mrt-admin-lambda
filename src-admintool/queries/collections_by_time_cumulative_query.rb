@@ -2,9 +2,9 @@ require 'date'
 class CollectionsByTimeCumulativeQuery < AdminQuery
   def initialize(query_factory, path, myparams, col, source)
     super(query_factory, path, myparams)
-    @col = (col == 'count_files' || col == 'billable_size') ? col : 'count_files'
+    @col = verify_files_col(col)
     @colclass = (@col == 'billable_size') ? 'bytes' : 'dataint'
-    @source_clause = (source == 'producer') ? " and source='producer'" : ""
+    @source = source
     @ranges = []
 
     @end = Date.today.next_year.next_year.prev_month(Date.today.month - 1) - Date.today.mday + 1
@@ -53,7 +53,7 @@ end
         oc.collection_name as ocname,
         (
           select
-            ifnull(sum(#{@col}), 0)
+            ifnull(sum(#{verify_files_col(@col)}), 0)
           from
             owner_coll_mime_use_details ocmud
           where
@@ -64,10 +64,14 @@ end
             date_added >= ?
           and
             date_added < ?
-          #{@source_clause}
+          #{
+            (@source == 'producer') ? 
+              " and source='producer'" : 
+              ""
+          }
         ) + (
           select
-            ? * ifnull(sum(#{@col}), 0) / 730
+            ? * ifnull(sum(#{verify_files_col(@col)}), 0) / 730
           from
             owner_coll_mime_use_details ocmud
           where
@@ -76,8 +80,12 @@ end
             oc.inv_collection_id = ocmud.inv_collection_id
           and
             date_added >= date_add(now(), interval - 730 day)
-          #{@source_clause}
-        )
+            #{
+              (@source == 'producer') ? 
+                " and source='producer'" : 
+                ""
+            }
+           )
         as sumval
       from
         owner_collections oc

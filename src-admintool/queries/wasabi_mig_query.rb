@@ -85,24 +85,24 @@ class WasabiMigrationQuery < AdminQuery
     %{
       select
         'Total',
-        #{@totobj} as obj,
-        if(#{@totobj} = 0, 0, #{@totobj} / #{@totobj} * 100) as pobj,
-        #{@totbytes} as fbytes,
-        if(#{@totbytes} = 0, 0, #{@totbytes} / #{@totbytes} * 100) as pfbytes
+        #{@totobj.to_i} as obj,
+        if(#{@totobj.to_i} = 0, 0, #{@totobj.to_i} / #{@totobj.to_i} * 100) as pobj,
+        #{@totbytes.to_i} as fbytes,
+        if(#{@totbytes.to_i} = 0, 0, #{@totbytes.to_i} / #{@totbytes.to_i} * 100) as pfbytes
       union
       select
         'Unmigrated',
-        #{@unmigobj} as obj,
-        if(#{@totobj} = 0, 0, #{@unmigobj} / #{@totobj} * 100) as pobj,
-        #{@unmigbytes} as fbytes,
-        if(#{@totbytes} = 0, 0, #{@unmigbytes} / #{@totbytes} * 100) as pfbytes
+        #{@unmigobj.to_i} as obj,
+        if(#{@totobj.to_i} = 0, 0, #{@unmigobj.to_i} / #{@totobj.to_i} * 100) as pobj,
+        #{@unmigbytes.to_i} as fbytes,
+        if(#{@totbytes.to_i} = 0, 0, #{@unmigbytes.to_i} / #{@totbytes.to_i} * 100) as pfbytes
       union
       select
         'Migrated',
-        #{@totobj} - #{@unmigobj} as obj,
-        if(#{@totobj} = 0, 0, (#{@totobj} - #{@unmigobj}) / #{@totobj} * 100) as pobj,
-        #{@totbytes} - #{@unmigbytes} as fbytes,
-        if(#{@totbytes} = 0, 0, (#{@totbytes} - #{@unmigbytes}) / #{@totbytes} * 100) as pfbytes
+        #{@totobj.to_i} - #{@unmigobj.to_i} as obj,
+        if(#{@totobj.to_i} = 0, 0, (#{@totobj.to_i} - #{@unmigobj.to_i}) / #{@totobj.to_i} * 100) as pobj,
+        #{@totbytes.to_i} - #{@unmigbytes.to_i} as fbytes,
+        if(#{@totbytes.to_i} = 0, 0, (#{@totbytes.to_i} - #{@unmigbytes.to_i}) / #{@totbytes.to_i} * 100) as pfbytes
       ;
     }
   end

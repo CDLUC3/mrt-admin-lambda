@@ -1,7 +1,7 @@
 class AuditProcessedSizeIterativeQuery < AdminQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
-    @day = get_param('day', Time.new.strftime('%Y-%m-%d'))
+    @day = verify_day(get_param('day', Time.new.strftime('%Y-%m-%d')))
   end
 
   def get_title
@@ -16,12 +16,12 @@ class AuditProcessedSizeIterativeQuery < AdminQuery
       sql = sql + %{
         select
           concat(
-            date_format(date_add('#{@day}', interval #{i} HOUR), '%H:00'),
+            date_format(date_add('#{verify_day(@day)}', interval #{i} HOUR), '%H:00'),
             ' - ',
-            date_format(date_add('#{@day}', interval #{i+1} HOUR), '%H:00')
+            date_format(date_add('#{verify_day(@day)}', interval #{i+1} HOUR), '%H:00')
           ),
-          date_format(date_add('#{@day}', interval #{i} HOUR), '%Y-%m-%d %H:00:00'),
-          date_format(date_add('#{@day}', interval #{i+1} HOUR), '%Y-%m-%d %H:00:00')
+          date_format(date_add('#{verify_day(@day)}', interval #{i} HOUR), '%Y-%m-%d %H:00:00'),
+          date_format(date_add('#{verify_day(@day)}', interval #{i+1} HOUR), '%Y-%m-%d %H:00:00')
       }
     end
 

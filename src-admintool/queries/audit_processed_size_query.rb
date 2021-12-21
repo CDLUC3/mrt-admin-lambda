@@ -37,7 +37,7 @@ class AuditProcessedSizeQuery < AdminQuery
       from 
         audits_processed
       where
-        audit_date > date_add(now(), INTERVAL - #{@days} DAY)
+        audit_date > date_add(now(), INTERVAL - #{@days.to_i} DAY)
       order by
         audit_date desc
     }
