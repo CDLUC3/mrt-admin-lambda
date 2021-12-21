@@ -98,6 +98,12 @@ class BatchJob < MerrittJson
     ]
   end
 
+  def status
+    return @status unless @status.empty? || @status.nil?
+    return 'PASS' if @obj_cnt > 0
+    return 'INFO'
+  end
+
   def to_table_row
     [
       "#{@bid}/#{@jid}",
@@ -108,7 +114,7 @@ class BatchJob < MerrittJson
       @fileType,
       @profile,
       "#{@bid}/#{@jid}; #{@obj_cnt}",
-      @status
+      status
     ]
   end
 
