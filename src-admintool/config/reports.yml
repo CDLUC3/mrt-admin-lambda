@@ -1,0 +1,149 @@
+owners:
+  class: OwnerQuery
+  description: |
+    This reports lists the Merritt Owner objects defined in the inventory database.
+    - A view in the Merritt Billing database helps to group each of the owner objects by campus. 
+collections:
+  class: CollectionQuery
+  description: |
+    This reports lists the Merritt Collection objects defined in the inventory database.
+    - A view in the Merritt Billing database helps to group each of the collection objects by campus. 
+mimes:
+  class: MimeQuery 
+collnodes:
+  class: CollectionNodesQuery
+nodes:
+  class: NodesQuery
+objects_by_ark:
+  class: ObjectsByArkQuery
+objects_by_title:
+  class: ObjectsByTitleQuery
+objects_by_local_id:
+  class: ObjectsByLocalIdQuery
+objects_by_author:
+  class: ObjectsByAuthorQuery
+objects_large:
+  class: ObjectsLargeQuery
+objects_many_files:
+  class: ObjectsManyFilesQuery
+objects_recent:
+  class: ObjectsRecentQuery
+objects_recent_coll:
+  class: ObjectsRecentCollQuery
+objects_by_batch:
+  class: ObjectsByBatchQuery
+objects_by_job:
+  class: ObjectsByJobQuery
+files_by_name_coll:
+  class: FilesByNameCollQuery
+filesize:
+  class: FilesizeQuery
+count_objects:
+  class: CountObjectsQuery
+collections_by_node:
+  class: CollectionsByNodeQuery
+collections_by_owner:
+  class: CollectionsByOwnerQuery
+collections_by_mime_type:
+  class: CollectionsByMimeQuery
+  params: ['mime_type']
+collections_by_mime_group:
+  class: CollectionsByMimeQuery
+  params: ['mime_group']
+collections_by_time_count_producer:
+  class: CollectionsByTimeQuery
+  params: ['count_files', 'producer']
+collections_by_time_count:
+  class: CollectionsByTimeQuery
+  params: ['count_files', '']
+collections_by_time_size:
+  class: CollectionsByTimeQuery
+  params: ['billable_size', '']
+collections_by_time_size_cumulative:
+  class: CollectionsByTimeCumulativeQuery
+  params: ['billable_size', '']
+collection_details:
+  class: CollectionDetailsQuery
+  params: ['inv_collection_id']
+collection_info:
+  class: CollectionInfoQuery
+  params: ['inv_collection_id']
+collection_group_details:
+  class: CollectionDetailsQuery
+  params: ['ogroup']
+invoices:
+  class: InvoicesQuery
+audit_status:
+  class: AuditStatusQuery
+audit_status_time:
+  class: AuditStatusTimeQuery
+audit_oldest:
+  class: AuditOldestQuery
+audit_size:
+  class: AuditQueueSizeQuery
+audit_processed_size:
+  class: AuditProcessedSizeQuery
+audit_processed_hours:
+  class: AuditProcessedSizeIterativeQuery
+replication_needed:
+  class: ReplicationNeededQuery
+replication_initiated:
+  class: ReplicationInitiatedQuery
+replic_processed:
+  class: ReplicProcessedQuery
+wasabi:
+  class: WasabiMigrationQuery
+doi:
+  class: DoiConflictQuery
+big_ingest:
+  class: BigIngestQuery
+recent_ingests:
+  class: RecentIngestsQuery
+arklist:
+  class: ArklistQuery
+locallist:
+  class: LocalidListQuery
+arkcompare:
+  class: ArklistCompareQuery
+localcompare:
+  class: LocalidListCompareQuery
+con_primary:
+  class: ConsistencyPrimaryNodeQuery
+con_secondary:
+  class: ConsistencySecondaryNodeQuery
+con_files:
+  class: ConsistencyFilesQuery
+con_no_audit:
+  class: ConsistencyFilesNoAuditQuery
+con_objects:
+  class: ConsistencyObjectsQuery
+con_versions:
+  class: ConsistencyVersionsQuery
+obj_version_clobber:
+  class: ObjectsVersionClobberQuery
+obj_version_gap:
+  class: ObjectsVersionGapQuery
+con_replic:
+  class: ConsistencyReplicationReqQuery
+file_copies_needed:
+  class: ObjectsFileCopiesNeededQuery
+object_copies_needed:
+  class: ObjectsObjectCopiesNeededQuery
+mult_coll:
+  class: MultipleCollectionsQuery
+object_mult_coll:
+  class: ObjectsMultipleCollQuery
+admin_obj:
+  class: AdminObjectsQuery
+admin_obj_files:
+  class: AdminObjectsFilesQuery
+admin_obj_agg:
+  class: AdminObjectsAggQuery
+admin_coll:
+  class: AdminCollectionsQuery
+report:
+  class: ReportRetrieve
+filelist:
+  class: ObjectIdFilesQuery
+obj_audit_status:
+  class: ObjectsAuditStatusQuery

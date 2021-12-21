@@ -305,3 +305,12 @@ button.storage-rebuild-inventory,
 button.storage-delete-obj {
   color: red;
 }
+
+#report-description {
+  display: none;
+  background-color: #EEEEEE;
+  padding: 4px;
+  border: thin solid #DDDDDD;
+  width: 90%;
+  margin: 0 auto;
+}
