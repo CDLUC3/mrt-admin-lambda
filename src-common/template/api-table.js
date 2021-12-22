@@ -282,10 +282,11 @@ function createTable(headers, types, data, filter_col, group_col, show_grand_tot
     .empty()
     .append($("<thead/>"))
     .append($("<tbody/>"));
+  $("#report-description").hide();
   if (description) {
     if (description != '') {
       $("#report-description").append($(markdown(description))).show();
-    }
+    } 
   }
   if (iterate) {
     $("#exportJson").hide();

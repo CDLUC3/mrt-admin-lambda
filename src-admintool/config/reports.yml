@@ -2,66 +2,162 @@ owners:
   class: OwnerQuery
   description: |
     This reports lists the Merritt Owner objects defined in the inventory database.
-    - A view in the Merritt Billing database helps to group each of the owner objects by campus. 
+    A [view in the Merritt Billing database](https://github.com/CDLUC3/mrt-admin-lambda/blob/main/merrit-billing/views.sql) helps to group each of the collection objects by campus. 
 collections:
   class: CollectionQuery
   description: |
     This reports lists the Merritt Collection objects defined in the inventory database.
-    - A view in the Merritt Billing database helps to group each of the collection objects by campus. 
+    A [view in the Merritt Billing database](https://github.com/CDLUC3/mrt-admin-lambda/blob/main/merrit-billing/views.sql) helps to group each of the collection objects by campus. 
 mimes:
   class: MimeQuery 
+  description: |
+    This report categorizes Merritt content by Mime Type.  A high-level _Mime Group_ is assigned to each Mime Type based on the work of the UC Digital Preservation working group.
+    A [view in the Merritt Billing database](https://github.com/CDLUC3/mrt-admin-lambda/blob/main/merrit-billing/views.sql) created the Mime Group organization based on Mime Type strings. 
 collnodes:
   class: CollectionNodesQuery
+  description: |
+    This report describes the primary storage node and 2 secondary storage nodes for each Merritt Collection.
+    This report also provides a count of objects for each collection/node in the table.
+    _If more than 2 secondary nodes are configured, only 2 nodes will be displayed._
+    #### Deprecated: This report has been superseded by the collection admin report *Manage Storage Nodes for a Collection*.
 nodes:
   class: NodesQuery
+  description: |
+    This report lists all defined storage nodes in the inventory database. 
+    The report displays the last daily count of objects and files for each storage node (captured in the billing database).
+
+    Click the **Filter Data** button to remove empty ndoes from the report.
 objects_by_ark:
   class: ObjectsByArkQuery
+  description: |
+    This report displays an object for a specific ark or matching an ark wildcard string such as `ark:/%`.
+       
+    Click the Object Id link to see a detailed listing of the files contained in the object.
+
+    If an object exists in more than one collection, the collection ids will appear as a list.
+    
+    A more feature rich version of this report is available in the Collection Admin Tool report **Manage Object Storage**. 
 objects_by_title:
   class: ObjectsByTitleQuery
+  description: |
+    This report displays an object with a matching title or matching a title wildcard string such as `Merritt %`.
+    
+    Click the Object Id link to see a detailed listing of the files contained in the object.
 objects_by_local_id:
   class: ObjectsByLocalIdQuery
+  description: |
+    This report displays an object with an exact match to a localid such as `doi:10.5061/dryad.9999`.  
+    Wildcard searching is not permitted.
+    
+    Click the Object Id link to see a detailed listing of the files contained in the object.
 objects_by_author:
   class: ObjectsByAuthorQuery
+  description: |
+    This report displays an object with a matching author or matching a author wildcard string such as `Jane D%`.
+    
+    Click the Object Id link to see a detailed listing of the files contained in the object.
 objects_large:
   class: ObjectsLargeQuery
+  description: |
+    Generate a sample list of objects larger than 1GB (1073741824 bytes).  
+    To keep the query reasonably quick, results are not in sorted order.
+    The intention of this report is to identify objects that might be useful for performance related testing.
 objects_many_files:
   class: ObjectsManyFilesQuery
+  description: |
+    Generate a sample list of objects containing more than 1000 files.
+    To keep the query reasonably quick, results are not in sorted order.
+    The intention of this report is to identify objects that might be useful for performance related testing.
 objects_recent:
   class: ObjectsRecentQuery
+  description: |
+    This report lists the last ingest performed for each Merritt collection.  
+    Results are sorted from collection most recently updated to least recently updated.
 objects_recent_coll:
   class: ObjectsRecentCollQuery
+  description: |
+    This report lists most recently ingested objects for a specific collection.  
+    Results are sorted from object most recently updated to least recently updated.
 objects_by_batch:
   class: ObjectsByBatchQuery
+  description: |
+    This report lists the objects ingested in a Ingest Batch.
+    This report is accessed from the **Recent Ingests/Ingests for Day** report.
 objects_by_job:
   class: ObjectsByJobQuery
+  description: |
+    This report lists the objects ingested in a Ingest Batch/Job.
+    This report is accessed from links in the Collection Admin Tool.
 files_by_name_coll:
   class: FilesByNameCollQuery
+  description: |
+    This report lists the objects containing files with a specific filename.
+    To keep the report efficient, it is recommended to scope the query to a specific collection mnemonic.
+
+    Click the Object Id link to see a detailed listing of the files contained in the object.
 filesize:
   class: FilesizeQuery
+  description: |
+    Generate a report on the distribution of files of a specific size within Merritt.
+    #### Note: This report can be slow and may timeout based on the maximum time specified for our lambda.
 count_objects:
   class: CountObjectsQuery
+  description: |
+    This report provides a count of objects by collection.  The results are summarized at a campus level.
 collections_by_node:
   class: CollectionsByNodeQuery
+  description: |
+    This report provides a count of objects by collection residing on a specific storage node.
+    This report is accessed from the **Storage Nodes** report.
 collections_by_owner:
   class: CollectionsByOwnerQuery
+  description: |
+    This report lists the collections owned by a Merritt Owner.
+    This report is accessed from the **File Counts by Owner** report.
 collections_by_mime_type:
   class: CollectionsByMimeQuery
   params: ['mime_type']
+  description: |
+    This report breaks down the count of objects by collection for a specific Mime Type.
+    This report is accessed from the **Mime Groups** report.
 collections_by_mime_group:
   class: CollectionsByMimeQuery
   params: ['mime_group']
+  description: |
+    This report breaks down the count of objects by collection for a specific Mime Group.
+    This report is accessed from the **Mime Groups** report.
 collections_by_time_count_producer:
   class: CollectionsByTimeQuery
   params: ['count_files', 'producer']
+  description: |
+    This report shows the count of **producer** files added to each Merritt collection.
+    Based on the interval parameter, the report may show Counts
+    - year by year since the Merritt system was established
+    - day by day for the past week
+    - week by week for the last 4 weeks
 collections_by_time_count:
   class: CollectionsByTimeQuery
   params: ['count_files', '']
+  description: |
+    This report shows the count of files added to each Merritt collection. 
+    Based on the interval parameter, the report may show Counts
+    - year by year since the Merritt system was established
+    - day by day for the past week
+    - week by week for the last 4 weeks
 collections_by_time_size:
   class: CollectionsByTimeQuery
   params: ['billable_size', '']
+  description: |
+    This report shows the bytes added to each Merritt collection.
+    Based on the interval parameter, the report may show Counts
+    - year by year since the Merritt system was established
+    - day by day for the past week
+    - week by week for the last 4 weeks
 collections_by_time_size_cumulative:
   class: CollectionsByTimeCumulativeQuery
   params: ['billable_size', '']
+  description: |
+    This report shows the cumulative byte count totals in each Merritt collection year by year since the Merritt system was established.
 collection_details:
   class: CollectionDetailsQuery
   params: ['inv_collection_id']
