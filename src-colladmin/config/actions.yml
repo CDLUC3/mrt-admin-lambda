@@ -7,69 +7,277 @@
 # [ ] Add generic logic to respond to .prod_support()
 # [ ] Create the ability to lock sensitive operations or further restrict to special cognito groups
 # [ ] Add descriptions
+# [ ] Create automated testing where possible
 # [ ] Add testing notes
 
-# Readonly operations
+
+# Properties
+#   class - class to create
+#   params - parameters to pass to the constructor
+#   implentented: [true | false] default: true
+#   prod_support: [true | false] default: true
+#     new actions are kept false until they have been thoroughly tested in stage
+#   category: 
+#     Audit | Cognito | Delete object | Dev Ops | Ingest Admin Profiles | Ingest Batches and Folders |
+#     Ingest Profiles | Inventory and Manifest | LDAP | Queue Management | Replication |
+#     Storage Manifest | Storage Node Configuration | Storage Scan | Storage Scan Review
+#   sensitivity: [readonly | reversible change | irreversible change | sensitive]
+#   description: |
+#     markdown description of the purpose of the action
+#   testing: [automated | contextually automatable | automatable | manual]
+#   testing_instructions: url to internal documentation describing how to perform a test
 
 profiles:
   class: IngestProfileAction
+  category: Ingest Profiles
+  sensitivity: readonly
+  testing: automatable
 adminprofiles:
   class: AdminProfileAction
+  category: Ingest Admin Profiles
+  sensitivity: readonly
+  testing: automatable
 state:
   class: IngestStateAction
+  category: Queue Management
+  sensitivity: readonly
+  testing: automatable
 queues:
   class: IngestQueueAction
+  category: Queue Management
+  sensitivity: readonly
+  testing: contextually automatable
 inv-queues:
   class: InventoryQueueAction
+  category: Queue Management
+  sensitivity: readonly
+  testing: contextually automatable
 acc-queues:
   class: AccessQueueAction
+  category: Queue Management
+  sensitivity: readonly
+  testing: contextually automatable
 batch:
   class: IngestBatchAction
+  category: Ingest Batches and Folders
+  sensitivity: readonly
+  testing: contextually automatable
 job:
   class: IngestJobMetadataAction
+  category: Ingest Batches and Folders
+  sensitivity: readonly
+  testing: contextually automatable
 manifest:
   class: IngestJobManifestAction
+  category: Ingest Batches and Folders
+  sensitivity: readonly
+  testing: contextually automatable
 files:
   class: IngestJobFilesAction
+  category: Ingest Batches and Folders
+  sensitivity: readonly
+  testing: contextually automatable
 batchFolders:
   class: IngestBatchFoldersAction
+  category: Ingest Batches and Folders
+  sensitivity: readonly
+  testing: contextually automatable
 sword:
   class: IngestSwordJobsAction
+  category: Ingest Batches and Folders
+  sensitivity: readonly
+  testing: contextually automatable
 ldap/users:
   class: LDAPAction
+  category: LDAP
+  sensitivity: readonly
+  testing: automatable
 ldap/user:
   class: LDAPAction
+  category: LDAP
+  sensitivity: readonly
+  testing: automatable
 ldap/roles:
   class: LDAPAction
+  category: LDAP
+  sensitivity: readonly
+  testing: automatable
 ldap/role:
   class: LDAPAction
+  category: LDAP
+  sensitivity: readonly
+  testing: automatable
 ldap/colls:
   class: LDAPAction
+  category: LDAP
+  sensitivity: readonly
+  testing: automatable
 ldap/coll:
   class: LDAPAction
+  category: LDAP
+  sensitivity: readonly
+  testing: automatable
 ldap/collmap:
   class: LDAPAction
+  category: LDAP
+  sensitivity: readonly
+  testing: automatable
 instances:
   class: TagAction
+  category: Dev Ops
+  sensitivity: readonly
+  testing: automatable
 ssm-describe:
   class: SsmDescribeAction
+  category: Dev Ops
+  sensitivity: readonly
+  testing: automatable
 storage-get-manifest:
   class: StorageAction
+  category: Storage Manifest
+  sensitivity: readonly
+  testing: automatable
 storage-get-augmented-manifest:
   implemented: false
+  category: Storage Manifest
+  sensitivity: readonly
+  testing: automatable
 storage-get-ingest-checkm:
   class: StorageAction
+  category: Storage Manifest
+  sensitivity: readonly
+  testing: automatable
 cognito-users:
   class: CognitoAction
+  category: Cognito
+  sensitivity: readonly
+  testing: automatable
+replication-state:
+  class: ReplicationAction
+  category: Dev Ops
+  sensitivity: readonly
+  testing: automatable
+storage-review-csv:
+  class: ReplicationAction
+  category: Storage Scan
+  sensitivity: readonly
+  testing: manual
 
-# Operations that change system state
+# Operations that change system state - Reversible
 
 submissions/pause:
   class: PostToIngestAction
   params: ["admin/submissions/freeze"]
+  category: Queue Management
+  sensitivity: reversible change
+  testing: automatable
 submissions/unpause:
   class: PostToIngestAction
   params: ["admin/submissions/thaw"]
+  category: Queue Management
+  sensitivity: reversible change
+  testing: automatable
+toggle_harvest:
+  class: AdminProfileAction
+  category: Ingest Admin Profiles
+  sensitivity: reversible change
+  testing: automatable
+unpause-ingest-for-collection:
+  implemented: false
+  # https://cdluc3.github.io/mrt-doc/diagrams/store-admin-pause-ing-for-coll
+  category: Queue Management
+  sensitivity: reversible change
+  testing: automatable
+pause-ingest-for-collection:
+  implemented: false
+  # https://cdluc3.github.io/mrt-doc/diagrams/store-admin-pause-ing-for-coll
+  category: Queue Management
+  sensitivity: reversible change
+  testing: automatable
+storage-force-audit-for-object:
+  class: StorageAction
+  category: Audit
+  sensitivity: reversible change
+  testing: automatable
+storage-rerun-audit-for-object:
+  class: StorageAction
+  category: Audit
+  sensitivity: reversible change
+  testing: automatable
+storage-force-replic-for-object:
+  class: StorageAction
+  category: Replication
+  sensitivity: reversible change
+  testing: automatable
+storage-clear-audit-batch:
+  class: StorageAction
+  category: Audit
+  sensitivity: reversible change
+  testing: automatable
+storage-cancel-all-scans:
+  class: ReplicationAction
+  category: Storage Scan
+  sensitivity: reversible change
+  testing: automatable
+storage-allow-all-scans:
+  class: ReplicationAction
+  category: Storage Scan
+  sensitivity: reversible change
+  testing: automatable
+storage-cancel-scan-node:
+  class: ReplicationAction
+  category: Storage Scan
+  sensitivity: reversible change
+  testing: automatable
+storage-resume-scan-node:
+  class: ReplicationAction
+  category: Storage Scan
+  sensitivity: reversible change
+  testing: automatable
+storage-clear-scan-entries:
+  prod_support: false
+  class: StorageAction
+  category: Storage Scan Review
+  sensitivity: reversible change
+  testing: manual
+storage-scan-node:
+  class: ReplicationAction
+  category: Storage Scan
+  sensitivity: reversible change
+  testing: automatable
+storage-delete-node-key:
+  class: ReplicationAction
+  category: Storage Scan Review
+  sensitivity: reversible change
+  testing: manual
+storage-delete-node-page:
+  class: ReplicationAction
+  category: Storage Scan Review
+  sensitivity: reversible change
+  testing: manual
+storage-hold-node-key:
+  class: ReplicationAction
+  category: Storage Scan Review
+  sensitivity: reversible change
+  testing: manual
+storage-hold-node-page:
+  class: ReplicationAction
+  category: Storage Scan Review
+  sensitivity: reversible change
+  testing: manual
+storage-review-node-key:
+  class: ReplicationAction
+  category: Storage Scan Review
+  sensitivity: reversible change
+  testing: manual
+storage-review-node-page:
+  class: ReplicationAction
+  category: Storage Scan Review
+  sensitivity: reversible change
+  testing: manual
+
+# Operations that change system state - Not reversible
+
 submit-profile:
   #        params = {
   #          file: File.new("/var/task/dummy.README"),
@@ -82,116 +290,146 @@ submit-profile:
   class: PostToIngestMultipartAction
   params: "poster/update"
   # return xml
-toggle_harvest:
-  class: AdminProfileAction
+  category: Ingest Admin Profiles
+  sensitivity: irreversible change
+  testing: manual
 set_mnemonic:
   class: AdminProfileAction
+  category: Ingest Admin Profiles
+  sensitivity: irreversible change
+  testing: manual
 set_coll_name:
   class: AdminProfileAction
+  category: Ingest Admin Profiles
+  sensitivity: irreversible change
+  testing: manual
 set_sla_name:
   class: AdminProfileAction
+  category: Ingest Admin Profiles
+  sensitivity: irreversible change
+  testing: manual
 set_own_name:
   class: AdminProfileAction
+  category: Ingest Admin Profiles
+  sensitivity: irreversible change
+  testing: manual
 create_owner_record:
   class: AdminProfileAction
+  category: Ingest Admin Profiles
+  sensitivity: irreversible change
+  testing: manual
 create_coll_record:
   class: AdminProfileAction
+  category: Ingest Admin Profiles
+  sensitivity: irreversible change
+  testing: manual
 createProfile/profile:
   class: PostToIngestMultipartAction
   params: ["admin/profile/profile"]
+  category: Ingest Admin Profiles
+  sensitivity: irreversible change
+  testing: manual
 createProfile/collection:
   class: PostToIngestMultipartAction
   params: ["admin/profile/collection"]
+  category: Ingest Admin Profiles
+  sensitivity: irreversible change
+  testing: manual
 createProfile/owner:
   class: PostToIngestMultipartAction
   params: ["admin/profile/owner"]
+  category: Ingest Admin Profiles
+  sensitivity: irreversible change
+  testing: manual
 createProfile/sla:
   class: PostToIngestMultipartAction
   params: ["admin/profile/sla"]
+  category: Ingest Admin Profiles
+  sensitivity: irreversible change
+  testing: manual
 queue-delete:
   class: PostToIngestAction
   # "admin/deleteq#{qp}"
+  category: Queue Management
+  sensitivity: irreversible change
+  testing: manual
 requeue:
   class: PostToIngestAction
   # "admin/requeue#{qp}"
-unpause-ingest-for-collection:
-  implemented: false
-  # https://cdluc3.github.io/mrt-doc/diagrams/store-admin-pause-ing-for-coll
-pause-ingest-for-collection:
-  implemented: false
-  # https://cdluc3.github.io/mrt-doc/diagrams/store-admin-pause-ing-for-coll
-storage-force-audit-for-object:
-  class: StorageAction
-storage-rerun-audit-for-object:
-  class: StorageAction
-storage-force-replic-for-object:
-  class: StorageAction
-storage-clear-audit-batch:
-  class: StorageAction
-storage-add-node-for-collection:
-  prod_support: false
-  class: StorageAction
-storage-clear-scan-entries:
-  prod_support: false
-  class: StorageAction
-
-storage-scan-node:
-  class: ReplicationAction
-storage-cancel-all-scans:
-  class: ReplicationAction
-storage-allow-all-scans:
-  class: ReplicationAction
-storage-cancel-scan-node:
-  class: ReplicationAction
-storage-resume-scan-node:
-  class: ReplicationAction
-replication-state:
-  class: ReplicationAction
-storage-delete-node-key:
-  class: ReplicationAction
-storage-delete-node-page:
-  class: ReplicationAction
-storage-hold-node-key:
-  class: ReplicationAction
-storage-hold-node-page:
-  class: ReplicationAction
-storage-review-node-key:
-  class: ReplicationAction
-storage-review-node-page:
-  class: ReplicationAction
-storage-review-csv:
-  class: ReplicationAction
+  category: Queue Management
+  sensitivity: irreversible change
+  testing: manual
 apply-review-changes:
   class: ReplicationAction
-
+  category: Storage Scan Review
+  sensitivity: irreversible change
+  testing: manual
 
 # Sensitive Operations
 
 cognito-remove-user-from-group:
   class: CognitoAction
+  category: Cognito
+  sensitivity: sensitive
+  testing: automatable
 cognito-add-user-to-group:
   class: CognitoAction
+  category: Cognito
+  sensitivity: sensitive
+  testing: automatable
 storage-rebuild-inventory:
   prod_support: false
-  class: StorageActionstorage-update-manifest:
+  class: StorageActions
+  category: Inventory and Manifest
+  sensitivity: sensitive
+  testing: automatable
+storage-update-manifest:
   implemented: false
+  category: Inventory and Manifest
+  sensitivity: sensitive
+  testing: manual
+storage-add-node-for-collection:
+  prod_support: false
+  class: StorageAction
+  category: Storage Node Configuration
+  sensitivity: sensitive
+  testing: manual
 storage-del-node-for-collection:
   implemented: false
   # https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-node
+  category: Storage Node Configuration
+  sensitivity: sensitive
+  testing: manual
 storage-del-object-from-node:
   implemented: false
+  # Question - will we implement this?
   # https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-node-obj
+  category: Delete object
+  sensitivity: sensitive
+  testing: manual
 storage-change-primary-for-collection:
   implemented: false
   # https://cdluc3.github.io/mrt-doc/diagrams/store-admin-change-primary-node
+  category: Storage Node Configuration
+  sensitivity: sensitive
+  testing: manual
 storage-reroute-ui-for-collection:
   implemented: false
+  # Question: will we implement this
   # https://cdluc3.github.io/mrt-doc/diagrams/store-admin-reroute-uistorage-perform-delete-node-key:
   prod_support: false
   class: ReplicationAction
+  sensitivity: sensitive
+  testing: manual
 storage-perform-delete-node-batch:
   prod_support: false
   class: ReplicationAction
+  category: Storage Scan Review
+  sensitivity: sensitive
+  testing: manual
 storage-delete-obj:
   implemented: false
   # https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-obj
+  category: Storage Scan Review
+  sensitivity: sensitive
+  testing: manual
