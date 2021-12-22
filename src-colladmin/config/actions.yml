@@ -1,0 +1,197 @@
+# This file is not yet implemented
+# 
+# TODOs:
+# [ ] Modify all actions to repsond to the same method signature .perform_action()
+# [ ] Determine handing needed for XML return for profile actions
+# [ ] Move param handing from the if/elsif/else block into action classes
+# [ ] Add generic logic to respond to .prod_support()
+# [ ] Create the ability to lock sensitive operations or further restrict to special cognito groups
+# [ ] Add descriptions
+# [ ] Add testing notes
+
+# Readonly operations
+
+profiles:
+  class: IngestProfileAction
+adminprofiles:
+  class: AdminProfileAction
+state:
+  class: IngestStateAction
+queues:
+  class: IngestQueueAction
+inv-queues:
+  class: InventoryQueueAction
+acc-queues:
+  class: AccessQueueAction
+batch:
+  class: IngestBatchAction
+job:
+  class: IngestJobMetadataAction
+manifest:
+  class: IngestJobManifestAction
+files:
+  class: IngestJobFilesAction
+batchFolders:
+  class: IngestBatchFoldersAction
+sword:
+  class: IngestSwordJobsAction
+ldap/users:
+  class: LDAPAction
+ldap/user:
+  class: LDAPAction
+ldap/roles:
+  class: LDAPAction
+ldap/role:
+  class: LDAPAction
+ldap/colls:
+  class: LDAPAction
+ldap/coll:
+  class: LDAPAction
+ldap/collmap:
+  class: LDAPAction
+instances:
+  class: TagAction
+ssm-describe:
+  class: SsmDescribeAction
+storage-get-manifest:
+  class: StorageAction
+storage-get-augmented-manifest:
+  implemented: false
+storage-get-ingest-checkm:
+  class: StorageAction
+cognito-users:
+  class: CognitoAction
+
+# Operations that change system state
+
+submissions/pause:
+  class: PostToIngestAction
+  params: ["admin/submissions/freeze"]
+submissions/unpause:
+  class: PostToIngestAction
+  params: ["admin/submissions/thaw"]
+submit-profile:
+  #        params = {
+  #          file: File.new("/var/task/dummy.README"),
+  #          type: "file",
+  #          submitter: myparams.fetch("submitter", ""),
+  #          responseForm: "xml",
+  #          title: myparams.fetch("title", ""),
+  #          profile: myparams.fetch("profile-path", "")
+  #        }
+  class: PostToIngestMultipartAction
+  params: "poster/update"
+  # return xml
+toggle_harvest:
+  class: AdminProfileAction
+set_mnemonic:
+  class: AdminProfileAction
+set_coll_name:
+  class: AdminProfileAction
+set_sla_name:
+  class: AdminProfileAction
+set_own_name:
+  class: AdminProfileAction
+create_owner_record:
+  class: AdminProfileAction
+create_coll_record:
+  class: AdminProfileAction
+createProfile/profile:
+  class: PostToIngestMultipartAction
+  params: ["admin/profile/profile"]
+createProfile/collection:
+  class: PostToIngestMultipartAction
+  params: ["admin/profile/collection"]
+createProfile/owner:
+  class: PostToIngestMultipartAction
+  params: ["admin/profile/owner"]
+createProfile/sla:
+  class: PostToIngestMultipartAction
+  params: ["admin/profile/sla"]
+queue-delete:
+  class: PostToIngestAction
+  # "admin/deleteq#{qp}"
+requeue:
+  class: PostToIngestAction
+  # "admin/requeue#{qp}"
+unpause-ingest-for-collection:
+  implemented: false
+  # https://cdluc3.github.io/mrt-doc/diagrams/store-admin-pause-ing-for-coll
+pause-ingest-for-collection:
+  implemented: false
+  # https://cdluc3.github.io/mrt-doc/diagrams/store-admin-pause-ing-for-coll
+storage-force-audit-for-object:
+  class: StorageAction
+storage-rerun-audit-for-object:
+  class: StorageAction
+storage-force-replic-for-object:
+  class: StorageAction
+storage-clear-audit-batch:
+  class: StorageAction
+storage-add-node-for-collection:
+  prod_support: false
+  class: StorageAction
+storage-clear-scan-entries:
+  prod_support: false
+  class: StorageAction
+
+storage-scan-node:
+  class: ReplicationAction
+storage-cancel-all-scans:
+  class: ReplicationAction
+storage-allow-all-scans:
+  class: ReplicationAction
+storage-cancel-scan-node:
+  class: ReplicationAction
+storage-resume-scan-node:
+  class: ReplicationAction
+replication-state:
+  class: ReplicationAction
+storage-delete-node-key:
+  class: ReplicationAction
+storage-delete-node-page:
+  class: ReplicationAction
+storage-hold-node-key:
+  class: ReplicationAction
+storage-hold-node-page:
+  class: ReplicationAction
+storage-review-node-key:
+  class: ReplicationAction
+storage-review-node-page:
+  class: ReplicationAction
+storage-review-csv:
+  class: ReplicationAction
+apply-review-changes:
+  class: ReplicationAction
+
+
+# Sensitive Operations
+
+cognito-remove-user-from-group:
+  class: CognitoAction
+cognito-add-user-to-group:
+  class: CognitoAction
+storage-rebuild-inventory:
+  prod_support: false
+  class: StorageActionstorage-update-manifest:
+  implemented: false
+storage-del-node-for-collection:
+  implemented: false
+  # https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-node
+storage-del-object-from-node:
+  implemented: false
+  # https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-node-obj
+storage-change-primary-for-collection:
+  implemented: false
+  # https://cdluc3.github.io/mrt-doc/diagrams/store-admin-change-primary-node
+storage-reroute-ui-for-collection:
+  implemented: false
+  # https://cdluc3.github.io/mrt-doc/diagrams/store-admin-reroute-uistorage-perform-delete-node-key:
+  prod_support: false
+  class: ReplicationAction
+storage-perform-delete-node-batch:
+  prod_support: false
+  class: ReplicationAction
+storage-delete-obj:
+  implemented: false
+  # https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-obj
