@@ -89,6 +89,11 @@ table.results td.profile {
   width: 200px !important;
 }
 
+table.results th.description,
+table.results td.description {
+  width: 350px !important;
+}
+
 table.results th.list,
 table.results td.list,
 table.results th.vallist,

@@ -32,6 +32,11 @@ profiles:
   category: Ingest Profiles
   sensitivity: readonly
   testing: automatable
+  description: |
+    List all collection profiles known to the ingest server.
+    These profiles are managed in a github repository and are deployed to the server.
+    - test
+    - test
 adminprofiles:
   class: AdminProfileAction
   category: Ingest Admin Profiles

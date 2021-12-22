@@ -22,6 +22,7 @@ require_relative 'actions/storage_action.rb'
 require_relative 'actions/tag_action.rb'
 require_relative 'actions/ssm_describe_action.rb'
 require_relative 'actions/replication_action.rb'
+require 'yaml'
 
 # Handle GET or POST event structures pass in via the ALB
 def get_params_from_event(event)
@@ -403,6 +404,22 @@ module LambdaFunctions
           ""
         ).objects
         map['OBJS'] = objects
+      elsif path == '/web/describeActions.html'
+        actions = YAML.load_file("config/actions.yml")
+        map['ACTIONS'] = []
+        actions.keys.each do |k|
+          act = actions[k]
+          map['ACTIONS'].append({
+            action: k,
+            class: act.fetch('class', 'Undefied'), 
+            description: act.fetch('description', ''), 
+            implemented: act.fetch('implemented', true), 
+            prod_support: act.fetch('prod_support', true), 
+            sensitivity: act.fetch('sensitivity', ''), 
+            category: act.fetch('category', ''), 
+            testing: act.fetch('testing_instructions', act.fetch('testing', '')), 
+          })
+        end
       end
       map
     end
