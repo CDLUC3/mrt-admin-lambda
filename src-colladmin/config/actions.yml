@@ -293,7 +293,7 @@ submit-profile:
   #          profile: myparams.fetch("profile-path", "")
   #        }
   class: PostToIngestMultipartAction
-  params: "poster/update"
+  params: ["poster/update"]
   # return xml
   category: Ingest Admin Profiles
   sensitivity: irreversible change

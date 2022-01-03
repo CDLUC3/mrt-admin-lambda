@@ -46,6 +46,38 @@ def get_params_from_event(event)
 end
 
 module LambdaFunctions
+  class ActionFactory
+    def initialize(config)
+      @config = config
+      @actions = YAML.load_file("config/actions.yml")
+    end  
+
+    def get_action_def(path)
+      @actions.fetch(path, {class: AdminAction, description: "Report not found", implemented: false})
+    end
+  
+    def supported?(path)
+      action_def = get_action_def(path)
+      supported = action_def.fetch("implemented", true)
+      supported = supported & action_def.fetch("prod_support", true) if LambdaBase.is_prod
+      supported
+    end
+
+    def get_action_for_path(path, myparams)
+      action = get_action_def(path)
+      params = action.fetch('params', [])
+  
+      # Use Ruby metaprogramming to construct the report class
+      if params.length == 2
+        Object.const_get(action['class']).new(@config, path, myparams, params[0], params[1])
+      elsif params.length == 1
+        Object.const_get(action['class']).new(@config, path, myparams, params[0])
+      else
+        Object.const_get(action['class']).new(@config, path, myparams)
+      end
+    end  
+  end
+
   class Handler < LambdaBase
     def self.process(event:,context:)
       begin
@@ -78,156 +110,11 @@ module LambdaFunctions
         result = {message: "Path undefined"}.to_json
 
         content_type = "application/json; charset=utf-8"
-        if path == "profiles" 
-          result = IngestProfileAction.new(config, path, myparams).get_data
-        elsif path == "adminprofiles" 
-          result = AdminProfileAction.new(config, path, myparams).get_data
-        elsif path == "state" 
-          result = IngestStateAction.new(config, path, myparams).get_data
-        elsif path == "queues" 
-          result = IngestQueueAction.new(config, path, myparams).get_data
-        elsif path == "inv-queues" 
-          result = InventoryQueueAction.new(config, path, myparams).get_data
-        elsif path == "acc-queues" 
-          result = AccessQueueAction.new(config, path, myparams).get_data
-        elsif path == "batch" 
-          result = IngestBatchAction.new(config, path, myparams).get_data
-        elsif path == "job" 
-          result = IngestJobMetadataAction.new(config, path, myparams).get_data
-        elsif path == "manifest" 
-          result = IngestJobManifestAction.new(config, path, myparams).get_data
-        elsif path == "files" 
-          result = IngestJobFilesAction.new(config, path, myparams).get_data
-        elsif path == "batchFolders" 
-          result = IngestBatchFoldersAction.new(config, path, myparams).get_data
-        elsif path == "sword" 
-          result = IngestSwordJobsAction.new(config, path, myparams).get_data
-        elsif path == "submissions/pause" 
-          result = PostToIngestAction.new(config, path, myparams, "admin/submissions/freeze").get_data
-        elsif path == "submissions/unpause" 
-          result = PostToIngestAction.new(config, path, myparams, "admin/submissions/thaw").get_data
-        elsif path == "submit-profile" 
-          params = {
-            file: File.new("/var/task/dummy.README"),
-            type: "file",
-            submitter: myparams.fetch("submitter", ""),
-            responseForm: "xml",
-            title: myparams.fetch("title", ""),
-            profile: myparams.fetch("profile-path", "")
-          }
-          result = PostToIngestMultipartAction.new(config, path, params, "poster/update").get_data
-          return {
-            headers: {
-              'Access-Control-Allow-Origin': '*',
-              'Content-Type': 'application/xml; charset=utf-8'
-            },
-            statusCode: 200,
-            body: result
-          }
-        elsif path == "toggle_harvest" || path == "set_mnemonic" || path == "set_coll_name" || path == "set_sla_name" || path == "set_own_name" || path == "create_owner_record" || path == "create_coll_record"
-          apa = AdminProfileAction.new(config, path, myparams)
-          result = apa.perform_action
-        elsif path == "createProfile/profile" 
-          result = PostToIngestMultipartAction.new(config, path, myparams, "admin/profile/profile").get_data
-        elsif path == "createProfile/collection" 
-          result = PostToIngestMultipartAction.new(config, path, myparams, "admin/profile/collection").get_data
-        elsif path == "createProfile/owner" 
-          result = PostToIngestMultipartAction.new(config, path, myparams, "admin/profile/owner").get_data
-        elsif path == "createProfile/sla" 
-          result = PostToIngestMultipartAction.new(config, path, myparams, "admin/profile/sla").get_data
-        elsif path =~ /ldap\/.*/ 
-          result = LDAPAction.make_action(config, path, myparams).get_data
-        elsif path == "cognito-users" 
-          result = CognitoAction.new(config, path, myparams).get_data
-        elsif path == "cognito-remove-user-from-group" 
-          result = CognitoAction.new(config, path, myparams).get_data
-        elsif path == "cognito-add-user-to-group" 
-          result = CognitoAction.new(config, path, myparams).get_data
-        elsif path == "instances" 
-          result = TagAction.new(config, path, myparams).get_data
-        elsif path == "ssm-describe" 
-          result = SsmDescribeAction.new(config, path, myparams).get_data
-        elsif path == "queue-delete"
-          qp = CGI.unescape(collHandler.get_key_val(myparams, 'queue-path', 'na'))
-          result = PostToIngestAction.new(config, path, myparams, "admin/deleteq#{qp}").get_data
-        elsif path == "requeue"
-          qp = CGI.unescape(collHandler.get_key_val(myparams, 'queue-path', 'na'))
-          result = PostToIngestAction.new(config, path, myparams, "admin/requeue#{qp}").get_data
-        elsif path == "unpause-ingest-for-collection" 
-          result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-pause-ing-for-coll")
-        elsif path == "pause-ingest-for-collection" 
-          result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-pause-ing-for-coll")
-        elsif path == "storage-force-audit-for-object" 
-          result = StorageAction.new(config, path, myparams).perform_action
-        elsif path == "storage-rerun-audit-for-object" 
-          result = StorageAction.new(config, path, myparams).perform_action
-        elsif path == "storage-force-replic-for-object" 
-          result = StorageAction.new(config, path, myparams).perform_action
-        elsif path == "storage-clear-audit-batch" 
-          result = StorageAction.new(config, path, myparams).perform_action
-        elsif path == "storage-add-node-for-collection" 
-          return LambdaBase.error(405, "Not yet supported") if LambdaBase.is_prod
-          result = StorageAction.new(config, path, myparams).perform_action
-          content_type = 'application/json; charset=utf-8'
-        elsif path == "storage-get-manifest" 
-          result = StorageAction.new(config, path, myparams).perform_action
-        elsif path == "storage-clear-scan-entries" 
-          return LambdaBase.error(405, "Not yet supported") if LambdaBase.is_prod
-          result = StorageAction.new(config, path, myparams).perform_action
-        elsif path == "storage-rebuild-inventory" 
-          return LambdaBase.error(405, "Not yet supported") if LambdaBase.is_prod
-          result = StorageAction.new(config, path, myparams).perform_action
-        elsif path == "storage-get-augmented-manifest" 
-          return LambdaBase.error(405, "Not yet supported") 
-        elsif path == "storage-get-ingest-checkm" 
-          result = StorageAction.new(config, path, myparams).perform_action
-        elsif path == "storage-update-manifest" 
-          return LambdaBase.error(405, "Not yet supported") 
-        elsif path == "storage-del-node-for-collection" 
-          result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-node")
-        elsif path == "storage-del-object-from-node" 
-          result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-node-obj")
-        elsif path == "storage-change-primary-for-collection" 
-          result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-change-primary-node")
-        elsif path == "storage-reroute-ui-for-collection" 
-          result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-reroute-ui")
-        elsif path == "storage-scan-node" 
-          result = ReplicationAction.new(config, path, myparams).perform_action
-        elsif path == "storage-cancel-all-scans" 
-          result = ReplicationAction.new(config, path, myparams).perform_action
-        elsif path == "storage-allow-all-scans" 
-          result = ReplicationAction.new(config, path, myparams).perform_action
-        elsif path == "storage-cancel-scan-node" 
-          result = ReplicationAction.new(config, path, myparams).perform_action
-        elsif path == "storage-resume-scan-node" 
-          result = ReplicationAction.new(config, path, myparams).perform_action
-        elsif path == "replication-state" 
-          result = ReplicationAction.new(config, path, myparams).perform_action
-        elsif path == "storage-delete-node-key" 
-          result = ReplicationAction.new(config, path, myparams).perform_action
-        elsif path == "storage-delete-node-page" 
-          result = ReplicationAction.new(config, path, myparams).perform_action
-        elsif path == "storage-perform-delete-node-key" 
-          return LambdaBase.error(405, "Not yet supported") if LambdaBase.is_prod
-          result = ReplicationAction.new(config, path, myparams).perform_action
-        elsif path == "storage-perform-delete-node-batch" 
-          return LambdaBase.error(405, "Not yet supported") if LambdaBase.is_prod
-          result = ReplicationAction.new(config, path, myparams).perform_action
-        elsif path == "storage-hold-node-key" 
-          result = ReplicationAction.new(config, path, myparams).perform_action
-        elsif path == "storage-hold-node-page" 
-          result = ReplicationAction.new(config, path, myparams).perform_action
-        elsif path == "storage-review-node-key" 
-          result = ReplicationAction.new(config, path, myparams).perform_action
-        elsif path == "storage-review-node-page" 
-          result = ReplicationAction.new(config, path, myparams).perform_action
-        elsif path == "storage-review-csv" 
-          result = ReplicationAction.new(config, path, myparams).perform_action
-        elsif path == "apply-review-changes" 
-          result = ReplicationAction.new(config, path, myparams).perform_action
-        elsif path == "storage-delete-obj" 
-          result = LambdaBase.jsredirect("https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-obj")
-        end
+
+        action_factory = ActionFactory.new(config)
+
+        action = action_factory.get_action_for_path(path, myparams)
+        result = action.perform_action if action_factory.supported?(path)
      
         {
           headers: {

@@ -147,7 +147,7 @@ class SsmDescribeAction < AdminAction
     SsmInfo.table_types
   end
 
-  def get_data
+  def perform_action
     evaluate_status(table_types, get_table_rows)
     {
       format: 'report',

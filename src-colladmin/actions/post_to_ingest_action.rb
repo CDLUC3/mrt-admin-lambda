@@ -7,7 +7,7 @@ class PostToIngestAction < ForwardToIngestAction
     super(config, path, myparams, endpoint)
   end
 
-  def get_data
+  def perform_action
     begin
       qjson = HttpPostJson.new(get_ingest_server, @endpoint)
       return { message: "Status #{qjson.status} for #{@endpoint}" }.to_json unless qjson.status == 200

@@ -14,7 +14,7 @@ class ForwardToIngestAction < AdminAction
     return qjson.body unless qjson.body.empty?
   end
 
-  def get_data
+  def perform_action
     begin
       body = get_body
       return convertJsonToTable(body) unless body.empty?

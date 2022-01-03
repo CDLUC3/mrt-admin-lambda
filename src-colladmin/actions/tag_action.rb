@@ -170,7 +170,7 @@ class TagAction < AdminAction
     resp.body
   end
 
-  def get_data
+  def perform_action
     return endpoint_call unless @list_servers
     evaluate_status(table_types, get_table_rows)
     {
