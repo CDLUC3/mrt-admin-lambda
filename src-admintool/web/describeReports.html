@@ -27,7 +27,7 @@
     </script>
   </head>
   <body>
-    <h1>Merritt Ark Query</h1>
+    <h1>Merritt Admin Report Index</h1>
     {{{ADMINNAV}}}
     <div>
       <table class="sortable results">
@@ -40,14 +40,14 @@
           </tr>
         </thead>
         <tbody>
-          {{#ACTIONS}}
+          {{#REPORTS}}
           <tr>
             <th class="name">{{report}}</th>
             <td>{{category}}</td>
             <td>{{class}}</td>
             <td class="description"><div class="markdown">{{description}}</div></td>
           </tr>
-          {{/ACTIONS}}
+          {{/REPORTS}}
         </tbody>      
       </table>
     </div>

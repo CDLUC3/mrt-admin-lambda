@@ -133,6 +133,10 @@ class LambdaBase
     path =~ %r[^/web/] ? true : false
   end
 
+  def self.admintool_base
+    ENV.fetch('ADMIN_ALB_URL','')
+  end
+
   def self.admintool_url
     "#{ENV.fetch('ADMIN_ALB_URL','')}/web/index.html"
   end
@@ -152,6 +156,7 @@ class LambdaBase
   def default_template_parameters
     {
       UC3INV_HOME: @config.fetch('uc3inv_home', ''), 
+      ADMINTOOL_BASE: LambdaBase.admintool_base, 
       ADMINTOOL_HOME: LambdaBase.admintool_url, 
       COLLADMIN_HOME: LambdaBase.colladmin_url,
       COLLADMIN_ROOT: LambdaBase.colladmin_root_url,

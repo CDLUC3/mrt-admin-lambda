@@ -1,20 +1,32 @@
+# Properties
+#   class - class to create
+#   params - parameters to pass to the constructor
+#   category: 
+#     admin obj | audit | collections | collections/time | concurrent update | files | ingest | mime types |
+#     objects | replication | reports | storage nodes
+#   description: |
+#     markdown description of the purpose of the action
 owners:
   class: OwnerQuery
+  category: collections
   description: |
     This reports lists the Merritt Owner objects defined in the inventory database.
     A [view in the Merritt Billing database](https://github.com/CDLUC3/mrt-admin-lambda/blob/main/merrit-billing/views.sql) helps to group each of the collection objects by campus. 
 collections:
   class: CollectionQuery
+  category: collections
   description: |
     This reports lists the Merritt Collection objects defined in the inventory database.
     A [view in the Merritt Billing database](https://github.com/CDLUC3/mrt-admin-lambda/blob/main/merrit-billing/views.sql) helps to group each of the collection objects by campus. 
 mimes:
   class: MimeQuery 
+  category: mime types
   description: |
     This report categorizes Merritt content by Mime Type.  A high-level _Mime Group_ is assigned to each Mime Type based on the work of the UC Digital Preservation working group.
     A [view in the Merritt Billing database](https://github.com/CDLUC3/mrt-admin-lambda/blob/main/merrit-billing/views.sql) created the Mime Group organization based on Mime Type strings. 
 collnodes:
   class: CollectionNodesQuery
+  category: storage nodes
   description: |
     This report describes the primary storage node and 2 secondary storage nodes for each Merritt Collection.
     This report also provides a count of objects for each collection/node in the table.
@@ -22,6 +34,7 @@ collnodes:
     #### Deprecated: This report has been superseded by the collection admin report *Manage Storage Nodes for a Collection*.
 nodes:
   class: NodesQuery
+  category: storage nodes
   description: |
     This report lists all defined storage nodes in the inventory database. 
     The report displays the last daily count of objects and files for each storage node (captured in the billing database).
@@ -29,6 +42,7 @@ nodes:
     Click the **Filter Data** button to remove empty ndoes from the report.
 objects_by_ark:
   class: ObjectsByArkQuery
+  category: objects
   description: |
     This report displays an object for a specific ark or matching an ark wildcard string such as `ark:/%`.
        
@@ -39,12 +53,14 @@ objects_by_ark:
     A more feature rich version of this report is available in the Collection Admin Tool report **Manage Object Storage**. 
 objects_by_title:
   class: ObjectsByTitleQuery
+  category: objects
   description: |
     This report displays an object with a matching title or matching a title wildcard string such as `Merritt %`.
     
     Click the Object Id link to see a detailed listing of the files contained in the object.
 objects_by_local_id:
   class: ObjectsByLocalIdQuery
+  category: objects
   description: |
     This report displays an object with an exact match to a localid such as `doi:10.5061/dryad.9999`.  
     Wildcard searching is not permitted.
@@ -52,44 +68,52 @@ objects_by_local_id:
     Click the Object Id link to see a detailed listing of the files contained in the object.
 objects_by_author:
   class: ObjectsByAuthorQuery
+  category: objects
   description: |
     This report displays an object with a matching author or matching a author wildcard string such as `Jane D%`.
     
     Click the Object Id link to see a detailed listing of the files contained in the object.
 objects_large:
   class: ObjectsLargeQuery
+  category: objects
   description: |
     Generate a sample list of objects larger than 1GB (1073741824 bytes).  
     To keep the query reasonably quick, results are not in sorted order.
     The intention of this report is to identify objects that might be useful for performance related testing.
 objects_many_files:
   class: ObjectsManyFilesQuery
+  category: objects
   description: |
     Generate a sample list of objects containing more than 1000 files.
     To keep the query reasonably quick, results are not in sorted order.
     The intention of this report is to identify objects that might be useful for performance related testing.
 objects_recent:
   class: ObjectsRecentQuery
+  category: objects
   description: |
     This report lists the last ingest performed for each Merritt collection.  
     Results are sorted from collection most recently updated to least recently updated.
 objects_recent_coll:
   class: ObjectsRecentCollQuery
+  category: objects
   description: |
     This report lists most recently ingested objects for a specific collection.  
     Results are sorted from object most recently updated to least recently updated.
 objects_by_batch:
   class: ObjectsByBatchQuery
+  category: objects
   description: |
     This report lists the objects ingested in a Ingest Batch.
     This report is accessed from the **Recent Ingests/Ingests for Day** report.
 objects_by_job:
   class: ObjectsByJobQuery
+  category: objects
   description: |
     This report lists the objects ingested in a Ingest Batch/Job.
     This report is accessed from links in the Collection Admin Tool.
 files_by_name_coll:
   class: FilesByNameCollQuery
+  category: files
   description: |
     This report lists the objects containing files with a specific filename.
     To keep the report efficient, it is recommended to scope the query to a specific collection mnemonic.
@@ -97,37 +121,44 @@ files_by_name_coll:
     Click the Object Id link to see a detailed listing of the files contained in the object.
 filesize:
   class: FilesizeQuery
+  category: files
   description: |
     Generate a report on the distribution of files of a specific size within Merritt.
     #### Note: This report can be slow and may timeout based on the maximum time specified for our lambda.
 count_objects:
   class: CountObjectsQuery
+  category: collections
   description: |
     This report provides a count of objects by collection.  The results are summarized at a campus level.
 collections_by_node:
   class: CollectionsByNodeQuery
+  category: storage nodes
   description: |
     This report provides a count of objects by collection residing on a specific storage node.
     This report is accessed from the **Storage Nodes** report.
 collections_by_owner:
   class: CollectionsByOwnerQuery
+  category: collections
   description: |
     This report lists the collections owned by a Merritt Owner.
     This report is accessed from the **File Counts by Owner** report.
 collections_by_mime_type:
   class: CollectionsByMimeQuery
+  category: mime types
   params: ['mime_type']
   description: |
     This report breaks down the count of objects by collection for a specific Mime Type.
     This report is accessed from the **Mime Groups** report.
 collections_by_mime_group:
   class: CollectionsByMimeQuery
+  category: mime types
   params: ['mime_group']
   description: |
     This report breaks down the count of objects by collection for a specific Mime Group.
     This report is accessed from the **Mime Groups** report.
 collections_by_time_count_producer:
   class: CollectionsByTimeQuery
+  category: collections/time
   params: ['count_files', 'producer']
   description: |
     This report shows the count of **producer** files added to each Merritt collection.
@@ -137,6 +168,7 @@ collections_by_time_count_producer:
     - week by week for the last 4 weeks
 collections_by_time_count:
   class: CollectionsByTimeQuery
+  category: collections/time
   params: ['count_files', '']
   description: |
     This report shows the count of files added to each Merritt collection. 
@@ -146,6 +178,7 @@ collections_by_time_count:
     - week by week for the last 4 weeks
 collections_by_time_size:
   class: CollectionsByTimeQuery
+  category: collections/time
   params: ['billable_size', '']
   description: |
     This report shows the bytes added to each Merritt collection.
@@ -155,91 +188,133 @@ collections_by_time_size:
     - week by week for the last 4 weeks
 collections_by_time_size_cumulative:
   class: CollectionsByTimeCumulativeQuery
+  category: collections/time
   params: ['billable_size', '']
   description: |
     This report shows the cumulative byte count totals in each Merritt collection year by year since the Merritt system was established.
 collection_details:
   class: CollectionDetailsQuery
+  category: collections
   params: ['inv_collection_id']
 collection_info:
   class: CollectionInfoQuery
+  category: collections
   params: ['inv_collection_id']
 collection_group_details:
   class: CollectionDetailsQuery
+  category: collections
   params: ['ogroup']
 invoices:
   class: InvoicesQuery
+  category: collections
 audit_status:
   class: AuditStatusQuery
+  category: audit
 audit_status_time:
   class: AuditStatusTimeQuery
+  category: audit
 audit_oldest:
   class: AuditOldestQuery
+  category: audit
 audit_size:
   class: AuditQueueSizeQuery
+  category: audit
 audit_processed_size:
   class: AuditProcessedSizeQuery
+  category: audit
 audit_processed_hours:
   class: AuditProcessedSizeIterativeQuery
+  category: audit
 replication_needed:
   class: ReplicationNeededQuery
+  category: replication
 replication_initiated:
   class: ReplicationInitiatedQuery
+  category: replication
 replic_processed:
   class: ReplicProcessedQuery
+  category: replication
 wasabi:
   class: WasabiMigrationQuery
+  category: replication
 doi:
   class: DoiConflictQuery
+  category: objects
 big_ingest:
   class: BigIngestQuery
+  category: ingest
 recent_ingests:
   class: RecentIngestsQuery
+  category: ingest
 arklist:
   class: ArklistQuery
+  category: objects
 locallist:
   class: LocalidListQuery
+  category: objects
 arkcompare:
   class: ArklistCompareQuery
+  category: objects
 localcompare:
   class: LocalidListCompareQuery
+  category: objects
 con_primary:
   class: ConsistencyPrimaryNodeQuery
+  category: storage nodes
 con_secondary:
   class: ConsistencySecondaryNodeQuery
+  category: storage nodes
 con_files:
   class: ConsistencyFilesQuery
+  category: replication
 con_no_audit:
   class: ConsistencyFilesNoAuditQuery
+  category: replication
 con_objects:
   class: ConsistencyObjectsQuery
+  category: replication
 con_versions:
   class: ConsistencyVersionsQuery
+  category: replication
 obj_version_clobber:
   class: ObjectsVersionClobberQuery
+  category: concurrent update
 obj_version_gap:
   class: ObjectsVersionGapQuery
+  category: concurrent update
 con_replic:
   class: ConsistencyReplicationReqQuery
+  category: replication
 file_copies_needed:
   class: ObjectsFileCopiesNeededQuery
+  category: replication
 object_copies_needed:
   class: ObjectsObjectCopiesNeededQuery
+  category: replication
 mult_coll:
   class: MultipleCollectionsQuery
+  category: objects
 object_mult_coll:
   class: ObjectsMultipleCollQuery
+  category: objects
 admin_obj:
   class: AdminObjectsQuery
+  category: admin obj
 admin_obj_files:
   class: AdminObjectsFilesQuery
+  category: admin obj
 admin_obj_agg:
   class: AdminObjectsAggQuery
+  category: admin obj
 admin_coll:
   class: AdminCollectionsQuery
+  category: admin obj
 report:
   class: ReportRetrieve
+  category: reports
 filelist:
   class: ObjectIdFilesQuery
+  category: objects
 obj_audit_status:
   class: ObjectsAuditStatusQuery
+  category: audit

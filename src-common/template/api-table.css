@@ -91,7 +91,7 @@ table.results td.profile {
 
 table.results th.description,
 table.results td.description {
-  width: 350px !important;
+  width: 500px !important;
 }
 
 table.results th.list,
@@ -317,6 +317,7 @@ button.storage-delete-obj {
   border: thin solid #DDDDDD;
   width: 90%;
   margin: 0 auto;
+  display: none;
 }
 
 #report-description code {
