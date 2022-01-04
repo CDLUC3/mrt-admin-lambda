@@ -1,10 +1,10 @@
 # This file is not yet implemented
 # 
 # TODOs:
-# [ ] Modify all actions to repsond to the same method signature .perform_action()
+# [x] Modify all actions to repsond to the same method signature .perform_action()
 # [ ] Determine handing needed for XML return for profile actions
-# [ ] Move param handing from the if/elsif/else block into action classes
-# [ ] Add generic logic to respond to .prod_support()
+# [x] Move param handing from the if/elsif/else block into action classes
+# [x] Add generic logic to respond to .prod_support()
 # [ ] Create the ability to lock sensitive operations or further restrict to special cognito groups
 # [ ] Add descriptions
 # [ ] Create automated testing where possible
@@ -289,17 +289,8 @@ storage-review-node-page:
 # Operations that change system state - Not reversible
 
 submit-profile:
-  #        params = {
-  #          file: File.new("/var/task/dummy.README"),
-  #          type: "file",
-  #          submitter: myparams.fetch("submitter", ""),
-  #          responseForm: "xml",
-  #          title: myparams.fetch("title", ""),
-  #          profile: myparams.fetch("profile-path", "")
-  #        }
-  class: PostToIngestMultipartAction
+  class: SubmitProfileAction
   params: ["poster/update"]
-  # return xml
   category: Ingest Admin Profiles
   sensitivity: irreversible change
   testing: manual
