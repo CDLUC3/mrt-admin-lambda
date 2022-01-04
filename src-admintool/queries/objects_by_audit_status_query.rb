@@ -15,15 +15,13 @@ class ObjectsAuditStatusQuery < ObjectsQuery
 
   def get_where
     %{
-      where exists (
+      where o.id in (
         select 
-          1 
+          a.inv_object_id
         from 
           inv.inv_audits a 
         where 
           a.status = ?
-        and
-          a.inv_object_id = o.id
       )
     }
   end
