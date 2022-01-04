@@ -93,17 +93,17 @@ sword:
   sensitivity: readonly
   testing: contextually automatable
 ldap/users:
-  class: LDAPAction
+  class: LDAPActionUsers
   category: LDAP
   sensitivity: readonly
   testing: automatable
 ldap/user:
-  class: LDAPAction
+  class: LDAPActionUserDetailed
   category: LDAP
   sensitivity: readonly
   testing: automatable
 ldap/roles:
-  class: LDAPAction
+  class: LDAPActionRoles
   category: LDAP
   sensitivity: readonly
   testing: automatable
@@ -113,17 +113,22 @@ ldap/role:
   sensitivity: readonly
   testing: automatable
 ldap/colls:
-  class: LDAPAction
+  class: LDAPActionColls
   category: LDAP
   sensitivity: readonly
   testing: automatable
 ldap/coll:
-  class: LDAPAction
+  class: LDAPActionCollDetailed
   category: LDAP
   sensitivity: readonly
   testing: automatable
 ldap/collmap:
-  class: LDAPAction
+  class: LDAPActionCollmap
+  category: LDAP
+  sensitivity: readonly
+  testing: automatable
+ldap/collark:
+  class: LDAPActionCollArk
   category: LDAP
   sensitivity: readonly
   testing: automatable
@@ -353,14 +358,14 @@ createProfile/sla:
   sensitivity: irreversible change
   testing: manual
 queue-delete:
-  class: PostToIngestAction
-  # "admin/deleteq#{qp}"
+  class: QueueAction
+  params: ["admin/deleteq"]
   category: Queue Management
   sensitivity: irreversible change
   testing: manual
 requeue:
-  class: PostToIngestAction
-  # "admin/requeue#{qp}"
+  class: QueueAction
+  params: ["admin/requeue"]
   category: Queue Management
   sensitivity: irreversible change
   testing: manual
@@ -384,7 +389,7 @@ cognito-add-user-to-group:
   testing: automatable
 storage-rebuild-inventory:
   prod_support: false
-  class: StorageActions
+  class: StorageAction
   category: Inventory and Manifest
   sensitivity: sensitive
   testing: automatable

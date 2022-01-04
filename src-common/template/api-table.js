@@ -567,7 +567,7 @@ function format(cell, v, type, merritt_path) {
   } else if (type == 'ldapcoll') {
     makeLink(cell, v, colladmin_home + "?path=ldap/coll&coll="+v.replace(/^.*\(/,'').replace(/\)/,''));
   } else if (type == 'ldapark') {
-    makeLink(cell, v, colladmin_home + "?path=ldap/coll&ark="+v);
+    makeLink(cell, v, colladmin_home + "?path=ldap/collark&ark="+v);
   } else if (type == 'qbatchnote') {
     var arr = v.split(";")
     if (arr.length == 2) {

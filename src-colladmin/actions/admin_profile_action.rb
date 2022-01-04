@@ -71,6 +71,10 @@ class AdminProfileAction < ForwardToIngestAction
   end
 
   def perform_action
+    if @path == "adminprofiles"
+      return super
+    end
+
     ark = @myparams.fetch("ark", "")
     return {message: "No ark provided"}.to_json if ark.empty?
 
