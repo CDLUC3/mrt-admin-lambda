@@ -89,6 +89,11 @@ table.results td.profile {
   width: 200px !important;
 }
 
+table.results th.description,
+table.results td.description {
+  width: 500px !important;
+}
+
 table.results th.list,
 table.results td.list,
 table.results th.vallist,
@@ -303,5 +308,18 @@ button.storage-perform-delete-node-batch,
 button.storage-update-manifest,
 button.storage-rebuild-inventory,
 button.storage-delete-obj {
+  color: red;
+}
+
+#report-description {
+  background-color: #EEEEEE;
+  padding: 2px 6px;
+  border: thin solid #DDDDDD;
+  width: 90%;
+  margin: 0 auto;
+  display: none;
+}
+
+#report-description code {
   color: red;
 }

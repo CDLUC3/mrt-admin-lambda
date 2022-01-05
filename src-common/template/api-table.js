@@ -153,7 +153,8 @@ function processResult(data) {
       data.show_iterative_total,
       data.merritt_path,
       data.alternative_queries,
-      data.iterate
+      data.iterate,
+      data.description
     )
   } else {
     document.body.innerHTML = JSON.stringify(data);
@@ -257,7 +258,7 @@ function query_iterate(show_iterative_total, types, data){
 }
 
 var alldata = [];
-function createTable(headers, types, data, filter_col, group_col, show_grand_total, show_iterative_total, merritt_path, alternative_queries, iterate) {
+function createTable(headers, types, data, filter_col, group_col, show_grand_total, show_iterative_total, merritt_path, alternative_queries, iterate, description) {
   $("p.buttons")
     .show();
   $('#alternative ul').empty().hide();
@@ -281,6 +282,12 @@ function createTable(headers, types, data, filter_col, group_col, show_grand_tot
     .empty()
     .append($("<thead/>"))
     .append($("<tbody/>"));
+  $("#report-description").hide();
+  if (description) {
+    if (description != '') {
+      $("#report-description").append($(markdown(description))).show();
+    } 
+  }
   if (iterate) {
     $("#exportJson").hide();
     iterativeParams = data;
@@ -560,7 +567,7 @@ function format(cell, v, type, merritt_path) {
   } else if (type == 'ldapcoll') {
     makeLink(cell, v, colladmin_home + "?path=ldap/coll&coll="+v.replace(/^.*\(/,'').replace(/\)/,''));
   } else if (type == 'ldapark') {
-    makeLink(cell, v, colladmin_home + "?path=ldap/coll&ark="+v);
+    makeLink(cell, v, colladmin_home + "?path=ldap/collark&ark="+v);
   } else if (type == 'qbatchnote') {
     var arr = v.split(";")
     if (arr.length == 2) {

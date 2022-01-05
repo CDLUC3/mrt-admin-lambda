@@ -56,6 +56,15 @@ This script requires SSM parameters to be configured.  Requires lambda update fu
 This script **requires aws cli V2** in order to deploy a docker image to lambda.  
 - The host running this script needs to be able to push to ECR and to update a lambda.
 
+## Automated Testing
+
+This may be performed from a DEV box against Stage instances.
+
+```
+cd src-testdriver
+bundle exec rspec
+```
+
 ## Local Testing
 
 ### Placeholder Lambda Testing

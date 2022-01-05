@@ -7,7 +7,7 @@ class PostToIngestMultipartAction < ForwardToIngestAction
     super(config, path, myparams, endpoint)
   end
 
-  def get_data
+  def perform_action
     begin
       qjson = HttpPostMultipartJson.new(get_ingest_server, @endpoint, @myparams)
 

@@ -31,3 +31,6 @@ src-colladmin/Gemfile.lock
 src-common/vendor/
 src-common/.bundle/config
 src-common/Gemfile.lock
+src-testdriver/vendor/
+src-testdriver/.bundle/
+src-testdriver/Gemfile.lock

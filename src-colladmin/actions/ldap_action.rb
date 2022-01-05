@@ -2,26 +2,6 @@ require_relative 'action'
 require_relative '../lib/merritt_ldap'
 
 class LDAPAction < AdminAction
-  def self.make_action(config, path, myparams)
-    if path == "ldap/users"
-      LDAPActionUsers.new(config, path, myparams)
-    elsif path == "ldap/user"
-      LDAPActionUserDetailed.new(config, path, myparams)
-    elsif path == "ldap/roles"
-      LDAPActionRoles.new(config, path, myparams)
-    elsif path == "ldap/colls"
-      LDAPActionColls.new(config, path, myparams)
-    elsif path == "ldap/collmap"
-      LDAPActionCollmap.new(config, path, myparams)
-    elsif path == "ldap/coll" && myparams.key?("ark")
-      LDAPActionCollArk.new(config, path, myparams)
-    elsif path == "ldap/coll"
-      LDAPActionCollDetailed.new(config, path, myparams)
-    else
-      LDAPAction.new(config, path, myparams)
-    end
-  end
-
   def initialize(config, path, myparams)
     super(config, path, myparams)
     @merritt_ldap = MerrittLdap.new(@config)
@@ -41,7 +21,7 @@ class LDAPAction < AdminAction
     []
   end
 
-  def get_data
+  def perform_action
     return body unless hasTable
     evaluate_status(table_types, get_table_rows)
     {
@@ -171,13 +151,21 @@ class LDAPActionCollDetailed < LDAPAction
 
 end
 
-class LDAPActionCollArk < LDAPActionCollDetailed
+class LDAPActionCollArk < LDAPAction
 
   def initialize(config, path, myparams)
     super(config, path, myparams)
     ark = CGI.unescape(myparams.fetch("ark", ""))
     @data = @merritt_ldap.collection_detail_records_for_ark(ark)
     @title = "Role Details for Collection #{ark}"
+  end
+
+  def table_headers
+    LdapCollectionDetailed.get_headers
+  end
+
+  def table_types
+    LdapCollectionDetailed.get_types
   end
 
 end

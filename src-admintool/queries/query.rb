@@ -3,6 +3,7 @@ require_relative '../admin_task'
 class AdminQuery < AdminTask
   def initialize(query_factory, path, myparams)
     super(query_factory.config, path, myparams)
+    @report_def = query_factory.get_report_def(path)
     @client = query_factory.client
     @limit = @myparams.fetch("limit", get_default_limit.to_s).to_i
     @limit = @limit > get_max_limit ? get_max_limit : @limit
@@ -11,6 +12,10 @@ class AdminQuery < AdminTask
     @itparam2 = get_param('itparam2', '')
     @itparam3 = get_param('itparam3', '')
     @format = myparams.key?('format') ? myparams['format'] : 'report'
+  end
+
+  def get_description
+    @report_def.fetch('description', '')
   end
 
   def get_title
@@ -141,7 +146,8 @@ class AdminQuery < AdminTask
         iterate: @iterate,
         bytes_unit: bytes_unit,
         saveable: is_saveable?,
-        report_path: report_path
+        report_path: report_path,
+        description: get_description
       }
       save_report(report_path, report) if is_saveable?
       report
