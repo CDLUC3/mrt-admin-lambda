@@ -37,12 +37,12 @@
       <thead>
         <tr>
           <th class="name">Path</th>
-          <th>Category</th>
-          <th>Class</th>
-          <th>Implemented</th>
-          <th>Prod Support</th>
-          <th>Sensitivity</th>
-          <th>Testing</th>
+          <th class="name">Category</th>
+          <th class="name">Class</th>
+          <th class="cell">Implemented</th>
+          <th class="cell">Prod Support</th>
+          <th class="cell">Sensitivity</th>
+          <th class="cell">Testing</th>
           <th class="description">Description</th>
         </tr>
       </thead>
@@ -50,12 +50,12 @@
         {{#ACTIONS}}
         <tr>
           <th class="name">{{action}}</th>
-          <td>{{category}}</td>
-          <td>{{class}}</td>
-          <td>{{implemented}}</td>
-          <td>{{prod_support}}</td>
-          <td>{{sensitivity}}</td>
-          <td>{{testing}}</td>
+          <td class="name">{{category}}</td>
+          <td class="name">{{class}}</td>
+          <td class="cell">{{implemented}}</td>
+          <td class="cell">{{prod_support}}</td>
+          <td class="cell">{{sensitivity}}</td>
+          <td class="cell">{{testing}}</td>
           <td class="description"><div class="markdown">{{description}}</div></td>
         </tr>
         {{/ACTIONS}}

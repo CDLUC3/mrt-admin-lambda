@@ -80,6 +80,7 @@ module LambdaFunctions
             class: rpt.fetch('class', 'Undefied'), 
             category: rpt.fetch('category', ''), 
             description: rpt.fetch('description', ''), 
+            iterative: rpt.fetch('iterative', false)
           })
         end
       end

@@ -1,6 +1,6 @@
 # this will pull the stage context string.  The driver should not be used to connect to prod
 context: "{!SSM: admintool/context}"
 admintool:
-  function: uc3-mrt-admintool-img
+  function: uc3-mrt-admintool-img-stg
 colladmin:
-  function: uc3-mrt-colladmin-img
+  function: uc3-mrt-colladmin-img-stg

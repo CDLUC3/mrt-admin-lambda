@@ -225,6 +225,7 @@ audit_processed_size:
 audit_processed_hours:
   class: AuditProcessedSizeIterativeQuery
   category: audit
+  iterative: true
 replication_needed:
   class: ReplicationNeededQuery
   category: replication
@@ -234,6 +235,7 @@ replication_initiated:
 replic_processed:
   class: ReplicProcessedQuery
   category: replication
+  iterative: true
 wasabi:
   class: WasabiMigrationQuery
   category: replication
@@ -249,15 +251,23 @@ recent_ingests:
 arklist:
   class: ArklistQuery
   category: objects
+  test_params:
+    arklist: a,b
 locallist:
   class: LocalidListQuery
   category: objects
+  test_params:
+    locallist: a,b
 arkcompare:
   class: ArklistCompareQuery
   category: objects
+  test_params:
+    arklist: a,b
 localcompare:
   class: LocalidListCompareQuery
   category: objects
+  test_params:
+    locallist: a,b
 con_primary:
   class: ConsistencyPrimaryNodeQuery
   category: storage nodes

@@ -26,12 +26,14 @@
 #     markdown description of the purpose of the action
 #   testing: [automated | contextually automatable | automatable | manual]
 #   testing_instructions: url to internal documentation describing how to perform a test
+#   format: [text|json|xml], default: json
+#   test_params: key/value pairs needed for testing
 
 profiles:
   class: IngestProfileAction
   category: Ingest Profiles
   sensitivity: readonly
-  testing: automatable
+  testing: automated
   description: |
     List all collection profiles known to the ingest server.
     These profiles are managed in a github repository and are deployed to the server.
@@ -41,112 +43,118 @@ adminprofiles:
   class: AdminProfileAction
   category: Ingest Admin Profiles
   sensitivity: readonly
-  testing: automatable
+  testing: automated
 state:
   class: IngestStateAction
   category: Queue Management
   sensitivity: readonly
-  testing: automatable
+  testing: automated
 queues:
   class: IngestQueueAction
   category: Queue Management
   sensitivity: readonly
-  testing: contextually automatable
+  testing: contextually automated
 inv-queues:
   class: InventoryQueueAction
   category: Queue Management
   sensitivity: readonly
-  testing: contextually automatable
+  testing: contextually automated
 acc-queues:
   class: AccessQueueAction
   category: Queue Management
   sensitivity: readonly
-  testing: contextually automatable
+  testing: contextually automated
 batch:
   class: IngestBatchAction
   category: Ingest Batches and Folders
   sensitivity: readonly
-  testing: contextually automatable
+  testing: contextually automated
 job:
   class: IngestJobMetadataAction
   category: Ingest Batches and Folders
   sensitivity: readonly
-  testing: contextually automatable
+  testing: contextually automated
 manifest:
   class: IngestJobManifestAction
   category: Ingest Batches and Folders
   sensitivity: readonly
-  testing: contextually automatable
+  testing: contextually automated
 files:
   class: IngestJobFilesAction
   category: Ingest Batches and Folders
   sensitivity: readonly
-  testing: contextually automatable
+  testing: contextually automated
 batchFolders:
   class: IngestBatchFoldersAction
   category: Ingest Batches and Folders
   sensitivity: readonly
-  testing: contextually automatable
+  testing: contextually automated
 sword:
   class: IngestSwordJobsAction
   category: Ingest Batches and Folders
   sensitivity: readonly
-  testing: contextually automatable
+  testing: contextually automated
 ldap/users:
   class: LDAPActionUsers
   category: LDAP
   sensitivity: readonly
-  testing: automatable
+  testing: automated
 ldap/user:
   class: LDAPActionUserDetailed
   category: LDAP
   sensitivity: readonly
-  testing: automatable
+  testing: automated
 ldap/roles:
   class: LDAPActionRoles
   category: LDAP
   sensitivity: readonly
-  testing: automatable
+  testing: automated
 ldap/role:
   class: LDAPAction
   category: LDAP
   sensitivity: readonly
-  testing: automatable
+  testing: automated
 ldap/colls:
   class: LDAPActionColls
   category: LDAP
   sensitivity: readonly
-  testing: automatable
+  testing: automated
 ldap/coll:
   class: LDAPActionCollDetailed
   category: LDAP
   sensitivity: readonly
-  testing: automatable
+  testing: automated
+  test_params:
+    coll: merritt_demo
 ldap/collmap:
   class: LDAPActionCollmap
   category: LDAP
   sensitivity: readonly
-  testing: automatable
+  testing: automated
 ldap/collark:
   class: LDAPActionCollArk
   category: LDAP
   sensitivity: readonly
-  testing: automatable
+  testing: automated
 instances:
   class: TagAction
   category: Dev Ops
   sensitivity: readonly
-  testing: automatable
+  testing: automated
 ssm-describe:
   class: SsmDescribeAction
   category: Dev Ops
   sensitivity: readonly
-  testing: automatable
+  testing: automated
 storage-get-manifest:
   class: StorageAction
   category: Storage Manifest
   sensitivity: readonly
-  testing: automatable
+  testing: automated
+  format: xml
+  test_params:
+    ark: ark:/99999/fk4dv31c0b
+    nodenum: 9502
 storage-get-augmented-manifest:
   implemented: false
   category: Storage Manifest
@@ -156,17 +164,22 @@ storage-get-ingest-checkm:
   class: StorageAction
   category: Storage Manifest
   sensitivity: readonly
-  testing: automatable
+  testing: automated
+  format: text
+  test_params:
+    ark: ark:/99999/fk4dv31c0b
+    nodenum: 9502
 cognito-users:
   class: CognitoAction
   category: Cognito
   sensitivity: readonly
-  testing: automatable
+  testing: automated
 replication-state:
   class: ReplicationAction
   category: Dev Ops
   sensitivity: readonly
-  testing: automatable
+  testing: automated
+  format: xml
 storage-review-csv:
   class: ReplicationAction
   category: Storage Scan
