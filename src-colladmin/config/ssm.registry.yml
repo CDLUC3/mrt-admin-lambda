@@ -146,6 +146,8 @@ ingest:
   zoo:
     IngestQNames:
       description: Zookeeper queue names used by Ingest workers
+    lockName:
+      description: Zookeeper lock name used by Ingest workers before submitting to Storage Service
   config:
     access.1:
       description: URL endpoint for Access
