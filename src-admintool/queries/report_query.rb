@@ -18,17 +18,19 @@ class ReportRetrieve < AdminQuery
   def run_sql
     json = get_report(@report)
     json = super.run_sql if json.nil?
-    json.fetch("alternative_queries", json.fetch(:alternative_queries, []))
-      .append(
-        {
-          label: "Prior Day - #{@report_base}", 
-          url: "path=report&report=#{@s3consistency}#{(Time.parse(@day) - 24*60*60).strftime('%Y-%m-%d')}/#{@report_base}"
-        },
-        {
-          label: "Next Day - #{@report_base}", 
-          url: "path=report&report=#{@s3consistency}#{(Time.parse(@day) + 24*60*60).strftime('%Y-%m-%d')}/#{@report_base}"
-        }  
-      )
+    unless @report_base =~ %r[\d\d\d\d-\d\d-\d\d]
+      json.fetch("alternative_queries", json.fetch(:alternative_queries, []))
+        .append(
+          {
+            label: "Prior Day - #{@report_base}", 
+            url: "path=report&report=#{@s3consistency}#{(Time.parse(@day) - 24*60*60).strftime('%Y-%m-%d')}/#{@report_base}"
+          },
+          {
+            label: "Next Day - #{@report_base}", 
+            url: "path=report&report=#{@s3consistency}#{(Time.parse(@day) + 24*60*60).strftime('%Y-%m-%d')}/#{@report_base}"
+          }  
+        )
+    end
     return json
   end
 
