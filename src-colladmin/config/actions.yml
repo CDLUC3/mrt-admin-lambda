@@ -258,7 +258,7 @@ storage-resume-scan-node:
   sensitivity: reversible change
   testing: automatable
 storage-clear-scan-entries:
-  prod_support: false
+  # prod_support: false
   class: StorageAction
   category: Storage Scan Review
   sensitivity: reversible change
@@ -392,7 +392,7 @@ cognito-add-user-to-group:
   sensitivity: sensitive
   testing: automatable
 storage-rebuild-inventory:
-  prod_support: false
+  # prod_support: false
   class: StorageAction
   category: Inventory and Manifest
   sensitivity: sensitive
@@ -403,7 +403,7 @@ storage-update-manifest:
   sensitivity: sensitive
   testing: manual
 storage-add-node-for-collection:
-  prod_support: false
+  # prod_support: false
   class: StorageAction
   category: Storage Node Configuration
   sensitivity: sensitive
@@ -431,7 +431,6 @@ storage-reroute-ui-for-collection:
   implemented: false
   # Question: will we implement this
   # https://cdluc3.github.io/mrt-doc/diagrams/store-admin-reroute-uistorage-perform-delete-node-key:
-  prod_support: false
   class: ReplicationAction
   sensitivity: sensitive
   testing: manual
