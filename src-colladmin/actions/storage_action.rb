@@ -8,8 +8,8 @@ require_relative '../lib/storage_nodes'
 require_relative '../lib/merritt_query'
 
 class StorageAction < AdminAction
-  def initialize(config, path, myparams)
-    super(config, path, myparams)
+  def initialize(config, action, path, myparams)
+    super(config, action, path, myparams)
   end
 
   def get_title

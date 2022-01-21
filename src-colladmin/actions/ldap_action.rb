@@ -2,8 +2,8 @@ require_relative 'action'
 require_relative '../lib/merritt_ldap'
 
 class LDAPAction < AdminAction
-  def initialize(config, path, myparams)
-    super(config, path, myparams)
+  def initialize(config, action, path, myparams)
+    super(config, action, path, myparams)
     @merritt_ldap = MerrittLdap.new(@config)
     @data = {}
     @title = "LDAP Queries"
@@ -37,7 +37,8 @@ class LDAPAction < AdminAction
       alternative_queries: get_alternative_queries_with_pagination,
       iterate: false,
       saveable: is_saveable?,
-      report_path: report_path
+      report_path: report_path,
+      description: get_description
     }.to_json
   end
 
@@ -61,8 +62,8 @@ end
 
 class LDAPActionUsers < LDAPAction
 
-  def initialize(config, path, myparams)
-    super(config, path, myparams)
+  def initialize(config, action, path, myparams)
+    super(config, action, path, myparams)
     @data = @merritt_ldap.users
     @title = "LDAP Users"
   end
@@ -79,8 +80,8 @@ end
 
 class LDAPActionUserDetailed < LDAPAction
 
-  def initialize(config, path, myparams)
-    super(config, path, myparams)
+  def initialize(config, action, path, myparams)
+    super(config, action, path, myparams)
     uid = myparams.fetch("uid", "")
     @data = @merritt_ldap.user_detail_records(uid)
     @title = "Role Details for LDAP User #{@merritt_ldap.user_displayname(uid)}"
@@ -98,8 +99,8 @@ end
 
 class LDAPActionRoles < LDAPAction
 
-  def initialize(config, path, myparams)
-    super(config, path, myparams)
+  def initialize(config, action, path, myparams)
+    super(config, action, path, myparams)
     @data = @merritt_ldap.roles
     @title = "LDAP Roles"
   end
@@ -116,8 +117,8 @@ end
 
 class LDAPActionColls < LDAPAction
 
-  def initialize(config, path, myparams)
-    super(config, path, myparams)
+  def initialize(config, action, path, myparams)
+    super(config, action, path, myparams)
     @data = @merritt_ldap.collections
     @title = "LDAP Collections"
   end
@@ -134,8 +135,8 @@ end
 
 class LDAPActionCollDetailed < LDAPAction
 
-  def initialize(config, path, myparams)
-    super(config, path, myparams)
+  def initialize(config, action, path, myparams)
+    super(config, action, path, myparams)
     coll = myparams.fetch("coll", "")
     @data = @merritt_ldap.collection_detail_records(coll)
     @title = "Role Details for Collection #{@merritt_ldap.coll_displayname(coll)} (#{coll})"
@@ -153,8 +154,8 @@ end
 
 class LDAPActionCollArk < LDAPAction
 
-  def initialize(config, path, myparams)
-    super(config, path, myparams)
+  def initialize(config, action, path, myparams)
+    super(config, action, path, myparams)
     ark = CGI.unescape(myparams.fetch("ark", ""))
     @data = @merritt_ldap.collection_detail_records_for_ark(ark)
     @title = "Role Details for Collection #{ark}"
@@ -172,8 +173,8 @@ end
 
 class LDAPActionCollmap < LDAPAction
 
-  def initialize(config, path, myparams)
-    super(config, path, myparams)
+  def initialize(config, action, path, myparams)
+    super(config, action, path, myparams)
     @data = {}
     @title = "LDAP Collection Map"
     @merritt_ldap.collections.keys.each do |m|

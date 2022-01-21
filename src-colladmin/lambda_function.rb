@@ -71,11 +71,11 @@ module LambdaFunctions
   
       # Use Ruby metaprogramming to construct the report class
       if params.length == 2
-        Object.const_get(action['class']).new(@config, path, myparams, params[0], params[1])
+        Object.const_get(action['class']).new(@config, action, path, myparams, params[0], params[1])
       elsif params.length == 1
-        Object.const_get(action['class']).new(@config, path, myparams, params[0])
+        Object.const_get(action['class']).new(@config, action, path, myparams, params[0])
       else
-        Object.const_get(action['class']).new(@config, path, myparams)
+        Object.const_get(action['class']).new(@config, action, path, myparams)
       end
     end  
   end
@@ -163,7 +163,6 @@ module LambdaFunctions
 
     def template_parameters(path, myparams)
       map = super(path, myparams)
-      map['COLL_LAMBDABASE_JS'] = Mustache.render(File.open("template/coll-lambda.base.js").read, map)
       map['PROFILE_JS'] = Mustache.render(File.open("template/profile.js").read, map)
       map['SUBPROFILE_JS'] = Mustache.render(File.open("template/subprofile.js").read, map)
       map['PROPERTIES_JS'] = Mustache.render(File.open("template/properties.js").read, map)
@@ -171,7 +170,7 @@ module LambdaFunctions
       if path == '/web/collProfile.html'
         map['OWNERS'] = Owners.new(@config).objs_select
         map['NODES'] = Nodes.new(@config).nodes
-        profiles = IngestProfileAction.new(@config, "", {}).get_profile_list
+        profiles = IngestProfileAction.new(@config, {}, "", {}).get_profile_list
         map['NOTIFICATIONS'] = profiles.notification_map
         # when constructing the admin object hierarchy, the parent object will first exist only in the inv_objects table
         map['COLLS'] = CollectionObjs.new(@config).objs_select
@@ -186,7 +185,7 @@ module LambdaFunctions
         artifact = myparams.fetch("type", "")
         map['artifact'] = artifact
         map["artifact_#{artifact}"] = true
-        profiles = AdminProfileAction.new(@config, "adminprofiles", myparams).get_profile_list
+        profiles = AdminProfileAction.new(@config, {}, "adminprofiles", myparams).get_profile_list
         map['NEWOBJS'] = []
         profiles.each do |p|
           map['NEWOBJS'].append(p) unless p.adsub_status == 'SKIP'
@@ -195,7 +194,7 @@ module LambdaFunctions
         artifact = myparams.fetch("type", "")
         map['artifact'] = artifact
         map["artifact_#{artifact}"] = true
-        profiles = AdminProfileAction.new(@config, "adminprofiles", myparams).get_profile_list
+        profiles = AdminProfileAction.new(@config, {}, "adminprofiles", myparams).get_profile_list
         map['COLLS'] = []
         profiles.each do |p|
           map['COLLS'].append(p) unless p.addb_status == 'SKIP'

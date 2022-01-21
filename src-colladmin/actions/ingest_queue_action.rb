@@ -1,8 +1,8 @@
 require_relative 'forward_to_ingest_action'
 
 class IngestQueueAction < ForwardToIngestAction
-  def initialize(config, path, myparams)
-    super(config, path, myparams, 'admin/queues')
+  def initialize(config, action, path, myparams)
+    super(config, action, path, myparams, 'admin/queues')
   end
 
   def get_title

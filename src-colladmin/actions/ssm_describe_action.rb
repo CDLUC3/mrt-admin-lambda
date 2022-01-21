@@ -78,8 +78,8 @@ end
 
 class SsmDescribeAction < AdminAction
 
-  def initialize(config, path, myparams)
-    super(config, path, myparams)
+  def initialize(config, action, path, myparams)
+    super(config, action, path, myparams)
     region = ENV['AWS_REGION'] || 'us-west-2'
     @ssm = Aws::SSM::Client.new(
       region: region, 
@@ -162,7 +162,8 @@ class SsmDescribeAction < AdminAction
       alternative_queries: get_alternative_queries_with_pagination,
       iterate: false,
       saveable: is_saveable?,
-      report_path: report_path
+      report_path: report_path,
+      description: get_description
     }.to_json
   end
 

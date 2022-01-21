@@ -2,8 +2,8 @@ require_relative 'action'
 require_relative 'forward_to_ingest_action'
 
 class IngestStateAction < ForwardToIngestAction
-  def initialize(config, path, myparams)
-    super(config, path, myparams, 'state')
+  def initialize(config, action, path, myparams)
+    super(config, action, path, myparams, 'state')
   end
 
   def get_title

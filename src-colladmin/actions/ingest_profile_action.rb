@@ -7,12 +7,12 @@ require_relative '../lib/admin_objects'
 require_relative '../lib/merritt_query'
 
 class IngestProfileAction < ForwardToIngestAction
-  def initialize(config, path, myparams)
+  def initialize(config, action, path, myparams)
     @profile = CGI.unescape(myparams.fetch('profile', ''))
     endpoint = 'admin/profiles-full' 
     endpoint = "admin/profile/#{CGI.escape(@profile)}" if specific_profile?
     @collections = Collections.new(config)
-    super(config, path, myparams, endpoint)
+    super(config, action, path, myparams, endpoint)
   end
 
   def specific_profile?

@@ -1,10 +1,10 @@
 require_relative 'forward_to_ingest_action'
 
 class IngestBatchFoldersAction < ForwardToIngestAction
-  def initialize(config, path, myparams)
+  def initialize(config, action, path, myparams)
     @days = myparams.fetch("days", "7").to_i 
     @days = 60 if @days > 60
-    super(config, path, myparams, "admin/bids/#{@days}")
+    super(config, action, path, myparams, "admin/bids/#{@days}")
   end
 
   def get_title

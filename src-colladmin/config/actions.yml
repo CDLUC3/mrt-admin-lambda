@@ -201,7 +201,7 @@ ssm-describe:
   testing: automated
   description: |
     Generate a report describing the SSM variables used by a Merritt domain.
-    These variables are compared against of [registry of expected SSM variables](https://github.com/CDLUC3/mrt-admin-lambda/blob/main/src-colladmin/congig/ssm.registry.yml).
+    These variables are compared against of [registry of expected SSM variables](https://github.com/CDLUC3/mrt-admin-lambda/blob/main/src-colladmin/config/ssm.registry.yml).
 storage-get-manifest:
   class: StorageAction
   category: Storage Manifest

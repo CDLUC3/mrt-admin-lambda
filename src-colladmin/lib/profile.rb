@@ -510,7 +510,7 @@ class Collections < MerrittQuery
     @collections.delete(LambdaFunctions::Handler.merritt_system)
     @collections.delete(LambdaFunctions::Handler.merritt_admin_coll_sla)
 
-    profiles = IngestProfileAction.new(@config, "", {}).get_profile_list
+    profiles = IngestProfileAction.new(@config, {}, "", {}).get_profile_list
     profiles.profiles.each do |p|
       context = p.getValue(:profileID)
       next if context.nil?

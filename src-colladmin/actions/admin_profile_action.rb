@@ -8,10 +8,10 @@ require_relative '../lib/storage_nodes'
 require_relative '../lib/merritt_query'
 
 class AdminProfileAction < ForwardToIngestAction
-  def initialize(config, path, myparams)
+  def initialize(config, action, path, myparams)
     @type = CGI.unescape(myparams.fetch('type', get_type_for_path(path)))
     endpoint = @type.empty? ? "admin/profiles/admin" : "admin/profiles/admin/#{@type}" 
-    super(config, path, myparams, endpoint)
+    super(config, action, path, myparams, endpoint)
   end
 
   def get_type_for_path(path)
