@@ -35,90 +35,133 @@ profiles:
   sensitivity: readonly
   testing: automated
   description: |
-    List all collection profiles known to the ingest server.
+    List all *ingest profiles* known to the ingest server.
     These profiles are managed in a github repository and are deployed to the server.
-    - test
-    - test
 adminprofiles:
   class: AdminProfileAction
   category: Ingest Admin Profiles
   sensitivity: readonly
   testing: automated
+  description: |
+    List all *admin profiles* (collection, owner, SLA) known to the ingest server.
+    These profiles are managed in a github repository and are deployed to the server.
 state:
   class: IngestStateAction
   category: Queue Management
   sensitivity: readonly
   testing: automated
+  description: |
+    Display the state of the ingest service.
 queues:
   class: IngestQueueAction
   category: Queue Management
   sensitivity: readonly
   testing: contextually automated
+  description: |
+    Display the contents of the *ingest queue*.
+    From this screen, items can be requeued.
 inv-queues:
   class: InventoryQueueAction
   category: Queue Management
   sensitivity: readonly
   testing: contextually automated
+  description: |
+    Display the contents of the *inventory queue*.
+    From this screen, items can be requeued.
 acc-queues:
   class: AccessQueueAction
   category: Queue Management
   sensitivity: readonly
   testing: contextually automated
-batch:
-  class: IngestBatchAction
-  category: Ingest Batches and Folders
-  sensitivity: readonly
-  testing: contextually automated
-job:
-  class: IngestJobMetadataAction
-  category: Ingest Batches and Folders
-  sensitivity: readonly
-  testing: contextually automated
-manifest:
-  class: IngestJobManifestAction
-  category: Ingest Batches and Folders
-  sensitivity: readonly
-  testing: contextually automated
-files:
-  class: IngestJobFilesAction
-  category: Ingest Batches and Folders
-  sensitivity: readonly
-  testing: contextually automated
+  description: |
+    Display the contents of the *access queue*.
+    From this screen, items can be requeued.
 batchFolders:
   class: IngestBatchFoldersAction
   category: Ingest Batches and Folders
   sensitivity: readonly
   testing: contextually automated
+  description: |
+    Display details about the recently created ingest *batch folders*.
+    In rare instances, an ingest is initiated but fails during the queueing step.  
+    This view provides an opportunity to identify to view content that could not be successfully queued.
+batch:
+  class: IngestBatchAction
+  category: Ingest Batches and Folders
+  sensitivity: readonly
+  testing: contextually automated
+  description: |
+    Display details about an *ingest batch*.  A *batch* may contain one or more *jobs*.
+job:
+  class: IngestJobMetadataAction
+  category: Ingest Batches and Folders
+  sensitivity: readonly
+  testing: contextually automated
+  description: |
+    Display details about a specific *job* within an ingest batch.
+manifest:
+  class: IngestJobManifestAction
+  category: Ingest Batches and Folders
+  sensitivity: readonly
+  testing: contextually automated
+  description: |
+    Display the manifest defining the content to ingest in a specific *ingest job*.
+files:
+  class: IngestJobFilesAction
+  category: Ingest Batches and Folders
+  sensitivity: readonly
+  testing: contextually automated
+  description: |
+    Display the files remaining on the filesystem for an *ingest job*.
+    After a successful submission:
+    - producer files will be removed
+    - system files will be retained
 sword:
   class: IngestSwordJobsAction
   category: Ingest Batches and Folders
   sensitivity: readonly
   testing: contextually automated
+  description: |
+    Display the most recent ingest jobs initiated from Dryad via the Sword service.
+    After the page is displayed, a separate search is run to display the ARK and DOI associated with each job.
 ldap/users:
   class: LDAPActionUsers
   category: LDAP
   sensitivity: readonly
   testing: automated
+  description: | 
+    Display the list of Merritt users defined in the Merritt LDAP database.
 ldap/user:
   class: LDAPActionUserDetailed
   category: LDAP
   sensitivity: readonly
   testing: automated
+  description: | 
+    Display the details for a specific Merritt user defined in the Merritt LDAP database.
+    The report conteys the permissions granted to the user.
 ldap/roles:
   class: LDAPActionRoles
   category: LDAP
   sensitivity: readonly
   testing: automated
+  description: | 
+    Display the set of permission groups (roles) defined in the Merritt LDAP database.
 ldap/role:
   class: LDAPAction
   category: LDAP
   sensitivity: readonly
   testing: automated
+  description: | 
+    Display information about a specific role defined in the Merritt LDAP database.
+    *This report does not seem to be linked in the application**.
 ldap/colls:
   class: LDAPActionColls
   category: LDAP
   sensitivity: readonly
   testing: automated
+  description: | 
+    Display the Merritt collections as defined in the  Merritt LDAP database.
+    Oddly, the Merritt UI uses the Collection name defined in LDAP as the definitive display name for the collection.
 ldap/coll:
   class: LDAPActionCollDetailed
   category: LDAP
@@ -126,26 +169,39 @@ ldap/coll:
   testing: automated
   test_params:
     coll: merritt_demo
+  description: | 
+    Display details about a Merritt collection as defined in the  Merritt LDAP database.
+    The report also displays the users who have access to the collection.
 ldap/collmap:
   class: LDAPActionCollmap
   category: LDAP
   sensitivity: readonly
   testing: automated
+  description: | 
+    Generate a report that maps entities in the Merritt LDAP database to entries in the Merritt inventory database.
+    For any items that do not match, an error will be reported in the report.  This indicates that maintenance needs to be performed on the LDAP entries for Merritt.
 ldap/collark:
   class: LDAPActionCollArk
   category: LDAP
   sensitivity: readonly
   testing: automated
+  description: |
+    This report maps a *collection ark* (from the inventory database) to the set of LDAP permissions defined for that collection.
 instances:
   class: TagAction
   category: Dev Ops
   sensitivity: readonly
   testing: automated
+  description: |
+    Generate a report describing the EC2 servers used by Merritt domain.  Server details are discovered by querying EC2 tags.
 ssm-describe:
   class: SsmDescribeAction
   category: Dev Ops
   sensitivity: readonly
   testing: automated
+  description: |
+    Generate a report describing the SSM variables used by a Merritt domain.
+    These variables are compared against of [registry of expected SSM variables](https://github.com/CDLUC3/mrt-admin-lambda/blob/main/src-colladmin/congig/ssm.registry.yml).
 storage-get-manifest:
   class: StorageAction
   category: Storage Manifest
@@ -205,6 +261,11 @@ toggle_harvest:
   category: Ingest Admin Profiles
   sensitivity: reversible change
   testing: automatable
+  description: |
+    Toggle the *harvest* flag for a collection.
+    The harvest flag determined whether or not a collection can be crawled from the OAI service.
+    
+    TBD: Eric, does this flag have any other purpose? Atom feeds?
 unpause-ingest-for-collection:
   implemented: false
   # https://cdluc3.github.io/mrt-doc/diagrams/store-admin-pause-ing-for-coll
@@ -312,31 +373,48 @@ set_mnemonic:
   category: Ingest Admin Profiles
   sensitivity: irreversible change
   testing: manual
+  description: |
+    Set the *mnemonic* field for a collection to match the value defined in the collection admin profile.
+    Once set, this value cannot be reset.
+    This option must be manually run due to a legacy limitation of the collection creation process for Merritt.
 set_coll_name:
   class: AdminProfileAction
   category: Ingest Admin Profiles
   sensitivity: irreversible change
   testing: manual
+  description: |
+    Set the *description* field for a collection to match the value defined in the collection admin profile.
+    To apply future changes to this field, you must update the collection admin profile.
 set_sla_name:
   class: AdminProfileAction
   category: Ingest Admin Profiles
   sensitivity: irreversible change
   testing: manual
+  description: |
+    Set the *description* field for an SLA to match the value defined in the SLA admin profile.
+    To apply future changes to this field, you must update the SLA admin profile.
 set_own_name:
   class: AdminProfileAction
   category: Ingest Admin Profiles
   sensitivity: irreversible change
   testing: manual
+  description: |
+    Set the *description* field for an Owner to match the value defined in the Owner admin profile.
+    To apply future changes to this field, you must update the Owner admin profile.
 create_owner_record:
   class: AdminProfileAction
   category: Ingest Admin Profiles
   sensitivity: irreversible change
   testing: manual
+  description: |
+    Generate an owner record in the Merritt inventory database based on the submission of a dummy object using the Owner Admin profile.
 create_coll_record:
   class: AdminProfileAction
   category: Ingest Admin Profiles
   sensitivity: irreversible change
   testing: manual
+  description: |
+    Generate an SLA record in the Merritt inventory database based on the submission of a dummy object using the SLA Admin profile.
 createProfile/profile:
   class: PostToIngestMultipartAction
   params: ["admin/profile/profile"]
