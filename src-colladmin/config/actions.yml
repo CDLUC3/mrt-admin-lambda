@@ -211,11 +211,17 @@ storage-get-manifest:
   test_params:
     ark: ark:/99999/fk4dv31c0b
     nodenum: 9502
+  description: |
+    Download the XML *storage manifest* representation of a object on a specific storage node.  This request will be forwarded to the storage service.
 storage-get-augmented-manifest:
   implemented: false
   category: Storage Manifest
   sensitivity: readonly
   testing: automatable
+  description: |
+    #### Future Feature
+    Download a programmatically repaired manifest generated the storage/replication service.
+    This feature is anticipated to be utilized to resolve specific problems that occur infrequently.
 storage-get-ingest-checkm:
   class: StorageAction
   category: Storage Manifest
@@ -225,22 +231,37 @@ storage-get-ingest-checkm:
   test_params:
     ark: ark:/99999/fk4dv31c0b
     nodenum: 9502
+  description: |
+    Download an *ingest manifest checkm* representation of a object on a specific storage node.  
+    This file could be utilized to re-ingest an object under a new ark.
 cognito-users:
   class: CognitoAction
   category: Cognito
   sensitivity: readonly
   testing: automated
+  description: |
+    Display the list of users who have authenticated to the Merritt Admin *Cognito User Pool*.
+    Users are not created explicitly in the admin tool. A user is created by (1)performing an SSO login or (2)registering as a non-SAML user.  
+    This screen contains buttons that could trigger the addition/removal of specific users from a *Cognito User Group*.
+
+    Note: while the tool supports non-SAML users.  In practice, we have not authorized any non-SAML users.  This is intended for partners such as Dryad staff.
 replication-state:
   class: ReplicationAction
   category: Dev Ops
   sensitivity: readonly
   testing: automated
   format: xml
+  description: |
+    Display the *storage scan status* of the replication service.
+    This function determines whether or not to enable the *Stop Storage Scan* and *Enable Storage Scan* buttons.
 storage-review-csv:
   class: ReplicationAction
   category: Storage Scan
   sensitivity: readonly
   testing: manual
+  description: |
+    Download a CSV file for all scan results from a specific storage node that have been marked with a *Review* status.
+    This CSV can be edited in Excel in order to apply bulk status/note changes to the scan results.
 
 # Operations that change system state - Reversible
 
@@ -250,12 +271,17 @@ submissions/pause:
   category: Queue Management
   sensitivity: reversible change
   testing: automatable
+  description: |
+    Pause all ingest processing.  Return the effective state of the ingest queues.
+    This is typically done before a patching cycle or a software release that impacts ingest or storage.
 submissions/unpause:
   class: PostToIngestAction
   params: ["admin/submissions/thaw"]
   category: Queue Management
   sensitivity: reversible change
   testing: automatable
+  description: |
+    Unpause ingest processing.  Return the effective state of the ingest queues.
 toggle_harvest:
   class: AdminProfileAction
   category: Ingest Admin Profiles
@@ -268,97 +294,144 @@ toggle_harvest:
     TBD: Eric, does this flag have any other purpose? Atom feeds?
 unpause-ingest-for-collection:
   implemented: false
-  # https://cdluc3.github.io/mrt-doc/diagrams/store-admin-pause-ing-for-coll
   category: Queue Management
   sensitivity: reversible change
   testing: automatable
+  description: |
+    #### Future feature: unpause ingest processing for a specific collection that is in a paused state.
+    The processing lock will reside in Zookeeper.
+    [Feature Design](https://cdluc3.github.io/mrt-doc/diagrams/store-admin-pause-ing-for-coll)
 pause-ingest-for-collection:
   implemented: false
-  # https://cdluc3.github.io/mrt-doc/diagrams/store-admin-pause-ing-for-coll
   category: Queue Management
   sensitivity: reversible change
   testing: automatable
+  description: |
+    #### Future feature: pause ingest processing for a specific collection.
+    The processing lock will reside in Zookeeper.
+    [Feature Design](https://cdluc3.github.io/mrt-doc/diagrams/store-admin-pause-ing-for-coll)
 storage-force-audit-for-object:
   class: StorageAction
   category: Audit
   sensitivity: reversible change
   testing: automatable
+  description: |
+    Trigger audit processing for all files in an object on a specific node.
 storage-rerun-audit-for-object:
   class: StorageAction
   category: Audit
   sensitivity: reversible change
   testing: automatable
+  description: |
+    Trigger audit processing for all *unverified* files in an object on a specific node.
+    This action is occasionally needed when the audit server is halted or experienced a networking issue on a previous audit.
 storage-force-replic-for-object:
   class: StorageAction
   category: Replication
   sensitivity: reversible change
   testing: automatable
+  description: |
+    Re-trigger replication for an existing object.  The replication service will resolve an incomplete replications for the files in the object.
+    This action is occasionally needed when the replic server is halted or experienced a networking issue on a previous replication.
 storage-clear-audit-batch:
   class: StorageAction
   category: Audit
   sensitivity: reversible change
   testing: automatable
+  description: |
+    The audit service processes a block of objects at one time.  All database updates are written back to the database in a batch.
+    If the audit service is shut down while processing a batch, some batches may appear to still be actively processing.
+    This fuction clears all audit batches older than a specified amout of time.
 storage-cancel-all-scans:
   class: ReplicationAction
   category: Storage Scan
   sensitivity: reversible change
   testing: automatable
+  description: |
+    Halt all storage scan processing by the replciation service.  This will give priority to content replication.
 storage-allow-all-scans:
   class: ReplicationAction
   category: Storage Scan
   sensitivity: reversible change
   testing: automatable
+  description: |
+    Re-enable storage scan processing by the replciation service.  This can be run after halting/canceling all scans.
 storage-cancel-scan-node:
   class: ReplicationAction
   category: Storage Scan
   sensitivity: reversible change
   testing: automatable
+  description: |
+    Cancel storage scan processing *on a specific storage node* by the replciation service.  
 storage-resume-scan-node:
   class: ReplicationAction
   category: Storage Scan
   sensitivity: reversible change
   testing: automatable
+  description: |
+    Resume storage scan processing *on a specific storage node* by the replciation service.  
 storage-clear-scan-entries:
   # prod_support: false
   class: StorageAction
   category: Storage Scan Review
   sensitivity: reversible change
   testing: manual
+  description: |
+    Clear storage scan entries for a specific ark.
+    This function is intended to be run after *rebuilding an inventory record* via the admin tool.  
 storage-scan-node:
   class: ReplicationAction
   category: Storage Scan
   sensitivity: reversible change
   testing: automatable
+  description: |
+    Initiate storage scan processing *on a specific storage node* by the replciation service.  
+    
+    In general, the storage scan process uses the S3 API to iterate over items found on a storage node.
+    For SCSC storage, the iterator api call does not function properly.  
+    An inventory dump must be manually requested from SDSC and uploaded to S3 for comparison processing.
 storage-delete-node-key:
   class: ReplicationAction
   category: Storage Scan Review
   sensitivity: reversible change
   testing: manual
+  description: |
+    Mark a single scan result with a *DELETE* status.  
 storage-delete-node-page:
   class: ReplicationAction
   category: Storage Scan Review
   sensitivity: reversible change
   testing: manual
+  description: |
+    Mark a page of scan results with a *DELETE* status.  
 storage-hold-node-key:
   class: ReplicationAction
   category: Storage Scan Review
   sensitivity: reversible change
   testing: manual
+  description: |
+    Mark a single scan result with a *HOLD* status.  
 storage-hold-node-page:
   class: ReplicationAction
   category: Storage Scan Review
   sensitivity: reversible change
   testing: manual
+  description: |
+    Mark a page of scan results with a *HOLD* status.  
 storage-review-node-key:
   class: ReplicationAction
   category: Storage Scan Review
   sensitivity: reversible change
   testing: manual
+  description: |
+    Mark a single scan result with a *REVIEW* status.  
 storage-review-node-page:
   class: ReplicationAction
   category: Storage Scan Review
   sensitivity: reversible change
   testing: manual
+  description: |
+    Mark a page of scan results with a *REVIEW* status.  
 
 # Operations that change system state - Not reversible
 
@@ -368,6 +441,9 @@ submit-profile:
   category: Ingest Admin Profiles
   sensitivity: irreversible change
   testing: manual
+  description: |
+    Submit a dummy object using a newly created admin profile.
+    This will trigger the creation of an object the Merritt inventory database.
 set_mnemonic:
   class: AdminProfileAction
   category: Ingest Admin Profiles
@@ -421,41 +497,59 @@ createProfile/profile:
   category: Ingest Admin Profiles
   sensitivity: irreversible change
   testing: manual
+  description: |
+    Send a request to the ingest service to generate a new *Ingest Profile*.
+    A new ARK will be minted as needed.
 createProfile/collection:
   class: PostToIngestMultipartAction
   params: ["admin/profile/collection"]
   category: Ingest Admin Profiles
   sensitivity: irreversible change
   testing: manual
+  description: |
+    Send a request to the ingest service to generate a new *Collection Admin Profile*.
+    A new ARK will be minted as needed.
 createProfile/owner:
   class: PostToIngestMultipartAction
   params: ["admin/profile/owner"]
   category: Ingest Admin Profiles
   sensitivity: irreversible change
   testing: manual
+  description: |
+    Send a request to the ingest service to generate a new *Owner Admin Profile*.
+    A new ARK will be minted as needed.
 createProfile/sla:
   class: PostToIngestMultipartAction
   params: ["admin/profile/sla"]
   category: Ingest Admin Profiles
   sensitivity: irreversible change
   testing: manual
+  description: |
+    Send a request to the ingest service to generate a new *SLA Admin Profile*.
+    A new ARK will be minted as needed.
 queue-delete:
   class: QueueAction
   params: ["admin/deleteq"]
   category: Queue Management
   sensitivity: irreversible change
   testing: manual
+  description: |
+    Remove an item from a Zookeeper queue.
 requeue:
   class: QueueAction
   params: ["admin/requeue"]
   category: Queue Management
   sensitivity: irreversible change
   testing: manual
+  description: |
+    Re-queue an item from a Zookeeper queue.
 apply-review-changes:
   class: ReplicationAction
   category: Storage Scan Review
   sensitivity: irreversible change
   testing: manual
+  description: |
+    Apply bulk changes to storage scan results by uploading a CSV containing a set of desired changes.
 
 # Sensitive Operations
 
@@ -464,63 +558,86 @@ cognito-remove-user-from-group:
   category: Cognito
   sensitivity: sensitive
   testing: automatable
+  description: |
+    Remove a *Cognito User* from a specific *Cognito User Group*.
 cognito-add-user-to-group:
   class: CognitoAction
   category: Cognito
   sensitivity: sensitive
   testing: automatable
+  description: |
+    Add a *Cognito User* to a specific *Cognito User Group*.
 storage-rebuild-inventory:
   # prod_support: false
   class: StorageAction
   category: Inventory and Manifest
   sensitivity: sensitive
   testing: automatable
+  description: |
+    Retrieve a storage manifest from the storage service.  
+    Send that manifest to the Inventory service in order to re-build the inventory record from the storage manifest.
 storage-update-manifest:
   implemented: false
   category: Inventory and Manifest
   sensitivity: sensitive
   testing: manual
+  description: |
+    #### Future Feature: upload a repaired storage manifest to override an existing one
 storage-add-node-for-collection:
   # prod_support: false
   class: StorageAction
   category: Storage Node Configuration
   sensitivity: sensitive
   testing: manual
+  description: |
+    Add a secondary storage node to the configuration for a collection.
 storage-del-node-for-collection:
   implemented: false
-  # https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-node
   category: Storage Node Configuration
   sensitivity: sensitive
   testing: manual
+  description: |
+    #### Future feature: delete all objects in a collection from a secondary storage node
+    [Feature Design](https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-node)
 storage-del-object-from-node:
   implemented: false
-  # Question - will we implement this?
-  # https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-node-obj
   category: Delete object
   sensitivity: sensitive
   testing: manual
+  description: |
+    #### Future feature - Probably not needed
+    [Feature Design](https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-node-obj)
 storage-change-primary-for-collection:
   implemented: false
-  # https://cdluc3.github.io/mrt-doc/diagrams/store-admin-change-primary-node
   category: Storage Node Configuration
   sensitivity: sensitive
   testing: manual
+  description: |
+    #### Future feature
+    [Feature Design](https://cdluc3.github.io/mrt-doc/diagrams/store-admin-change-primary-node)
 storage-reroute-ui-for-collection:
   implemented: false
-  # Question: will we implement this
-  # https://cdluc3.github.io/mrt-doc/diagrams/store-admin-reroute-uistorage-perform-delete-node-key:
   class: ReplicationAction
   sensitivity: sensitive
   testing: manual
+  description: |
+    #### Future feature - Probably not in scope for the project
+    [Feature Design](https://cdluc3.github.io/mrt-doc/diagrams/store-admin-reroute-uistorage-perform-delete-node-key)
 storage-perform-delete-node-batch:
   prod_support: false
   class: ReplicationAction
   category: Storage Scan Review
   sensitivity: sensitive
   testing: manual
+  description: |
+    #### Not yet enabled in prod 
+    Process all scan results marked with a *DELETE* status.
 storage-delete-obj:
   implemented: false
-  # https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-obj
   category: Storage Scan Review
   sensitivity: sensitive
   testing: manual
+  description: |
+    #### Future feature
+    Trigger the deletion of a Merritt Object.  Save a tombstone record.
+    [Feature Design](https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-obj)

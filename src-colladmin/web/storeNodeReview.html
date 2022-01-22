@@ -94,6 +94,18 @@
       {{/is_delete}}
     </div>
     <h4>Node Key List</h4>
+    <div class="page-description">
+      Review the storage scan results performed on a storage node.  The storage scan process will identify files found in cloud storage that do not have a matching entry in the inventory database.
+
+      <dl>
+        <dt>Review</dt>
+        <dd>Items that need to be categorized as either <b>Delete</b> or <b>Hold</b>. When in doubt, keep the status as <b>Review</b></dd>
+        <dt>Delete</dt>
+        <dd>Files/keys to be purged from cloud storage</dd>
+        <dt>Hold</dt>
+        <dd>Files/keys to be retained.  Some action is likely needed to add these items to the Inventory database.</dd>
+      </dl>
+    </div>
     <div>
       <table class="sortable results">
         <thead>
