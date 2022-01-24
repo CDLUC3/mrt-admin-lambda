@@ -672,6 +672,8 @@ function format(cell, v, type, merritt_path) {
   } else if (type == 'requeue'  && v != '') {
     p = colladmin_root + "/lambda?path=requeue&queue-path="+v;
     makeLink(cell, 'Requeue', "javascript:ajax_invoke('"+encodeURIComponent(p)+"')");
+  } else if (type == 'collnode'  && v != '') {
+    makeLink(cell, 'Manage Coll Nodes', colladmin_root + "/web/storeCollNode.html?coll="+v);
   } else {
     cell.text(v);
   }
