@@ -3,8 +3,8 @@ require_relative 'forward_to_ingest_action'
 require_relative '../lib/http_post_multipart_json'
 
 class PostToIngestMultipartAction < ForwardToIngestAction
-  def initialize(config, path, myparams, endpoint)
-    super(config, path, myparams, endpoint)
+  def initialize(config, action, path, myparams, endpoint)
+    super(config, action, path, myparams, endpoint)
   end
 
   def perform_action

@@ -2,10 +2,10 @@ require_relative 'action'
 require_relative 'forward_to_ingest_action'
 
 class IngestJobManifestAction < ForwardToIngestAction
-  def initialize(config, path, myparams)
+  def initialize(config, action, path, myparams)
     @batch = myparams.fetch('batch', '')
     @job = myparams.fetch('job', '')
-    super(config, path, myparams, "admin/jid-manifest/#{@batch}/#{@job}")
+    super(config, action, path, myparams, "admin/jid-manifest/#{@batch}/#{@job}")
   end
 
   def get_title

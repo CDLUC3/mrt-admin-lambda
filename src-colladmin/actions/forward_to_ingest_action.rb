@@ -3,8 +3,8 @@ require_relative '../lib/queue'
 require_relative '../lib/http_get_json'
 
 class ForwardToIngestAction < AdminAction
-  def initialize(config, path, myparams, endpoint)
-    super(config, path, myparams)
+  def initialize(config, action, path, myparams, endpoint)
+    super(config, action, path, myparams)
     @endpoint = endpoint
   end
 

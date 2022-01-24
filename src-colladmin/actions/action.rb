@@ -4,8 +4,9 @@ require 'zip'
 require 'mysql2'
 
 class AdminAction < AdminTask
-  def initialize(config, path, myparams)
+  def initialize(config, action_def, path, myparams)
     super(config, path, myparams)
+    @action_def = action_def
     @format = 'report'
   end
 
@@ -32,10 +33,15 @@ class AdminAction < AdminTask
       iterate: false,
       bytes_unit: bytes_unit,
       saveable: is_saveable?,
-      report_path: report_path
+      report_path: report_path,
+      description: get_description
     }
     save_report(report_path, report) if is_saveable?
     report.to_json
+  end
+
+  def get_description
+    @action_def.fetch('description', '')
   end
 
   def table_headers

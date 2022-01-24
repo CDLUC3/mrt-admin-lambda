@@ -311,12 +311,15 @@ button.storage-delete-obj {
   color: red;
 }
 
-#report-description {
+#report-description, .page-description {
   background-color: #EEEEEE;
-  padding: 2px 6px;
+  padding: 4px 12px;
   border: thin solid #DDDDDD;
   width: 90%;
-  margin: 0 auto;
+  margin: 5px 0 auto;
+}
+
+#report-description {
   display: none;
 }
 

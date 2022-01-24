@@ -9,8 +9,8 @@ require_relative '../lib/merritt_query'
 require_relative '../lib/http_delete_json'
 
 class ReplicationAction < AdminAction
-  def initialize(config, path, myparams)
-    super(config, path, myparams)
+  def initialize(config, action, path, myparams)
+    super(config, action, path, myparams)
   end
 
   def get_replic_server
