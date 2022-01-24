@@ -2,8 +2,8 @@ require_relative 'forward_to_ingest_action'
 require_relative '../lib/inv_queue'
 
 class InventoryQueueAction < ForwardToIngestAction
-  def initialize(config, path, myparams)
-    super(config, path, myparams, 'admin/queues-inv')
+  def initialize(config, action, path, myparams)
+    super(config, action, path, myparams, 'admin/queues-inv')
   end
 
   def get_title

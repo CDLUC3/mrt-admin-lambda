@@ -2,10 +2,10 @@ require 'date'
 require_relative 'forward_to_ingest_action'
 
 class IngestSwordJobsAction < ForwardToIngestAction
-  def initialize(config, path, myparams)
+  def initialize(config, action, path, myparams)
     @days = myparams.fetch("days", "3").to_i 
     @days = 21 if @days > 21
-    super(config, path, myparams, "admin/bid/JOB_ONLY/#{@days}")
+    super(config, action, path, myparams, "admin/bid/JOB_ONLY/#{@days}")
   end
 
   def get_title
