@@ -328,3 +328,6 @@ filelist:
 obj_audit_status:
   class: ObjectsAuditStatusQuery
   category: audit
+collection_node_cleanup_required:
+  class: CollectionNodeCleanupQuery
+  category: storage nodes
