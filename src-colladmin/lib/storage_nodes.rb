@@ -54,13 +54,13 @@ class CollectionNodeCleanup < MerrittQuery
   def initialize(config, collid)
     super(config)
     @name = ''
-    @primary_node = 0
+    @nodes = []
     run_query(
       %{
         select
           inio.inv_node_id,
           n.number,
-          count(*),
+          count(*)
         from 
           inv.inv_nodes_inv_objects inio
         inner join
@@ -98,23 +98,21 @@ class CollectionNodeCleanup < MerrittQuery
         )
         group by
           inio.inv_node_id,
-          n.number,
-          status
+          n.number
         ;
         },
         [collid]
     ).each_with_index do |r, i|
-      @name = r[0]
-      @primary_node = r[1]
+      @nodes.append({
+        node_id: r[0],
+        number: r[1],
+        obj_count: r[2]
+      })
     end
   end
 
-  def name
-    @name
-  end
-
-  def primary_node
-    @primary_node
+  def nodes
+    @nodes
   end
 
 end 

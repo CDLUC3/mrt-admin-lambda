@@ -223,6 +223,7 @@ module LambdaFunctions
           n = node[:number].to_s
           map['NODES'].append(node) unless skips[n]
         end
+        map['CNODES_CLEANUP'] = CollectionNodeCleanup.new(@config, coll).nodes
       elsif path == '/web/storeNodes.html'
         nodenum = myparams.fetch("nodenum", "0").to_i
         nodename = CGI.unescape(myparams.fetch("nodename", ""))

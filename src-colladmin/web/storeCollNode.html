@@ -120,6 +120,13 @@
             </tr>
           </thead>
           <tbody>
+            {{#CNODES_CLEANUP}}
+            <tr>
+              <th>{{number}}</th>
+              <td>{{obj_count}}</td>
+              <td><button>Delete Batch of Objects from this Node 🚧</button></td>
+            </tr>
+            {{/CNODES_CLEANUP}}              
           </tbody>
         </table>
       </div>
