@@ -27,6 +27,17 @@
     <div class="page-description">
       This page allows a user to perform storage-related maintenance actions on either (1) a Merritt Object OR (2)a Merritt object residing on a specific storage node.
     </div>
+    <div>
+      <fieldset>
+      <legend>Go To Ark:</legend>
+      <form action="storeObjectNodes.html">
+        {{#OBJS}}
+        <input type="text" name="ark" value="{{ark}}" size="50"/>
+        {{/OBJS}}
+        <input type='submit'/>
+      </form>
+      </fieldset>
+    </div>
     <h2>Object Actions</h2>
     <table class="sortable results">
       <thead>
@@ -152,14 +163,14 @@
               class="colladmin storage-rebuild-inventory"
             >Rebuild Inventory</button>
           
-            {{/primary}}
-
             <button 
               data-ark="{{ark}}"
               data-node-id="{{nodeid}}"
               title="Clear Scan Entries for Object"
               class="colladmin storage-clear-scan-entries"
             >Clear Scan Entries for Ark</button>
+
+            {{/primary}}
 
             {{#secondary}}
 

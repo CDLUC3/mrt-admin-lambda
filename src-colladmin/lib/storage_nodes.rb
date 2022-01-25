@@ -1,10 +1,127 @@
 require_relative 'merritt_json'
 require_relative 'merritt_query'
 
+class CollectionNodeInfo < MerrittQuery
+  def initialize(config, collid)
+    super(config)
+    @name = ''
+    @primary_node = 0
+    run_query(
+        %{
+          select
+            name,
+            (
+              select 
+                inio.inv_node_id
+              from
+                inv_nodes_inv_objects inio
+              where exists (
+                select 
+                  1
+                from
+                  inv_collections_inv_objects icio
+                where
+                  icio.inv_collection_id = c.id
+              )
+              and
+                inio.role = 'primary'
+              limit 1
+            )
+          from
+            inv_collections c
+          where 
+            c.id = ?
+          ;
+        },
+        [collid]
+    ).each_with_index do |r, i|
+      @name = r[0]
+      @primary_node = r[1]
+    end
+  end
+
+  def name
+    @name
+  end
+
+  def primary_node
+    @primary_node
+  end
+
+end 
+
+class CollectionNodeCleanup < MerrittQuery
+  def initialize(config, collid)
+    super(config)
+    @name = ''
+    @primary_node = 0
+    run_query(
+      %{
+        select
+          inio.inv_node_id,
+          n.number,
+          count(*),
+        from 
+          inv.inv_nodes_inv_objects inio
+        inner join
+          inv.inv_collections_inv_objects icio
+        on 
+          inio.inv_object_id = icio.inv_object_id
+        inner join 
+          inv.inv_nodes n
+        on
+          n.id = inio.inv_node_id
+        where
+          icio.inv_collection_id = ?
+        and
+          inio.role = 'secondary' 
+        and 
+          not exists (
+            select 
+              1
+            from
+              inv.inv_collections_inv_nodes icin 
+            where
+              icin.inv_collection_id = icio.inv_collection_id
+            and 
+              icin.inv_node_id = inio.inv_node_id
+          )
+        and exists (
+          select 
+            1
+          from  
+            inv.inv_objects o 
+          where 
+            o.id = inio.inv_object_id
+          and 
+            aggregate_role = 'MRT-none'
+        )
+        group by
+          inio.inv_node_id,
+          n.number,
+          status
+        ;
+        },
+        [collid]
+    ).each_with_index do |r, i|
+      @name = r[0]
+      @primary_node = r[1]
+    end
+  end
+
+  def name
+    @name
+  end
+
+  def primary_node
+    @primary_node
+  end
+
+end 
+
 class CollectionNodes < MerrittQuery
   def initialize(config, collid, primary_id)
       super(config)
-      primary_id = (primary_id.empty? ? "0" : primary_id).to_i
       @collnodes = []
       run_query(
           %{
@@ -777,6 +894,25 @@ class ObjectIdObjectQuery < ObjectQuery
     s.strip.to_i
   end
 
+end
+
+class ObjectArk < MerrittQuery
+  def initialize(config, ark)
+    super(config)
+    @id = 0
+    run_query(
+      %{
+        select id from inv_objects where ark = ?
+      },
+      [ark]
+    ).each do |r|
+      @id = r[0]
+    end
+  end
+
+  def id
+    @id
+  end
 end
 
 class ObjectNodes < MerrittQuery

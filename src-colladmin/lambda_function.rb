@@ -206,9 +206,9 @@ module LambdaFunctions
         map['COLLS'] = colls.collections_select
       elsif path == '/web/storeCollNode.html'
         coll = myparams.fetch("coll", "")
-        name = myparams.fetch("name", "")
-        primary_node = myparams.fetch("primary_node", "")
-        map['COLLNAME'] = CGI.unescape(name)
+        info = CollectionNodeInfo.new(@config, coll.to_i)
+        primary_node = info.primary_node
+        map['COLLNAME'] = info.name
         map['PRIMARY_NODE'] = primary_node
         map['COLL'] = coll.to_i
         map['ingest_paused'] = false
@@ -283,7 +283,12 @@ module LambdaFunctions
         map['OBJS'] = objects
         map['OBJSCNT'] = objects.length
       elsif path == '/web/storeObjectNodes.html'
+        # id or ark can be use for lookup
         id = myparams.fetch("id","0").to_i
+        if id == 0
+          ark = CGI.unescape(myparams.fetch("ark",""))
+          id = ObjectArk.new(@config, ark).id 
+        end
         map['ID'] = id
         map['OBJNODES'] = ObjectNodes.new(@config, id).nodes
         objects = ObjectQuery.query_factory(

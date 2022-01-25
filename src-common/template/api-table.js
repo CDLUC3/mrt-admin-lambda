@@ -581,7 +581,7 @@ function format(cell, v, type, merritt_path) {
     var j = arr.length > 1 ? arr[1] : "";
     makeLink(cell, j, colladmin_home + "?path=manifest&batch="+b+"&job="+j);
   } else if (type == 'snodes') {
-    makeLink(cell, v, colladmin_root + "/web/storeCollNode.html?coll="+v+"&name="+v);
+    makeLink(cell, v, colladmin_root + "/web/storeCollNode.html?coll="+v);
   } else if (type == 'mnemonic'){
     makeLink(cell, v, merritt_path + "/m/" + v);
   } else if (type == 'ark'){

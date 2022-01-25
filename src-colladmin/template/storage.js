@@ -250,8 +250,7 @@ function init() {
     var nodeid = $(this).attr("data-node-id");
     params = {
       path: 'storage-clear-scan-entries',
-      ark: ark,
-      nodeid: nodeid
+      ark: ark
     }
     showConfirm("This will delete scan results for this object in preparation for a future scan.\nDo you want to continue?", params);
   });

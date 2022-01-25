@@ -187,13 +187,11 @@ class StorageAction < AdminAction
           DELETE FROM
             inv_storage_maints
           WHERE
-            inv_node_id = ?
-          AND
             s3key like concat(?,'%')
           AND
             maint_status != 'removed'
         }, 
-        [nodeid, ark],
+        [ark],
         "Scan records deleted for #{ark}"
       ).to_json
       return res
