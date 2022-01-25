@@ -136,6 +136,27 @@ class StorageAction < AdminAction
         "Replication status reset for all objects in the collection"
       ).to_json
       return res
+    elsif @path == "storage-del-node-for-collection"
+      coll = @myparams.fetch("coll", "0").to_i
+      res = MerrittQuery.new(@config).run_update(
+        %{
+          DELETE FROM 
+            inv_collections_inv_nodes
+          WHERE
+            inv_collection_id = ?
+          AND
+            inv_node_id = (
+              select
+                id
+              from
+                inv_nodes
+              where
+                number = ?
+            )
+        }, 
+        [coll, nodenum],
+        "Node removed from collection config"
+      ).to_json
     end
 
     ark = @myparams.fetch("ark", "")

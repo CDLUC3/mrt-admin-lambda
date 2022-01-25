@@ -190,6 +190,53 @@ class ReplicationAction < AdminAction
         end
       end
       return {log: "#{count} review records updated"}.to_json
+    elsif @path == "replic-delete-coll-batch-from-node"
+      nodenum = @myparams.fetch("nodenum", "0").to_i
+      coll = @myparams.fetch("coll", "0").to_i
+      ids = []
+      MerrittQuery.new(@config).run_query(
+        %{
+          SELECT
+            icio.inv_object_id
+          from 
+            inv_collections_inv_objects icio
+          WHERE
+            icio.inv_collection_id = ?
+          AND exists (
+            select
+              1
+            from
+              inv_nodes_inv_objects inio 
+            WHERE
+              inio.inv_node_id = (
+                select id from inv_nodes where number = ?
+              ) 
+            and
+              inio.inv_object_id = icio.inv_object_id
+            and 
+              inio.role = 'secondary'
+          )
+          limit 50
+        }, 
+        [coll, nodenum]
+      ).each do |r|
+        endpoint = "delete/#{nodenum}/#{r[0]}"
+        puts endpoint
+        begin
+          qjson = HttpDeleteJson.new(get_replic_server, endpoint)
+          puts qjson.status
+          if qjson.status == 200
+            ids.push(r[0])
+          end
+        rescue => e
+          puts(e.message)
+          puts(e.backtrace)
+          return { error: "#{e.message} for #{endpoint}" }.to_json
+        end
+      end
+      return {
+        message: "#{ids.length} objects removed from node #{nodenum}: #{ids.join(',')}"
+      }.to_json
     else
       return {message: "No action"}.to_json
     end

@@ -128,6 +128,21 @@ class CollectionNodes < MerrittQuery
               n.number,
               n.description,
               n.access_mode,
+              (
+                select 
+                  'configured'
+                where
+                  exists (
+                    select
+                      1
+                    from 
+                      inv_collections_inv_nodes icin 
+                    where 
+                      icin.inv_collection_id=c.id 
+                    and 
+                      icin.inv_node_id = n.id
+                  )
+              ) as config, 
               count(*)
             from
               inv_collections c
@@ -156,6 +171,21 @@ class CollectionNodes < MerrittQuery
               n.number,
               n.description as description,
               n.access_mode,
+              (
+                select 
+                  'configured'
+                where
+                  exists (
+                    select
+                      1
+                    from 
+                      inv_collections_inv_nodes icin 
+                    where 
+                      icin.inv_collection_id=c.id 
+                    and 
+                      icin.inv_node_id = n.id
+                  )
+              ) as config, 
               0
             from
               inv_collections c,
@@ -186,6 +216,21 @@ class CollectionNodes < MerrittQuery
               n.number,
               n.description,
               n.access_mode,
+              (
+                select 
+                  'configured'
+                where
+                  exists (
+                    select
+                      1
+                    from 
+                      inv_collections_inv_nodes icin 
+                    where 
+                      icin.inv_collection_id=c.id 
+                    and 
+                      icin.inv_node_id = n.id
+                  )
+              ) as config, 
               0
             from
               inv_collections c
@@ -222,14 +267,15 @@ class CollectionNodes < MerrittQuery
       ).each_with_index do |r, i|
           percent = 100
           if i > 0
-            percent = ((r[4] * 100.0)/@collnodes[0][:count]).to_i if @collnodes[0][:count] > 0
+            percent = ((r[5] * 100.0)/@collnodes[0][:count]).to_i if @collnodes[0][:count] > 0
           end
           @collnodes.push({
             role: r[0],
             number: r[1],
             name: r[2],
             access_mode: r[3],
-            count: r[4],
+            configured: r[4],
+            count: r[5],
             percent: percent,
             primary: r[0] == 'primary',
             secondary: r[0] == 'secondary',

@@ -38,12 +38,14 @@
         <input 
           type="button" 
           name="pause" 
+          data-collection="{{COLL}}"
           value="Pause Ingest {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}" 
           onclick="javascript:document.location='https://cdluc3.github.io/mrt-doc/diagrams/store-admin-pause-ing-for-coll'"
         />
         <input 
           type="button" 
           name="unpause" 
+          data-collection="{{COLL}}"
           value="Unpause Ingest {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}" 
           onclick="javascript:document.location='https://cdluc3.github.io/mrt-doc/diagrams/store-admin-pause-ing-for-coll'"
         />
@@ -54,6 +56,7 @@
           <thead>
             <tr>
               <th>Role</th>
+              <th>In inv_collections_inv_nodes</th>
               <th>Node Num</th>
               <th>Node Name</th>
               <th>Access Mode</th>
@@ -66,6 +69,7 @@
             {{#CNODES}}
             <tr>
               <th>{{role}}</th>
+              <th>{{configured}}</th>
               <th>{{number}}</th>
               <td>{{name}}</td>
               <td>{{access_mode}}</td>
@@ -73,22 +77,29 @@
               <td>{{percent}}</td>
               <td>
                 {{#secondary}}
+                {{#configured}}
                 <button 
                   class="colladmin storage-del-node-for-collection"
                   title="Delete all objects in the collection from this SECONDARY node."
-                  onclick="javascript:document.location='https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-node'"
-                >Delete Node from Collection Config 🚧</button>
+                  data-node-num="{{number}}"
+                  data-collection="{{COLL}}"
+                >Delete Node from Collection Config {{#IS_PROD}}🚧{{/IS_PROD}}</button>
+                {{/configured}}
                 {{/secondary}}
 
                 {{#secondary}}
+                {{#configured}}
                 {{#online}}
                 <button
                   {{#not100}}disabled="Y"{{/not100}}
                   class="colladmin storage-change-primary-for-collection"
                   title="Make this storage node the primary node for a collection.  The node must be ONLINE (not nearline) and replication must be 100% complete. The collection profile must have this node marked as primary."
+                  data-node-num="{{number}}"
+                  data-collection="{{COLL}}"
                   onclick="javascript:document.location='https://cdluc3.github.io/mrt-doc/diagrams/store-admin-change-primary-node'"
                 >Make Primary 🚧</button>
                 {{/online}}
+                {{/configured}}
                 {{/secondary}}
                </td>
             </tr>
@@ -112,7 +123,14 @@
             <tr>
               <th>{{number}}</th>
               <td>{{obj_count}}</td>
-              <td><button>Delete Batch of Objects from this Node 🚧</button></td>
+              <td>
+                <button
+                  class="colladmin replic-delete-coll-batch-from-node"
+                  title="Delete a batch of objects from the collection from this node.  This may need to run iteratively."
+                  data-node-num="{{number}}"
+                  data-collection="{{COLL}}"
+                >Delete Batch of Objects from this Node {{#IS_PROD}}🚧{{/IS_PROD}}</button>
+              </td>
             </tr>
             {{/CNODES_CLEANUP}}              
           </tbody>

@@ -195,6 +195,28 @@ function init() {
     showConfirm("This will trigger a replication for all objects in the collection.\nDo you want to continue?", params);
   });
 
+  $("button.storage-del-node-for-collection").on("click", function(){
+    var nodenum = $(this).attr("data-node-num");
+    var coll = $(this).attr("data-collection");
+    params = {
+      path: 'storage-del-node-for-collection',
+      nodenum: nodenum,
+      coll: coll
+    }
+    showConfirm("This remove the storage node from the collection configuration.  All objects from this collection will need to be removed from the storage node. Do you want to proceded?", params);
+  });
+
+  $("button.replic-delete-coll-batch-from-node").on("click", function(){
+    var nodenum = $(this).attr("data-node-num");
+    var coll = $(this).attr("data-collection");
+    params = {
+      path: 'replic-delete-coll-batch-from-node',
+      nodenum: nodenum,
+      coll: coll
+    }
+    showConfirm("Delete a batch of objects from the collection from this node.  This may need to run iteratively. Do you want to proceded?", params);
+  });
+
   $("button.storage-get-manifest").on("click", function(){
     var ark = $(this).attr("data-ark");
     var nodenum = $(this).attr("data-node-num");
