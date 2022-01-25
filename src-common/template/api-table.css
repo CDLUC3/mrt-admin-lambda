@@ -316,7 +316,7 @@ button.storage-delete-obj {
   padding: 4px 12px;
   border: thin solid #DDDDDD;
   width: 90%;
-  margin: 5px 0 auto;
+  margin: 10px auto;
 }
 
 #report-description {
@@ -325,4 +325,12 @@ button.storage-delete-obj {
 
 #report-description code {
   color: red;
+}
+
+tr.toggle-0 td, tr.toggle-0 th {
+  background-color: #EEEEEE;
+}
+
+tr.head td, tr.head th {
+  background-color: #f6f88f;
 }

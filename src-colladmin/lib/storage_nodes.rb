@@ -635,9 +635,16 @@ class ScanReview < MerrittQuery
   end
 
   def process_resuts(res)
+    lastark = ''
+    seq = 0
     res.each do |r|
       ark, ver, type, path = parse_key(r[0])
+      if lastark != ark
+        lastark = ark
+        seq = seq + 1
+      end
       @review_items.push({
+        toggle: "toggle-#{seq % 2}",
         s3key: r[0],
         ark: ark,
         ver: ver,

@@ -109,7 +109,7 @@
     <div>
       <table class="sortable results">
         <thead>
-          <tr>
+          <tr class="head">
             <th>Node</th>
             <th>Maint Id</th>
             <th>Ark</th>
@@ -126,7 +126,7 @@
         </thead>
         <tbody>
           {{#REVIEW}}
-          <tr>
+          <tr class="{{toggle}}">
             <th>{{num}}</th>
             <th class="maintid">{{maintid}}</th>
             <th class="name">{{ark}}</th>
