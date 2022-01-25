@@ -375,7 +375,6 @@ storage-resume-scan-node:
   description: |
     Resume storage scan processing *on a specific storage node* by the replication service.  
 storage-clear-scan-entries:
-  # prod_support: false
   class: StorageAction
   category: Storage Scan Review
   sensitivity: reversible change
@@ -572,7 +571,6 @@ cognito-add-user-to-group:
   description: |
     Add a *Cognito User* to a specific *Cognito User Group*.
 storage-rebuild-inventory:
-  # prod_support: false
   class: StorageAction
   category: Inventory and Manifest
   sensitivity: sensitive
@@ -588,7 +586,6 @@ storage-update-manifest:
   description: |
     #### Future Feature: upload a repaired storage manifest to override an existing one
 storage-add-node-for-collection:
-  # prod_support: false
   class: StorageAction
   category: Storage Node Configuration
   sensitivity: sensitive
@@ -628,7 +625,7 @@ storage-reroute-ui-for-collection:
     #### Future feature - Probably not in scope for the project
     [Feature Design](https://cdluc3.github.io/mrt-doc/diagrams/store-admin-reroute-uistorage-perform-delete-node-key)
 storage-perform-delete-node-batch:
-  prod_support: false
+  # prod_support: false
   class: ReplicationAction
   category: Storage Scan Review
   sensitivity: sensitive

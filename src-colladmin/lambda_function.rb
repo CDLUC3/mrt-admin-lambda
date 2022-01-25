@@ -209,7 +209,6 @@ module LambdaFunctions
         info = CollectionNodeInfo.new(@config, coll.to_i)
         primary_node = info.primary_node
         map['COLLNAME'] = info.name
-        map['PRIMARY_NODE'] = primary_node
         map['COLL'] = coll.to_i
         map['ingest_paused'] = false
         map['CNODES'] = CollectionNodes.new(@config, coll.to_i, primary_node).collnodes         

@@ -134,13 +134,15 @@
               class="colladmin storage-get-manifest"
             >Get Manifest</button>
           
+            <!--
             <button 
               data-ark="{{ark}}"
               data-node-num="{{number}}"
               title="Get Manifest"
               class="colladmin storage-get-augmented-manifest"
             >Get Augmented Manifest 🚧</button>
-
+            -->
+            
             <button 
               data-ark="{{ark}}"
               data-node-num="{{number}}"
@@ -172,16 +174,6 @@
 
             {{/primary}}
 
-            {{#secondary}}
-
-            <button 
-              data-ark="{{ark}}"
-              data-node-num="{{number}}"
-              data-node-name="{{name}}"
-              title="Delete a secondary copy of an object.  Cannot be run on the primary node."
-              class="colladmin storage-del-object-from-node"
-            >Delete Object from Node 🚧</button>
-            {{/secondary}}
           </td>
         </tr>
         {{/OBJNODES}}
