@@ -10,24 +10,24 @@ class CollectionNodeCleanupQuery < AdminQuery
   def get_sql
     %{
         select
+          icio.inv_collection_id,
+          ifnull(c.name, concat('Coll', c.id)),
           inio.inv_node_id,
           n.number,
-          icio.inv_collection_id,
-          c.name,
           count(*),
           'FAIL' as status
         from 
-          inv_nodes_inv_objects inio
+          inv.inv_nodes_inv_objects inio
         inner join
-          inv_collections_inv_objects icio
+          inv.inv_collections_inv_objects icio
         on 
           inio.inv_object_id = icio.inv_object_id
         inner join 
-          inv_nodes n
+          inv.inv_nodes n
         on
           n.id = inio.inv_node_id
         inner join 
-          inv_collections c
+          inv.inv_collections c
         on
           c.id = icio.inv_collection_id
         where
@@ -37,7 +37,7 @@ class CollectionNodeCleanupQuery < AdminQuery
             select 
               1
             from
-              inv_collections_inv_nodes icin 
+              inv.inv_collections_inv_nodes icin 
             where
               icin.inv_collection_id = icio.inv_collection_id
             and 
@@ -47,7 +47,7 @@ class CollectionNodeCleanupQuery < AdminQuery
           select 
             1
           from  
-            inv_objects o 
+            inv.inv_objects o 
           where 
             o.id = inio.inv_object_id
           and 
@@ -64,11 +64,15 @@ class CollectionNodeCleanupQuery < AdminQuery
   end
 
   def get_headers(results)
-    ['Node Id', 'Node Num', 'Coll Id', 'Coll Name', 'Total Obj', 'Status']
+    ['Coll Id', 'Coll Name', 'Node Id', 'Node Num', 'Obj Count', 'Status']
   end
 
   def get_types(results)
-    ['', '', '', '', 'dataint', 'status']
+    ['collnode', 'name', 'na', '', 'dataint', 'status']
+  end
+
+  def init_status
+    :PASS
   end
 
 end
