@@ -75,18 +75,15 @@
               <td>{{percent}}</td>
               <td>
                 {{#secondary}}
-                {{#configured}}
                 <button 
                   class="colladmin storage-del-node-for-collection"
-                  title="Delete all objects in the collection from this SECONDARY node."
+                  title="Delete this SECONDARY node from the collection configuration."
                   data-node-num="{{number}}"
                   data-collection="{{COLL}}"
                 >Delete Node from Collection Config {{#IS_PROD}}🚧{{/IS_PROD}}</button>
-                {{/configured}}
                 {{/secondary}}
 
                 {{#secondary}}
-                {{#configured}}
                 {{#online}}
                 <button
                   {{#not100}}disabled="Y"{{/not100}}
@@ -97,7 +94,6 @@
                   onclick="javascript:document.location='https://cdluc3.github.io/mrt-doc/diagrams/store-admin-change-primary-node'"
                 >Make Primary 🚧</button>
                 {{/online}}
-                {{/configured}}
                 {{/secondary}}
                </td>
             </tr>
