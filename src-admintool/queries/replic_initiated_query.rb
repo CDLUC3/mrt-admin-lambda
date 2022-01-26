@@ -29,10 +29,6 @@ class ReplicationInitiatedQuery < AdminQuery
         inv.inv_objects o
       on
         o.id = inio.inv_object_id
-      inner join 
-        object_size os
-      on 
-        os.inv_object_id = inio.inv_object_id
       left join 
         inv.inv_nodes_inv_objects i2
       on 

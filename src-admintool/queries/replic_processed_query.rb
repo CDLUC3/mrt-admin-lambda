@@ -41,8 +41,8 @@ class ReplicProcessedQuery < AdminQuery
       union
       select
         'Last 7 days',
-        date_add(date(now()), INTERVAL -7 DAY),
-        date(now())
+        date_add(now(), INTERVAL -7 DAY),
+        now()
       union
       select
         '7 - 14 days ago',
@@ -61,8 +61,8 @@ class ReplicProcessedQuery < AdminQuery
       union
       select
         'Last 30 days',
-        date_add(date(now()), INTERVAL -30 DAY),
-        date(now())
+        date_add(now(), INTERVAL -30 DAY),
+        now()
       union
       select
         '30 - 60 days ago',
@@ -87,13 +87,9 @@ class ReplicProcessedQuery < AdminQuery
       select
         ? as title,
         count(inio.inv_object_id) as objs,
-        ifnull(sum(os.billable_size),0) as bytes
+        ifnull(sum(inio.replic_size),0) as bytes
       from
         inv.inv_nodes_inv_objects inio
-      inner join 
-        object_size os
-      on 
-        os.inv_object_id = inio.inv_object_id
       where
         replicated >= ?
       and
@@ -103,7 +99,7 @@ class ReplicProcessedQuery < AdminQuery
   end
 
   def get_headers(results)
-    ['Time Frame', 'Objects Processed', 'Bytes in Replicated Objects*']
+    ['Time Frame', 'Objects Processed', 'Bytes Replicated']
   end
 
   def get_types(results)
