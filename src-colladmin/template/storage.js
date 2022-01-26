@@ -298,6 +298,21 @@ function init() {
   }
 }
 
+async function apply_changes(nodenum, changes) {
+  var params = {
+    path: 'apply-review-changes',
+    nodenum: nodenum,
+    changes: JSON.stringify(changes)
+  }  
+  // Use return to treat as a promise
+  return $.ajax({
+    dataType: "json",
+    method: "POST",
+    url: "{{COLLADMIN_ROOT}}/lambda",
+    data: params
+  });
+}
+
 async function apply_csv_changes(nodenum) {
   var [fileHandle] = await window.showOpenFilePicker();
   const file = await fileHandle.getFile();
@@ -326,13 +341,8 @@ async function apply_csv_changes(nodenum) {
       ]);
     }
     if (changes.length > 0) {
-      var params = {
-        path: 'apply-review-changes',
-        nodenum: nodenum,
-        changes: JSON.stringify(changes)
-      }  
       total_changes += changes.length;
-      invoke(params, false, false);
+      await apply_changes(nodenum, changes);
     }
   }
   alert(total_changes + " changes submitted.\n\nReload page to review changes.");
