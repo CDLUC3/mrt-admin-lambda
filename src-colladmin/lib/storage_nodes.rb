@@ -60,6 +60,8 @@ class CollectionNodeCleanup < MerrittQuery
         select
           inio.inv_node_id,
           n.number,
+          n.description,
+          n.access_mode,
           count(*)
         from 
           inv.inv_nodes_inv_objects inio
@@ -106,7 +108,9 @@ class CollectionNodeCleanup < MerrittQuery
       @nodes.append({
         node_id: r[0],
         number: r[1],
-        obj_count: r[2]
+        name: r[2],
+        access_mode: r[3],
+        obj_count: r[4]
       })
     end
   end
@@ -123,69 +127,80 @@ class CollectionNodes < MerrittQuery
       @collnodes = []
       run_query(
           %{
-            select
-              inio.role,
-              n.number,
-              n.description,
-              n.access_mode,
-              (
-                select 
-                  'configured'
-                where
-                  exists (
-                    select
-                      1
-                    from 
-                      inv_collections_inv_nodes icin 
-                    where 
-                      icin.inv_collection_id=c.id 
-                    and 
-                      icin.inv_node_id = n.id
-                  )
-              ) as config, 
-              count(*)
-            from
-              inv_collections c
-            inner join
-              inv_collections_inv_objects icio
-            on
-              icio.inv_collection_id = c.id
-            inner join
-              inv_nodes_inv_objects inio
-            on
-              inio.inv_object_id = icio.inv_object_id
-            inner join
-              inv_nodes n
-            on
-              inio.inv_node_id = n.id
-            where
-              c.id = ?
-            group by
-              inio.role,
-              n.number,
-              n.description,
-              n.access_mode
-            union
-            select
-              'primary' as role,
+          /* find primary replicas of objects*/
+          select
+            inio.role,
+            n.number,
+            n.description,
+            n.access_mode,
+            count(*)
+          from
+            inv_collections c
+          inner join
+            inv_collections_inv_objects icio
+          on
+            icio.inv_collection_id = c.id
+          inner join
+            inv_nodes_inv_objects inio
+          on
+            inio.inv_object_id = icio.inv_object_id
+          and
+            inio.role = 'primary'
+          inner join
+            inv_nodes n
+          on
+            inio.inv_node_id = n.id
+          where
+            c.id = ?
+          group by
+            inio.role,
+            n.number,
+            n.description,
+            n.access_mode
+          union
+          /* find valid secondary replicas of objects*/
+          select
+            inio.role,
+            n.number,
+            n.description,
+            n.access_mode,
+            count(*)
+          from
+            inv_collections c
+          inner join
+            inv_collections_inv_objects icio
+          on
+            icio.inv_collection_id = c.id
+          inner join
+            inv_nodes_inv_objects inio
+          on
+            inio.inv_object_id = icio.inv_object_id
+          and
+            inio.role = 'secondary'
+          inner join
+            inv_nodes n
+          on
+            inio.inv_node_id = n.id
+          inner join 
+            inv_collections_inv_nodes icin
+          on
+            icin.inv_collection_id = c.id
+          and
+            icin.inv_node_id = n.id
+          where
+            c.id = ?
+          group by
+            inio.role,
+            n.number,
+            n.description,
+            n.access_mode
+          union
+          /* find primary node if no primary replicas exist*/
+          select
+            'primary' as role,
               n.number,
               n.description as description,
-              n.access_mode,
-              (
-                select 
-                  'configured'
-                where
-                  exists (
-                    select
-                      1
-                    from 
-                      inv_collections_inv_nodes icin 
-                    where 
-                      icin.inv_collection_id=c.id 
-                    and 
-                      icin.inv_node_id = n.id
-                  )
-              ) as config, 
+              n.access_mode, 
               0
             from
               inv_collections c,
@@ -211,26 +226,12 @@ class CollectionNodes < MerrittQuery
                 inio.inv_node_id = n.id
             )
             union
+            /* find secondary node where no secondary replicas exist*/
             select
               'secondary' as role,
               n.number,
               n.description,
               n.access_mode,
-              (
-                select 
-                  'configured'
-                where
-                  exists (
-                    select
-                      1
-                    from 
-                      inv_collections_inv_nodes icin 
-                    where 
-                      icin.inv_collection_id=c.id 
-                    and 
-                      icin.inv_node_id = n.id
-                  )
-              ) as config, 
               0
             from
               inv_collections c
@@ -263,19 +264,18 @@ class CollectionNodes < MerrittQuery
               number
             ;
           },
-          [collid, primary_id, collid, collid]
+          [collid, collid, primary_id, collid, collid]
       ).each_with_index do |r, i|
           percent = 100
           if i > 0
-            percent = ((r[5] * 100.0)/@collnodes[0][:count]).to_i if @collnodes[0][:count] > 0
+            percent = ((r[4] * 100.0)/@collnodes[0][:count]).to_i if @collnodes[0][:count] > 0
           end
           @collnodes.push({
             role: r[0],
             number: r[1],
             name: r[2],
             access_mode: r[3],
-            configured: r[4],
-            count: r[5],
+            count: r[4],
             percent: percent,
             primary: r[0] == 'primary',
             secondary: r[0] == 'secondary',

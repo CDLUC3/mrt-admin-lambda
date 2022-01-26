@@ -56,7 +56,6 @@
           <thead>
             <tr>
               <th>Role</th>
-              <th>In inv_collections_inv_nodes</th>
               <th>Node Num</th>
               <th>Node Name</th>
               <th>Access Mode</th>
@@ -69,7 +68,6 @@
             {{#CNODES}}
             <tr>
               <th>{{role}}</th>
-              <th>{{configured}}</th>
               <th>{{number}}</th>
               <td>{{name}}</td>
               <td>{{access_mode}}</td>
@@ -113,7 +111,9 @@
         <table class="sortable results">
           <thead>
             <tr>
-              <th>Node</th>
+              <th>Node Num</th>
+              <th>Node Name</th>
+              <th>Access Mode</th>
               <th>Object Count</th>
               <th>Action</th>
             </tr>
@@ -122,6 +122,8 @@
             {{#CNODES_CLEANUP}}
             <tr>
               <th>{{number}}</th>
+              <td>{{name}}</td>
+              <td>{{access_mode}}</td>
               <td>{{obj_count}}</td>
               <td>
                 <button

@@ -197,9 +197,13 @@ class ReplicationAction < AdminAction
       MerrittQuery.new(@config).run_query(
         %{
           SELECT
-            icio.inv_object_id
+            o.ark
           from 
+            inv_objects o
+          inner join
             inv_collections_inv_objects icio
+          on 
+            o.id = icio.inv_object_id
           WHERE
             icio.inv_collection_id = ?
           AND exists (
@@ -220,7 +224,7 @@ class ReplicationAction < AdminAction
         }, 
         [coll, nodenum]
       ).each do |r|
-        endpoint = "delete/#{nodenum}/#{r[0]}"
+        endpoint = "delete/#{nodenum}/#{CGI.escape(r[0])}"
         puts endpoint
         begin
           qjson = HttpDeleteJson.new(get_replic_server, endpoint)
@@ -235,7 +239,7 @@ class ReplicationAction < AdminAction
         end
       end
       return {
-        message: "#{ids.length} objects removed from node #{nodenum}: #{ids.join(',')}"
+        message: "#{ids.length} objects removed from node #{nodenum}."
       }.to_json
     else
       return {message: "No action"}.to_json
