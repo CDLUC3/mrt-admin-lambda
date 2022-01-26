@@ -18,8 +18,8 @@ class ReplicationInitiatedQuery < AdminQuery
         o.ark,
         o.version_number,
         o.created,
-        o.modified,
-        ifnull(sum(os.billable_size),0) as bytes,
+        inio.replic_start,
+        ifnull(inio.replic_size,0) as bytes,
         count(i2.created) as seccnt,
         min(i2.version_number) as secmin,
         max(i2.version_number) as secmax
@@ -49,13 +49,14 @@ class ReplicationInitiatedQuery < AdminQuery
         o.ark,
         o.version_number,
         o.created,
-        o.modified
+        inio.replic_start,
+        bytes
       ;
     }
   end
 
   def get_headers(results)
-    ['Category', 'Object Id', 'Ark', 'Version', 'Obj Created', 'Obj Modifed', 'Bytes','Sec Count', 'Ver Min', 'Ver Max']
+    ['Category', 'Object Id', 'Ark', 'Version', 'Obj Created', 'Replic Start', 'Bytes','Sec Count', 'Ver Min', 'Ver Max']
   end
 
   def get_types(results)
