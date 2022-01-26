@@ -157,6 +157,7 @@ class StorageAction < AdminAction
         [coll, nodenum],
         "Node removed from collection config"
       ).to_json
+      return res
     end
 
     ark = @myparams.fetch("ark", "")
