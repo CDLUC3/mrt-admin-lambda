@@ -19,6 +19,10 @@
   - Ingest
     - GET admin/queues
     - GET admin/queue/*QueueName*
+- Display Ingest Locks
+  - Ingest
+    - GET admin/locks
+    - GET admin/lock/*LockName*
 - Display Batch Detail
   - Colladmin
     - GET batch?bid=*BID*
@@ -88,6 +92,9 @@ Ingest Admin APIs
 - GET /admin/queues               - list ingest queues
 - GET /admin/queue                - query ingest worker's queue
 - GET /admin/queue/<queue>        - query specific ingest queue
+
+- GET /admin/locks                - list ingest locks
+- GET /admin/lock/<lock>          - query specific ingest lock
 
 - GET /admin/bid/<bid>            - batch listing (dryad will be "JOB_ONLY")
 - GET /admin/bid/<bid>/<age in days>      - batch listing, with age (dryad will be "JOB_ONLY")
