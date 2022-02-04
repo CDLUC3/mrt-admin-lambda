@@ -268,6 +268,13 @@ storage-review-csv:
   description: |
     Download a CSV file for all scan results from a specific storage node that have been marked with a *Review* status.
     This CSV can be edited in Excel in order to apply bulk status/note changes to the scan results.
+ingest-locks:
+  class: IngestLockAction
+  category: Lock Management
+  sensitivity: readonly
+  testing: contextually automated
+  description: |
+    Display the ingest storage locks existing for object arks.
 
 # Operations that change system state - Reversible
 
