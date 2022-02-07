@@ -196,36 +196,76 @@ collection_details:
   class: CollectionDetailsQuery
   category: collections
   params: ['inv_collection_id']
+  description: |
+    This report describes the contents of a collection by mime type and mime group.
 collection_info:
   class: CollectionInfoQuery
   category: collections
   params: ['inv_collection_id']
+  description: |
+    This report provides a landing page that links to all useful reports related to a Merritt collection.
 collection_group_details:
   class: CollectionDetailsQuery
   category: collections
   params: ['ogroup']
+  description: |
+    This report describes the contents of collections for a campus by mime type and mime group.
 invoices:
   class: InvoicesQuery
   category: collections
+  description: |
+    This report calculates the Merritt charge-backs for each campus.  
+    This report can be run for all campuses or for a specific campus.
+    The report also accounts for the significant charge-back calculations that were implemented in FY2019.
 audit_status:
   class: AuditStatusQuery
   category: audit
+  description: |
+    Enumerate the number of files with an irregular audit status.  
+
+    - For status `unknown` and `processing`, no action is generally required.  These states indicate that an item is being processed.
+    - For status `system-unavailable` or `unverified`, a retry is generally recommended.
+    - A status of `size-mismatch` or `digest-mismatch` indicates that either a copy error occurred or this could show evidence of bit rot.  Immediate investigation is required.
+    - Files with a status of `verified` are explicitly excluded from this report for performance reasons.
 audit_status_time:
   class: AuditStatusTimeQuery
   category: audit
+  description: |
+    This report identifies the number of files that have been processed by the audit service in the last hour or minute.
+    Note: the audit service performs database updates in batches, so these number will tend to be reported in multiples of 248 records.
+    #### Consider retiring this report in favor of other existing reports.
 audit_oldest:
   class: AuditOldestQuery
   category: audit
+  description: |
+    Identify the oldest previously audited file in the inventory database.
+    - If less than 60 days old, PASS
+    - If 60-90 days old, WARN.  Consider adding capacity to the audit service.
+    - If more than 90 days, ERROR.  The system is not meeting expectations for active fixity checking.
 audit_size:
   class: AuditQueueSizeQuery
   category: audit
+  description: |
+    This report shows the size of the audit queue.  Since the audit service performs database updates to 496 records at a time, 
+    the entries in this report will generally be multiples of 248.  If the audit service is not gracefully shutdown, old queue entries will be reported.
+    Once these entries are older than 10 hours old, an error will be reported.
+    The collection admin tool has an action defined to clear old queue entries from the database.
 audit_processed_size:
   class: AuditProcessedSizeQuery
   category: audit
+  description: |
+    Report on the number of files/bytes audited each day for the past 30-90 days.
+    This report uses aggregate data from the billing database which is computed on a daily basis.
+    This report will attempt to identify any significant degredation in performance from the audit service over the prior 6 day period.
+    Performance issues older than 6 days are ignored by the report.
 audit_processed_hours:
   class: AuditProcessedSizeIterativeQuery
   category: audit
   iterative: true
+  description: |
+    Report on the number of files/bytes audited hour by hour since midnight PDT.
+    This report uses real-time data from the inv_audits table.
+    The query is iterative looking at counts hour-by-hour to prevent timeouts.
 replication_needed:
   class: ReplicationNeededQuery
   category: replication
