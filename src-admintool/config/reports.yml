@@ -293,35 +293,58 @@ doi:
 big_ingest:
   class: BigIngestQuery
   category: ingest
+  description: |
+    Enumerate large batch ingests (by object count) in the last X days.
 recent_ingests:
   class: RecentIngestsQuery
   category: ingest
+  description: |
+    Enumerate the ingest batches that were processed on a specific date.
+    All Dryad submissions for the specific date will be counted as a single batch.
 arklist:
   class: ArklistQuery
   category: objects
   test_params:
     arklist: a,b
+  description: |
+    This report supports the [Multiple Ark Query](/web/ark.html) page.
+    This page will allow you to copy/paste text containing one or more arks and convert that into a parameter list for the report.
 locallist:
   class: LocalidListQuery
   category: objects
   test_params:
     locallist: a,b
+  description: |
+    This report supports the [Multiple LocalId Query](/web/localid.html) OR [Multiple DOI Query](/web/doi.html) page.
+    This page will allow you to copy/paste text containing one or more localids and convert that into a parameter list for the report.
 arkcompare:
   class: ArklistCompareQuery
   category: objects
   test_params:
     arklist: a,b
+  description: |
+    This report supports the [Multiple Ark Compare](/web/ark.html) query page.
+    Select `Compare Rpt` to run this report.
 localcompare:
   class: LocalidListCompareQuery
   category: objects
   test_params:
     locallist: a,b
+  description: |
+    This report supports the [Multiple LocalId Compare](/web/localid.html) OR [Multiple DOI Compare](/web/doi.html) query page.
+    Select `Compare Rpt` to run this report.
 con_primary:
   class: ConsistencyPrimaryNodeQuery
   category: storage nodes
+  description: |
+    Report on collections with non-standard primary node configurations.
+    Collections that have been configured as "Public Collections" are currently recorded with an INFO status.  
+    Eventually, each of these collections will be re-configured to use SDSC as a primary node. 
 con_secondary:
   class: ConsistencySecondaryNodeQuery
   category: storage nodes
+  description: |
+    Report on collections with non-standard secondary node configurations.
 con_files:
   class: ConsistencyFilesQuery
   category: replication
@@ -349,12 +372,23 @@ con_objects:
 con_versions:
   class: ConsistencyVersionsQuery
   category: replication
+  description: |
+    Count objects containing irregularities in the `inv_versions` table.
+    - Same version number created twice
+    - Gap in version numbers (has never occurred)
+    This has occurred when an object was simultaneously modified by 2 ingest workers at the same time.
+    The Merritt Team is implementing changes to prevent this issue from occurring in the future.
 obj_version_clobber:
   class: ObjectsVersionClobberQuery
   category: concurrent update
+  description: |
+    Enumerate objects containing irregularities in the `inv_versions` table: Same version number created twice
+    - Gap in version numbers (has never occurred)
 obj_version_gap:
   class: ObjectsVersionGapQuery
   category: concurrent update
+  description: |
+    Enumberate objects containing irregularities in the `inv_versions` table: Gap in version numbers (has never occurred)
 con_replic:
   class: ConsistencyReplicationReqQuery
   category: replication
@@ -367,36 +401,70 @@ con_replic:
 file_copies_needed:
   class: ObjectsFileCopiesNeededQuery
   category: replication
+  description: |
+    Enumerate a list of objects containing files that have not been consistently replicated as a primary + 2 replicated copies.
 object_copies_needed:
   class: ObjectsObjectCopiesNeededQuery
   category: replication
+  description: |
+    Enumerate a list of objects that have not been consistently replicated as a primary + 2 replicated copies.
 mult_coll:
   class: MultipleCollectionsQuery
   category: objects
+  description: |
+    Count objects that have been assigned to multiple Merritt collections.
+    Objects resiging in multiple collections is a legacy Merritt feature.
 object_mult_coll:
   class: ObjectsMultipleCollQuery
   category: objects
+  description: |
+    Enumerate objects that have been assigned to multiple Merritt collections.
+    Objects resiging in multiple collections is a legacy Merritt feature.
 admin_obj:
   class: AdminObjectsQuery
   category: admin obj
+  description: |
+    Enumerage Merritt Admin Objects for a specific aggregate role.
 admin_obj_files:
   class: AdminObjectsFilesQuery
   category: admin obj
+  descritpion: |
+    Display the `inv_files` entries for a set of Merritt Admin Objects.  
+    In reality, these objects are always dummy objects with no meaningful producer files. 
+    The system files exist to help reconstruct the inventory database from cloud storage if a disaster occurred.
 admin_obj_agg:
   class: AdminObjectsAggQuery
   category: admin obj
+  description: |
+    Count all Merritt Admin Objects by aggregate role.
 admin_coll:
   class: AdminCollectionsQuery
   category: admin obj
+  description: |
+    Merritt SLA objects have corresponding entries in the `inv_collections` table. 
+    List the known information for these admin objects.
 report:
   class: ReportRetrieve
   category: reports
+  description: |
+    Retrieve a previously run conistency report.
+    Consistency reports are defined in the [mrt-cron](https://github.com/CDLUC3/mrt-cron/blob/main/consistency-driver/reports.yml) repo.
 filelist:
   class: ObjectIdFilesQuery
   category: objects
+  description: |
+    Given an object id, list the versions/files for the object.
+    For each file, list the nodes where the object has been replciated.
+    For each replication, list any instances in which the audit process has not been successful.
 obj_audit_status:
   class: ObjectsAuditStatusQuery
   category: audit
+  description: |
+    Enumerate the specific files that have been characterized with an incomplete OR error audit status.
+    From the report, navigate to the object storage admin page to re-initiate the audit process.
 collection_node_cleanup_required:
   class: CollectionNodeCleanupQuery
   category: storage nodes
+  description: |
+    For a specific collection, identify any secondary replicated copies of the object stored on a node that is no longer configured in `inv_collections_inv_nodes`. 
+    Results will appear in this report after a secondary node has been removed for a specific collection.
