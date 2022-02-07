@@ -428,7 +428,7 @@ admin_obj:
 admin_obj_files:
   class: AdminObjectsFilesQuery
   category: admin obj
-  descritpion: |
+  description: |
     Display the `inv_files` entries for a set of Merritt Admin Objects.  
     In reality, these objects are always dummy objects with no meaningful producer files. 
     The system files exist to help reconstruct the inventory database from cloud storage if a disaster occurred.
