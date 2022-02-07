@@ -221,7 +221,7 @@ audit_status:
   class: AuditStatusQuery
   category: audit
   description: |
-    Enumerate the number of files with an irregular audit status.  
+    Count the number of files with an irregular audit status.  
 
     - For status `unknown` and `processing`, no action is generally required.  These states indicate that an item is being processed.
     - For status `system-unavailable` or `unverified`, a retry is generally recommended.
@@ -269,19 +269,27 @@ audit_processed_hours:
 replication_needed:
   class: ReplicationNeededQuery
   category: replication
+  description: |
+    Generate a list of objects requiring replication based on entries in the `inv_nodes_inv_objects` table that have a primary copy of an object but no secondary copy.
 replication_initiated:
   class: ReplicationInitiatedQuery
   category: replication
+  description: |
+    Generate a list of objects for which replication has been initiated.
+    For objects with specific know replication issues, a category can be assigned to an object.
 replic_processed:
   class: ReplicProcessedQuery
   category: replication
   iterative: true
-wasabi:
-  class: WasabiMigrationQuery
-  category: replication
+  description: |
+    Count the number of object replications performed over a period of time.
+    The need for replication is driven by ingest actions or by the reconfiguration of storage nodes, so the number of records processed over time may be irregular.
 doi:
   class: DoiConflictQuery
   category: objects
+  description: |
+    Identify potential localid conflicts by looking for duplicate DOI's within `inv_objects.erc_where`.  
+    This issue has occasionally occurred for Dryad content.
 big_ingest:
   class: BigIngestQuery
   category: ingest
@@ -317,12 +325,27 @@ con_secondary:
 con_files:
   class: ConsistencyFilesQuery
   category: replication
-con_no_audit:
+  description: |
+    This report will query `inv_audits` to count the number of files having an irregular number of recorded copies. 
+    The Merritt system typically has one primary copy of an object and 2 secondary copies.
+
+    Files with only 1 or 2 copies likely indicate that replication is in progress or replication failed for the object.
+    Files with more than 3 copies could indicate a misconfiguration of storage nodes for a collection.
+ccon_no_audit:
   class: ConsistencyFilesNoAuditQuery
   category: replication
+  description: |
+    Identify files in `inv_files` that have not yet been recorded in `inv_audits`.
+    #### Note: this report is too slow to be run from the Admin Tool.  It is initiated from AWS CLI as a part of the daily consistency reports.
 con_objects:
   class: ConsistencyObjectsQuery
   category: replication
+  description: |
+    This report will query `inv_nodes_inv_objects` to count the number of objects having an irregular number of replicated copies. 
+    The Merritt system typically has one primary copy of an object and 2 secondary copies.
+
+    Objects with only 1 or 2 copies likely indicate that replication is in progress or replication failed for the object.
+    Objects with more than 3 copies could indicate a misconfiguration of storage nodes for a collection.
 con_versions:
   class: ConsistencyVersionsQuery
   category: replication
@@ -335,6 +358,12 @@ obj_version_gap:
 con_replic:
   class: ConsistencyReplicationReqQuery
   category: replication
+  description: |
+    Count the number of objects with a primary entry in `inv_nodes_inv_objects` and no secondary entry in `inv_nodes_inv_objects`. 
+    Entries older than 1 day will trigger a WARN.  Entries 2 days or older will trigger an ERROR.
+
+    From this report, you can navigate to a list of objects needing replication.  
+    From that report, you can navigate to the object's storage management page to re-initiate replication.
 file_copies_needed:
   class: ObjectsFileCopiesNeededQuery
   category: replication
