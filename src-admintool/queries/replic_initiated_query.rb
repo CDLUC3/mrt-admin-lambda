@@ -51,12 +51,24 @@ class ReplicationInitiatedQuery < AdminQuery
     }
   end
 
+  def get_filter_col
+    4
+  end
+
+  def get_group_col
+    0
+  end
+
+  def bytes_unit
+    "1000000000"
+  end
+
   def get_headers(results)
     ['Category', 'Object Id', 'Ark', 'Version', 'Obj Created', 'Replic Start', 'Bytes','Sec Count', 'Ver Min', 'Ver Max']
   end
 
   def get_types(results)
-    ['', 'objlist', 'ark', 'dataint', 'datetime', 'datetime', 'bytes','dataint','dataint','dataint']
+    ['name', 'objlist', 'ark', '', 'datetime', 'datetime', 'bytes','','','']
   end
 
 end
