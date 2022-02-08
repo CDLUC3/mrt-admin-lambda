@@ -277,6 +277,12 @@ replication_initiated:
   description: |
     Generate a list of objects for which replication has been initiated.
     For objects with specific know replication issues, a category can be assigned to an object.
+replication_failed:
+  class: ReplicationFailedQuery
+  category: replication
+  description: |
+    Generate a list of objects for which replication has failed.
+    For objects with specific know replication issues, a category can be assigned to an object.
 replic_processed:
   class: ReplicProcessedQuery
   category: replication

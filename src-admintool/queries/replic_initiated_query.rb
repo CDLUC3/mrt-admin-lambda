@@ -39,6 +39,10 @@ class ReplicationInitiatedQuery < AdminQuery
         inio.replicated is not null 
       and 
         inio.replicated < '1971-01-01'
+      and
+        inio.role = 'primary'
+      and
+        inio.completion_status = 'unknown'
       group by
         category,
         inio.inv_object_id,
