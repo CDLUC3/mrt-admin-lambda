@@ -383,12 +383,14 @@ obj_version_clobber:
   category: concurrent update
   description: |
     Enumerate objects containing irregularities in the `inv_versions` table: Same version number created twice
-    - Gap in version numbers (has never occurred)
+    This issue has occurred ~170 times in the life of the system.  In most instances, the issue was resolved by rebuilding the inventory record.
+    A couple of items required manual reassembly of the inventory record from cloud storage entries.
 obj_version_gap:
   class: ObjectsVersionGapQuery
   category: concurrent update
   description: |
-    Enumberate objects containing irregularities in the `inv_versions` table: Gap in version numbers (has never occurred)
+    Enumerate objects containing irregularities in the `inv_versions` table: Gap in version numbers 
+    (issue has never occurred).
 con_replic:
   class: ConsistencyReplicationReqQuery
   category: replication
@@ -424,7 +426,7 @@ admin_obj:
   class: AdminObjectsQuery
   category: admin obj
   description: |
-    Enumerage Merritt Admin Objects for a specific aggregate role.
+    Enumerate Merritt Admin Objects for a specific aggregate role.
 admin_obj_files:
   class: AdminObjectsFilesQuery
   category: admin obj
