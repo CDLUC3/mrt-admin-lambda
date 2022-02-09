@@ -6,6 +6,7 @@ require_relative '../lib/profile'
 require_relative '../lib/admin_objects'
 require_relative '../lib/storage_nodes'
 require_relative '../lib/merritt_query'
+require_relative '../lib/audit_info'
 
 class StorageAction < AdminAction
   def initialize(config, action, path, myparams)
@@ -85,6 +86,23 @@ class StorageAction < AdminAction
         }, 
         [],
         "Audit Batches Cleared"
+      ).to_json
+    end
+    if @path == "storage-retry-audit-status"
+      status = @myparams.fetch("status", "")
+      status = '' if status == 'verified'
+      return MerrittQuery.new(@config).run_update(
+        %{
+          UPDATE 
+            inv_audits
+          SET 
+            status='unknown',
+            verified=null
+          WHERE 
+            status = ?
+        }, 
+        [status],
+        "Audit Retries Set"
       ).to_json
     end
 

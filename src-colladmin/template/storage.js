@@ -288,6 +288,16 @@ function init() {
     showConfirm("This will delete and rebuild inventory entries for the object.\nDo you want to continue?", params);
   });
 
+  $("button.storage-retry-audit-status").on("click", function(){
+    var status = $(this).attr("data-status");
+    params = {
+      path: 'storage-retry-audit-status',
+      status: status
+    }
+    invoke(params, false, true);
+  });
+  
+
   if ($("button.storage-cancel-all-scans").is("*")) {
     invoke(
       {

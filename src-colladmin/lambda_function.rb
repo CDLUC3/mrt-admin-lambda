@@ -315,6 +315,8 @@ module LambdaFunctions
             testing: act.fetch('testing_instructions', act.fetch('testing', '')), 
           })
         end
+      elsif path == '/web/storeQueues.html'
+        map['AUDIT_INFO'] = AuditInfo.new(@config).data
       end
       map
     end

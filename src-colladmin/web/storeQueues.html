@@ -21,22 +21,76 @@
   </head>
   <body>
     <div class="form-body">
-    <h1>Manage Audit and Replic Queues</h1>
+    <h1>Manage Audit Queues and Audit Status</h1>
     {{{COLLADMINNAV}}}
-    <h2>Audit Queue</h2>
     <div class="page-description">
       This page allows the user to reset audit queue items that may have been orphaned during a server restart.
     </div>
+    <h3>Audit Queue</h3>
     <div>
-      <a href="{{ADMINTOOL_HOME}}?path=audit_size">View Audit Queue</a>
+      {{#AUDIT_INFO}}
+      <table class="sortable results" style="caption-side: bottom">
+        <caption>
+          <div>
+            <caption>
+              <button 
+                title="Clear Audit Batches Older than 2 days"
+                class="colladmin storage-clear-audit-batch"
+              >Clear Audit Batches Older than 2 days</button>
+            </caption>
+          </div>
+        </caption>
+        <thead>
+          <tr class="header">
+            <th>Batch Time</th>
+            <th>Count</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#batches}}
+          <tr>
+            <th>{{batchtime}}</th>
+            <td>{{count}}</td>
+          </tr>
+          {{/batches}}
+        </tbody>
+      </table>  
+      {{/AUDIT_INFO}}
     </div>
+
+    <h3>Audit Statuses</h3>
     <div>
-      <button 
-      title="Clear Audit Batches Older than 2 days"
-      class="colladmin storage-clear-audit-batch"
-    >Clear Audit Batches</button>
-</div>
-    <h2>Replic Queue</h2>
+      {{#AUDIT_INFO}}
+      <table class="sortable results">
+        <thead>
+          <tr class="header">
+            <th>Status</th>
+            <th>Count</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#statuses}}
+          <tr>
+            <th>{{status}}</th>
+            <td>{{count}}</td>
+            <td>
+              {{#reset_allowed}}
+              <button 
+                title="Retry audits with a status of {{status}}"
+                class="colladmin storage-retry-audit-status"
+                data-status="{{status}}"
+              >Retry Audit Status: {{status}}</button>
+              {{/reset_allowed}}   
+            </td>
+          </tr>
+          {{/statuses}}
+        </tbody>
+      </table>  
+      {{/AUDIT_INFO}}
+
+    </div>
+
   </div>
   </body>
 </html>

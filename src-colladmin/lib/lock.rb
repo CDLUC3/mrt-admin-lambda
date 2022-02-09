@@ -17,14 +17,14 @@ class LockEntry < MerrittJson
     )
     addProperty(
       :ark, 
-      MerrittJsonProperty.new("Profile").lookupValue(json, "loc", "iD")
+      MerrittJsonProperty.new("Ark").lookupValue(json, "loc", "iD")
     )
   end
 
   def self.table_headers
     arr = []
     LockEntry.placeholder.getPropertyList.each do |sym|
-      arr.append(QueueEntry.placeholder.getLabel(sym))
+      arr.append(LockEntry.placeholder.getLabel(sym))
     end
     arr
   end

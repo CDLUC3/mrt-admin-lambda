@@ -353,6 +353,13 @@ storage-clear-audit-batch:
     The audit service processes a block of objects at one time.  All database updates are written back to the database in a batch.
     If the audit service is shut down while processing a batch, some batches may appear to still be actively processing.
     This function clears all audit batches older than a specified amount of time.
+storage-retry-audit-status:
+  class: StorageAction
+  category: Audit
+  sensitivity: reversible change
+  testing: automatable
+  description: |
+    Trigger an audit retry for all audit records with a specific status.
 storage-cancel-all-scans:
   class: ReplicationAction
   category: Storage Scan
