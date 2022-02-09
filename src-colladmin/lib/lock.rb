@@ -33,7 +33,6 @@ class LockEntry < MerrittJson
     arr = []
     LockEntry.placeholder.getPropertyList.each do |sym|
       type = ''
-      type = 'qjob' if sym == :job
       type = 'datetime' if sym == :date
       arr.append(type)
     end
