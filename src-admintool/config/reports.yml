@@ -22,7 +22,7 @@ mimes:
   class: MimeQuery 
   category: mime types
   description: |
-    This report categorizes Merritt content by Mime Type.  A high-level _Mime Group_ is assigned to each Mime Type based on the work of the UC Digital Preservation working group.
+    This report categorizes Merritt content by Mime Type.  A high-level _Mime Group_ is assigned to each Mime Type based on the work of the UC Digital Preservation Strategy working group.
     A [view in the Merritt Billing database](https://github.com/CDLUC3/mrt-admin-lambda/blob/main/merrit-billing/views.sql) created the Mime Group organization based on Mime Type strings. 
 collnodes:
   class: CollectionNodesQuery
@@ -39,7 +39,7 @@ nodes:
     This report lists all defined storage nodes in the inventory database. 
     The report displays the last daily count of objects and files for each storage node (captured in the billing database).
 
-    Click the **Filter Data** button to remove empty ndoes from the report.
+    Click the **Filter Data** button to remove empty nodes from the report.
 objects_by_ark:
   class: ObjectsByArkQuery
   category: objects
@@ -97,7 +97,7 @@ objects_recent_coll:
   class: ObjectsRecentCollQuery
   category: objects
   description: |
-    This report lists most recently ingested objects for a specific collection.  
+    This report lists the most recently ingested objects for a specific collection.  
     Results are sorted from object most recently updated to least recently updated.
 objects_by_batch:
   class: ObjectsByBatchQuery
@@ -109,7 +109,7 @@ objects_by_job:
   class: ObjectsByJobQuery
   category: objects
   description: |
-    This report lists the objects ingested in a Ingest Batch/Job.
+    This report lists the objects ingested in an Ingest Batch/Job.
     This report is accessed from links in the Collection Admin Tool.
 files_by_name_coll:
   class: FilesByNameCollQuery
@@ -129,7 +129,7 @@ count_objects:
   class: CountObjectsQuery
   category: collections
   description: |
-    This report provides a count of objects by collection.  The results are summarized at a campus level.
+    This report provides a count of objects by collection. The results are summarized at a campus level.
 collections_by_node:
   class: CollectionsByNodeQuery
   category: storage nodes
@@ -171,7 +171,8 @@ collections_by_time_count:
   category: collections/time
   params: ['count_files', '']
   description: |
-    This report shows the count of files added to each Merritt collection. 
+    This report shows the count of files added to each Merritt collection.
+    This report includes both system and producer files. 
     Based on the interval parameter, the report may show Counts
     - year by year since the Merritt system was established
     - day by day for the past week
@@ -214,9 +215,10 @@ invoices:
   class: InvoicesQuery
   category: collections
   description: |
-    This report calculates the Merritt charge-backs for each campus.  
+    This report calculates the Merritt recharge for each campus.  
     This report can be run for all campuses or for a specific campus.
-    The report also accounts for the significant charge-back calculations that were implemented in FY2019.
+    The report also accounts for the significant recharge calculations that were implemented in FY2019, 
+    including the 10TB storage allocation made available to each main campus library free of recharge.
 audit_status:
   class: AuditStatusQuery
   category: audit
@@ -270,18 +272,18 @@ replication_needed:
   class: ReplicationNeededQuery
   category: replication
   description: |
-    Generate a list of objects requiring replication based on entries in the `inv_nodes_inv_objects` table that have a primary copy of an object but no secondary copy.
+    This report generates a list of objects requiring replication, based on entries in the `inv_nodes_inv_objects` table that have a primary copy of an object but no secondary copy.
 replication_initiated:
   class: ReplicationInitiatedQuery
   category: replication
   description: |
-    Generate a list of objects for which replication has been initiated.
+    This report generates a list of objects for which replication has been initiated.
     For objects with specific know replication issues, a category can be assigned to an object.
 replication_failed:
   class: ReplicationFailedQuery
   category: replication
   description: |
-    Generate a list of objects for which replication has failed.
+    This report generates a list of objects for which replication has failed.
     For objects with specific know replication issues, a category can be assigned to an object.
 replic_processed:
   class: ReplicProcessedQuery
@@ -323,6 +325,8 @@ locallist:
   description: |
     This report supports the [Multiple LocalId Query](/web/localid.html) OR [Multiple DOI Query](/web/doi.html) page.
     This page will allow you to copy/paste text containing one or more localids and convert that into a parameter list for the report.
+    Upon form execution, a page is returned with a list of requested objects and their details.
+    Options are presented to enable retrieval or either object summary or object metadata details.
 arkcompare:
   class: ArklistCompareQuery
   category: objects
@@ -351,6 +355,7 @@ con_secondary:
   category: storage nodes
   description: |
     Report on collections with non-standard secondary node configurations.
+    Current standard configurations for secondary nodes include Glacier and Wasabi, or SDSC and Wasabi.
 con_files:
   class: ConsistencyFilesQuery
   category: replication
@@ -360,6 +365,7 @@ con_files:
 
     Files with only 1 or 2 copies likely indicate that replication is in progress or replication failed for the object.
     Files with more than 3 copies could indicate a misconfiguration of storage nodes for a collection.
+    An error captured by this report can often be directly correlated with an error in the ConsistencyObjectsQuery report.
 ccon_no_audit:
   class: ConsistencyFilesNoAuditQuery
   category: replication
@@ -375,6 +381,7 @@ con_objects:
 
     Objects with only 1 or 2 copies likely indicate that replication is in progress or replication failed for the object.
     Objects with more than 3 copies could indicate a misconfiguration of storage nodes for a collection.
+    An error captured by this report can often be directly correlated with an error in the ConsistencyFilesQuery report.
 con_versions:
   class: ConsistencyVersionsQuery
   category: replication
@@ -391,6 +398,7 @@ obj_version_clobber:
     Enumerate objects containing irregularities in the `inv_versions` table: Same version number created twice
     This issue has occurred ~170 times in the life of the system.  In most instances, the issue was resolved by rebuilding the inventory record.
     A couple of items required manual reassembly of the inventory record from cloud storage entries.
+    The Merritt Team is implementing changes to prevent this issue from occurring in the future.
 obj_version_gap:
   class: ObjectsVersionGapQuery
   category: concurrent update
@@ -410,24 +418,26 @@ file_copies_needed:
   class: ObjectsFileCopiesNeededQuery
   category: replication
   description: |
-    Enumerate a list of objects containing files that have not been consistently replicated as a primary + 2 replicated copies.
+    Enumerate a list of objects containing files that have not been consistently replicated according to standard collection configuration (primary + 2 replicated copies).
+    Results of this report may directly correlate with those in the ObjectsObjectCopiesNeededQuery report.
 object_copies_needed:
   class: ObjectsObjectCopiesNeededQuery
   category: replication
   description: |
-    Enumerate a list of objects that have not been consistently replicated as a primary + 2 replicated copies.
+    Enumerate a list of objects that have not been consistently replicated according to standard collection configuration (primary + 2 replicated copies).
+    Result of this report may directly correlate with those in the ObjectsFileCopiesNeededQuery report.
 mult_coll:
   class: MultipleCollectionsQuery
   category: objects
   description: |
     Count objects that have been assigned to multiple Merritt collections.
-    Objects resiging in multiple collections is a legacy Merritt feature.
+    Objects residing in multiple collections is a legacy Merritt feature.
 object_mult_coll:
   class: ObjectsMultipleCollQuery
   category: objects
   description: |
     Enumerate objects that have been assigned to multiple Merritt collections.
-    Objects resiging in multiple collections is a legacy Merritt feature.
+    Objects residing in multiple collections is a legacy Merritt feature.
 admin_obj:
   class: AdminObjectsQuery
   category: admin obj
@@ -439,7 +449,7 @@ admin_obj_files:
   description: |
     Display the `inv_files` entries for a set of Merritt Admin Objects.  
     In reality, these objects are always dummy objects with no meaningful producer files. 
-    The system files exist to help reconstruct the inventory database from cloud storage if a disaster occurred.
+    The system files exist to help reconstruct the inventory database from cloud storage if a disaster occurs.
 admin_obj_agg:
   class: AdminObjectsAggQuery
   category: admin obj
@@ -462,7 +472,7 @@ filelist:
   category: objects
   description: |
     Given an object id, list the versions/files for the object.
-    For each file, list the nodes where the object has been replciated.
+    For each file, list the nodes where the object has been replicated.
     For each replication, list any instances in which the audit process has not been successful.
 obj_audit_status:
   class: ObjectsAuditStatusQuery
