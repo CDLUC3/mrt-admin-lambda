@@ -204,6 +204,8 @@ inventory:
       description: "Zookeeper name"
     queueService:
       description: "Zookeper service(s)"
+    lockName:
+      description: "Zookeeper lock node name
 ldap:
   accounts:
     admin:
