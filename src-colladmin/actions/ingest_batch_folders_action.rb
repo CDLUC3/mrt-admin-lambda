@@ -249,7 +249,7 @@ class RecentIngests < MerrittQuery
                   batch_id
               ;
           },
-          [days]
+          [days + 7]
       ).each do |r|
           ri = RecentIngest.new(r)
           @batches[ri.bid] = ri
