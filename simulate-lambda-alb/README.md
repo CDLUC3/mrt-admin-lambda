@@ -7,7 +7,7 @@ When used in conjunction with a lambda container image, this permits testing wit
 
 ```
 # aws ecr create-repository --repository-name simulate-lambda-alb
-docker build -t ${ECR_REGISTRY}/simulate-lambda-alb .
+docker build --pull -t ${ECR_REGISTRY}/simulate-lambda-alb .
 docker push ${ECR_REGISTRY}/simulate-lambda-alb
 ```
 

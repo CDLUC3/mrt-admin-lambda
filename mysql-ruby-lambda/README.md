@@ -6,6 +6,6 @@ This Docker image is used to facilitate building Ruby Lambda dependencies.
 MySql binaries need to be built for the Lambda environment.
 
 ```
-docker build -t ${ECR_REGISTRY}/mysql-ruby-lambda .
+docker build --pull -t ${ECR_REGISTRY}/mysql-ruby-lambda .
 docker push ${ECR_REGISTRY}/mysql-ruby-lambda
 ```
