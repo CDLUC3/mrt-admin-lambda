@@ -4,5 +4,6 @@ Testing is only supported to the stage environment.
 
 ```
 cd src-testdriver
+bundle install --path vendor/bundle
 bundle exec rspec
 ```

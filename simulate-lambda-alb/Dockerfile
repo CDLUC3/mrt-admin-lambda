@@ -8,6 +8,8 @@
 
 FROM ruby:2.7
 
+RUN yum -y update
+
 RUN gem install bundler
 
 COPY Gemfile Gemfile

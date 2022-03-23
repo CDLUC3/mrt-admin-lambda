@@ -25,7 +25,7 @@ aws ecr get-login-password --region us-west-2 | \
     --password-stdin ${ECR_REGISTRY}
 
 # build cognito lambda
-docker build --build-arg ECR_REGISTRY=${ECR_REGISTRY} -t ${ECR_IMAGE_TAG} cognito-lambda-nonvpc || die "Image build failure for ${ECR_IMAGE_TAG}"
+docker build --pull --build-arg ECR_REGISTRY=${ECR_REGISTRY} -t ${ECR_IMAGE_TAG} cognito-lambda-nonvpc || die "Image build failure for ${ECR_IMAGE_TAG}"
 
 # aws ecr create-repository --repository-name ${FUNCTNAME}
 docker push ${ECR_IMAGE_TAG} || die "Image push failure for ${ECR_IMAGE_TAG}"

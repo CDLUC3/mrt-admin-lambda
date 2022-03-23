@@ -10,6 +10,8 @@ ARG ECR_REGISTRY=ecr_registry_not_set
 
 FROM ${ECR_REGISTRY}/uc3-mrt-admin-common
 
+RUN yum -y update
+
 # Build rest-client gem from source
 RUN yum -y install gcc-c++
 

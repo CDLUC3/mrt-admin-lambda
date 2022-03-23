@@ -7,6 +7,8 @@
 
 FROM public.ecr.aws/lambda/ruby:2.7
 
+RUN yum -y update
+
 # Install an os-specific MySQL installation.  
 # gcc and make are required to build mysql.
 # UC3 ruby code pulls a common gem from github for use in Lambda code.

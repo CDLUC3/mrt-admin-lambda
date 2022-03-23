@@ -7,6 +7,7 @@
 
 FROM public.ecr.aws/lambda/ruby:2.7
 
+RUN yum -y update
 RUN yum -y install gcc make git
 RUN gem update bundler 
 
