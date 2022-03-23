@@ -8,7 +8,7 @@
 
 FROM ruby:2.7
 
-RUN yum -y update
+RUN apt-get update
 
 RUN gem install bundler
 
