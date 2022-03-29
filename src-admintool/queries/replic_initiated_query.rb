@@ -12,6 +12,7 @@ class ReplicationInitiatedQuery < AdminQuery
       select 
         case
           when o.ark = 'ark:/13030/m5q57br8' then 'Wasabi Issue 477'
+          when o.ark in ('ark:/13030/m5v45qp2', 'ark:/13030/j2br86wx', 'ark:/13030/j21n79mc') then 'Issue 951 - Admin Object'
           else 'Default'
         end as category,
         inio.inv_object_id,
@@ -22,8 +23,21 @@ class ReplicationInitiatedQuery < AdminQuery
         ifnull(inio.replic_size,0) as bytes,
         count(i2.created) as seccnt,
         min(i2.version_number) as secmin,
-        max(i2.version_number) as secmax
-      from 
+        max(i2.version_number) as secmax,
+        case
+          when o.ark = 'ark:/13030/m5q57br8' 
+            then 'INFO'
+          when o.ark in ('ark:/13030/m5v45qp2', 'ark:/13030/j2br86wx', 'ark:/13030/j21n79mc') 
+            then 'INFO'
+          when inio.replic_start is null
+            then 'FAIL'
+          when inio.replic_start < date_add(now(), INTERVAL -4 HOUR) 
+            then 'PASS'
+          when inio.replic_start < date_add(now(), INTERVAL -24 HOUR) 
+            then 'WARN'
+          else 'FAIL' 
+        end as status      
+    from 
         inv.inv_nodes_inv_objects inio 
       inner join 
         inv.inv_objects o
@@ -42,7 +56,7 @@ class ReplicationInitiatedQuery < AdminQuery
       and
         inio.role = 'primary'
       and
-        inio.completion_status = 'unknown'
+        ifnull(inio.completion_status, 'unknown') = 'unknown'
       group by
         category,
         inio.inv_object_id,
@@ -50,7 +64,8 @@ class ReplicationInitiatedQuery < AdminQuery
         o.version_number,
         o.created,
         inio.replic_start,
-        bytes
+        bytes,
+        status
       ;
     }
   end
@@ -67,12 +82,16 @@ class ReplicationInitiatedQuery < AdminQuery
     "1000000000"
   end
 
+  def init_status
+    :PASS
+  end
+
   def get_headers(results)
-    ['Category', 'Object Id', 'Ark', 'Version', 'Obj Created', 'Replic Start', 'Bytes','Sec Count', 'Ver Min', 'Ver Max']
+    ['Category', 'Object Id', 'Ark', 'Version', 'Obj Created', 'Replic Start', 'Bytes','Sec Count', 'Ver Min', 'Ver Max', 'Status']
   end
 
   def get_types(results)
-    ['name', 'objlist', 'ark', '', 'datetime', 'datetime', 'bytes','','','']
+    ['name', 'objlist', 'ark', '', 'datetime', 'datetime', 'bytes','','','', 'status']
   end
 
 end
