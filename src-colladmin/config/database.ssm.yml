@@ -37,6 +37,7 @@ default:
   endpoints:
     ingest: 
       state: "{!SSM: ingest/port}/state?t=json"
+      build-info: "{!SSM: ingest/port}/static/build.content.txt"
     store: 
       state: "{!SSM: store/port}/state?t=json"
     access: 
@@ -45,6 +46,7 @@ default:
       state: "{!SSM: inventory/port}/mrtinv/state?t=json"
     audit: 
       state: "{!SSM: audit/port}/mrtaudit/state?t=json"
+      build-info: "{!SSM: audit/port}/mrtaudit/static/build.content.txt"
     replic: 
       state: "{!SSM: replic/port}/mrtreplic/state?t=json"
     # sword: 
