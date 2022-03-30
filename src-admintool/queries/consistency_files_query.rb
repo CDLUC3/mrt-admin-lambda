@@ -29,6 +29,10 @@ class ConsistencyFilesQuery < AdminQuery
           )
             then 'Wasabi Issue 477'
           when age.inv_object_id = (
+            select id from inv.inv_objects where ark = 'ark:/13030/m5q029nw'
+          )
+            then 'Large Repl 991'
+          when age.inv_object_id = (
             select id from inv.inv_objects where ark = 'ark:/13030/m5v45qp2'
           )
             then 'UCD Curatorial'
@@ -94,7 +98,10 @@ class ConsistencyFilesQuery < AdminQuery
               when age.inv_object_id = (
                 select id from inv.inv_objects where ark = 'ark:/13030/m5q57br8'
               ) then 'INFO'
-              else 'FAIL'
+              when age.inv_object_id = (
+                select id from inv.inv_objects where ark = 'ark:/13030/m5q029nw'
+              ) then 'WARN'
+            else 'FAIL'
             end
           when ifnull(
             sum(
