@@ -31,9 +31,9 @@ class ReplicationInitiatedQuery < AdminQuery
             then 'INFO'
           when inio.replic_start is null
             then 'FAIL'
-          when inio.replic_start < date_add(now(), INTERVAL -4 HOUR) 
+          when inio.replic_start > date_add(now(), INTERVAL -4 HOUR) 
             then 'PASS'
-          when inio.replic_start < date_add(now(), INTERVAL -24 HOUR) 
+          when inio.replic_start > date_add(now(), INTERVAL -24 HOUR) 
             then 'WARN'
           else 'FAIL' 
         end as status      
