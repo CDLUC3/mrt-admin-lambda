@@ -664,7 +664,7 @@ function format(cell, v, type, merritt_path) {
       var li = makeLiLink(ul, atext, colladmin_root + "?path=instances&name="+name+"&label="+atext);
       li.attr("title", title);
       li.append(" ");
-      li.append($("<span/>").addClass("endpoint").text(title));
+      makeLink(li, "📋", "javascript:window.prompt('Copy to clipboard: Ctrl+C, Enter', '" +title+"')"); 
     });
   } else if (type == 'qdelete'  && v != '') {
     p = colladmin_root + "/lambda?path=queue-delete&queue-path="+v;
