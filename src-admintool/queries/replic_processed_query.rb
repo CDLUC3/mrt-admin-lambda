@@ -106,4 +106,8 @@ class ReplicProcessedQuery < AdminQuery
     ['', 'dataint', 'bytes']
   end
 
+  def bytes_unit
+    "1000000000"
+  end
+
 end

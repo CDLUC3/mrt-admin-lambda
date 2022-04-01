@@ -87,4 +87,8 @@ class ReplicationFailedQuery < AdminQuery
     ['name', 'objlist', 'ark', '', 'datetime', 'datetime', 'bytes', '', '', 'status']
   end
 
+  def bytes_unit
+    "1000000000"
+  end
+
 end
