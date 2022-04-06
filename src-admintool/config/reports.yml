@@ -123,8 +123,12 @@ filesize:
   class: FilesizeQuery
   category: files
   description: |
-    Generate a report on the distribution of files of a specific size within Merritt.
-    #### Note: This report can be slow and may timeout based on the maximum time specified for our lambda.
+    Generate a report on producer files size max/min/average within Merritt.
+filesizedist:
+  class: FilesizeDistributionQuery
+  category: files
+  description: |
+    Generate a report on the distribution of producer files of a specific size ranges within Merritt.
 count_objects:
   class: CountObjectsQuery
   category: collections
