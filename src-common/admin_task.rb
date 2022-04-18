@@ -285,7 +285,15 @@ class AdminTask
         })
       end
     end
+    qarr.prepend(get_this_query)
     qarr
+  end
+
+  def get_this_query
+    {
+      label: "This Query",
+      url: params_to_str(@myparams.clone)
+    }
   end
 
   def get_alternative_queries

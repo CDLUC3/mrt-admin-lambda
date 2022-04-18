@@ -60,4 +60,11 @@ class AdminAction < AdminTask
     "Collection Admin Query"
   end
 
+  def get_this_query
+    {
+      label: "This Query",
+      url: "#{LambdaBase.colladmin_url}?#{params_to_str(@myparams.clone)}"
+    }
+  end
+
 end
