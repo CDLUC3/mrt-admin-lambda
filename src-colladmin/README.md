@@ -104,7 +104,11 @@ Ingest Admin APIs
 - GET /admin/jid-manifest/<bid>/<jid>     - Job manifest data
 - GET /admin/jid-file/<bid>/<jid> - Job file view
 
-- POST /admin/submissions/<freeze|thaw>   - Freeze/Thaw processing of submissions
+- POST /admin/submissions/<freeze|thaw>   - Freeze/Thaw processing of submissions (all)
+- POST /admin/submissions/<freeze|thaw>/<profile>   - Freeze/Thaw processing of submissions (collection)
+
+- POST /admin/release/<queue>/<entry>   - Release held job
+- POST /admin/hold/<queue>/<entry>   	- hold job
 
 - POST /admin/profile/<profile|collection|owner|sla> - Create Ingest submission profiles
 
