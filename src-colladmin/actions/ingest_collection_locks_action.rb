@@ -18,11 +18,11 @@ class IngestCollectionLocksAction < ForwardToIngestAction
   end
 
   def table_headers
-    ["Profile", "CollId", "Name", "Locked", "Actions"]
+    ["Profile", "CollId", "Name", "Locked", "Locks", "Held Items"]
   end
 
   def table_types
-    ["", "colllist", "", "", "colllock"]
+    ["", "colllist", "", "", "colllock", "collqitems"]
   end
 
   def table_rows(body)
@@ -37,6 +37,7 @@ class IngestCollectionLocksAction < ForwardToIngestAction
         p[:name],
         p[:locked] ? "Locked" : "",
         "#{p[:locked] ? 'unlock' : 'lock'},#{prof}",
+        prof
       ])
     end
     arr

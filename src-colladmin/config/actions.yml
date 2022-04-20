@@ -44,7 +44,13 @@ collection-locks:
   sensitivity: readonly
   testing: automated
   description: |
-    List all collections.  Show which ones are locked/frozen.
+    List all collections.  Show which ones are frozen/thawed.  Collections generally exist in a thawed state.
+
+    This report allows the admin to freeze/thaw ingest processing for a collection.
+    
+    Once ingest processing for a collection has been thawed, any items that have accumulated into the Held queue for the collection must be released.  
+
+    Items can be individually released from the [queue page](/web/collIndex.html?path=queues) or they can be released as a set from this page.
 adminprofiles:
   class: AdminProfileAction
   category: Ingest Admin Profiles
@@ -326,6 +332,14 @@ lock-coll:
   testing: automatable
   description: |
     Lock ingest for a collection.
+release-coll-queue-items:
+  class: QueueAction
+  params: ["admin/release-items/coll"]
+  category: Queue Management
+  sensitivity: reversible change
+  testing: automatable
+  description: |
+    Release any held items for a collection.
 storage-force-audit-for-object:
   class: StorageAction
   category: Audit

@@ -678,6 +678,9 @@ function format(cell, v, type, merritt_path) {
   } else if (type == 'release'  && v != '') {
     p = colladmin_root + "/lambda?path=release-queue-item&queue-path="+v;
     makeLink(cell, 'Release', "javascript:ajax_invoke('"+encodeURIComponent(p)+"')");
+  } else if (type == 'collqitems'  && v != '') {
+    p = colladmin_root + "/lambda?path=release-coll-queue-items&coll="+v;
+    makeLink(cell, 'Release - TBD', "javascript:ajax_invoke('"+encodeURIComponent(p)+"')");
   } else if (type == 'colllock') {
     var arr = v.split(",");
     if (arr.length == 2) {
