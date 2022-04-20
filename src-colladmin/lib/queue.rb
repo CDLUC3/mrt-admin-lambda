@@ -69,6 +69,14 @@ class QueueEntry < QueueJson
       :requeue, 
       MerrittJsonProperty.new("Requeue", get_queue_path(true))
     )
+    addProperty(
+      :hold, 
+      MerrittJsonProperty.new("Hold", get_hold_path(false))
+    )
+    addProperty(
+      :release, 
+      MerrittJsonProperty.new("Release", get_hold_path(true))
+    )
   end
 
   def checkFilter(filter)
@@ -93,6 +101,8 @@ class QueueEntry < QueueJson
       type = 'datetime' if sym == :date
       type = 'qdelete' if sym == :qdelete
       type = 'requeue' if sym == :requeue
+      type = 'hold' if sym == :hold
+      type = 'release' if sym == :release
       arr.append(type)
     end
     arr

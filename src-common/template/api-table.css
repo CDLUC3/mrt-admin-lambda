@@ -281,7 +281,7 @@ tr.latest td, tr.latest th {
   background-color: #EEEEEE;
 }
 
-td.qdelete a, td.requeue a {
+td.qdelete a, td.requeue a, td.hold a, td.release a {
   display: block;
   text-align: center;
   border-radius: 5px;

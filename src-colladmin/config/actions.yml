@@ -38,6 +38,13 @@ profiles:
     List all *ingest profiles* known to the ingest server.
     An ingest profile describes characteristics associated with a collection's configuration, such as its context mnemonic, description and primary storage node. 
     These profiles are managed in a github repository and are deployed to the server.
+collection-locks:
+  class: IngestCollectionLocksAction
+  category: Ingest Profiles
+  sensitivity: readonly
+  testing: automated
+  description: |
+    List all collections.  Show which ones are locked/frozen.
 adminprofiles:
   class: AdminProfileAction
   category: Ingest Admin Profiles
@@ -303,24 +310,22 @@ toggle_harvest:
   description: |
     Toggle the *harvest* flag for a collection.
     The harvest flag determines whether or not a collection can be crawled from the OAI service.    
-unpause-ingest-for-collection:
-  implemented: false
+unlock-coll:
+  class: QueueAction
+  params: ["admin/submission/thaw/coll"]
   category: Queue Management
   sensitivity: reversible change
   testing: automatable
   description: |
-    #### Future feature: unpause ingest processing for a specific collection that is in a paused state.
-    The processing lock will reside in Zookeeper.
-    [Feature Design](https://cdluc3.github.io/mrt-doc/diagrams/store-admin-pause-ing-for-coll)
-pause-ingest-for-collection:
-  implemented: false
+    Unlock ingest for a collection.
+lock-coll:
+  class: QueueAction
+  params: ["admin/submission/freeze/coll"]
   category: Queue Management
   sensitivity: reversible change
   testing: automatable
   description: |
-    #### Future feature: pause ingest processing for a specific collection.
-    The processing lock will reside in Zookeeper.
-    [Feature Design](https://cdluc3.github.io/mrt-doc/diagrams/store-admin-pause-ing-for-coll)
+    Lock ingest for a collection.
 storage-force-audit-for-object:
   class: StorageAction
   category: Audit
@@ -560,6 +565,22 @@ requeue:
   testing: manual
   description: |
     Re-queue an item from a Zookeeper queue.
+hold-queue-item:
+  class: QueueAction
+  params: ["admin/hold"]
+  category: Queue Management
+  sensitivity: irreversible change
+  testing: manual
+  description: |
+    Move a pending item from in Zookeeper queue to a Held status.
+release-queue-item:
+  class: QueueAction
+  params: ["admin/release"]
+  category: Queue Management
+  sensitivity: irreversible change
+  testing: manual
+  description: |
+    Release a held item from in Zookeeper queue to a Pending status.
 apply-review-changes:
   class: ReplicationAction
   category: Storage Scan Review
