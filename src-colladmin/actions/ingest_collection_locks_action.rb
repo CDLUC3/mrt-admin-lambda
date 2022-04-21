@@ -29,7 +29,15 @@ class IngestCollectionLocksAction < ForwardToIngestAction
     arr = []
     plist = get_profile_names
 
+    pkeys = []
     plist.keys.sort.each do |prof|
+      pkeys.append(prof) if plist[prof][:locked]
+    end
+    plist.keys.sort.each do |prof|
+      pkeys.append(prof) unless plist[prof][:locked]
+    end
+
+    pkeys.each do |prof|
       p = plist[prof]
       arr.append([
         prof,
