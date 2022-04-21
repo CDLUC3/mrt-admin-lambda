@@ -672,6 +672,21 @@ function format(cell, v, type, merritt_path) {
   } else if (type == 'requeue'  && v != '') {
     p = colladmin_root + "/lambda?path=requeue&queue-path="+v;
     makeLink(cell, 'Requeue', "javascript:ajax_invoke('"+encodeURIComponent(p)+"')");
+  } else if (type == 'hold'  && v != '') {
+    p = colladmin_root + "/lambda?path=hold-queue-item&queue-path="+v;
+    makeLink(cell, 'Hold', "javascript:ajax_invoke('"+encodeURIComponent(p)+"')");
+  } else if (type == 'release'  && v != '') {
+    p = colladmin_root + "/lambda?path=release-queue-item&queue-path="+v;
+    makeLink(cell, 'Release', "javascript:ajax_invoke('"+encodeURIComponent(p)+"')");
+  } else if (type == 'collqitems'  && v != '') {
+    p = colladmin_root + "/lambda?path=release-coll-queue-items&coll="+v;
+    makeLink(cell, 'Release - TBD', "javascript:ajax_invoke('"+encodeURIComponent(p)+"')");
+  } else if (type == 'colllock') {
+    var arr = v.split(",");
+    if (arr.length == 2) {
+      p = colladmin_root + "/lambda?path=" + arr[0] + "-coll&coll=" + arr[1];
+      makeLink(cell, arr[0], "javascript:ajax_invoke('"+encodeURIComponent(p)+"')");  
+    }
   } else if (type == 'collnode'  && v != '') {
     makeLink(cell, 'Manage Coll Nodes', colladmin_root + "/web/storeCollNode.html?coll="+v);
   } else {

@@ -41,6 +41,11 @@ class IngestStateAction < ForwardToIngestAction
     rows
   end
 
+  def get_locked_collections
+    data = JSON.parse(get_body)
+    data.fetch('ing:ingestServiceState', {}).fetch("ing:collectionSubmissionState", "").split(",")
+  end
+
   def hasTable
     true
   end

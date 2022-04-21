@@ -365,6 +365,10 @@ class IngestProfile < MerrittJson
     arr.append(getValue(:profileID) == "#{getValue(:context)}_content" ? 'PASS' : 'FAIL')
     arr
   end
+
+  def collection
+    @collection
+  end
 end
 
 class Collection < QueryObject
