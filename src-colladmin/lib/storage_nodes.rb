@@ -973,49 +973,39 @@ class ObjectNodes < MerrittQuery
     run_query(
       %{
         select
-          inio.role,
-          n.id,
-          n.number,
-          n.description,
-          n.access_mode,
-          o.created,
-          inio.created as replicated,
-          (
-            select 
-              count(*) 
-            from 
-              inv_audits a
-            where 
-              a.inv_object_id = o.id
-            and 
-              a.inv_node_id = n.id
-            and 
-              status != 'verified'
-          ) as unverified,
-          (
-            select 
-              max(verified) 
-            from 
-              inv_audits a
-            where 
-              a.inv_object_id = o.id
-            and 
-              a.inv_node_id = n.id
-          ) as last_verified,
-          o.id as objid,
-          o.ark as ark,
-          o.version_number
-        from
-          inv_objects o
-        inner join inv_nodes_inv_objects inio
-          on o.id = inio.inv_object_id
-        inner join inv_nodes n
-          on inio.inv_node_id = n.id
-        where
-          o.id = ?
-        order by
-          role,
-          number
+          nn.role,
+          nn.id,
+          nn.number,
+          nn.description,
+          nn.access_mode,
+          nn.created,
+          nn.replicated,
+          (select count(*) from inv_audits a where a.inv_object_id = nn.objid and a.inv_node_id=nn.id and status != 'verified') as unverified,
+          (select max(verified) from inv_audits a where a.inv_object_id = nn.objid and a.inv_node_id=nn.id) as last_verified,
+          nn.objid,
+          nn.ark,
+          nn.version_number
+        from (
+          select
+            inio.role,
+            n.id,
+            n.number,
+            n.description,
+            n.access_mode,
+            o.created,
+            inio.created as replicated,
+            o.id as objid,
+            o.ark as ark,
+            o.version_number
+          from
+            inv_objects o
+          inner join inv_nodes_inv_objects inio
+            on o.id = inio.inv_object_id
+          inner join inv_nodes n
+            on inio.inv_node_id = n.id
+          where
+            o.id = ?
+        ) as nn
       },
       [id]
     ).each do |r|
