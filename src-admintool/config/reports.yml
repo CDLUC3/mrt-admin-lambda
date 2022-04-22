@@ -478,6 +478,8 @@ filelist:
     Given an object id, list the versions/files for the object.
     For each file, list the nodes where the object has been replicated.
     For each replication, list any instances in which the audit process has not been successful.
+
+    Due to lambda resource constraints, a maximum of 2,000 files will be listed.
 obj_audit_status:
   class: ObjectsAuditStatusQuery
   category: audit

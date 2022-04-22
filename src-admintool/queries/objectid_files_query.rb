@@ -56,6 +56,7 @@ class ObjectIdFilesQuery < AdminQuery
         f.created desc,
         source,
         pathname
+      limit 2000
       ;
     }
   end
