@@ -188,12 +188,12 @@ class StorageAction < AdminAction
       begin
         qxml = HttpGetXml.new(srvc, endpoint)
         return "<message>Status #{qjson.status} for #{endpoint}</message>" unless qxml.status == 200
+        return "<message>Manifest is too large to download:  use curl: #{srvc}#{endpoint}</message>" if qxml.body.length > 5000000
         return qxml.body
-        return "<message>No response for #{endpoint}</message>"
       rescue => e
         puts(e.message)
         puts(e.backtrace)
-        return "<message>Error #{e.message} for #{endpoint}</message>"
+        return "<message>Error #{e.message}, try curl:  #{srvc}#{endpoint}</message>"
       end
   
     end
@@ -211,12 +211,12 @@ class StorageAction < AdminAction
       begin
         qxml = HttpGetXml.new(srvc, endpoint)
         return "<message>Status #{qjson.status} for #{endpoint}</message>" unless qxml.status == 200
+        return "<message>Manifest is too large to download:  use curl: #{srvc}#{endpoint}</message>" if qxml.body.length > 5000000
         return qxml.body
-        return "<message>No response for #{endpoint}</message>"
       rescue => e
         puts(e.message)
         puts(e.backtrace)
-        return "<message>Error #{e.message} for #{endpoint}</message>"
+        return "<message>Error #{e.message}, try curl:  #{srvc}#{endpoint}</message>"
       end
     end
 
