@@ -23,6 +23,7 @@
     <div class="form-body">
     <h1>Manage Object Storage</h1>
     {{{COLLADMINNAV}}}
+    {{{BUTTONS}}}
     <div class="page-description">
       This page allows a user to perform storage-related maintenance actions on one or more Merritt objects.
       Merritt objects can be retrieved by (1)ark (2)object id (3)local id (4)local id + Owner.
@@ -69,7 +70,9 @@
           <th>Local Id</th>
           <th>Title</th>
           <th>Created</th>
+          <th>Bytes (est)</th>
           <th>Last Replicated</th>
+          <th>File Count (est)</th>
           <th>Num Unverified</th>
           <th>Last Verified</th>
           <th>Actions</th>
@@ -85,7 +88,9 @@
           <td>{{localid}}</td>
           <td>{{title}}</td>
           <td>{{created}}</td>
+          <td class="bytes" data="{{billable_size}}">{{billable_size_fmt}}</td>
           <td>{{last_replicated}}</td>
+          <td class="dataint" data="{{file_count}}">{{file_count_fmt}}</td>
           <td>{{unverified}}</td>
           <td>{{last_verified}}</td>
           <td>

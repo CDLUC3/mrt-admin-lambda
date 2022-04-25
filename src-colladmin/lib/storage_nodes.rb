@@ -829,7 +829,9 @@ class ObjectQuery < MerrittQuery
             inv_audits a
           where 
             a.inv_object_id = o.id
-        ) as last_verified
+        ) as last_verified,
+        os.file_count,
+        os.billable_size
       from
         inv_objects o
       inner join inv_owners own
@@ -838,6 +840,8 @@ class ObjectQuery < MerrittQuery
         on icio.inv_object_id = o.id
       inner join inv_collections c
         on c.id = icio.inv_collection_id
+      left join billing.object_size os
+        on o.id = os.inv_object_id
       where
         #{get_where}
         #{owner_clause}
@@ -877,7 +881,11 @@ class ObjectQuery < MerrittQuery
         created: r[6].nil? ? "" : r[6].strftime("%Y-%m-%d %T"),
         last_replicated: r[7].nil? ? "" : r[7].strftime("%Y-%m-%d %T"),
         unverified: r[8].nil? ? 0 : r[8],
-        last_verified: r[9].nil? ? "" : r[9].strftime("%Y-%m-%d %T")
+        last_verified: r[9].nil? ? "" : r[9].strftime("%Y-%m-%d %T"),
+        file_count: r[10],
+        file_count_fmt: MerrittQuery.num_format(r[10]),
+        billable_size: r[11].nil? ? 0 : r[11],
+        billable_size_fmt: MerrittQuery.num_format(r[11].nil? ? 0 : r[11])
       })
     end
     objects

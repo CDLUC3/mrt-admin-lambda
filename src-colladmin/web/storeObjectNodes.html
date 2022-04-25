@@ -23,6 +23,7 @@
     <div class="form-body">
     <h1>Manage Object Storage Nodes for Object <a href="{{ADMINTOOL_HOME}}?path=filelist&id={{ID}}">{{ID}}</a></h1>
     {{{COLLADMINNAV}}}
+    {{{BUTTONS}}}
 
     <div class="page-description">
       This page allows a user to perform storage-related maintenance actions on either (1) a Merritt Object OR (2)a Merritt object residing on a specific storage node.
@@ -49,7 +50,9 @@
           <th>Local Id</th>
           <th>Title</th>
           <th>Created</th>
+          <th>Bytes (est)</th>
           <th>Last Replicated</th>
+          <th>File Count (est)</th>
           <th>Num Unverified</th>
           <th>Last Verified</th>
           <th>Actions</th>
@@ -65,7 +68,9 @@
           <td>{{localid}}</td>
           <td>{{title}}</td>
           <td>{{created}}</td>
+          <td class="bytes" data="{{billable_size}}">{{billable_size_fmt}}</td>
           <td>{{last_replicated}}</td>
+          <td class="dataint" data="{{file_count}}">{{file_count_fmt}}</td>
           <td>{{unverified}}</td>
           <td>{{last_verified}}</td>
           <td>
@@ -94,7 +99,7 @@
           <th>Node Name</th>
           <th>Access Mode</th>
           <th>Obj Created</th>
-          <th>Replic Created</th>
+          <th>Last Replicated</th>
           <th>Num Unverified</th>
           <th>Last Audited</th>
           <th>Actions</th>
@@ -108,7 +113,7 @@
           <td>{{name}}</td>
           <td>{{access_mode}}</td>
           <td>{{created}}</td>
-          <td>{{replicated}}</td>
+          <td>{{last_replicated}}</td>
           <td>{{unverified}}</td>
           <td>{{last_verified}}</td>
           <td>
