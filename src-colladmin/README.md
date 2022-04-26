@@ -108,9 +108,13 @@ Ingest Admin APIs
 - POST /admin/submissions/<freeze|thaw>/<profile>   - Freeze/Thaw processing of submissions (collection)
 
 - POST /admin/release/<queue>/<entry>   - Release held job
-- POST /admin/hold/<queue>/<entry>   	- hold job
+- POST /admin/hold/<queue>/<entry>   	- Hold job
+- POST /admin/release-all/<queue>/<profile>   	- Release all held entries of a collection
 
 - POST /admin/profile/<profile|collection|owner|sla> - Create Ingest submission profiles
+
+- POST /admin/requeue/<queue>/<entry>/<state> - Requeue a ZK entry
+- POST /admin/deleteq/<queue>/<entry>/<state> - Delete a ZK entry
 
 ## Issues/Questions
 - [X ] The "Collection" array is not populating for profile objects - it is returning as an empty string
