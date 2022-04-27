@@ -10,7 +10,14 @@ class IngestCollectionLocksAction < ForwardToIngestAction
   def initialize(config, action, path, myparams)
     endpoint = 'admin/profiles-full' 
     @collections = Collections.new(config)
+
     super(config, action, path, myparams, endpoint)
+    @held_counts = {}
+    ql = QueueList.get_queue_list(get_ingest_server)
+    ql.jobs.each do |qe|
+      next if qe.qstatus != "Held"
+      @held_counts[qe.profile] = @held_counts.fetch(qe.profile, 0) + 1
+    end
   end
 
   def specific_profile?
@@ -18,11 +25,11 @@ class IngestCollectionLocksAction < ForwardToIngestAction
   end
 
   def table_headers
-    ["Profile", "CollId", "Name", "Locked", "Locks", "Held Items"]
+    ["Profile", "CollId", "Name", "Locked", "Locks", "Held Items", "Release"]
   end
 
   def table_types
-    ["", "colllist", "", "", "colllock", "collqitems"]
+    ["", "colllist", "", "", "colllock", "dataint", "collqitems"]
   end
 
   def table_rows(body)
@@ -39,13 +46,15 @@ class IngestCollectionLocksAction < ForwardToIngestAction
 
     pkeys.each do |prof|
       p = plist[prof]
+      hc = @held_counts.fetch(prof, 0)
       arr.append([
         prof,
         p[:collid],
         p[:name],
         p[:locked] ? "Locked" : "",
         "#{p[:locked] ? 'unlock' : 'lock'},#{prof}",
-        prof
+        hc,
+        hc > 0 ? prof : ""
       ])
     end
     arr

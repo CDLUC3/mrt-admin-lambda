@@ -322,7 +322,7 @@ toggle_harvest:
     Toggle the *harvest* flag for a collection.
     The harvest flag determines whether or not a collection can be crawled from the OAI service.    
 unlock-coll:
-  class: QueueAction
+  class: CollQueueAction
   params: ["admin/submission/thaw/coll"]
   category: Queue Management
   sensitivity: reversible change
@@ -330,7 +330,7 @@ unlock-coll:
   description: |
     Unlock ingest for a collection.
 lock-coll:
-  class: QueueAction
+  class: CollQueueAction
   params: ["admin/submission/freeze/coll"]
   category: Queue Management
   sensitivity: reversible change
@@ -338,8 +338,8 @@ lock-coll:
   description: |
     Lock ingest for a collection.
 release-coll-queue-items:
-  class: QueueAction
-  params: ["admin/release-items/coll"]
+  class: CollIterateQueueAction
+  params: ["admin/release-all/queue/coll"]
   category: Queue Management
   sensitivity: reversible change
   testing: automatable
