@@ -105,6 +105,11 @@ batchFolders:
     Display details about the recently created ingest *batch folders*.
     In rare instances, an ingest is initiated but fails during the queueing step.  
     This view provides an opportunity to identify content that could not be successfully queued.
+
+    ## Status Values:
+    - PASS: Once the batch has been registered in the inventory database
+    - WARN: The folder has existed for over one HOUR without registering in the inventory database
+    - FAIL: The folder has existed for over one DAY without registering in the inventory database
 batch:
   class: IngestBatchAction
   category: Ingest Batches and Folders
