@@ -691,6 +691,14 @@ storage-reroute-ui-for-collection:
   description: |
     #### Future feature - Probably not in scope for the project
     [Feature Design](https://cdluc3.github.io/mrt-doc/diagrams/store-admin-reroute-uistorage-perform-delete-node-key)
+storage-perform-delete-node-key:
+  # prod_support: false
+  class: ReplicationAction
+  category: Storage Scan Review
+  sensitivity: sensitive
+  testing: manual
+  description: |
+    Process the delete of a single storage scan record.
 storage-perform-delete-node-batch:
   # prod_support: false
   class: ReplicationAction
@@ -698,7 +706,6 @@ storage-perform-delete-node-batch:
   sensitivity: sensitive
   testing: manual
   description: |
-    #### Not yet enabled in prod 
     Process all scan results marked with a *DELETE* status.
 storage-delete-obj:
   implemented: false

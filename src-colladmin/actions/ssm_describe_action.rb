@@ -111,7 +111,6 @@ class SsmDescribeAction < AdminAction
   end
 
   def process_registry_node(path, reg)
-    skip = skip 
     if reg.key?("description")
       p = @parameters.fetch(path, SsmInfo.new(path))
       p.set_description(reg["description"])
