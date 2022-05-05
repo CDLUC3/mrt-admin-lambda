@@ -283,6 +283,11 @@ replication_initiated:
   description: |
     This report generates a list of objects for which replication has been initiated.
     For objects with specific know replication issues, a category can be assigned to an object.
+
+    - FAIL: Replication has waited more than 24 hours to complete
+    - WARN: Replication has waited more than 4 hours to complete
+    - PASS: Replication has waited less than 4 hours to complete
+    - INFO: Known replication exception has been coded into the report
 replication_failed:
   class: ReplicationFailedQuery
   category: replication
