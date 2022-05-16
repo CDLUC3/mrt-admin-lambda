@@ -36,7 +36,7 @@ class CountObjectsQuery < AdminQuery
   end
 
   def get_types(results)
-    ['ogroup', 'coll', 'name', 'dataint']
+    ['ogroup', 'colllist', 'name', 'dataint']
   end
 
 end

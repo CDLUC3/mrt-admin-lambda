@@ -61,4 +61,13 @@ class CollectionDetailsQuery < AdminQuery
     ['gmime', 'mime', 'dataint', 'bytes']
   end
 
+  def get_alternative_queries
+    [
+      {
+        label: "Collection Info for #{@coll}", 
+        url: "path=collection_info&coll=#{@coll}"
+      }
+    ]
+  end
+ 
 end

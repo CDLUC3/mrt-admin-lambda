@@ -45,4 +45,12 @@ class CollectionInfoQuery < AdminQuery
     ['name', 'ark', 'mnemonic', 'profile', 'coll', 'dataint', 'ldapcoll', 'snodes']
   end
 
+  def get_alternative_queries
+    [
+      {
+        label: "File counts for collection #{@coll}", 
+        url: "path=collection_details&coll=#{@coll}"
+      }
+    ]
+  end
 end
