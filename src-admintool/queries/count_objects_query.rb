@@ -19,22 +19,24 @@ class CountObjectsQuery < AdminQuery
     %{
       select
         ogroup,
+        inv_collection_id,
         collection_name,
         sum(count_objects) as count_objects
       from
         owner_collections_objects
       group by
         ogroup,
+        inv_collection_id,
         collection_name
     }
   end
 
   def get_headers(results)
-    ['Group', 'Collection', 'Object Count']
+    ['Group', 'CollId', 'Collection', 'Object Count']
   end
 
   def get_types(results)
-    ['ogroup', 'name', 'dataint']
+    ['ogroup', 'coll', 'name', 'dataint']
   end
 
 end
