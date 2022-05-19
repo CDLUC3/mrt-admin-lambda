@@ -5,7 +5,7 @@ class CollectionInfoQuery < AdminQuery
   end
 
   def get_params
-    [@coll]
+    [@coll, @coll]
   end
 
   def get_title
@@ -33,7 +33,7 @@ class CollectionInfoQuery < AdminQuery
       from
         inv.inv_collections c
       where
-        id = ?
+        id = ? or mnemonic = ?
     }
   end
 

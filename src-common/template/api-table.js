@@ -525,7 +525,7 @@ function format(cell, v, type, merritt_path) {
     v = "" + v;
     var arr = v.split(",");
     if (arr.length == 1) {
-      makeLink(cell, v, admintool_home + "?path=collection_info&coll="+v);
+      makeLink(cell, v, admintool_home + "?path=collection_info&coll="+v.replace(/_content$/, ''));
     } else {
       var ul = makeUl(cell);
       $.each(arr, function(i,txt){

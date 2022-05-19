@@ -20,7 +20,7 @@ class IngestQueueProfileCountAction < ForwardToIngestAction
 
   def table_types
     [
-      "",
+      "colllist",
       "",
       "dataint",
       "status"
