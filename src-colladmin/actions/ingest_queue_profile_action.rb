@@ -12,8 +12,9 @@ class IngestQueueProfileCountAction < ForwardToIngestAction
   def table_headers
     [
       "Profile",
-      "Status",
-      "Counts"
+      "Queue Status",
+      "Counts",
+      "Status"
     ]
   end
 
@@ -21,16 +22,24 @@ class IngestQueueProfileCountAction < ForwardToIngestAction
     [
       "",
       "",
-      "dataint"
+      "dataint",
+      "status"
     ]
   end
 
   def table_rows(body)
     queueList = QueueList.new(get_ingest_server, body)
     arr = []
-    queueList.profiles.each do |k, v|
+    queueList.profiles.keys.sort.each do |k|
       ka = k.split(",")
-      arr.append([ka[0], ka[1], v.length])
+      qs = ka[1]
+      profile = ka[0]
+      list = queueList.profiles[k]
+      count = list.length
+      status = "PASS"
+      status = "FAIL" if qs == "Failed"
+      status = "WARN" if qs == "Held"
+      arr.append([profile, qs, count, status])
     end
     arr
   end
@@ -41,6 +50,14 @@ class IngestQueueProfileCountAction < ForwardToIngestAction
 
   def init_status
     :PASS
+  end
+
+  def get_filter_col
+    3
+  end
+
+  def get_group_col
+    0
   end
 
 end

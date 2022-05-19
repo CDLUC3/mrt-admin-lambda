@@ -25,9 +25,9 @@ class AdminAction < AdminTask
       headers: table_headers,
       types: table_types,
       data: data,
-      filter_col: nil,
-      group_col: nil,
-      show_grand_total: false,
+      filter_col: get_filter_col,
+      group_col: get_group_col,
+      show_grand_total: show_grand_total,
       merritt_path: @merritt_path,
       alternative_queries: get_alternative_queries_with_pagination,
       iterate: false,
@@ -65,6 +65,18 @@ class AdminAction < AdminTask
       label: "This Query",
       url: "#{LambdaBase.colladmin_url}?#{params_to_str(@myparams.clone)}"
     }
+  end
+
+  def get_filter_col
+    nil
+  end
+
+  def get_group_col
+    nil
+  end
+
+  def show_grand_total
+    get_filter_col != nil || get_group_col != nil
   end
 
 end

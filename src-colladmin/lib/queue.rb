@@ -193,7 +193,7 @@ class IngestQueue < MerrittJson
       queueList.batches[q.bid] = qenrtylist
       queueList.jobs.append(q)
 
-      next if q.qstatus == "Completed"
+      next if q.qstatus == "Completed" || q.qstatus == "Deleted"
       k = "#{q.profile},#{q.qstatus}"
       queueList.profiles[k] = queueList.profiles.fetch(k, [])
       queueList.profiles[k].append(q)
