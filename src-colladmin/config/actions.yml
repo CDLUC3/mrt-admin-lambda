@@ -77,6 +77,13 @@ queues:
   description: |
     Display the contents of the *ingest queue*. Items in this queue are slated to be processed by the Ingest service.
     From this screen, items can be requeued.
+ingest-queue-by-profile:
+  class: IngestQueueProfileCountAction
+  category: Queue Management
+  sensitivity: readonly
+  testing: contextually automated
+  description: |
+    Display the counts of the *ingest queue* items by profile.
 inv-queues:
   class: InventoryQueueAction
   category: Queue Management

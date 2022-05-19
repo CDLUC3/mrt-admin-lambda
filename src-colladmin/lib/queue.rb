@@ -192,6 +192,11 @@ class IngestQueue < MerrittJson
       qenrtylist.addJob(q)
       queueList.batches[q.bid] = qenrtylist
       queueList.jobs.append(q)
+
+      next if q.qstatus == "Completed"
+      k = "#{q.profile},#{q.qstatus}"
+      queueList.profiles[k] = queueList.profiles.fetch(k, [])
+      queueList.profiles[k].append(q)
     end
   end
 end
@@ -203,6 +208,7 @@ class QueueList < MerrittJson
     @body = body
     @batches = {}
     @jobs = []
+    @profiles = {}
     @filter = filter
     retrieveQueues
   end
@@ -239,6 +245,10 @@ class QueueList < MerrittJson
 
   def batches
     @batches
+  end
+
+  def profiles
+    @profiles
   end
 
   def jobs
