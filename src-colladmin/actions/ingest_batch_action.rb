@@ -20,7 +20,7 @@ class IngestBatchAction < ForwardToIngestAction
   end
 
   def table_rows(body)
-    queueList = QueueList.new(get_ingest_server, body, @batch)
+    queueList = QueueList.new(get_ingest_server, body, {batch: @batch})
     queueList.jobs.each do |qe|
       @batch_obj.add_queue_job(qe)
     end

@@ -80,7 +80,14 @@ class QueueEntry < QueueJson
   end
 
   def checkFilter(filter)
-    filter.empty? || bid == filter
+    show = true
+    fbatch = filter.fetch(:batch, "")
+    show = show && (fbatch.empty? || bid == fbatch)
+    fprofile = filter.fetch(:profile, "")
+    show = show && (fprofile.empty? || profile == fprofile)
+    fstatus = filter.fetch(:qstatus, "")
+    show = show && (fstatus.empty? || qstatus == fstatus)
+    show
   end
 
   def self.table_headers
@@ -193,7 +200,7 @@ class IngestQueue < MerrittJson
       queueList.batches[q.bid] = qenrtylist
       queueList.jobs.append(q)
 
-      next if q.qstatus == "Completed" || q.qstatus == "Deleted"
+      #next if q.qstatus == "Completed" || q.qstatus == "Deleted"
       k = "#{q.profile},#{q.qstatus}"
       queueList.profiles[k] = queueList.profiles.fetch(k, [])
       queueList.profiles[k].append(q)
@@ -202,7 +209,7 @@ class IngestQueue < MerrittJson
 end
 
 class QueueList < MerrittJson
-  def initialize(ingest_server, body, filter = "")
+  def initialize(ingest_server, body, filter = {})
     super()
     @ingest_server = ingest_server
     @body = body
@@ -213,7 +220,7 @@ class QueueList < MerrittJson
     retrieveQueues
   end
 
-  def self.get_queue_list(ingest_server, filter = "")
+  def self.get_queue_list(ingest_server, filter = {})
     qjson = HttpGetJson.new(ingest_server, "admin/queues")
     QueueList.new(ingest_server, qjson.body, filter)
   end

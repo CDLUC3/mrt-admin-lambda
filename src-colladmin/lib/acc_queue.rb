@@ -129,7 +129,7 @@ class AccQueue < MerrittJson
 end
 
 class AccQueueList < MerrittJson
-  def initialize(ingest_server, body, filter = "")
+  def initialize(ingest_server, body, filter = {})
     super()
     @ingest_server = ingest_server
     @body = body
@@ -137,7 +137,7 @@ class AccQueueList < MerrittJson
     retrieveQueues
   end
 
-  def self.get_queue_list(ingest_server, filter = "")
+  def self.get_queue_list(ingest_server, filter = {})
     qjson = HttpGetJson.new(ingest_server, "admin/queues-acc")
     AccQueueList.new(ingest_server, qjson.body, filter)
   end

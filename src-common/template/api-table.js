@@ -668,27 +668,36 @@ function format(cell, v, type, merritt_path) {
     });
   } else if (type == 'qdelete'  && v != '') {
     p = colladmin_root + "/lambda?path=queue-delete&queue-path="+v;
-    makeLink(cell, 'Delete', "javascript:ajax_invoke('"+encodeURIComponent(p)+"')");
+    makeLink(cell, 'Delete', "javascript:ajax_invoke('"+encodeURIComponent(p)+"')").addClass("ajax");
   } else if (type == 'requeue'  && v != '') {
     p = colladmin_root + "/lambda?path=requeue&queue-path="+v;
-    makeLink(cell, 'Requeue', "javascript:ajax_invoke('"+encodeURIComponent(p)+"')");
+    makeLink(cell, 'Requeue', "javascript:ajax_invoke('"+encodeURIComponent(p)+"')").addClass("ajax");
   } else if (type == 'hold'  && v != '') {
     p = colladmin_root + "/lambda?path=hold-queue-item&queue-path="+v;
-    makeLink(cell, 'Hold', "javascript:ajax_invoke('"+encodeURIComponent(p)+"')");
+    makeLink(cell, 'Hold', "javascript:ajax_invoke('"+encodeURIComponent(p)+"')").addClass("ajax");
   } else if (type == 'release'  && v != '') {
     p = colladmin_root + "/lambda?path=release-queue-item&queue-path="+v;
-    makeLink(cell, 'Release', "javascript:ajax_invoke('"+encodeURIComponent(p)+"')");
+    makeLink(cell, 'Release', "javascript:ajax_invoke('"+encodeURIComponent(p)+"')").addClass("ajax");
   } else if (type == 'collqitems'  && v != '') {
     p = colladmin_root + "/lambda?path=release-coll-queue-items&coll="+v;
-    makeLink(cell, 'Release - TBD', "javascript:ajax_invoke('"+encodeURIComponent(p)+"')");
+    makeLink(cell, 'Release Items', "javascript:ajax_invoke('"+encodeURIComponent(p)+"')").addClass("ajax");
   } else if (type == 'colllock') {
     var arr = v.split(",");
     if (arr.length == 2) {
       p = colladmin_root + "/lambda?path=" + arr[0] + "-coll&coll=" + arr[1];
-      makeLink(cell, arr[0], "javascript:ajax_invoke('"+encodeURIComponent(p)+"')");  
+      makeLink(cell, arr[0], "javascript:ajax_invoke('"+encodeURIComponent(p)+"')").addClass("ajax");  
     }
   } else if (type == 'collnode'  && v != '') {
     makeLink(cell, 'Manage Coll Nodes', colladmin_root + "/web/storeCollNode.html?coll="+v);
+  } else if (type == 'fprofile') {
+    makeLink(cell, v, colladmin_home + "?path=queues&profile="+v);
+  } else if (type == 'fstatus') {
+    makeLink(cell, v, colladmin_home + "?path=queues&qstatus="+v);
+  } else if (type == 'fprofilestatus') {
+    arr = v.split(";");
+    if (arr.length == 3) {
+      makeLink(cell, arr[2], colladmin_home + "?path=queues&profile="+arr[0]+"&qstatus="+arr[1]);
+    }
   } else {
     cell.text(v);
   }
@@ -700,6 +709,7 @@ function cognitoUserAdmin(u,g) {
 }
 
 function ajax_invoke(p) {
+  $("a.ajax:focus").attr("href", "javascript:console.log('already run')").attr("disabled", true).addClass("disabled");
   $.ajax({
     dataType: "json",
     method: "GET",
@@ -711,7 +721,7 @@ function ajax_invoke(p) {
       if ('redirect_location' in data) {
         window.location = data['redirect_location'];
       } else {
-        window.location.reload();
+        //window.location.reload();
       }
     },
     error: function( xhr, status ) {

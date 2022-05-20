@@ -293,6 +293,11 @@ td.qdelete a, td.requeue a, td.hold a, td.release a, td.colllock a, td.collqitem
   padding: 2px 6px;
 }
 
+td.qdelete a.disabled, td.requeue a.disabled, td.hold a.disabled, td.release a.disabled, td.colllock a.disabled, td.collqitems a.disabled {
+  border: thin solid gray;
+  color: gray;
+}
+
 button.maints-0,
 button.maint-delete-delete,
 button.maint-review-review,

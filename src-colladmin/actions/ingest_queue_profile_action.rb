@@ -13,6 +13,7 @@ class IngestQueueProfileCountAction < ForwardToIngestAction
     [
       "Profile",
       "Queue Status",
+      "Filter",
       "Counts",
       "Status"
     ]
@@ -20,8 +21,9 @@ class IngestQueueProfileCountAction < ForwardToIngestAction
 
   def table_types
     [
-      "colllist",
-      "",
+      "fprofile",
+      "fstatus",
+      "fprofilestatus",
       "dataint",
       "status"
     ]
@@ -39,7 +41,7 @@ class IngestQueueProfileCountAction < ForwardToIngestAction
       status = "PASS"
       status = "FAIL" if qs == "Failed"
       status = "WARN" if qs == "Held"
-      arr.append([profile, qs, count, status])
+      arr.append([profile, qs, "#{profile};#{qs};#{count}", count, status])
     end
     arr
   end
