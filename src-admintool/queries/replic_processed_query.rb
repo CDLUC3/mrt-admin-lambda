@@ -87,23 +87,31 @@ class ReplicProcessedQuery < AdminQuery
       select
         ? as title,
         count(inio.inv_object_id) as objs,
-        ifnull(sum(inio.replic_size),0) as bytes
+        ifnull(sum(inio.replic_size),0) as bytes,
+        ifnull(sum(inio.replic_size), 0) * (
+          timediff(now(), date_add(now(), interval -1 day)) / timediff(drange.end, drange.start)
+        ) as bytes_per_day
       from
-        inv.inv_nodes_inv_objects inio
+        inv.inv_nodes_inv_objects inio,
+        (
+          select
+            ? as start,
+            ? as end
+        ) as drange
       where
-        replicated >= ?
+        replicated >= drange.start
       and
-        replicated < ?
+        replicated < drange.end
       ;
     }
   end
 
   def get_headers(results)
-    ['Time Frame', 'Objects Processed', 'Bytes Replicated']
+    ['Time Frame', 'Objects Processed', 'Bytes Replicated', 'Bytes/day']
   end
 
   def get_types(results)
-    ['', 'dataint', 'bytes']
+    ['', 'dataint', 'bytes', 'bytes']
   end
 
   def bytes_unit

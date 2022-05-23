@@ -19,6 +19,7 @@ module LambdaFunctions
         collHandler.check_permission
 
         respath = event.fetch("path", "")
+        return LambdaBase.redirect("/web/index.html") if respath.empty?
         return LambdaBase.redirect("/web#{respath}") if respath =~ %r[^/index.html.*]
         myparams = collHandler.get_params_from_event(event)
         return collHandler.web_assets("/web/favicon.ico", myparams) if respath =~ %r[^/favicon.ico.*]
