@@ -503,3 +503,8 @@ collection_node_cleanup_required:
   description: |
     For a specific collection, identify any secondary replicated copies of the object stored on a node that is no longer configured in `inv_collections_inv_nodes`. 
     Results will appear in this report after a secondary node has been removed for a specific collection.
+ingest_bytes_by_hour:
+  class: IngestBytesByHourQuery
+  category: files
+  description: |
+    Generate a graphable list of total bytes ingested for a 4 hour period over the past week.
