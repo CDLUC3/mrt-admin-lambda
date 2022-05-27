@@ -139,7 +139,7 @@ function showUrl(url) {
 }
 
 function processResult(data) {
-  $("h1").text(data.title);
+  $("h1,title").text(data.title);
   $(".report_path").text(data.report_path);
 
   if (data.format == 'report'){
