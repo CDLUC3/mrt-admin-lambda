@@ -40,8 +40,10 @@ default:
       build-info: "{!SSM: ingest/port}/static/build.content.txt"
     store: 
       state: "{!SSM: store/port}/state?t=json"
+      build-info: "{!SSM: store/port}/static/build.content.txt"
     access: 
       state: "{!SSM: store/port}/state?t=json"
+      build-info: "{!SSM: store/port}/static/build.content.txt"
     inventory: 
       state: "{!SSM: inventory/port}/mrtinv/state?t=json"
       build-info: "{!SSM: inventory/port}/mrtinv/static/build.content.txt"

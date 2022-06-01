@@ -178,7 +178,8 @@ class AdminTask
       iterate: false,
       bytes_unit: bytes_unit,
       saveable: is_saveable?,
-      report_path: report_path
+      report_path: report_path,
+      chart: get_chart(data, types, headers)
     }
   end
 
@@ -253,6 +254,87 @@ class AdminTask
     data = get_result_data(results, types)
     headers = get_headers(results)
     format_result_json(types, data, headers)
+  end
+
+  def is_line_chart
+    false
+  end
+
+  def is_pie_chart
+    false
+  end
+
+  def has_chart
+    is_line_chart || is_pie_chart
+  end
+
+  def get_label_col
+    0
+  end
+
+  def get_data_col
+    1
+  end
+
+  def get_line_chart(data, types, headers)
+    clabels = []
+    cdata = []
+
+    data.each do |r|
+      clabels.append(r[get_label_col])
+      cdata.append(r[get_data_col])
+    end
+
+    {
+      type: 'line',
+      data: {
+        labels: clabels,
+        datasets: [{
+          label: get_title,
+          data: cdata,
+        }]
+      },
+      options: {}
+    };
+
+  end
+
+  def get_pie_chart(data, types, headers)
+    clabels = []
+    cdata = []
+
+    data.each do |r|
+      clabels.append(r[get_label_col])
+      cdata.append(r[get_data_col])
+    end
+
+    {
+      type: 'pie',
+      data: {
+        labels: clabels,
+        datasets: [{
+          label: get_title,
+          data: cdata,
+        }]
+      },
+      options: {}
+    };
+
+  end
+
+  def colors(count) 
+    colors = ['red','yellow','blue','orange','green','purple','brown','pink','gray','gold', 'cyan', 'magenta', 'silver', 'lavender']
+    c = []
+    for x in 0..count-1
+      c.append(colors[x % colors.length])
+    end
+    c
+  end
+
+  def get_chart(data, types, headers)
+    return get_line_chart(data, types, headers) if is_line_chart
+    return get_pie_chart(data, types, headers) if is_pie_chart
+    nil
   end
 
   def get_title_with_pagination

@@ -156,6 +156,14 @@ function processResult(data) {
       data.iterate,
       data.description
     )
+
+    if (data.chart) {
+      $("#chartdiv").show();
+      const myChart = new Chart(
+        document.getElementById('myChart'),
+        data.chart
+      );
+    }
   } else {
     document.body.innerHTML = JSON.stringify(data);
   }

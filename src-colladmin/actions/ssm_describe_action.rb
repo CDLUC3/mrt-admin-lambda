@@ -162,6 +162,7 @@ class SsmDescribeAction < AdminAction
       iterate: false,
       saveable: is_saveable?,
       report_path: report_path,
+      chart: nil,
       description: get_description
     }.to_json
   end

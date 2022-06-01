@@ -39,4 +39,38 @@ class CountObjectsQuery < AdminQuery
     ['ogroup', 'colllist', 'name', 'dataint']
   end
 
+  def is_pie_chart
+    true
+  end
+
+  def get_pie_chart(data, types, headers)
+    cmap = {}
+
+    data.each do |r|
+      cmap[r[0]] = cmap.fetch(r[0], 0) + r[3]
+    end
+
+    clabels = []
+    cdata = []
+
+    cmap.keys.each do |k|
+      clabels.append(k)
+      cdata.append(cmap[k])
+    end
+
+    {
+      type: 'pie',
+      data: {
+        labels: clabels,
+        datasets: [{
+          label: get_title,
+          data: cdata,
+          backgroundColor: colors(cdata.length)
+        }]
+      },
+      options: {}
+    };
+
+  end
+
 end

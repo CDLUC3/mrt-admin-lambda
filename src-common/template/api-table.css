@@ -341,3 +341,12 @@ tr.toggle-0 td, tr.toggle-0 th {
 tr.head td, tr.head th {
   background-color: #f6f88f;
 }
+
+#chartdiv {
+  display: none;
+  width: 90%;
+}
+
+#chartdiv canvas {
+  max-height: 400px;
+}

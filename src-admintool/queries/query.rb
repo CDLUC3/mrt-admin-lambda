@@ -147,6 +147,7 @@ class AdminQuery < AdminTask
         bytes_unit: bytes_unit,
         saveable: is_saveable?,
         report_path: report_path,
+        chart: get_chart(data, types, headers),
         description: get_description
       }
       save_report(report_path, report) if is_saveable?

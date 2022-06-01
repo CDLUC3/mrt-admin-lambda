@@ -45,5 +45,7 @@ class IngestBytesByHourQuery < AdminQuery
     "1000000000"
   end
   
-
+  def is_line_chart
+    true
+  end
 end
