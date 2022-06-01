@@ -17,7 +17,7 @@ class ObjectIdFilesQuery < AdminQuery
         f.pathname,
         f.full_size,
         f.created,
-        group_concat(n.number) as nodelist,
+        ifnull(group_concat(n.number), '') as nodelist,
         ifnull(
           group_concat(
             case 
@@ -39,8 +39,8 @@ class ObjectIdFilesQuery < AdminQuery
           o.id = a.inv_object_id
         and
           f.id = a.inv_file_id        
-      inner join inv.inv_nodes n
-        on n.id = a.inv_node_id
+      left join inv.inv_nodes n
+        on a.inv_node_id = n.id
       where 
         o.id = ?
       and
