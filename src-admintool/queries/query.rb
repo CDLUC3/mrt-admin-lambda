@@ -22,20 +22,8 @@ class AdminQuery < AdminTask
     "Merritt Admin Query"
   end
 
-  def get_filter_col
-    nil
-  end
-
-  def get_group_col
-    nil
-  end
-
   def show_iterative_total
     false
-  end
-
-  def show_grand_total
-    get_filter_col != nil || get_group_col != nil
   end
 
   def get_params

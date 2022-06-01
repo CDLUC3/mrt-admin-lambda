@@ -256,6 +256,18 @@ class AdminTask
     format_result_json(types, data, headers)
   end
 
+  def get_filter_col
+    nil
+  end
+
+  def get_group_col
+    nil
+  end
+
+  def show_grand_total
+    get_filter_col != nil || get_group_col != nil
+  end
+
   def is_line_chart
     false
   end
@@ -269,6 +281,7 @@ class AdminTask
   end
 
   def get_label_col
+    return get_group_col if get_group_col
     0
   end
 
@@ -276,22 +289,24 @@ class AdminTask
     1
   end
 
-  def get_line_chart(data, types, headers)
-    clabels = []
-    cdata = []
-
+  def get_chart_map(data)
+    m = {}
     data.each do |r|
-      clabels.append(r[get_label_col])
-      cdata.append(r[get_data_col])
+      m[r[get_label_col]] = m.fetch(r[get_label_col], 0) + r[get_data_col]
     end
+    m
+  end
+
+  def get_line_chart(data, types, headers)
+    m = get_chart_map(data)
 
     {
       type: 'line',
       data: {
-        labels: clabels,
+        labels: m.keys,
         datasets: [{
           label: get_title,
-          data: cdata,
+          data: m.values,
         }]
       },
       options: {}
@@ -300,21 +315,16 @@ class AdminTask
   end
 
   def get_pie_chart(data, types, headers)
-    clabels = []
-    cdata = []
-
-    data.each do |r|
-      clabels.append(r[get_label_col])
-      cdata.append(r[get_data_col])
-    end
+    m = get_chart_map(data)
 
     {
       type: 'pie',
       data: {
-        labels: clabels,
+        labels: m.keys,
         datasets: [{
           label: get_title,
-          data: cdata,
+          data: m.values,
+          backgroundColor: chart_colors
         }]
       },
       options: {}
@@ -322,13 +332,8 @@ class AdminTask
 
   end
 
-  def colors(count) 
-    colors = ['red','yellow','blue','orange','green','purple','brown','pink','gray','gold', 'cyan', 'magenta', 'silver', 'lavender']
-    c = []
-    for x in 0..count-1
-      c.append(colors[x % colors.length])
-    end
-    c
+  def chart_colors
+    ['red','yellow','blue','orange','green','purple','brown','pink','gray','gold', 'cyan', 'magenta', 'silver', 'lavender','teal']
   end
 
   def get_chart(data, types, headers)

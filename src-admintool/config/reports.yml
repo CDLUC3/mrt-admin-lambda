@@ -127,6 +127,7 @@ filesize:
 filesizedist:
   class: FilesizeDistributionQuery
   category: files
+  iterative: true
   description: |
     Generate a report on the distribution of producer files of a specific size ranges within Merritt.
 count_objects:

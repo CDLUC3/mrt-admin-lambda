@@ -68,16 +68,4 @@ class AdminAction < AdminTask
     }
   end
 
-  def get_filter_col
-    nil
-  end
-
-  def get_group_col
-    nil
-  end
-
-  def show_grand_total
-    get_filter_col != nil || get_group_col != nil
-  end
-
 end
