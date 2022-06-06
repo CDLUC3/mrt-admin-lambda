@@ -166,7 +166,9 @@ ingest:
       description: Name of Ingest servie
       deprecated: Duplicate of identifier?
     numThreads:
-      description: Number of threads in pool for request processing
+      description: Number of worker threads in pool
+    numDownloadThreads:
+      description: Number of download threads in pool for retrieval
     PollingInterval:
       description: Zookeeper queue polling Interval in seconds
     QueueHoldFile:
