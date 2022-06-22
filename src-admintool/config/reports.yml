@@ -265,6 +265,16 @@ audit_processed_size:
     This report uses aggregate data from the billing database which is computed on a daily basis.
     This report will attempt to identify any significant degredation in performance from the audit service over the prior 6 day period.
     Performance issues older than 6 days are ignored by the report.
+
+    ### Calculations - Revised June 2022
+    - 140M files / 60 days = 2.3M
+    - 735T online / 60 days = 12T
+
+    ### Criteria - Revised June 2022
+    - If the process handles more than 2.3M files AND more than 12T in a given day, PASS.
+    - If the process handles less than 2.3M files AND less than 12T in a given day, failed.
+    - If either goal is not met, WARN for 6 days then set to INFO
+
 audit_processed_hours:
   class: AuditProcessedSizeIterativeQuery
   category: audit
