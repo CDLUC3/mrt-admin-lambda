@@ -26,9 +26,13 @@ class AuditProcessedSizeQuery < AdminQuery
         other_files,
         other_bytes,
         case
+          when ('#{LambdaBase.is_prod}' = '')
+            then 'SKIP'
           when (all_files > 2300000 and online_bytes > 12000000000000)
             then 'PASS'
-          when (all_files < 2300000 and online_bytes < 12000000000000)
+          when (all_files > 1550000 and online_bytes >  8000000000000)
+            then 'INFO'
+          when (all_files < 1550000 and online_bytes <  8000000000000)
             then 'FAIL'
           when (audit_date < date_add(now(), INTERVAL -6 DAY))
             then 'INFO'

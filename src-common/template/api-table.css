@@ -10,12 +10,15 @@ div.results {
   margin: 0 0 auto;
 }
 
+#report-description table,
 table.results {
   border-collapse: collapse;
   width: 90%;
   margin: auto;
 }
 
+#report-description table th,
+#report-description table td,
 table.results th,
 table.results td {
   border: thin solid black;

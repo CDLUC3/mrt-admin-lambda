@@ -267,13 +267,22 @@ audit_processed_size:
     Performance issues older than 6 days are ignored by the report.
 
     ### Calculations - Revised June 2022
-    - 140M files / 60 days = 2.3M
-    - 735T online / 60 days = 12T
+    
+    |Criteria                      |Total|60 days|90 days|
+    |------------------------------|-----|-------|-------|
+    |Files Processed               |140m |2.3m   |1.55m  |
+    |Online (total-nearline) Bytes |735T |12T    |8T     |
 
+    
     ### Criteria - Revised June 2022
-    - If the process handles more than 2.3M files AND more than 12T in a given day, PASS.
-    - If the process handles less than 2.3M files AND less than 12T in a given day, failed.
-    - If either goal is not met, WARN for 6 days then set to INFO
+
+    | Status | Criteria |
+    | ------ | -------- |
+    | SKIP   | Test is skipped in the stage environment |
+    | PASS   | Process more than 2.3m files  **AND** more than 12T of online content |
+    | INFO   | Process more than 1.55m files **AND** more than 8T of online content |
+    | FAIL   | Process less than 1.55m files **AND** less than 8T of online content |
+    | WARN   | Process more than 1.55m files **OR**  more than 8T of online content. Ignore after 6 days |
 
 audit_processed_hours:
   class: AuditProcessedSizeIterativeQuery
