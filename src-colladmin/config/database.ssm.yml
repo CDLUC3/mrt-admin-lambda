@@ -52,6 +52,7 @@ default:
       build-info: "{!SSM: audit/port}/mrtaudit/static/build.content.txt"
     replic: 
       state: "{!SSM: replic/port}/mrtreplic/state?t=json"
+      build-info: "{!SSM: replic/port}/mrtreplic/static/build.content.txt"
     # sword: 
     #   state: "{!SSM: sword/port}/mrtrsword/servicedocument"
     oai: 
