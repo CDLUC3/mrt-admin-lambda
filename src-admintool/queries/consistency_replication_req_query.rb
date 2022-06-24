@@ -16,9 +16,11 @@ class ConsistencyReplicationReqQuery < AdminQuery
       select
         case
           when u.inv_object_id = (
-            select id from inv.inv_objects where ark = 'ark:/13030/m5q57br8'
-          ) then 'Wasabi Issue 477'
-          else 'Default'
+            select id from inv.inv_objects where ark = 'ark:/99999/fk4t15qn1'
+          ) 
+            then 'Stage Exception'
+          else 
+            'Default'
         end as category,
         count(u.inv_object_id) as obj,
         sum(os.billable_size) as fbytes,
@@ -57,15 +59,6 @@ class ConsistencyReplicationReqQuery < AdminQuery
           0
         ) as day0,   
         case
-          when 
-            sum(
-              case
-                when u.inv_object_id = (
-                  select id from inv.inv_objects where ark = 'ark:/13030/m5q57br8'
-                ) then 1
-                else 0
-              end
-            ) > 0 then 'INFO'
           when count(distinct u.inv_object_id) = 0 then 'PASS'
           when 
             sum(

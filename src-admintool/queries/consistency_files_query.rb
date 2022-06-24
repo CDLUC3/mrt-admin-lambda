@@ -25,17 +25,11 @@ class ConsistencyFilesQuery < AdminQuery
           when ifnull(c.mnemonic, '') = ''
             then 'No Mnemonic'
           when age.inv_object_id = (
-            select id from inv.inv_objects where ark = 'ark:/13030/m5q57br8'
-          )
-            then 'Wasabi Issue 477'
-          when age.inv_object_id = (
-            select id from inv.inv_objects where ark = 'ark:/13030/m5q029nw'
-          )
-            then 'Large Repl 991'
-          when age.inv_object_id = (
-            select id from inv.inv_objects where ark = 'ark:/13030/m5v45qp2'
-          )
-            then 'UCD Curatorial'
+            select -1 /*id from inv.inv_objects where ark = '...'*/
+          ) 
+            then '...'
+          when c.name = 'Merritt curatorial classes'
+            then 'Stage Exception'
           else
             'Default'
         end as category,
@@ -88,20 +82,11 @@ class ConsistencyFilesQuery < AdminQuery
             0
           ) > 0 then 
             case
-              when age.inv_object_id = (
-                select id from inv.inv_objects where ark = 'ark:/13030/m5v45qp2'
-              ) then 'INFO'
-              when #{@copies.to_i} != 2 then 'FAIL'
               when c.mnemonic = 'oneshare_dataup' then 'INFO'
               when c.mnemonic = 'dataone_dash' then 'INFO'
               when ifnull(c.mnemonic, '') = '' then 'INFO'
-              when age.inv_object_id = (
-                select id from inv.inv_objects where ark = 'ark:/13030/m5q57br8'
-              ) then 'INFO'
-              when age.inv_object_id = (
-                select id from inv.inv_objects where ark = 'ark:/13030/m5q029nw'
-              ) then 'WARN'
-            else 'FAIL'
+              when #{@copies.to_i} != 2 then 'FAIL'
+              else 'FAIL'
             end
           when ifnull(
             sum(

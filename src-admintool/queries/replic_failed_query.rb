@@ -11,8 +11,7 @@ class ReplicationFailedQuery < AdminQuery
     %{
       select 
         case
-          when o.ark = 'ark:/13030/m5q57br8' then 'Wasabi Issue 477'
-          when o.ark = 'ark:/13030/m5q029nw' then 'Repl Issue 991'
+          when o.ark = '...' then '...'
           else 'Default'
         end as category,
         inio.inv_object_id,
@@ -39,8 +38,7 @@ class ReplicationFailedQuery < AdminQuery
             i2.completion_status = 'fail'
         ) as nodes,
         case
-          when o.ark = 'ark:/13030/m5q57br8' then 'INFO'
-          when o.ark = 'ark:/13030/m5q029nw' then 'WARN'
+          when o.ark = '...' then 'INFO'
           else 'FAIL' 
         end as status      
       from 

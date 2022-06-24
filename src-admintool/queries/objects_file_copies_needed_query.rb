@@ -12,15 +12,6 @@ class ObjectsFileCopiesNeededQuery < ObjectsQuery
       and not exists (
         select 1
         from 
-          inv.inv_objects xo 
-        where 
-          xo.ark = 'ark:/13030/m5q57br8'
-        and 
-          xo.id = age.inv_object_id
-      ) 
-      and not exists (
-        select 1
-        from 
           inv.inv_collections_inv_objects icio
         inner join inv.inv_collections c
           on c.id = icio.inv_collection_id

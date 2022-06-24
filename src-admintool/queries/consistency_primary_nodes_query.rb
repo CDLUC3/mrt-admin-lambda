@@ -28,6 +28,8 @@ class ConsistencyPrimaryNodeQuery < AdminQuery
         case
           when n.number = 4001 then 'SKIP'
           when n.number = 5001 then 'INFO'
+          when c.name like 'CDL Dryad Stage' then 'INFO'
+          when c.name like 'CDL Wasabi Demo Collection' then 'INFO'
           else 'FAIL'
         end as status
       from

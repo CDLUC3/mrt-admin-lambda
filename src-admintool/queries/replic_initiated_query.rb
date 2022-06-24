@@ -11,7 +11,6 @@ class ReplicationInitiatedQuery < AdminQuery
     %{
       select 
         case
-          when o.ark = 'ark:/13030/m5q57br8' then 'Wasabi Issue 477'
           when o.ark in ('ark:/13030/m5v45qp2', 'ark:/13030/j2br86wx', 'ark:/13030/j21n79mc') then 'Issue 951 - Admin Object'
           else 'Default'
         end as category,
@@ -25,8 +24,6 @@ class ReplicationInitiatedQuery < AdminQuery
         min(i2.version_number) as secmin,
         max(i2.version_number) as secmax,
         case
-          when o.ark = 'ark:/13030/m5q57br8' 
-            then 'INFO'
           when o.ark in ('ark:/13030/m5v45qp2', 'ark:/13030/j2br86wx', 'ark:/13030/j21n79mc') 
             then 'INFO'
           when inio.replic_start is null and o.modified > date_add(now(), INTERVAL -4 HOUR)
