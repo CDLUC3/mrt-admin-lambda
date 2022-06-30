@@ -306,14 +306,14 @@ replication_initiated:
 
     - *FAIL*: 
       - Replication started more than 24 hours ago .
-      - Replication not yet started, it has been more than 24 hours since the object was created/modified.
     - *WARN*: 
       - Replication started more than 4 hours ago.
-      - Replication not yet started, it has been more than 4 hours since the object was created/modified.
     - *PASS*: 
       - Replication started less than 4 hours ago.
       - Replication not yet started, it has been less than 4 hours since the object was created/modified.
-    - *INFO*: Known replication exception has been coded into the report
+    - *INFO*: 
+      - Known replication exception has been coded into the report
+      - Replication not yet started, it has been more than 4 hours since the object was created/modified.
 replication_failed:
   class: ReplicationFailedQuery
   category: replication

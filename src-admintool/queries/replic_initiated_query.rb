@@ -24,14 +24,10 @@ class ReplicationInitiatedQuery < AdminQuery
         min(i2.version_number) as secmin,
         max(i2.version_number) as secmax,
         case
-          when o.ark in ('ark:/13030/m5v45qp2', 'ark:/13030/j2br86wx', 'ark:/13030/j21n79mc') 
-            then 'INFO'
           when inio.replic_start is null and o.modified > date_add(now(), INTERVAL -4 HOUR)
             then 'PASS'
-          when inio.replic_start is null and o.modified > date_add(now(), INTERVAL -24 HOUR)
-            then 'WARN'
           when inio.replic_start is null 
-            then 'FAIL'
+            then 'INFO'
           when inio.replic_start > date_add(now(), INTERVAL -4 HOUR) 
             then 'PASS'
           when inio.replic_start > date_add(now(), INTERVAL -24 HOUR) 
