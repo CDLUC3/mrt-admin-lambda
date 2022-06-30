@@ -354,7 +354,7 @@ class Nodes < MerrittQuery
           else description
         end as description,
         access_mode,
-        nc.file_count + nc.object_count as pcount, 
+        ifnull(nc.file_count, 0) + ifnull(nc.object_count, 0) as pcount, 
         iss.scan_status,
         iss.created,
         iss.updated,
@@ -400,7 +400,7 @@ class Nodes < MerrittQuery
         iss.id as inv_scan_id
       from 
         inv_nodes n
-      inner join billing.node_counts nc
+      left join billing.node_counts nc
         on n.id = nc.inv_node_id
       left join (
         select
