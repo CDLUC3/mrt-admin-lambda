@@ -131,28 +131,31 @@ class StorageAction < AdminAction
         "Node added to collection"
       ).to_json
 
-      MerrittQuery.new(@config).run_update(
-        %{
-          update 
-            inv_nodes_inv_objects inio
-          set
-            replicated = null
-          where 
-            role = 'primary'
-          and exists (
-            select 
-              1 
-            from
-              inv_collections_inv_objects icio
+      trigger_repl = false
+      if trigger_repl
+        MerrittQuery.new(@config).run_update(
+          %{
+            update 
+              inv_nodes_inv_objects inio
+            set
+              replicated = null
             where 
-              icio.inv_collection_id = ?
-            and
-              icio.inv_object_id = inio.inv_object_id
-          )
-        }, 
-        [coll],
-        "Replication status reset for all objects in the collection"
-      ).to_json
+              role = 'primary'
+            and exists (
+              select 
+                1 
+              from
+                inv_collections_inv_objects icio
+              where 
+                icio.inv_collection_id = ?
+              and
+                icio.inv_object_id = inio.inv_object_id
+            )
+          }, 
+          [coll],
+          "Replication status reset for all objects in the collection"
+        ).to_json
+      end
       return res
     elsif @path == "storage-del-node-for-collection"
       coll = @myparams.fetch("coll", "0").to_i
