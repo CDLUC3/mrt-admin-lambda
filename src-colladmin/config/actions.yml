@@ -654,7 +654,6 @@ storage-add-node-for-collection:
   description: |
     Add a secondary storage node to the configuration for a collection.
 storage-del-node-for-collection:
-  prod_support: false
   class: StorageAction
   category: Storage Node Configuration
   sensitivity: sensitive
@@ -665,7 +664,6 @@ storage-del-node-for-collection:
 
     #### Not yet implemented in prod
 replic-delete-coll-batch-from-node:
-  prod_support: false
   class: ReplicationAction
   category: Storage Node Configuration
   sensitivity: sensitive
