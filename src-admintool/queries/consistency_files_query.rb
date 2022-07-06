@@ -71,6 +71,7 @@ class ConsistencyFilesQuery < AdminQuery
         case
           when count(*) = 0 then 'PASS'
           when #{@copies.to_i} = 3 then 'PASS'
+          when #{@copies.to_i} = 4 and c.mnemonic = 'cdl_dryad' then 'INFO'
           when ifnull(
             sum(
               case

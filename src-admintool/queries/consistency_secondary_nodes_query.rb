@@ -4,7 +4,7 @@ class ConsistencySecondaryNodeQuery < AdminQuery
   end
 
   def get_title
-    "Collections with Non-standard Secondary Nodes (Not Glacier+Wasabi or SDSC+Wasabi)"
+    "Collections with Non-standard Secondary Nodes (Not Glacier+Wasabi or SDSC+Wasabi or Dryad Glacier+SDSC)"
   end
 
   def get_sql
@@ -49,7 +49,7 @@ class ConsistencySecondaryNodeQuery < AdminQuery
       group by
         collection
       having
-        nodes not in ('2001,6001', '2001,9501', '2002,6001', '2002,9502')
+        nodes not in ('2001,6001', '2001,9501', '2002,6001', '2002,9502', '3641,9501')
       ; 
     }
   end
