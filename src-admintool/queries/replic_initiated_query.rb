@@ -4,9 +4,12 @@ class ReplicationInitiatedQuery < AdminQuery
 
     sql = %{
       select 
-        count(*) 
+        count(inio.inv_object_id) as obj,
+        format(sum(ifnull(os.billable_size,0))/1000000000,2) as gb
       from 
-        inv.inv_nodes_inv_objects 
+        inv.inv_nodes_inv_objects inio
+      left join billing.object_size os
+        on inio.inv_object_id = os.inv_object_id
       where 
         ifnull(replicated,'1970-01-01') < '1971-01-01' 
       and role='primary'
@@ -16,13 +19,15 @@ class ReplicationInitiatedQuery < AdminQuery
     results = stmt.execute()
 
     @waiting = 0
+    @gb = 0
     results.each do |r|
       @waiting = r.values[0]
+      @gb = r.values[1]
     end
   end
 
   def get_title
-    "Replication Initiated -- #{@waiting} Objects Waiting to Replicate"
+    "Replication Initiated -- #{@waiting} Objects (#{@gb} GB) Waiting to Replicate"
   end
 
   def get_sql
