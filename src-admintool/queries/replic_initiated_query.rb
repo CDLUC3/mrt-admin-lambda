@@ -1,10 +1,28 @@
 class ReplicationInitiatedQuery < AdminQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
+
+    sql = %{
+      select 
+        count(*) 
+      from 
+        inv.inv_nodes_inv_objects 
+      where 
+        ifnull(replicated,'1970-01-01') < '1971-01-01' 
+      and role='primary'
+      ;
+    }
+    stmt = @client.prepare(sql)
+    results = stmt.execute()
+
+    @waiting = 0
+    results.each do |r|
+      @waiting = r.values[0]
+    end
   end
 
   def get_title
-    "Replication Initiated"
+    "Replication Initiated -- #{@waiting} Objects Waiting to Replicate"
   end
 
   def get_sql
@@ -40,16 +58,16 @@ class ReplicationInitiatedQuery < AdminQuery
         inv.inv_objects o
       on
         o.id = inio.inv_object_id
-      left join 
+      inner join 
         inv.inv_nodes_inv_objects i2
       on 
         inio.inv_object_id = i2.inv_object_id
       and
         i2.role = 'secondary'
       where 
-        inio.replicated is not null 
+        inio.replic_start is not null 
       and 
-        inio.replicated < '1971-01-01'
+        ifnull(inio.replicated, '1970-01-01') < '1971-01-01'
       and
         inio.role = 'primary'
       and
