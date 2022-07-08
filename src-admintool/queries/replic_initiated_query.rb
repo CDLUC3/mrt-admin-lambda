@@ -12,7 +12,10 @@ class ReplicationInitiatedQuery < AdminQuery
         on inio.inv_object_id = os.inv_object_id
       where 
         ifnull(replicated,'1970-01-01') < '1971-01-01' 
-      and role='primary'
+      and 
+        role='primary'
+      and
+        ifnull(inio.completion_status, 'unknown') = 'unknown'
       ;
     }
     stmt = @client.prepare(sql)
@@ -63,7 +66,7 @@ class ReplicationInitiatedQuery < AdminQuery
         inv.inv_objects o
       on
         o.id = inio.inv_object_id
-      inner join 
+      left join 
         inv.inv_nodes_inv_objects i2
       on 
         inio.inv_object_id = i2.inv_object_id
