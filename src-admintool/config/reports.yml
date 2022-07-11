@@ -528,3 +528,10 @@ ingest_bytes_by_hour:
   category: files
   description: |
     Generate a graphable list of total bytes ingested for a 4 hour period over the past week.
+
+update_billing:
+  class: UpdateBillingDatabaseQuery
+  category: reports
+  description: |
+    Call stored procedures to update the billing database.
+    These queries run nightly.  This process is in place for ad-hoc updates during the day.
