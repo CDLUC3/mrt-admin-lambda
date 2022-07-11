@@ -14,8 +14,8 @@ class ReplicationInitiatedQuery < AdminQuery
         ifnull(replicated,'1970-01-01') < '1971-01-01' 
       and 
         role='primary'
-      and
-        ifnull(inio.completion_status, 'unknown') = 'unknown'
+      and 
+        inio.completion_status not in ('fail', 'partial')
       ;
     }
     stmt = @client.prepare(sql)
