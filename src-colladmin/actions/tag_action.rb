@@ -51,7 +51,21 @@ class Ec2Info
     return res unless @state == "running"
 
     @config.fetch("endpoints", {}).fetch(@subservice, {}).each do |k,v|
-      res[k] = "http://#{@name}.cdlib.org:#{v}"
+      if k == 'state' && @subservice == "ui"
+        m = @name.match(%r[(ui0[0-9])x2-stg]) 
+        if m 
+          res["*#{k}"] = "https://#{m[1]}-aws-stg.cdlib.org/state.json"
+        else
+          m = @name.match(%r[(ui0[0-9])x2]) 
+          if m 
+            res["*#{k}"] = "https://#{m[1]}-aws.cdlib.org/state.json"
+          end
+        end
+      elsif k == 'state' && @subservice == "sword"
+        res["*#{k}"] = "http://foo:bar@#{@name}:39001/mrtsword/servicedocument"
+      else
+        res[k] = "http://#{@name}.cdlib.org:#{v}"
+      end
     end
     res
   end

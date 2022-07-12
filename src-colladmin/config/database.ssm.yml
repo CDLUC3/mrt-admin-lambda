@@ -53,10 +53,14 @@ default:
     replic: 
       state: "{!SSM: replic/port}/mrtreplic/state?t=json"
       build-info: "{!SSM: replic/port}/mrtreplic/static/build.content.txt"
-    # sword: 
-    #   state: "{!SSM: sword/port}/mrtrsword/servicedocument"
+    sword: 
+      state: "{!SSM: sword/port}/mrtsword/servicedocument"
+      # build-info: "{!SSM: sword/port}/mrtsword/static/build.content.txt"
     oai: 
       state: "{!SSM: oai/port}/mrtoai/state?t=json"
+      # build-info: "{!SSM: oai/port}/mrtoai/static/build.content.txt"
+    ui: 
+      state: "/state"
   replic-service: "{!SSM: colladmin/replic-service}"
   storage-service: "{!SSM: colladmin/storage-service}"
   inventory-service: "{!SSM: colladmin/inventory-service}"

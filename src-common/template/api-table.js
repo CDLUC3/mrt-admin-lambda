@@ -669,7 +669,13 @@ function format(cell, v, type, merritt_path) {
       var atext = arr.length > 0 ? arr[0] : "";
       var name = arr.length > 1 ? arr[1] : "";
       var title = arr.length > 2 ? arr[2] : "";
-      var li = makeLiLink(ul, atext, colladmin_root + "?path=instances&name="+name+"&label="+atext);
+      var href = colladmin_root + "?path=instances&name="+name+"&label="+atext;
+      var li;
+      if (atext.match(/^\*/)) {
+        li = makeLi(ul, atext);
+      } else {
+        li = makeLiLink(ul, atext, href);
+      }
       li.attr("title", title);
       li.append(" ");
       makeLink(li, "📋", "javascript:window.prompt('Copy to clipboard: Ctrl+C, Enter', '" +title+"')"); 
