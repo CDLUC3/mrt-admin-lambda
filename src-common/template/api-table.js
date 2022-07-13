@@ -672,11 +672,12 @@ function format(cell, v, type, merritt_path) {
       var href = colladmin_root + "?path=instances&name="+name+"&label="+atext;
       var li;
       if (atext.match(/^\*/)) {
-        li = makeLi(ul, atext);
+        li = makeLi(ul, atext.replace(/^\*/, ""));
+        li.attr("title", "Use curl for this request" + title);
       } else {
         li = makeLiLink(ul, atext, href);
+        li.attr("title", title);
       }
-      li.attr("title", title);
       li.append(" ");
       makeLink(li, "📋", "javascript:window.prompt('Copy to clipboard: Ctrl+C, Enter', '" +title+"')"); 
     });

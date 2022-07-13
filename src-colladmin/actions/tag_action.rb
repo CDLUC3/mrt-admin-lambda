@@ -54,15 +54,16 @@ class Ec2Info
       if k == 'state' && @subservice == "ui"
         m = @name.match(%r[(ui0[0-9])x2-stg]) 
         if m 
-          res["*#{k}"] = "https://#{m[1]}-aws-stg.cdlib.org/state.json"
+          res["#{k}"] = "https://#{m[1]}-aws-stg.cdlib.org/state.json"
         else
           m = @name.match(%r[(ui0[0-9])x2]) 
           if m 
-            res["*#{k}"] = "https://#{m[1]}-aws.cdlib.org/state.json"
+            res["#{k}"] = "https://#{m[1]}-aws.cdlib.org/state.json"
           end
         end
       elsif k == 'state' && @subservice == "sword"
-        res["*#{k}"] = "http://foo:bar@#{@name}:39001/mrtsword/servicedocument"
+        # The following should be tested with curl
+        res["*#{k}"] = "http://foo:bar@#{@name}.cdlib.org:39001/mrtsword/servicedocument"
       else
         res[k] = "http://#{@name}.cdlib.org:#{v}"
       end
@@ -175,13 +176,25 @@ class TagAction < AdminAction
     url = ec2.urls.fetch(@label, "")
     return "No Url found" if url.empty?
     cli = HTTPClient.new
-    resp = cli.get(url)
-    unless resp.status == 200
-      { 
+    cli.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    if @label == "stop" || @label == "start"
+      resp = cli.post(url)
+    else
+      resp = cli.get(url)
+    end
+    ret = resp.body
+    if resp.status == 200
+      begin
+        JSON.parse(resp.body)
+      rescue => exception
+        ret = {body: resp.dump}.to_json
+      end
+    else
+      ret = { 
         message: "Status #{resp.status} for #{url}" 
       }.to_json
     end
-    resp.body
+    ret
   end
 
   def perform_action

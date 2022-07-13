@@ -47,15 +47,21 @@ default:
     inventory: 
       state: "{!SSM: inventory/port}/mrtinv/state?t=json"
       build-info: "{!SSM: inventory/port}/mrtinv/static/build.content.txt"
+      start: "{!SSM: inventory/port}/mrtinv/service/start?t=json"
+      stop: "{!SSM: inventory/port}/mrtinv/service/stop?t=json"
     audit: 
       state: "{!SSM: audit/port}/mrtaudit/state?t=json"
       build-info: "{!SSM: audit/port}/mrtaudit/static/build.content.txt"
+      start: "{!SSM: audit/port}/mrtaudit/service/start?t=json"
+      stop: "{!SSM: audit/port}/mrtaudit/service/stop?t=json"
     replic: 
       state: "{!SSM: replic/port}/mrtreplic/state?t=json"
       build-info: "{!SSM: replic/port}/mrtreplic/static/build.content.txt"
+      start: "{!SSM: replic/port}/mrtreplic/service/start?t=json"
+      stop: "{!SSM: replic/port}/mrtreplic/service/stop?t=json"
     sword: 
       state: "{!SSM: sword/port}/mrtsword/servicedocument"
-      # build-info: "{!SSM: sword/port}/mrtsword/static/build.content.txt"
+      build-info: "{!SSM: sword/port}/mrtsword/static/build.content.txt"
     oai: 
       state: "{!SSM: oai/port}/mrtoai/state?t=json"
       # build-info: "{!SSM: oai/port}/mrtoai/static/build.content.txt"
