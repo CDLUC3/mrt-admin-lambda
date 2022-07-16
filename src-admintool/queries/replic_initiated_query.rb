@@ -15,7 +15,7 @@ class ReplicationInitiatedQuery < AdminQuery
       and 
         role='primary'
       and 
-        inio.completion_status not in ('fail', 'partial')
+        ifnull(inio.completion_status, 'ok') not in ('fail', 'partial')
       ;
     }
     stmt = @client.prepare(sql)
