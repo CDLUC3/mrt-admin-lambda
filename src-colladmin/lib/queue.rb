@@ -110,6 +110,7 @@ class QueueEntry < QueueJson
       type = 'requeue' if sym == :requeue
       type = 'hold' if sym == :hold
       type = 'release' if sym == :release
+      type = 'container' if sym == :queue
       arr.append(type)
     end
     arr

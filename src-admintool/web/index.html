@@ -200,6 +200,14 @@
             <li><a href="{{ADMINTOOL_HOME}}?path=ingest_bytes_by_hour">Recent Bytes ingested by hour</a></li>
             <li><a href="{{ADMINTOOL_HOME}}?path=recent_ingests">Recent Ingests</a></li>
             <li><a href="{{ADMINTOOL_HOME}}?path=big_ingest&items=200&days=14">Big Ingests (200+) - Last 14 days</a></li>
+            <li>
+              <form action="{{ADMINTOOL_HOME}}">
+                Object(s) by Batch Container Name:
+                <input name="container" type="text" value="" size=40 title="This would generally be a .checkm or .zip file"/>
+                <input name="path" type="hidden" value="objects_by_container_name"/>
+                <input type="submit" value="Go!"/>
+              </form>
+            </li>
           </ul>
         </li>
         <li>

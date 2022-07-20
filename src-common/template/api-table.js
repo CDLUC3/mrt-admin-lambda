@@ -568,6 +568,8 @@ function format(cell, v, type, merritt_path) {
   } else if (type == 'job') {
     //todo... pass batch as well, job is not indexed
     makeLink(cell, v, admintool_home + "?path=objects_by_job&job="+v+"&batch=x");
+  } else if (type == 'container') {
+    makeLink(cell, v, admintool_home + "?path=objects_by_container_name&container="+v);
   } else if (type == 'qbatch') {
     makeLink(cell, v, colladmin_home + "?path=batch&batch="+v);
   } else if (type == 'ldapuid') {

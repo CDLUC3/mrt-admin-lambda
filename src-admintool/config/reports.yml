@@ -66,6 +66,11 @@ objects_by_local_id:
     Wildcard searching is not permitted.
     
     Click the Object Id link to see a detailed listing of the files contained in the object.
+objects_by_container_name:
+  class: ObjectsByContainerNameQuery
+  category: objects
+  description: |
+    This report displays an object with a batch container file such as a .checkm file or a .zip file.
 objects_by_author:
   class: ObjectsByAuthorQuery
   category: objects
