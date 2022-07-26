@@ -661,8 +661,6 @@ storage-del-node-for-collection:
   description: |
     Remove a storage node from a collection configuration.
     All objects in the collection will need to be cleared from the storage node.
-
-    #### Not yet implemented in prod
 replic-delete-coll-batch-from-node:
   class: ReplicationAction
   category: Storage Node Configuration
@@ -670,8 +668,6 @@ replic-delete-coll-batch-from-node:
   testing: manual
   description: |
     Delete a batch of objects from the collection from this node.  This may need to run iteratively.
-
-    #### Not yet implemented in prod
 storage-del-object-from-node:
   implemented: false
   category: Delete object
