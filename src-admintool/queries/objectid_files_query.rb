@@ -14,7 +14,7 @@ class ObjectIdFilesQuery < AdminQuery
         o.ark, 
         v.number,
         f.source,
-        f.pathname,
+        binary f.pathname,
         f.full_size,
         f.created,
         ifnull(group_concat(n.number), '') as nodelist,
@@ -49,7 +49,7 @@ class ObjectIdFilesQuery < AdminQuery
         o.ark,
         v.number,
         f.source,
-        f.pathname,
+        binary f.pathname,
         f.full_size,
         f.created
       order by 
