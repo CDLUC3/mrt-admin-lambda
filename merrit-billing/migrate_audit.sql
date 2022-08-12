@@ -71,7 +71,7 @@ BEGIN
       ifnull(
         sum(
           case 
-            when a.inv_node_id in (select id from inv.inv_nodes where number = 6001) 
+            when a.inv_node_id in (select id from inv.inv_nodes where access_mode != 'on-line') 
               then 0
             else 1
           end
@@ -81,7 +81,7 @@ BEGIN
       ifnull(
         sum(
           case 
-            when a.inv_node_id in (select id from inv.inv_nodes where number = 6001) 
+            when a.inv_node_id in (select id from inv.inv_nodes where access_mode != 'on-line') 
               then 0
             else full_size
           end
@@ -111,7 +111,7 @@ BEGIN
         ifnull(
         sum(
             case 
-            when a.inv_node_id in (select id from inv.inv_nodes where number = 6001) 
+            when a.inv_node_id in (select id from inv.inv_nodes where access_mode != 'on-line') 
                 then 1
             else 0
             end
@@ -121,7 +121,7 @@ BEGIN
         ifnull(
         sum(
             case 
-            when a.inv_node_id in (select id from inv.inv_nodes where number = 6001) 
+            when a.inv_node_id in (select id from inv.inv_nodes where access_mode != 'on-line') 
                 then full_size
             else 0
             end
@@ -173,7 +173,7 @@ BEGIN
             case 
             when a.inv_node_id in (select id from inv.inv_nodes where number in (5001, 3041, 3042)) 
                 then 0
-            when a.inv_node_id in (select id from inv.inv_nodes where number = 6001) 
+            when a.inv_node_id in (select id from inv.inv_nodes where access_mode != 'on-line') 
                 then 0
             when a.inv_node_id in (select id from inv.inv_nodes where number in (2001, 2002)) 
                 then 0
@@ -189,7 +189,7 @@ BEGIN
             case 
             when a.inv_node_id in (select id from inv.inv_nodes where number in (5001, 3041, 3042)) 
                 then 0
-            when a.inv_node_id in (select id from inv.inv_nodes where number = 6001) 
+            when a.inv_node_id in (select id from inv.inv_nodes where access_mode != 'on-line') 
                 then 0
             when a.inv_node_id in (select id from inv.inv_nodes where number in (2001, 2002)) 
                 then 0
