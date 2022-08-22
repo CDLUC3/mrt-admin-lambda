@@ -399,7 +399,7 @@ function invoke(params, showRes, reload) {
           scanEnabled(true);
         } else if (data.message == "Scan Allowed: false") {
           scanEnabled(false);
-        } else {
+        } else if (showRes) {
           alert(data.message);
         }
       } else if ('log' in data) {
