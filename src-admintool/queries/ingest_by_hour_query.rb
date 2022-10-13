@@ -12,13 +12,13 @@ class IngestBytesByHourQuery < AdminQuery
       @tstart = get_param('start', defstart)
       @tstart = defstart unless Time.parse(@tstart)
       @days = ((Time.parse(@tend) - Time.parse(@tstart)) / spd ).to_i
-      unless @days > 0 && @days < 100
+      unless @days > 0 && @days <= 100
         @days = defdays
         @tstart = defstart
       end
     else
       @days = get_param('days', defdays).to_i
-      @days = defdays unless @days > 0 && @days < 100
+      @days = defdays unless @days > 0 && @days <= 100
       @tstart = (Time.parse(@tend) - @days * spd).strftime('%Y-%m-%d')
     end
     if @days <= 3
@@ -37,7 +37,7 @@ class IngestBytesByHourQuery < AdminQuery
   def get_sql
     sql = %{
       select
-        date_format(times.ts, 'D%Y-%m-%d_%H') as timeblock, 
+        date_format(times.ts, '%Y-%m-%d %H:00') as timeblock, 
         ifnull(sum(billable_size), 0) as bytes 
       from 
         (

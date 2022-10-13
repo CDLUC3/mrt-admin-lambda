@@ -537,7 +537,7 @@ ingest_bytes_by_hour:
     - If less than or equal to 14 days, the values will be graphed in 4 hour increments
     - If more than 14 days, the values will be graphed daily
     - the default is the most recent 7 days
-    - ranges over 100 days will not be graphed 
+    - ranges over 100 days will not be graphed.  The data retrieval is too slow for ranges that large. 
 
 update_billing:
   class: UpdateBillingDatabaseQuery
