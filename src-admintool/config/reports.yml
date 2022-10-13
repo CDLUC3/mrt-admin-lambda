@@ -532,7 +532,12 @@ ingest_bytes_by_hour:
   class: IngestBytesByHourQuery
   category: files
   description: |
-    Generate a graphable list of total bytes ingested for a 4 hour period over the past week.
+    Generate a graphable list of total bytes ingested for a period of 1 day to 100 days.
+    - If less than equal to 3 days, the values will be graphed hourly 
+    - If less than or equal to 14 days, the values will be graphed in 4 hour increments
+    - If more than 14 days, the values will be graphed daily
+    - the default is the most recent 7 days
+    - ranges over 100 days will not be graphed 
 
 update_billing:
   class: UpdateBillingDatabaseQuery
