@@ -14,7 +14,7 @@ class GlobalConfig
   @@colladmin_actions = {}
 
   def self.load_config
-    @@config = Uc3Ssm::ConfigResolver.new.resolve_file_values({file: 'config/config.yml'})
+    @@config = Uc3Ssm::ConfigResolver.new.resolve_file_values(file: 'config/config.yml')
     @@admin_reports = YAML.load_file('../src-admintool/config/reports.yml')
     @@colladmin_actions = YAML.load_file('../src-colladmin/config/actions.yml')
   end
