@@ -5,7 +5,7 @@
 # This image is based on an architecture that matches the Lambda Ruby runtime
 # docker build -t ${ECR_REGISTRY}/mysql-ruby-lambda .
 
-FROM public.ecr.aws/lambda/ruby:2.7
+FROM public.ecr.aws/lambda/ruby:3
 
 RUN yum -y update
 
