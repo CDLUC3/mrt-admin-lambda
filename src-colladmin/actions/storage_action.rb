@@ -131,7 +131,7 @@ class StorageAction < AdminAction
         "Node added to collection"
       ).to_json
 
-      trigger_repl = false
+      trigger_repl = true
       if trigger_repl
         MerrittQuery.new(@config).run_update(
           %{
