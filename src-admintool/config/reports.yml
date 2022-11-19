@@ -39,6 +39,9 @@ mimes:
     This report categorizes Merritt content by Mime Type.  A high-level _Mime Group_ is assigned to each Mime Type based on the work of the UC Digital Preservation Strategy working group.
     A [view in the Merritt Billing database](https://github.com/CDLUC3/mrt-admin-lambda/blob/main/merrit-billing/views.sql) created the Mime Group organization based on Mime Type strings. 
 collnodes:
+  link-title: Primary and Secondary Storage Nodes for a Collection
+  nav:
+    path: /storage/configuration
   class: CollectionNodesQuery
   category: storage nodes
   description: |
@@ -47,6 +50,9 @@ collnodes:
     _If more than 2 secondary nodes are configured, only 2 nodes will be displayed._
     #### Deprecated: This report has been superseded by the collection admin report *Manage Storage Nodes for a Collection*.
 nodes:
+  link-title: Storage Nodes
+  nav:
+    path: /storage/configuration
   class: NodesQuery
   category: storage nodes
   description: |
@@ -55,6 +61,9 @@ nodes:
 
     Click the **Filter Data** button to remove empty nodes from the report.
 objects_by_ark:
+  link-title: Objects by Ark Query
+  nav:
+    path: /objects/query
   class: ObjectsByArkQuery
   category: objects
   description: |
@@ -66,6 +75,9 @@ objects_by_ark:
     
     A more feature rich version of this report is available in the Collection Admin Tool report **Manage Object Storage**. 
 objects_by_title:
+  link-title: Objects by Title Query
+  nav:
+    path: /objects/query
   class: ObjectsByTitleQuery
   category: objects
   description: |
@@ -73,6 +85,9 @@ objects_by_title:
     
     Click the Object Id link to see a detailed listing of the files contained in the object.
 objects_by_local_id:
+  link-title: Objects by Local Id Query
+  nav:
+    path: /objects/query
   class: ObjectsByLocalIdQuery
   category: objects
   description: |
@@ -81,11 +96,17 @@ objects_by_local_id:
     
     Click the Object Id link to see a detailed listing of the files contained in the object.
 objects_by_container_name:
+  link-title: Objects by Ingest Container Name Query
+  nav:
+    path: /objects/query
   class: ObjectsByContainerNameQuery
   category: objects
   description: |
     This report displays an object with a batch container file such as a .checkm file or a .zip file.
 objects_by_author:
+  link-title: Objects by Author/Creator Query
+  nav:
+    path: /objects/query
   class: ObjectsByAuthorQuery
   category: objects
   description: |
@@ -93,6 +114,9 @@ objects_by_author:
     
     Click the Object Id link to see a detailed listing of the files contained in the object.
 objects_large:
+  link-title: Sample Objects Larger than 1GB
+  nav:
+    path: /objects/issue-list
   class: ObjectsLargeQuery
   category: objects
   description: |
@@ -100,6 +124,9 @@ objects_large:
     To keep the query reasonably quick, results are not in sorted order.
     The intention of this report is to identify objects that might be useful for performance related testing.
 objects_many_files:
+  link-title: Sample Objects containing more than 1000 files
+  nav:
+    path: /objects/issue-list
   class: ObjectsManyFilesQuery
   category: objects
   description: |
@@ -107,30 +134,45 @@ objects_many_files:
     To keep the query reasonably quick, results are not in sorted order.
     The intention of this report is to identify objects that might be useful for performance related testing.
 objects_recent:
+  link-title: Last ingest performed for each Merritt Collection
+  nav:
+    path: /ingest/activity
   class: ObjectsRecentQuery
   category: objects
   description: |
     This report lists the last ingest performed for each Merritt collection.  
     Results are sorted from collection most recently updated to least recently updated.
 objects_recent_coll:
+  link-title: Objects Most Recently Ingested for a Specific Collection
+  nav:
+    path: /ingest/activity
   class: ObjectsRecentCollQuery
   category: objects
   description: |
     This report lists the most recently ingested objects for a specific collection.  
     Results are sorted from object most recently updated to least recently updated.
 objects_by_batch:
+  link-title: Objects Ingested from an Ingest Batch
+  nav:
+    path: /objects/issue-list
   class: ObjectsByBatchQuery
   category: objects
   description: |
     This report lists the objects ingested in a Ingest Batch.
     This report is accessed from the **Recent Ingests/Ingests for Day** report.
 objects_by_job:
+  link-title: Objects Ingested from an Ingest Job
+  nav:
+    path: /objects/issue-list
   class: ObjectsByJobQuery
   category: objects
   description: |
     This report lists the objects ingested in an Ingest Batch/Job.
     This report is accessed from links in the Collection Admin Tool.
 files_by_name_coll:
+  link-title: Objects cotnaining Files matching a particluar filename
+  nav:
+    path: /files/query
   class: FilesByNameCollQuery
   category: files
   description: |
@@ -156,23 +198,35 @@ filesizedist:
   description: |
     Generate a report on the distribution of producer files of a specific size ranges within Merritt.
 count_objects:
+  link-title: Count Objects by Collection
+  nav:
+    path: /campus/content
   class: CountObjectsQuery
   category: collections
   description: |
     This report provides a count of objects by collection. The results are summarized at a campus level.
 collections_by_node:
+  link-title: Count Objects Residing on a Storage Node
+  nav:
+    path: /storage/content
   class: CollectionsByNodeQuery
   category: storage nodes
   description: |
     This report provides a count of objects by collection residing on a specific storage node.
     This report is accessed from the **Storage Nodes** report.
 collections_by_owner:
+  link-title: Collections for a Specific Merritt Owner
+  nav:
+    path: /campus/content
   class: CollectionsByOwnerQuery
   category: collections
   description: |
     This report lists the collections owned by a Merritt Owner.
     This report is accessed from the **File Counts by Owner** report.
 collections_by_mime_type:
+  link-title: Collections Containing a specific Mime Type
+  nav:
+    path: /campus/content
   class: CollectionsByMimeQuery
   category: mime types
   params: ['mime_type']
@@ -180,6 +234,9 @@ collections_by_mime_type:
     This report breaks down the count of objects by collection for a specific Mime Type.
     This report is accessed from the **Mime Groups** report.
 collections_by_mime_group:
+  link-title: Collections Containing a specific Mime Group
+  nav:
+    path: /campus/content
   class: CollectionsByMimeQuery
   category: mime types
   params: ['mime_group']
@@ -236,18 +293,27 @@ collections_by_time_size_cumulative:
   description: |
     This report shows the cumulative byte count totals in each Merritt collection year by year since the Merritt system was established.
 collection_details:
+  link-title: Mime type usage within a collection 
+  nav: 
+    path: /collections/content
   class: CollectionDetailsQuery
   category: collections
   params: ['inv_collection_id']
   description: |
     This report describes the contents of a collection by mime type and mime group.
 collection_info:
+  link-title: Consolidated page containing all the links relevant to a specific Merritt collection 
+  nav: 
+    path: /collections/details
   class: CollectionInfoQuery
   category: collections
   params: ['inv_collection_id']
   description: |
     This report provides a landing page that links to all useful reports related to a Merritt collection.
 collection_group_details:
+  link-title: Campus Specific Mime type usage within a collection 
+  nav: 
+    path: /content/mimes
   class: CollectionDetailsQuery
   category: collections
   params: ['ogroup']
@@ -588,23 +654,35 @@ object_copies_needed:
     Enumerate a list of objects that have not been consistently replicated according to standard collection configuration (primary + 2 replicated copies).
     Result of this report may directly correlate with those in the ObjectsFileCopiesNeededQuery report.
 mult_coll:
+  link-title: Count of Objects in multiple Collections
+  nav: 
+    path: /objects/issue-count
   class: MultipleCollectionsQuery
   category: objects
   description: |
     Count objects that have been assigned to multiple Merritt collections.
     Objects residing in multiple collections is a legacy Merritt feature.
 object_mult_coll:
+  link-title: Objects in multiple Collections
+  nav: 
+    path: /objects/issue-list
   class: ObjectsMultipleCollQuery
   category: objects
   description: |
     Enumerate objects that have been assigned to multiple Merritt collections.
     Objects residing in multiple collections is a legacy Merritt feature.
 admin_obj:
+  link-title: Merritt Admin Objects with a Specific Role
+  nav: 
+    path: /objects/issue-list
   class: AdminObjectsQuery
   category: admin obj
   description: |
     Enumerate Merritt Admin Objects for a specific aggregate role.
 admin_obj_files:
+  link-title: Display inv_files list for a Merritt Admin Object
+  nav:
+    path: /system/internal
   class: AdminObjectsFilesQuery
   category: admin obj
   description: |
@@ -638,6 +716,9 @@ report:
     Retrieve a previously run conistency report.
     Consistency reports are defined in the [mrt-cron](https://github.com/CDLUC3/mrt-cron/blob/main/consistency-driver/reports.yml) repo.
 filelist:
+  link-title: File List for an object
+  nav:
+    path: /object/details
   class: ObjectIdFilesQuery
   category: objects
   description: |
@@ -647,18 +728,27 @@ filelist:
 
     Due to lambda resource constraints, a maximum of 2,000 files will be listed.
 obj_audit_status:
+  link-title: Objects with a specific audit status
+  nav:
+    path: /object/issue-list
   class: ObjectsAuditStatusQuery
   category: audit
   description: |
     Enumerate the specific files that have been characterized with an incomplete OR error audit status.
     From the report, navigate to the object storage admin page to re-initiate the audit process.
 collection_node_cleanup_required:
+  link-title: List sectondary object copies that no longer exist in inv_collections_inv_nodes
+  nav:
+    path: /object/issue-list
   class: CollectionNodeCleanupQuery
   category: storage nodes
   description: |
     For a specific collection, identify any secondary replicated copies of the object stored on a node that is no longer configured in `inv_collections_inv_nodes`. 
     Results will appear in this report after a secondary node has been removed for a specific collection.
 ingest_bytes_by_hour:
+  link-title: Graph bytes ingested by hour or day for a range of time
+  nav:
+    path: /ingest/activity
   class: IngestBytesByHourQuery
   category: files
   description: |
@@ -670,6 +760,9 @@ ingest_bytes_by_hour:
     - ranges over 100 days will not be graphed.  The data retrieval is too slow for ranges that large. 
 
 update_billing:
+  link-title: Update the Merritt Billing database (via stored procedure)
+  nav:
+    path: /merritt-internal
   class: UpdateBillingDatabaseQuery
   category: reports
   description: |

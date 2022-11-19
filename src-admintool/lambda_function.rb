@@ -78,12 +78,17 @@ module LambdaFunctions
           rpt = reports[k]
           map['REPORTS'].append({
             report: k,
+            title: rpt.fetch('link-title', '--'), 
+            path: rpt.fetch('nav', {}).fetch('path', '--'), 
             class: rpt.fetch('class', 'Undefied'), 
             category: rpt.fetch('category', ''), 
             description: rpt.fetch('description', ''), 
             iterative: rpt.fetch('iterative', false)
           })
         end
+        map['REPORTS'].sort!{
+          |a,b| "#{a[:path]}/#{a[:report]}" <=> "#{b[:path]}/#{b[:report]}"  
+        }
       end
       map
     end

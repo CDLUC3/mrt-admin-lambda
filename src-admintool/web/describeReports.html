@@ -34,21 +34,20 @@
       <table class="sortable results">
         <thead>
           <tr>
+            <th class="name">Navigation</th>
             <th class="name">Path</th>
-            <th class="name">Category</th>
-            <th class="name">Class</th>
-            <th class="cell">Iterative</th>
             <th class="description">Description</th>
           </tr>
         </thead>
         <tbody>
           {{#REPORTS}}
           <tr>
-            <th class="name">{{report}}</th>
-            <td class="name">{{category}}</td>
-            <td class="name">{{class}}</td>
-            <td class="cell">{{iterative}}</td>
-            <td class="description"><div class="markdown">{{description}}</div></td>
+            <td class="name">{{path}}</td>
+            <td class="name">{{report}}</td>
+            <td class="description">
+              <h3>{{title}}</h3>
+              <div class="markdown">{{description}}</div>
+            </td>
           </tr>
           {{/REPORTS}}
         </tbody>      
