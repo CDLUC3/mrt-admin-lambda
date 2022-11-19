@@ -308,6 +308,8 @@ module LambdaFunctions
           act = actions[k]
           map['ACTIONS'].append({
             action: k,
+            title: act.fetch('link-title', '--'), 
+            path: act.fetch('nav', {}).fetch('path', '--'), 
             class: act.fetch('class', 'Undefied'), 
             description: act.fetch('description', ''), 
             implemented: act.fetch('implemented', true), 
@@ -317,6 +319,9 @@ module LambdaFunctions
             testing: act.fetch('testing_instructions', act.fetch('testing', '')), 
           })
         end
+        map['ACTIONS'].sort!{
+          |a,b| "#{a[:path]}/#{a[:report]}" <=> "#{b[:path]}/#{b[:report]}"  
+        }
       elsif path == '/web/storeQueues.html'
         map['AUDIT_INFO'] = AuditInfo.new(@config).data
       end

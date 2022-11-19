@@ -28,8 +28,16 @@
 #   testing_instructions: url to internal documentation describing how to perform a test
 #   format: [text|json|xml], default: json
 #   test_params: key/value pairs needed for testing
+#   link-title: link title
+#   nav:
+#     path: navigation path
+#     conditional:
+#       param: navigation path with qualifying param
 
 profiles:
+  link-title: List Ingest Profiles (deployed on the Ingest Server)
+  nav:
+    path: /ingest/profiles
   class: IngestProfileAction
   category: Ingest Profiles
   sensitivity: readonly
@@ -39,6 +47,9 @@ profiles:
     An ingest profile describes characteristics associated with a collection's configuration, such as its context mnemonic, description and primary storage node. 
     These profiles are managed in a github repository and are deployed to the server.
 collection-locks:
+  link-title: List Merritt Collections and Collection Level Locks
+  nav:
+    path: /collections/locks
   class: IngestCollectionLocksAction
   category: Ingest Profiles
   sensitivity: readonly
@@ -52,6 +63,9 @@ collection-locks:
 
     Items can be individually released from the [queue page](/web/collIndex.html?path=queues) or they can be released as a set from this page.
 adminprofiles:
+  link-title: List Merritt Admin Profiles
+  nav:
+    path: /ingest/admin-profiles
   class: AdminProfileAction
   category: Ingest Admin Profiles
   sensitivity: readonly
@@ -63,6 +77,9 @@ adminprofiles:
     Admin profiles also provide a basis on which to roll up annual storage recharge calculations.
     These profiles are managed in a github repository and are deployed to the server.
 state:
+  link-title: Ingest Service Status
+  nav:
+    path: /ingest/status
   class: IngestStateAction
   category: Queue Management
   sensitivity: readonly
@@ -70,6 +87,9 @@ state:
   description: |
     Display the state of the ingest service.
 queues:
+  link-title: Ingest Queue Jobs
+  nav:
+    path: /ingest/activity
   class: IngestQueueAction
   category: Queue Management
   sensitivity: readonly
@@ -78,6 +98,9 @@ queues:
     Display the contents of the *ingest queue*. Items in this queue are slated to be processed by the Ingest service.
     From this screen, items can be requeued.
 ingest-queue-by-profile:
+  link-title: Ingest Queue Activity by Profile
+  nav:
+    path: /ingest/activity
   class: IngestQueueProfileCountAction
   category: Queue Management
   sensitivity: readonly
@@ -85,6 +108,9 @@ ingest-queue-by-profile:
   description: |
     Display the counts of the *ingest queue* items by profile.
 inv-queues:
+  link-title: Inventory Queue Jobs
+  nav:
+    path: /inventory/activity
   class: InventoryQueueAction
   category: Queue Management
   sensitivity: readonly
@@ -93,6 +119,9 @@ inv-queues:
     Display the contents of the *inventory queue*. Items in this queue are slated to be processed by the Ingest service.
     From this screen, items can be requeued.
 acc-queues:
+  link-title: Access Queue Jobs
+  nav:
+    path: /access/activity
   class: AccessQueueAction
   category: Queue Management
   sensitivity: readonly
@@ -104,6 +133,9 @@ acc-queues:
     More specifically, each queue item pertains to an end-user request to download an entire digital object. 
     Requests are routed to Access worker hosts based on object size (large or small).
 batchFolders:
+  link-title: Ingest Batch Folders
+  nav:
+    path: /ingest/folders
   class: IngestBatchFoldersAction
   category: Ingest Batches and Folders
   sensitivity: readonly
@@ -118,6 +150,9 @@ batchFolders:
     - WARN: The folder has existed for over one HOUR without registering in the inventory database
     - FAIL: The folder has existed for over one DAY without registering in the inventory database
 batch:
+  link-title: Ingest Batch
+  nav:
+    path: /ingest/activity
   class: IngestBatchAction
   category: Ingest Batches and Folders
   sensitivity: readonly
@@ -125,6 +160,9 @@ batch:
   description: |
     Display details about an *ingest batch*.  A *batch* may contain one or more *jobs*.
 job:
+  link-title: Ingest Job
+  nav:
+    path: /ingest/activity
   class: IngestJobMetadataAction
   category: Ingest Batches and Folders
   sensitivity: readonly
@@ -132,6 +170,9 @@ job:
   description: |
     Display details about a specific *job* within an ingest batch.
 manifest:
+  link-title: Ingest Job Manifest Contents
+  nav:
+    path: /ingest/activity
   class: IngestJobManifestAction
   category: Ingest Batches and Folders
   sensitivity: readonly
@@ -139,6 +180,9 @@ manifest:
   description: |
     Display the manifest defining the content to ingest in a specific *ingest job*.
 files:
+  link-title: Ingest Job Folder File List
+  nav:
+    path: /ingest/folders
   class: IngestJobFilesAction
   category: Ingest Batches and Folders
   sensitivity: readonly
@@ -149,6 +193,9 @@ files:
     - producer files will be removed
     - system files will be retained
 sword:
+  link-title: Dryad Recent Jobs
+  nav:
+    path: /ingest/activity
   class: IngestSwordJobsAction
   category: Ingest Batches and Folders
   sensitivity: readonly
@@ -157,6 +204,9 @@ sword:
     Display the most recent ingest jobs initiated from Dryad via the Sword service.
     After the page is displayed, a separate search is run to display the ARK and DOI associated with each job.
 ldap/users:
+  link-title: List Merritt LDAP Users
+  nav:
+    path: /ldap/users
   class: LDAPActionUsers
   category: LDAP
   sensitivity: readonly
@@ -164,6 +214,9 @@ ldap/users:
   description: | 
     Display the list of Merritt users defined in the Merritt LDAP database.
 ldap/user:
+  link-title: List details for an Merritt LDAP User
+  nav:
+    path: /ldap/users
   class: LDAPActionUserDetailed
   category: LDAP
   sensitivity: readonly
@@ -172,6 +225,9 @@ ldap/user:
     Display the details for a specific Merritt user defined in the Merritt LDAP database.
     The report conveys the permissions granted to the user on a collection basis.
 ldap/roles:
+  link-title: List Merritt LDAP Roles
+  nav:
+    path: /ldap/roles
   class: LDAPActionRoles
   category: LDAP
   sensitivity: readonly
@@ -179,6 +235,9 @@ ldap/roles:
   description: | 
     Display the set of permission groups (roles) defined in the Merritt LDAP database.
 ldap/role:
+  link-title: List details for an Merritt LDAP Role
+  nav:
+    path: /ldap/roles
   class: LDAPAction
   category: LDAP
   sensitivity: readonly
@@ -187,6 +246,9 @@ ldap/role:
     Display information about a specific role defined in the Merritt LDAP database.
     *This report does not seem to be linked in the application**.
 ldap/colls:
+  link-title: List Merritt LDAP Collections
+  nav:
+    path: /ldap/collections
   class: LDAPActionColls
   category: LDAP
   sensitivity: readonly
@@ -195,6 +257,9 @@ ldap/colls:
     Display the Merritt collections as defined in the  Merritt LDAP database.
     Oddly, the Merritt UI uses the Collection name defined in LDAP as the definitive display name for the collection.
 ldap/coll:
+  link-title: List Details for an LDAP Collection
+  nav:
+    path: /ldap/collections
   class: LDAPActionCollDetailed
   category: LDAP
   sensitivity: readonly
@@ -204,6 +269,9 @@ ldap/coll:
   description: | 
     List user details for a Merritt collection as defined in the  Merritt LDAP database, including user roles.
 ldap/collmap:
+  link-title: Merritt LDAP / Inventory Database Mismatches
+  nav:
+    path: /ldap/issue-list
   class: LDAPActionCollmap
   category: LDAP
   sensitivity: readonly
@@ -212,6 +280,9 @@ ldap/collmap:
     Generate a report that maps entities in the Merritt LDAP database to entries in the Merritt inventory database.
     For any items that do not match, an error will be reported in the report.  This indicates that maintenance needs to be performed on the LDAP entries for Merritt.
 ldap/collark:
+  link-title: List LDAP Users for a specific collection ARK
+  nav:
+    path: /ldap/collections
   class: LDAPActionCollArk
   category: LDAP
   sensitivity: readonly

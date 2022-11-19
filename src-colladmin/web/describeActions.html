@@ -43,27 +43,20 @@
     <table class="sortable results">
       <thead>
         <tr>
+          <th class="name">Navigation</th>
           <th class="name">Path</th>
-          <th class="name">Category</th>
-          <th class="name">Class</th>
-          <th class="cell">Implemented</th>
-          <th class="cell">Prod Support</th>
-          <th class="cell">Sensitivity</th>
-          <th class="cell">Testing</th>
           <th class="description">Description</th>
         </tr>
       </thead>
       <tbody>
         {{#ACTIONS}}
         <tr>
+          <th class="name">{{path}}</th>
           <th class="name">{{action}}</th>
-          <td class="name">{{category}}</td>
-          <td class="name">{{class}}</td>
-          <td class="cell">{{implemented}}</td>
-          <td class="cell">{{prod_support}}</td>
-          <td class="cell">{{sensitivity}}</td>
-          <td class="cell">{{testing}}</td>
-          <td class="description"><div class="markdown">{{description}}</div></td>
+          <td class="description">
+            <h3>{{title}}</h3>
+            <div class="markdown">{{description}}</div>
+          </td>
         </tr>
         {{/ACTIONS}}
       </tbody>      
