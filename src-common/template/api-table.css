@@ -102,9 +102,7 @@ table.results td.list,
 table.results th.vallist,
 table.results td.vallist,
 table.results th.list-doc,
-table.results td.list-doc,
-table.results th.list-host,
-table.results td.list-host {
+table.results td.list-doc {
   width: 250px !important;
 }
 

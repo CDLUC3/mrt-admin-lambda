@@ -105,6 +105,9 @@ objects_by_container_name:
   category: objects
   description: |
     This report displays an object with a batch container file such as a .checkm file or a .zip file.
+
+    ### Report data types that link here: 
+    - container
 objects_by_author:
   link-title: Objects by Author/Creator Query
   nav:
@@ -153,6 +156,9 @@ objects_recent_coll:
   description: |
     This report lists the most recently ingested objects for a specific collection.  
     Results are sorted from object most recently updated to least recently updated.
+
+    ### Report data types that link here:
+    - coll-date
 objects_by_batch:
   link-title: Objects Ingested from an Ingest Batch
   nav:
@@ -162,6 +168,10 @@ objects_by_batch:
   description: |
     This report lists the objects ingested in a Ingest Batch.
     This report is accessed from the **Recent Ingests/Ingests for Day** report.
+
+    ### Report data types that link here:
+    - batch
+    - batchnote
 objects_by_job:
   link-title: Objects Ingested from an Ingest Job
   nav:
@@ -171,6 +181,10 @@ objects_by_job:
   description: |
     This report lists the objects ingested in an Ingest Batch/Job.
     This report is accessed from links in the Collection Admin Tool.
+
+    ### Report data types that link here:
+    - job
+    - jobnote
 files_by_name_coll:
   link-title: Objects cotnaining Files matching a particluar filename
   nav:
@@ -216,6 +230,9 @@ collections_by_node:
   description: |
     This report provides a count of objects by collection residing on a specific storage node.
     This report is accessed from the **Storage Nodes** report.
+
+    ### Report data types that link here:
+    - node
 collections_by_owner:
   link-title: Collections for a Specific Merritt Owner
   nav:
@@ -225,6 +242,9 @@ collections_by_owner:
   description: |
     This report lists the collections owned by a Merritt Owner.
     This report is accessed from the **File Counts by Owner** report.
+
+    ### Report data types that link here:
+    - own
 collections_by_mime_type:
   link-title: Collections Containing a specific Mime Type
   nav:
@@ -235,6 +255,9 @@ collections_by_mime_type:
   description: |
     This report breaks down the count of objects by collection for a specific Mime Type.
     This report is accessed from the **Mime Groups** report.
+
+    ### Report data types that link here:
+    - mime
 collections_by_mime_group:
   link-title: Collections Containing a specific Mime Group
   nav:
@@ -245,6 +268,9 @@ collections_by_mime_group:
   description: |
     This report breaks down the count of objects by collection for a specific Mime Group.
     This report is accessed from the **Mime Groups** report.
+
+    ### Report data types that link here:
+    - gmime
 collections_by_time_count_producer:
   link-title: Producer Files Added by Date 
   nav: 
@@ -303,6 +329,9 @@ collection_details:
   params: ['inv_collection_id']
   description: |
     This report describes the contents of a collection by mime type and mime group.
+
+    ### Report data types that link here:
+    - coll
 collection_info:
   link-title: Consolidated page containing all the links relevant to a specific Merritt collection 
   nav: 
@@ -312,6 +341,12 @@ collection_info:
   params: ['inv_collection_id']
   description: |
     This report provides a landing page that links to all useful reports related to a Merritt collection.
+
+    ### Report data types that link here
+    - colllist
+
+    ### Pages that link here
+    - Manage Storage Nodes for {COLLNAME}
 collection_group_details:
   link-title: Campus Specific Mime type usage within a collection 
   nav: 
@@ -321,6 +356,9 @@ collection_group_details:
   params: ['ogroup']
   description: |
     This report describes the contents of collections for a campus by mime type and mime group.
+
+    ### Report data types that link here:
+    - ogroup
 invoices:
   link-title: Campus Invoices
   nav: 
@@ -681,6 +719,9 @@ admin_obj:
   category: admin obj
   description: |
     Enumerate Merritt Admin Objects for a specific aggregate role.
+
+    ### Report data types that link here:
+    - aggrole
 admin_obj_files:
   link-title: Display inv_files list for a Merritt Admin Object
   nav:
@@ -717,6 +758,9 @@ report:
   description: |
     Retrieve a previously run conistency report.
     Consistency reports are defined in the [mrt-cron](https://github.com/CDLUC3/mrt-cron/blob/main/consistency-driver/reports.yml) repo.
+
+    ### Report data types that link here:
+    - report
 filelist:
   link-title: File List for an object
   nav:
@@ -729,6 +773,13 @@ filelist:
     For each replication, list any instances in which the audit process has not been successful.
 
     Due to lambda resource constraints, a maximum of 2,000 files will be listed.
+
+    ### Report data types that link here: 
+    - filelist
+
+    ### Pages that link here
+    - Manage Object Storage Nodes for Object
+    - Manage Object Storage
 obj_audit_status:
   link-title: Objects with a specific audit status
   nav:
@@ -738,6 +789,9 @@ obj_audit_status:
   description: |
     Enumerate the specific files that have been characterized with an incomplete OR error audit status.
     From the report, navigate to the object storage admin page to re-initiate the audit process.
+
+    ### Report data types that link here:
+    - astatus
 collection_node_cleanup_required:
   link-title: List sectondary object copies that no longer exist in inv_collections_inv_nodes
   nav:
