@@ -49,7 +49,7 @@
           <ul>
           {{#actions}}
             <li>
-              <h4>
+              <span class="navhead">
               {{#is_readonly}}
               <a href="{{COLLADMIN_HOME}}?path={{action}}">
               {{/is_readonly}}
@@ -57,11 +57,11 @@
               {{#is_readonly}}
               </a>
               {{/is_readonly}}
-              (<span><b>{{action}}</b></span>)
+              (<span class="navlabel">{{action}}</span>)
               <input class="doc" type="checkbox" title="Show Documentation">📖</input>
-              </h4>
+              </span>
               <div class="documentation">
-                <div class="markdown">{{description}}</div>
+                <div class="markdown">{{description_doc}}</div>
               </div>
             </li>
           {{/actions}}

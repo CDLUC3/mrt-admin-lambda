@@ -311,6 +311,13 @@ module LambdaFunctions
       map
     end
 
+    def description_doc(act)
+      desc = act.fetch('description', '')
+      doc = act.fetch('documentation', '')
+      return desc if doc.empty?
+      "#{desc}\n\n-- Technical Documentation --\n```\n#{doc}\n```"
+    end
+
     def getActionsArr
       actions = YAML.load_file("config/actions.yml")
       actlist = []
@@ -322,6 +329,8 @@ module LambdaFunctions
           path: act.fetch('nav', {}).fetch('path', ''), 
           class: act.fetch('class', 'Undefied'), 
           description: act.fetch('description', ''), 
+          description_doc: description_doc(act),
+          documentation: act.fetch('documentation', ''), 
           implemented: act.fetch('implemented', true), 
           prod_support: act.fetch('prod_support', true), 
           sensitivity: act.fetch('sensitivity', ''), 

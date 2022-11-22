@@ -357,8 +357,8 @@ tr.head td, tr.head th {
 .documentation {
   border: solid thin black;
   background-color: #EEEEEE;
-  padding: 5px;
-  margin: 5px;
+  padding: 2px 8px;
+  margin: 5px 0px;
 }
 
 li .documentation {
@@ -367,4 +367,13 @@ li .documentation {
 
 li:has(input:checked) .documentation {
   display: block;
+}
+
+span.navhead {
+  font-weight: bold;
+}
+
+span.navlabel {
+  font-weight: bold;
+  color: red;
 }

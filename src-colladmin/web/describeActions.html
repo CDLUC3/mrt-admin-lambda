@@ -44,7 +44,6 @@
       <thead>
         <tr>
           <th class="name">Navigation</th>
-          <th class="name">Path</th>
           <th class="description">Description</th>
         </tr>
       </thead>
@@ -52,10 +51,9 @@
         {{#ACTIONS}}
         <tr>
           <th class="name">{{path}}</th>
-          <th class="name">{{action}}</th>
           <td class="description">
-            <h3>{{title}}</h3>
-            <div class="markdown">{{description}}</div>
+            <h3>{{title}} (<span class="navlabel">{{action}}</span>)</h3>
+            <div class="markdown">{{description_doc}}</div>
           </td>
         </tr>
         {{/ACTIONS}}

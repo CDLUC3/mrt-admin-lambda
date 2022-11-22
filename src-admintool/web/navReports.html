@@ -39,13 +39,13 @@
             <ul>
             {{#reports}}
               <li>
-                <h4>
-                <a href="{{ADMIN_HOME}}?path={{report}}">
+                <span class="navhead">
+                <a href="{{ADMINTOOL_HOME}}?path={{report}}">
                   {{title}} 
                 </a>
-                (<span><b>{{report}}</b></span>)
+                (<span class="navlabel">{{report}}</span>)
                 <input class="doc" type="checkbox" title="Show Documentation">📖</input>
-                </h4>
+                </span>
                 <div class="documentation">
                   <div class="markdown">{{description}}</div>
                 </div>
