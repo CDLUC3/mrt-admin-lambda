@@ -72,25 +72,51 @@ module LambdaFunctions
       map['ARKFORM_JS'] = Mustache.render(File.open("template/arkform.js").read, map)
       map['LAMBDABASE_JS'] = Mustache.render(File.open("template/lambda.base.js").read, map)
       if path == '/web/describeReports.html'
-        reports = YAML.load_file("config/reports.yml")
-        map['REPORTS'] = []
-        reports.keys.each do |k|
-          rpt = reports[k]
-          map['REPORTS'].append({
-            report: k,
-            title: rpt.fetch('link-title', '--'), 
-            path: rpt.fetch('nav', {}).fetch('path', '--'), 
-            class: rpt.fetch('class', 'Undefied'), 
-            category: rpt.fetch('category', ''), 
-            description: rpt.fetch('description', ''), 
-            iterative: rpt.fetch('iterative', false)
-          })
-        end
-        map['REPORTS'].sort!{
-          |a,b| "#{a[:path]}/#{a[:report]}" <=> "#{b[:path]}/#{b[:report]}"  
-        }
+        map['REPORTS'] = getReportsList
+      elsif path == '/web/navReports.html'
+        map['REPORTSMAP'] = getReportsMap
       end
       map
+    end
+ 
+    def getReportsArr
+      reports = YAML.load_file("config/reports.yml")
+      rptlist = []
+      reports.keys.each do |k|
+        rpt = reports[k]
+        rptlist.append({
+          report: k,
+          title: rpt.fetch('link-title', '--'), 
+          path: rpt.fetch('nav', {}).fetch('path', '--'), 
+          class: rpt.fetch('class', 'Undefied'), 
+          category: rpt.fetch('category', ''), 
+          description: rpt.fetch('description', ''), 
+          iterative: rpt.fetch('iterative', false)
+        })
+      end
+      rptlist
+    end
+  
+    def getReportsList
+      rptlist = getReportsArr
+      rptlist.sort!{
+        |a,b| "#{a[:path]}/#{a[:report]}" <=> "#{b[:path]}/#{b[:report]}"  
+      }
+      rptlist
+    end
+
+    def getReportsMap
+      rptmap = {}
+      getReportsArr.each do |rpt|
+        path = rpt.fetch(:path, '')
+        rptmap[path] = [] unless rptmap.key?(path)
+        rptmap[path].push(rpt)
+      end
+      maplist = []
+      rptmap.keys.sort.each do |p|
+        maplist.push({path: p, reports: rptmap[p]})
+      end
+      maplist
     end
   end
 

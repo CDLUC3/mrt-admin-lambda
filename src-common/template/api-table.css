@@ -353,3 +353,18 @@ tr.head td, tr.head th {
 #chartdiv canvas {
   max-height: 400px;
 }
+
+.documentation {
+  border: solid thin black;
+  background-color: #EEEEEE;
+  padding: 5px;
+  margin: 5px;
+}
+
+li .documentation {
+  display: none;
+}
+
+li:has(input:checked) .documentation {
+  display: block;
+}

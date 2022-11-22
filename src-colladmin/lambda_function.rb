@@ -302,30 +302,57 @@ module LambdaFunctions
         ).objects
         map['OBJS'] = objects
       elsif path == '/web/describeActions.html'
-        actions = YAML.load_file("config/actions.yml")
-        map['ACTIONS'] = []
-        actions.keys.each do |k|
-          act = actions[k]
-          map['ACTIONS'].append({
-            action: k,
-            title: act.fetch('link-title', '--'), 
-            path: act.fetch('nav', {}).fetch('path', '--'), 
-            class: act.fetch('class', 'Undefied'), 
-            description: act.fetch('description', ''), 
-            implemented: act.fetch('implemented', true), 
-            prod_support: act.fetch('prod_support', true), 
-            sensitivity: act.fetch('sensitivity', ''), 
-            category: act.fetch('category', ''), 
-            testing: act.fetch('testing_instructions', act.fetch('testing', '')), 
-          })
-        end
-        map['ACTIONS'].sort!{
-          |a,b| "#{a[:path]}/#{a[:report]}" <=> "#{b[:path]}/#{b[:report]}"  
-        }
+        map['ACTIONS'] = getActionsList
+      elsif path == '/web/navActions.html'
+        map['ACTIONSMAP'] = getActionsMap
       elsif path == '/web/storeQueues.html'
         map['AUDIT_INFO'] = AuditInfo.new(@config).data
       end
       map
+    end
+
+    def getActionsArr
+      actions = YAML.load_file("config/actions.yml")
+      actlist = []
+      actions.keys.each do |k|
+        act = actions[k]
+        actlist.append({
+          action: k,
+          title: act.fetch('link-title', '--'), 
+          path: act.fetch('nav', {}).fetch('path', ''), 
+          class: act.fetch('class', 'Undefied'), 
+          description: act.fetch('description', ''), 
+          implemented: act.fetch('implemented', true), 
+          prod_support: act.fetch('prod_support', true), 
+          sensitivity: act.fetch('sensitivity', ''), 
+          is_readonly: act.fetch('sensitivity', '') == 'readonly',
+          category: act.fetch('category', ''), 
+          testing: act.fetch('testing_instructions', act.fetch('testing', '')), 
+        })
+      end
+      actlist
+    end
+  
+    def getActionsList
+      actlist = getActionsArr
+      actlist.sort!{
+        |a,b| "#{a[:path]}/#{a[:report]}" <=> "#{b[:path]}/#{b[:report]}"  
+      }
+      actlist
+    end
+
+    def getActionsMap
+      actmap = {}
+      getActionsArr.each do |act|
+        path = act.fetch(:path, '')
+        actmap[path] = [] unless actmap.key?(path)
+        actmap[path].push(act)
+      end
+      maplist = []
+      actmap.keys.sort.each do |p|
+        maplist.push({path: p, actions: actmap[p]})
+      end
+      maplist
     end
   end
 
