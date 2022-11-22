@@ -79,6 +79,13 @@ module LambdaFunctions
       map
     end
  
+    def description_doc(rpt)
+      desc = rpt.fetch('description', '')
+      doc = rpt.fetch('documentation', '')
+      return desc if doc.empty?
+      "#{desc}\n\n-- Technical Documentation --\n```\n#{doc}\n```"
+    end
+
     def getReportsArr
       reports = YAML.load_file("config/reports.yml")
       rptlist = []
@@ -91,6 +98,8 @@ module LambdaFunctions
           class: rpt.fetch('class', 'Undefied'), 
           category: rpt.fetch('category', ''), 
           description: rpt.fetch('description', ''), 
+          description_doc: description_doc(rpt),
+          documentation: rpt.fetch('documentation', ''), 
           iterative: rpt.fetch('iterative', false)
         })
       end

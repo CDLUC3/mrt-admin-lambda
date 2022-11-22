@@ -35,7 +35,6 @@
         <thead>
           <tr>
             <th class="name">Navigation</th>
-            <th class="name">Path</th>
             <th class="description">Description</th>
           </tr>
         </thead>
@@ -43,10 +42,9 @@
           {{#REPORTS}}
           <tr>
             <td class="name">{{path}}</td>
-            <td class="name">{{report}}</td>
             <td class="description">
-              <h3>{{title}}</h3>
-              <div class="markdown">{{description}}</div>
+              <h3>{{title}} (<span class="navlabel">{{report}}</span>)</h3>
+              <div class="markdown">{{description_doc}}</div>
             </td>
           </tr>
           {{/REPORTS}}

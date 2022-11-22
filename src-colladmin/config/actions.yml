@@ -49,8 +49,8 @@ profiles:
     An ingest profile describes characteristics associated with a collection's configuration, such as its context mnemonic, description and primary storage node. 
     These profiles are managed in a github repository and are deployed to the server.
   documentation: |
-    Ingest: GET admin/profiles-full
-    Ingest: GET admin/profile/{profile}
+    Ingest: GET /admin/profiles-full
+    Ingest: GET /admin/profile/{profile}
 collection-locks:
   link-title: List Merritt Collections and Collection Level Locks
   nav:
@@ -68,8 +68,8 @@ collection-locks:
 
     Items can be individually released from the [queue page](/web/collIndex.html?path=queues) or they can be released as a set from this page.
   documentation: |
-    Ingest: GET admin/profiles-full 
-    Ingest: GET admin/queues 
+    Ingest: GET /admin/profiles-full 
+    Ingest: GET /admin/queues 
 adminprofiles:
   link-title: List Merritt Admin Profiles
   nav:
@@ -175,7 +175,7 @@ batchFolders:
     - WARN: The folder has existed for over one HOUR without registering in the inventory database
     - FAIL: The folder has existed for over one DAY without registering in the inventory database
   documentation: |
-    Ingest: GET admin/bids/{days}
+    Ingest: GET /admin/bids/{days}
     Ingest: GET /admin/queues-acc
     Ingest: GET /admin/queue-acc/{node}
 batch:
@@ -202,7 +202,7 @@ job:
   description: |
     Display details about a specific *job* within an ingest batch.
   documentation: |
-    Ingest: GET admin/jid-erc/{batch}/{job}
+    Ingest: GET /admin/jid-erc/{batch}/{job}
 manifest:
   link-title: Ingest Job Manifest Contents
   nav:
@@ -214,7 +214,7 @@ manifest:
   description: |
     Display the manifest defining the content to ingest in a specific *ingest job*.
   documentation: |
-    Ingest: GET admin/jid-manifest/{batch}/{job}
+    Ingest: GET /admin/jid-manifest/{batch}/{job}
 files:
   link-title: Ingest Job Folder File List
   nav:
@@ -229,7 +229,7 @@ files:
     - producer files will be removed
     - system files will be retained
   documentation: |
-    Ingest: GET admin/jid-file/{batch}/{job}
+    Ingest: GET /admin/jid-file/{batch}/{job}
 sword:
   link-title: Dryad Recent Jobs
   nav:
@@ -242,7 +242,7 @@ sword:
     Display the most recent ingest jobs initiated from Dryad via the Sword service.
     After the page is displayed, a separate search is run to display the ARK and DOI associated with each job.
   documentation: |
-    Ingest: GET admin/bid/JOB_ONLY/{days}
+    Ingest: GET /admin/bid/JOB_ONLY/{days}
 ldap/users:
   link-title: List Merritt LDAP Users
   nav:

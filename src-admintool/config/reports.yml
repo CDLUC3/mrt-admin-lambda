@@ -6,6 +6,8 @@
 #     objects | replication | reports | storage nodes
 #   description: |
 #     markdown description of the purpose of the action
+#   documentation: |
+#     technical documentation
 #   link-title: link title
 #   nav:
 #     path: navigation path
@@ -768,3 +770,9 @@ update_billing:
   description: |
     Call stored procedures to update the billing database.
     These queries run nightly.  This process is in place for ad-hoc updates during the day.
+  documentation: |
+    SQL: call update_object_size()
+    SQL: call update_node_counts()
+    SQL: call update_billing_range()
+    SQL: call update_audits_processed()
+    SQL: call update_ingests_processed()
