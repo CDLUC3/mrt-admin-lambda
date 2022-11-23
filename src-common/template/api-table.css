@@ -398,6 +398,7 @@ td.own:not(:empty)::before {
   content: "🏫 ";
 }
 
+div.collinfo::before,
 li.coll::before,
 td.colllist:not(:empty)::before {
   content: "🧺 ";
@@ -409,6 +410,7 @@ td.coll-date:not(:empty)::before {
 }
 
 li.files::before,
+td.files::before,
 td.objlist:not(:empty)::before{
   content: "📑 ";
 }
@@ -438,18 +440,22 @@ td.qbatchnote:not(:empty)::before {
 }
 
 li.config::before,
+td.config:not(:empty)::before,
 td.snodes:not(:empty)::before,
 td.collnode:not(:empty)::before {
   content: "⚙ ";
 }
 
+li.ldapuid::before,
 td.ldapark:not(:empty)::before,
 td.ldapuid:not(:empty)::before {
   content: "🆔 ";
 }
+li.ldapcoll::before,
 td.ldapcoll:not(:empty)::before {
   content: "🟣 ";
 }
+li.ldaprole::before,
 td.ldapuidlist:not(:empty)::before {
   content: "🟪 ";
 }
@@ -477,4 +483,9 @@ li.rerun::before {
 
 li form {
   display: inline;
+}
+
+button.scanreview::before,
+li.review::before {
+  content: "☑ ";
 }

@@ -117,25 +117,25 @@
               >Scan History</button>
 
               <button 
-                class="colladmin storage-review-scan-node maints-{{num_maints}}"
+                class="colladmin storage-review-scan-node scanreview maints-{{num_maints}}"
                 title="Review the storage keys requiring maintenance" 
                 onclick="javascript:document.location='storeNodeReview.html?nodenum={{number}}&maint_status=all'"
               >Review: All</button>
 
               <button 
-                class="colladmin storage-review-scan-node maints-{{num_review}}"
+                class="colladmin storage-review-scan-node scanreview maints-{{num_review}}"
                 title="Review the untracked storage keys discovered in the last storage scan" 
                 onclick="javascript:document.location='storeNodeReview.html?nodenum={{number}}&maint_status=review'"
               >Review: Review</button>
 
               <button 
-                class="colladmin storage-review-scan-node maints-{{num_holds}}"
+                class="colladmin storage-review-scan-node scanreview maints-{{num_holds}}"
                 title="Review the untracked storage keys marked for hold" 
                 onclick="javascript:document.location='storeNodeReview.html?nodenum={{number}}&maint_status=hold'"
               >Review: Hold</button>
 
               <button 
-                class="colladmin storage-review-scan-node maints-{{num_deletes}}"
+                class="colladmin storage-review-scan-node scanreview maints-{{num_deletes}}"
                 title="Review the untracked storage keys marked for delete" 
                 onclick="javascript:document.location='storeNodeReview.html?nodenum={{number}}&maint_status=delete'"
               >Review: Delete</button>
