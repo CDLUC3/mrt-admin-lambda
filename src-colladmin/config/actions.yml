@@ -48,12 +48,8 @@ profiles:
     List all *ingest profiles* known to the ingest server.
     An ingest profile describes characteristics associated with a collection's configuration, such as its context mnemonic, description and primary storage node. 
     These profiles are managed in a github repository and are deployed to the server.
-
-    ### Report data types that link here
-    - profile
-
-    ### Pages that link here
-    - Manage Storage Nodes for a Collection
+  report-datatypes:
+  - profile
   documentation: |
     Ingest: GET /admin/profiles-full
     Ingest: GET /admin/profile/{profile}
@@ -116,11 +112,10 @@ queues:
   description: |
     Display the contents of the *ingest queue*. Items in this queue are slated to be processed by the Ingest service.
     From this screen, items can be requeued.
-
-    ### Report data types that link here:
-    - fprofile
-    - fstatus
-    - fprofilestatus
+  report-datatypes:
+  - fprofile
+  - fstatus
+  - fprofilestatus
   documentation: |
     Ingest: GET /admin/queues
     Ingest: GET /admin/queue/{node}
@@ -199,10 +194,9 @@ batch:
   testing: contextually automated
   description: |
     Display details about an *ingest batch*.  A *batch* may contain one or more *jobs*.
-
-    ### Report data types that link here:
-    - qbatch
-    - qbatchnote
+  report-datatypes:
+  - qbatch
+  - qbatchnote
   documentation: |
     Ingest: GET /admin/queues
     Ingest: GET /admin/queue/{node}
@@ -228,9 +222,8 @@ manifest:
   testing: contextually automated
   description: |
     Display the manifest defining the content to ingest in a specific *ingest job*.
-
-    ### Report data types that link here:
-    - manifest
+  report-datatypes:
+  - manifest
   documentation: |
     Ingest: GET /admin/jid-manifest/{batch}/{job}
 files:
@@ -284,10 +277,9 @@ ldap/user:
   description: | 
     Display the details for a specific Merritt user defined in the Merritt LDAP database.
     The report conveys the permissions granted to the user on a collection basis.
-
-    ### Report data types that link here:
-    - ldapuid
-    - ldapuidlist
+  report-datatypes:
+  - ldapuid
+  - ldapuidlist
   documentation: |
     Ldap: Query
 ldap/roles:
@@ -340,9 +332,8 @@ ldap/coll:
     coll: merritt_demo
   description: | 
     List user details for a Merritt collection as defined in the  Merritt LDAP database, including user roles.
-
-    ### Report data types that link here:
-    - ldapcoll
+  report-datatypes:
+  - ldapcoll
   documentation: |
     Ldap: Query
 ldap/collmap:
@@ -368,9 +359,8 @@ ldap/collark:
   testing: automated
   description: |
     This report maps a *collection ark* (from the inventory database) to the set of LDAP permissions defined for that collection.
-
-    ### Report data types that link here:
-    - ldapcollark
+  report-datatypes:
+  - ldapcollark
   documentation: |
     Ldap: Query
 instances:
@@ -383,9 +373,8 @@ instances:
   testing: automated
   description: |
     Generate a report describing the EC2 servers used by Merritt domain.  Server details are discovered by querying EC2 tags.
-
-    ### Report data types that link here:
-    - instances
+  report-datatypes:
+  - instances
   documentation: |
     Aws: Tag Query
 ssm-describe:
@@ -559,9 +548,8 @@ unlock-coll:
   testing: automatable
   description: |
     Unlock ingest for a collection.
-
-    ### Report data types that link here:
-    - colllock
+  report-datatypes:
+  - colllock
   documentation: |
     Ingest: POST /admin/submission/thaw/{coll}
 lock-coll:
@@ -575,9 +563,8 @@ lock-coll:
   testing: automatable
   description: |
     Lock ingest for a collection.
-
-    ### Report data types that link here:
-    - colllock
+  report-datatypes:
+  - colllock
   documentation: |
     Ingest: POST /admin/submission/freeze/{coll}
 release-coll-queue-items:
@@ -591,9 +578,8 @@ release-coll-queue-items:
   testing: automatable
   description: |
     Release any held items for a collection.
-
-    ### Report data types that link here: 
-    - collqitems
+  report-datatypes:
+  - collqitems
   documentation: |
     Ingest: POST /admin/release-all/queue/{coll}
 storage-force-audit-for-object:
@@ -970,9 +956,8 @@ queue-delete:
   testing: manual
   description: |
     Remove an item from a Zookeeper queue.
-
-    ### Report data types that link here:
-    - qdelete
+  report-datatypes:
+  - qdelete
   documentation: |
     Ingest: POST /admin/deleteq
 requeue:
@@ -986,9 +971,8 @@ requeue:
   testing: manual
   description: |
     Re-queue an item from a Zookeeper queue.
-
-    ### Report data types that link here:
-    - requeue
+  report-datatypes:
+  - requeue
   documentation: |
     Ingest: POST /admin/requeue
 hold-queue-item:
@@ -1002,9 +986,8 @@ hold-queue-item:
   testing: manual
   description: |
     Move a pending item from in Zookeeper queue to a Held status.
-
-    ### Report data types that link here:
-    - hold
+  report-datatypes:
+  - hold
   documentation: |
     Ingest: POST /admin/hold
 release-queue-item:
@@ -1018,9 +1001,8 @@ release-queue-item:
   testing: manual
   description: |
     Release a held item from in Zookeeper queue to a Pending status.
-
-    ### Report data types that link here:
-    - release
+  report-datatypes:
+  - release
   documentation: |
     Ingest: POST /admin/release
 apply-review-changes:
@@ -1048,9 +1030,8 @@ cognito-remove-user-from-group:
   testing: automatable
   description: |
     Remove a *Cognito User* from a specific *Cognito User Group*.
-
-    ### Report data types that link here:
-    - cognito
+  report-datatypes:
+  - cognito
   documentation: |
     Aws: invoke lambda
 cognito-add-user-to-group:
@@ -1063,9 +1044,8 @@ cognito-add-user-to-group:
   testing: automatable
   description: |
     Add a *Cognito User* to a specific *Cognito User Group*.
-
-    ### Report data types that link here:
-    - cognito
+  report-datatypes:
+  - cognito
   documentation: |
     Aws: invoke lambda
 storage-rebuild-inventory:

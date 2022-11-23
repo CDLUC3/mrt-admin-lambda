@@ -314,8 +314,15 @@ module LambdaFunctions
     def description_doc(act)
       desc = act.fetch('description', '')
       doc = act.fetch('documentation', '')
-      return desc if doc.empty?
-      "#{desc}\n\n-- Technical Documentation --\n```\n#{doc}\n```"
+      datatypes = act.fetch('report-datatypes', [])
+
+      s = desc
+      s += "\n\n*Technical Documentation:*\n```\n#{doc}\n```" unless doc.empty?
+      s += "\n\n_Report Data Types that Link Here:_ \n" unless datatypes.empty?
+      datatypes.each do |dt|
+        s += "- #{dt}\n"
+      end
+      s
     end
 
     def getActionsArr

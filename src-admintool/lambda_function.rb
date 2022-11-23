@@ -82,8 +82,15 @@ module LambdaFunctions
     def description_doc(rpt)
       desc = rpt.fetch('description', '')
       doc = rpt.fetch('documentation', '')
-      return desc if doc.empty?
-      "#{desc}\n\n-- Technical Documentation --\n```\n#{doc}\n```"
+      datatypes = rpt.fetch('report-datatypes', [])
+
+      s = desc
+      s += "\n\n*Technical Documentation:*\n```\n#{doc}\n```" unless doc.empty?
+      s += "\n\n_Report Data Types that Link Here:_ \n" unless datatypes.empty?
+      datatypes.each do |dt|
+        s += "- #{dt}\n"
+      end
+      s
     end
 
     def getReportsArr
