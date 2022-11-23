@@ -44,7 +44,8 @@ class IngestQueueAction < ForwardToIngestAction
     arr = [
       {
         label: 'Ingest Queue Counts by Profile', 
-        url: "#{LambdaBase.colladmin_url}?path=ingest-queue-by-profile"
+        url: "#{LambdaBase.colladmin_url}?path=ingest-queue-by-profile",
+        class: 'graph'
       }
     ]
     if @batch.empty?

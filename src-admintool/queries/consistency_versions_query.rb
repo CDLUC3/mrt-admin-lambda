@@ -50,11 +50,13 @@ class ConsistencyVersionsQuery < AdminQuery
     [
       {
         label: "Object List - Version Clobber", 
-        url: "path=obj_version_clobber"
+        url: "path=obj_version_clobber",
+        class: 'objects'
       },
       {
         label: "Object List - Version Gap", 
-        url: "path=obj_version_gap"
+        url: "path=obj_version_gap",
+        class: 'objects'
       }
     ]
   end

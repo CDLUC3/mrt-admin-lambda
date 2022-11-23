@@ -33,11 +33,13 @@ class RecentIngestsQuery < AdminQuery
     [
       {
         label: 'Prior Day', 
-        url: 'path=recent_ingests&day=' + (Time.parse(@day) - 24*60*60).strftime('%Y-%m-%d')
+        url: 'path=recent_ingests&day=' + (Time.parse(@day) - 24*60*60).strftime('%Y-%m-%d'),
+        class: 'batches'
       },
       {
         label: 'Next Day', 
-        url: 'path=recent_ingests&day=' + (Time.parse(@day) + 24*60*60).strftime('%Y-%m-%d')
+        url: 'path=recent_ingests&day=' + (Time.parse(@day) + 24*60*60).strftime('%Y-%m-%d'),
+        class: 'batches'
       }
     ]
   end

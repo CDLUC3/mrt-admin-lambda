@@ -41,15 +41,18 @@ class ReplicationNeededQuery < ObjectsQuery
     [
       {
         label: "Objects - Replication Required", 
-        url: "path=replication_needed&days=0&limit=500"
+        url: "path=replication_needed&days=0&limit=500",
+        class: 'objects'
       },
       {
         label: "Objects - Replication Required, older than 1 day", 
-        url: "path=replication_needed&days=1&limit=500"
+        url: "path=replication_needed&days=1&limit=500",
+        class: 'objects'
       },
       {
         label: "Objects - Replication Required, older than 2 days", 
-        url: "path=replication_needed&days=2&limit=500"
+        url: "path=replication_needed&days=2&limit=500",
+        class: 'objects'
       },
     ]
   end

@@ -53,15 +53,18 @@ class ObjectsFileCopiesNeededQuery < ObjectsQuery
     [
       {
         label: "Objects with #{@copies} Copies", 
-        url: "path=file_copies_needed&copies=#{@copies}&days=0&limit=500"
+        url: "path=file_copies_needed&copies=#{@copies}&days=0&limit=500",
+        class: 'objects'
       },
       {
         label: "Objects with #{@copies} Copies, older than 1 day", 
-        url: "path=file_copies_needed&copies=#{@copies}&days=1&limit=500"
+        url: "path=file_copies_needed&copies=#{@copies}&days=1&limit=500",
+        class: 'objects'
       },
       {
         label: "Objects with #{@copies} Copies, older than 2 days", 
-        url: "path=file_copies_needed&copies=#{@copies}&days=2&limit=500"
+        url: "path=file_copies_needed&copies=#{@copies}&days=2&limit=500",
+        class: 'objects'
       },
     ]
   end

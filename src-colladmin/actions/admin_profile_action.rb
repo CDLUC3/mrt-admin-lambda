@@ -130,15 +130,18 @@ class AdminProfileAction < ForwardToIngestAction
     [
       {
         label: 'Collection Admin Profiles', 
-        url: "#{LambdaBase.colladmin_url}?path=adminprofiles&type=collection"
+        url: "#{LambdaBase.colladmin_url}?path=adminprofiles&type=collection",
+        class: 'profile'
       },
       {
         label: 'Owner Admin Profiles', 
-        url: "#{LambdaBase.colladmin_url}?path=adminprofiles&type=owner"
+        url: "#{LambdaBase.colladmin_url}?path=adminprofiles&type=owner",
+        class: 'profile'
       },
       {
         label: 'SLA Admin Profiles', 
-        url: "#{LambdaBase.colladmin_url}?path=adminprofiles&type=sla"
+        url: "#{LambdaBase.colladmin_url}?path=adminprofiles&type=sla",
+        class: 'profile'
       },
     ]
   end

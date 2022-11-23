@@ -379,7 +379,8 @@ class AdminTask
   def get_this_query
     {
       label: "This Query",
-      url: params_to_str(@myparams.clone)
+      url: params_to_str(@myparams.clone),
+      class: "rerun"
     }
   end
 

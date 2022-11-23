@@ -44,19 +44,23 @@ class AuditStatusTimeQuery < AdminQuery
     [
       {
         label: 'Last minute', 
-        url: 'path=audit_status_time&unit=MINUTE&count=-1'
+        url: 'path=audit_status_time&unit=MINUTE&count=-1',
+        class: 'graph'
       },
       {
         label: 'Last 10 minute', 
-        url: 'path=audit_status_time&unit=MINUTE&count=-10'
+        url: 'path=audit_status_time&unit=MINUTE&count=-10',
+        class: 'graph'
       },
       {
         label: 'Last Hour', 
-        url: 'path=audit_status_time&unit=HOUR&count=-1'
+        url: 'path=audit_status_time&unit=HOUR&count=-1',
+        class: 'graph'
       },
       {
         label: 'Last 3 Hours', 
-        url: 'path=audit_status_time&unit=HOUR&count=-3'
+        url: 'path=audit_status_time&unit=HOUR&count=-3',
+        class: 'graph'
       },
     ]
   end

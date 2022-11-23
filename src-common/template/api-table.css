@@ -388,23 +388,32 @@ td.ark:not(:empty)::before {
   content: "🖼 ";
 }
 
+li.node::before,
 td.node:not(:empty)::before {
   content: "🗄 ";
 }
 
+li.campus::before,
 td.own:not(:empty)::before {
   content: "🏫 ";
 }
 
+li.coll::before,
 td.colllist:not(:empty)::before {
   content: "🧺 ";
 }
 
+li.coll-date::before,
 td.coll-date:not(:empty)::before {
   content: "⌛ ";
 }
 
-td.objlist:not(:empty)::before,
+li.files::before,
+td.objlist:not(:empty)::before{
+  content: "📑 ";
+}
+
+li.objects::before,
 td.aggrole:not(:empty)::before,
 td.astatus:not(:empty)::before,
 td.container:not(:empty)::before,
@@ -415,17 +424,20 @@ td.batch:not(:empty)::before {
   content: "📚 ";
 }
 
+li.batches::before,
 td.fprofile:not(:empty)::before,
 td.fstatus:not(:empty)::before,
 td.fprofilestatus:not(:empty)::before {
   content: "🔵 ";
 }
 
+li.job::before,
 td.qbatch:not(:empty)::before,
 td.qbatchnote:not(:empty)::before {
-  content: "⚙ ";
+  content: "🔷 ";
 }
 
+li.config::before,
 td.snodes:not(:empty)::before,
 td.collnode:not(:empty)::before {
   content: "⚙ ";
@@ -441,12 +453,28 @@ td.ldapcoll:not(:empty)::before {
 td.ldapuidlist:not(:empty)::before {
   content: "🟪 ";
 }
+
+li.jobmeta::before,
 td.qjob:not(:empty)::before {
   content: "🗂 ";
 }
+li.profile::before,
 td.profile:not(:empty)::before {
   content: "🏷 ";
 }
+li.report::before,
 td.report:not(:empty)::before {
   content: "🧪 ";
+}
+
+li.graph::before {
+  content: "📈 ";
+}
+
+li.rerun::before {
+  content: "🔄 ";
+}
+
+li form {
+  display: inline;
 }

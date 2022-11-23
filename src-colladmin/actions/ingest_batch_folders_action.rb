@@ -38,15 +38,18 @@ class IngestBatchFoldersAction < ForwardToIngestAction
     [
       {
         label: 'Batch Folders Last 7 days', 
-        url: "#{LambdaBase.colladmin_url}?path=batchFolders&days=7"
+        url: "#{LambdaBase.colladmin_url}?path=batchFolders&days=7",
+        class: 'batches'
       },
       {
         label: 'Batch Folders Last 14 days', 
-        url: "#{LambdaBase.colladmin_url}?path=batchFolders&days=14"
+        url: "#{LambdaBase.colladmin_url}?path=batchFolders&days=14",
+        class: 'batches'
       },
       {
         label: 'Batch Folders Last 21 days', 
-        url: "#{LambdaBase.colladmin_url}?path=batchFolders&days=21"
+        url: "#{LambdaBase.colladmin_url}?path=batchFolders&days=21",
+        class: 'batches'
       }
     ]
   end

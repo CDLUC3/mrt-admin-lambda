@@ -115,7 +115,8 @@ class ConsistencyReplicationReqQuery < AdminQuery
     [
       {
         label: "Object List - Replication Needed, Older than 2 days", 
-        url: "path=replication_needed&days=2&limit=500"
+        url: "path=replication_needed&days=2&limit=500",
+        class: 'objects'
       }
     ]
   end

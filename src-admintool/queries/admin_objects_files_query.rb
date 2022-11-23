@@ -55,11 +55,13 @@ class AdminObjectsFilesQuery < AdminQuery
     [
       {
         label: "Admin Object Counts by Aggegate Role", 
-        url: "path=admin_obj_agg"
+        url: "path=admin_obj_agg",
+        class: 'graph'
       },
       {
         label: "Admin Object List for #{@aggrole}", 
-        url: "path=admin_obj&aggrole=#{@aggrole}"
+        url: "path=admin_obj&aggrole=#{@aggrole}",
+        class: 'objects'
       }
     ]
   end

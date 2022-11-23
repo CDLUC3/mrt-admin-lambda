@@ -65,6 +65,7 @@ class AdminAction < AdminTask
     {
       label: "This Query",
       url: "#{LambdaBase.colladmin_url}?#{params_to_str(@myparams.clone)}"
+      class: "rerun"
     }
   end
 

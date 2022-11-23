@@ -39,38 +39,34 @@
 
       <h2>Applications</h2>
       <ul>
-        <li>
+        <li class="report">
           <a class="json" href="{{ADMINTOOL_HOME}}?path=report">Consistency Reports</a>
           <span id="consistency">...</span>
         </li>
-        <li><a href="{{COLLADMIN_ADMIN}}">Collection Admin</a></li>
+        <li class="config"><a href="{{COLLADMIN_ADMIN}}">Collection Admin</a></li>
       </ul>
 
       <h2>Understanding Merritt Content</h2>
       <ul>
-        <li><a class="json" href="{{ADMINTOOL_HOME}}?path=collections">File Counts by Collections</a></li>
-        <li><a class="json" href="{{ADMINTOOL_HOME}}?path=owners">File Counts by Owner</a></li>
-        <li><a class="json" href="{{ADMINTOOL_HOME}}?path=mimes">Mime Groups</a></li>
-        <li><a class="json" href="{{ADMINTOOL_HOME}}?path=filesize">File Size Averages</a></li>
-        <li><a class="json" href="{{ADMINTOOL_HOME}}?path=filesizedist&iterate=1">File Size Distribution (Iterative)</a></li>
-        <li><a class="json" href="{{ADMINTOOL_HOME}}?path=admin_obj_agg">Merritt Admin Objects Count</a></li>
-        <li><a class="json" href="{{ADMINTOOL_HOME}}?path=admin_coll">Collections Table Special Cases</a></li>
+        <li class="graph"><a class="json" href="{{ADMINTOOL_HOME}}?path=collections">File Counts by Collections</a></li>
+        <li class="graph"><a class="json" href="{{ADMINTOOL_HOME}}?path=owners">File Counts by Owner</a></li>
+        <li class="graph"><a class="json" href="{{ADMINTOOL_HOME}}?path=mimes">Mime Groups</a></li>
+        <li class="graph"><a class="json" href="{{ADMINTOOL_HOME}}?path=filesize">File Size Averages</a></li>
+        <li class="graph"><a class="json" href="{{ADMINTOOL_HOME}}?path=filesizedist&iterate=1">File Size Distribution (Iterative)</a></li>
+        <li class="graph"><a class="json" href="{{ADMINTOOL_HOME}}?path=admin_obj_agg">Merritt Admin Objects Count</a></li>
+        <li class="coll"><a class="json" href="{{ADMINTOOL_HOME}}?path=admin_coll">Collections Table Special Cases</a></li>
       </ul>
 
       <h2>Campus Invoices</h2>
       <ul>
-        <li><a class="json" href="{{ADMINTOOL_HOME}}?path=invoices&fy=2022">FY2022 Invoices</a></li>
-        <li><a class="json" href="{{ADMINTOOL_HOME}}?path=invoices&fy=2021">FY2021 Invoices</a></li>
-        <li><a class="json" href="{{ADMINTOOL_HOME}}?path=invoices&fy=2020">FY2020 Invoices</a></li>
-        <li><a class="json" href="{{ADMINTOOL_HOME}}?path=invoices&fy=2019">FY2019 Invoices</a></li>
-        <li><a class="json" href="{{ADMINTOOL_HOME}}?path=invoices&fy=2019&as_of=2020-01-01">FY2019 Invoices- Proj from Jan 1</a></li>
-        <li><a class="json" href="{{ADMINTOOL_HOME}}?path=invoices&fy=2018">FY2018 Invoices</a></li>
-        <li><a class="json" href="{{ADMINTOOL_HOME}}?path=invoices&fy=2017">FY2017 Invoices</a></li>
+        <li class="campus"><a class="json" href="{{ADMINTOOL_HOME}}?path=invoices&fy=2023">FY2023 Invoices</a></li>
+        <li class="campus"><a class="json" href="{{ADMINTOOL_HOME}}?path=invoices&fy=2022">FY2022 Invoices</a></li>
+        <li class="campus"><a class="json" href="{{ADMINTOOL_HOME}}?path=invoices&fy=2021">FY2021 Invoices</a></li>
       </ul>
 
       <h2>Metadata Queries: Objects</h2>
       <ul>
-        <li>
+        <li class="objects">
           <form action="{{ADMINTOOL_HOME}}">
             Object(s) by Ark:
             <input name="ark" type="text" value="ark:/" size=40 title="Use a % as a wildcard search string"/>
@@ -79,7 +75,7 @@
             <input type="button" onclick="javascript:document.location='ark.html';" value="Multiple Arks"/>
           </form>
         </li>
-        <li>
+        <li class="objects">
           <form action="{{ADMINTOOL_HOME}}">
             Object(s) by Title:
             <input name="title" type="text" value="" size=40 title="Use a % as a wildcard search string"/>
@@ -87,7 +83,7 @@
             <input type="submit" value="Go!"/>
           </form>
         </li>
-        <li>
+        <li class="objects">
           <form action="{{ADMINTOOL_HOME}}">
             Object(s) by Author:
             <input name="author" type="text" value="" size=40 title="Use a % as a wildcard search string"/>
@@ -95,7 +91,7 @@
             <input type="submit" value="Go!"/>
           </form>
         </li>
-        <li>
+        <li class="objects">
           <form action="{{ADMINTOOL_HOME}}">
             Object(s) by Local ID:
             <input name="localid" type="text" value="" size=40 title="Use a % as a wildcard search string"/>
@@ -109,7 +105,7 @@
 
       <h2>Metadata Queries: Files</h2>
       <ul>
-        <li>
+        <li class="files">
           <form action="{{ADMINTOOL_HOME}}">
             Object(s) by Filename:
             <input name="file" type="text" value="" size=60 title="Use a % as a wildcard search string"/>
@@ -125,83 +121,83 @@
 
       <h2>Queries by ingest date</h2>
       <ul>
-        <li><a class="json" href="{{ADMINTOOL_HOME}}?path=collections_by_time_count_producer">Producer Files Added by Date (All time)</a></li>
-        <li><a class="json" href="{{ADMINTOOL_HOME}}?path=collections_by_time_count">Files Added by Date (All time)</a></li>
-        <li><a class="json" href="{{ADMINTOOL_HOME}}?path=collections_by_time_size">File Size Added by Date (All time)</a></li>
-        <li><a class="json" href="{{ADMINTOOL_HOME}}?path=collections_by_time_size_cumulative">Cumulative File Size Added by Date (All time)</a></li>
-        <li><a class="json" href="{{ADMINTOOL_HOME}}?path=collections_by_time_count_producer&interval=days">Producer Files Added by Date (Last week)</a></li>
-        <li><a class="json" href="{{ADMINTOOL_HOME}}?path=collections_by_time_count&interval=days">Files Added by Date (Last week)</a></li>
-        <li><a class="json" href="{{ADMINTOOL_HOME}}?path=collections_by_time_size&interval=days">File Size Added by Date (Last week)</a></li>
-        <li><a class="json" href="{{ADMINTOOL_HOME}}?path=collections_by_time_count_producer&interval=weeks">Producer Files Added by Date (Last 4 weeks)</a></li>
-        <li><a class="json" href="{{ADMINTOOL_HOME}}?path=collections_by_time_count&interval=weeks">Files Added by Date (Last 4 weeks)</a></li>
-        <li><a class="json" href="{{ADMINTOOL_HOME}}?path=collections_by_time_size&interval=weeks">File Size Added by Date (Last 4 weeks)</a></li>
+        <li class="graph"><a class="json" href="{{ADMINTOOL_HOME}}?path=collections_by_time_count_producer">Producer Files Added by Date (All time)</a></li>
+        <li class="graph"><a class="json" href="{{ADMINTOOL_HOME}}?path=collections_by_time_count">Files Added by Date (All time)</a></li>
+        <li class="graph"><a class="json" href="{{ADMINTOOL_HOME}}?path=collections_by_time_size">File Size Added by Date (All time)</a></li>
+        <li class="graph"><a class="json" href="{{ADMINTOOL_HOME}}?path=collections_by_time_size_cumulative">Cumulative File Size Added by Date (All time)</a></li>
+        <li class="graph"><a class="json" href="{{ADMINTOOL_HOME}}?path=collections_by_time_count_producer&interval=days">Producer Files Added by Date (Last week)</a></li>
+        <li class="graph"><a class="json" href="{{ADMINTOOL_HOME}}?path=collections_by_time_count&interval=days">Files Added by Date (Last week)</a></li>
+        <li class="graph"><a class="json" href="{{ADMINTOOL_HOME}}?path=collections_by_time_size&interval=days">File Size Added by Date (Last week)</a></li>
+        <li class="graph"><a class="json" href="{{ADMINTOOL_HOME}}?path=collections_by_time_count_producer&interval=weeks">Producer Files Added by Date (Last 4 weeks)</a></li>
+        <li class="graph"><a class="json" href="{{ADMINTOOL_HOME}}?path=collections_by_time_count&interval=weeks">Files Added by Date (Last 4 weeks)</a></li>
+        <li class="graph"><a class="json" href="{{ADMINTOOL_HOME}}?path=collections_by_time_size&interval=weeks">File Size Added by Date (Last 4 weeks)</a></li>
       </ul>
 
       <h2>Operational Information</h2>
       <ul>
-        <li>
+        <li class="config">
           <a href="https://github.com/CDLUC3/mrt-cron/blob/main/consistency-driver/reports.yml">Consistency Report Configuration</a>
         </li>
-        <li><a href="{{ADMINTOOL_HOME}}?path=update_billing">Update Billing Database</a></li>
-        <li><a href="{{ADMINTOOL_HOME}}?path=update_billing&all-tables=Y">Update Billing Database (recalcuate yesterday's totals)</a></li>
+        <li class="config"><a href="{{ADMINTOOL_HOME}}?path=update_billing">Update Billing Database</a></li>
+        <li class="config"><a href="{{ADMINTOOL_HOME}}?path=update_billing&all-tables=Y">Update Billing Database (recalcuate yesterday's totals)</a></li>
         <li>
           <h3>Audit</h3>
           <ul>
-            <li><a href="{{ADMINTOOL_HOME}}?path=audit_status">Audit - Irregular Status</a></li>
-            <li><a href="{{ADMINTOOL_HOME}}?path=audit_status_time&unit=HOUR&count=-1">Audit Status - Last Hour</a></li>
-            <li><a href="{{ADMINTOOL_HOME}}?path=audit_oldest">Audit - Oldest Unprocessed Item</a></li>
-            <li><a href="{{ADMINTOOL_HOME}}?path=audit_size">Audit - Size of Queue</a></li>
-            <li><a href="{{ADMINTOOL_HOME}}?path=audit_processed_size">Historical Audits processed + bytes over time</a></li>
-            <li><a href="{{ADMINTOOL_HOME}}?path=audit_processed_hours&iterate=1">Hourly Audits processed + bytes over time</a></li>
+            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=audit_status">Audit - Irregular Status</a></li>
+            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=audit_status_time&unit=HOUR&count=-1">Audit Status - Last Hour</a></li>
+            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=audit_oldest">Audit - Oldest Unprocessed Item</a></li>
+            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=audit_size">Audit - Size of Queue</a></li>
+            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=audit_processed_size">Historical Audits processed + bytes over time</a></li>
+            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=audit_processed_hours&iterate=1">Hourly Audits processed + bytes over time</a></li>
           </ul>
         </li>
         <li>
           <h3>Replication - Objects</h3>
           <ul>
-            <li><a href="{{ADMINTOOL_HOME}}?path=replication_needed">Objects - Replication needed</a></li>
-            <li><a href="{{ADMINTOOL_HOME}}?path=replic_processed&iterate=1">Replic processed over time</a></li>
-            <li><a href="{{ADMINTOOL_HOME}}?path=con_objects&copies=1">Objects with <em>1</em> copy (Replication Needed?)</a></li>
-            <li><a href="{{ADMINTOOL_HOME}}?path=con_objects&copies=2">Objects with <em>2</em> copies (Replication Needed?)</a></li>
-            <li><a href="{{ADMINTOOL_HOME}}?path=con_objects&copies=4">Objects with <em>4</em> copies (Cleanup Needed?)</a></li>
-            <li><a href="{{ADMINTOOL_HOME}}?path=con_replic">Outstanding replication</a></li>
-            <li><a href="{{ADMINTOOL_HOME}}?path=replication_initiated">Replication Initiated</a></li>
-            <li><a href="{{ADMINTOOL_HOME}}?path=replication_failed">Replication Failed</a></li>
-            <li><a href="{{ADMINTOOL_HOME}}?path=con_versions">Version Inconsistencies</a></li>
+            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=replication_needed">Objects - Replication needed</a></li>
+            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=replic_processed&iterate=1">Replic processed over time</a></li>
+            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=con_objects&copies=1">Objects with <em>1</em> copy (Replication Needed?)</a></li>
+            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=con_objects&copies=2">Objects with <em>2</em> copies (Replication Needed?)</a></li>
+            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=con_objects&copies=4">Objects with <em>4</em> copies (Cleanup Needed?)</a></li>
+            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=con_replic">Outstanding replication</a></li>
+            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=replication_initiated">Replication Initiated</a></li>
+            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=replication_failed">Replication Failed</a></li>
+            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=con_versions">Version Inconsistencies</a></li>
           </ul>
         </li>
         <li>
           <h3>Replication - File View</h3>
           <ul>
-            <li><a href="{{ADMINTOOL_HOME}}?path=con_files&copies=1">Files with <em>1</em> copy (Replication Needed?)</a></li>
-            <li><a href="{{ADMINTOOL_HOME}}?path=con_files&copies=2">Files with <em>2</em> copies (Replication Needed?)</a></li>
-            <li><a href="{{ADMINTOOL_HOME}}?path=con_files&copies=4">Files with <em>4</em> copies (Cleanup Needed?)</a></li>
-            <li><a href="{{ADMINTOOL_HOME}}?path=con_no_audit">Files not in the audit table (too slow to run from web)</a></li>
+            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=con_files&copies=1">Files with <em>1</em> copy (Replication Needed?)</a></li>
+            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=con_files&copies=2">Files with <em>2</em> copies (Replication Needed?)</a></li>
+            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=con_files&copies=4">Files with <em>4</em> copies (Cleanup Needed?)</a></li>
+            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=con_no_audit">Files not in the audit table (too slow to run from web)</a></li>
           </ul>
         </li>
         <li>
           <h3>Storage</h3>
           <ul>
-            <li><a href="{{ADMINTOOL_HOME}}?path=nodes">Storage Nodes</a></li>
-            <li><a href="{{ADMINTOOL_HOME}}?path=collnodes">Storage Nodes by Collection</a></li>
-            <li><a href="{{ADMINTOOL_HOME}}?path=collection_node_cleanup_required">Storage Node/Collection Cleanup Needed</a></li>
-            <li><a href="{{ADMINTOOL_HOME}}?path=con_primary">Collections with Non-standard Primary Nodes (Not SDSC or Dryad S3)</a></li>
-            <li><a href="{{ADMINTOOL_HOME}}?path=con_secondary">Collections with Non-standard Secondary Nodes (Not Glacier+Wasabi or SDSC+Wasabi)</a></li>
+            <li class="node"><a href="{{ADMINTOOL_HOME}}?path=nodes">Storage Nodes</a></li>
+            <li class="node"><a href="{{ADMINTOOL_HOME}}?path=collnodes">Storage Nodes by Collection</a></li>
+            <li class="node"><a href="{{ADMINTOOL_HOME}}?path=collection_node_cleanup_required">Storage Node/Collection Cleanup Needed</a></li>
+            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=con_primary">Collections with Non-standard Primary Nodes (Not SDSC or Dryad S3)</a></li>
+            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=con_secondary">Collections with Non-standard Secondary Nodes (Not Glacier+Wasabi or SDSC+Wasabi)</a></li>
           </ul>
         </li>
         <li>
           <h3>Collections</h3>
           <ul>
-            <li><a href="{{ADMINTOOL_HOME}}?path=count_objects">Object Counts by Owner and Collection</a></li>
-            <li><a class="json" href="{{ADMINTOOL_HOME}}?path=objects_recent">Recent object updates by collection (object details)</a></li>
+            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=count_objects">Object Counts by Owner and Collection</a></li>
+            <li class="coll-date"><a class="json" href="{{ADMINTOOL_HOME}}?path=objects_recent">Recent object updates by collection (object details)</a></li>
           </ul>
         </li>
         <li>
           <h3>Ingests</h3>
           <ul>
-            <li><a href="{{ADMINTOOL_HOME}}?path=ingest_bytes_by_hour">Recent Bytes ingested by hour</a></li>
-            <li><a href="{{ADMINTOOL_HOME}}?path=recent_ingests">Recent Ingests</a></li>
-            <li><a href="{{ADMINTOOL_HOME}}?path=big_ingest&items=200&days=14">Big Ingests (200+) - Last 14 days</a></li>
-            <li>
+            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=ingest_bytes_by_hour">Recent Bytes ingested by hour</a></li>
+            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=recent_ingests">Recent Ingests</a></li>
+            <li class="objects"><a href="{{ADMINTOOL_HOME}}?path=big_ingest&items=200&days=14">Big Ingests (200+) - Last 14 days</a></li>
+            <li class="objects">
               <form action="{{ADMINTOOL_HOME}}">
                 Object(s) by Batch Container Name:
                 <input name="container" type="text" value="" size=40 title="This would generally be a .checkm or .zip file"/>
@@ -214,15 +210,15 @@
         <li>
           <h3>Objects</h3>
           <ul>
-            <li><a href="{{ADMINTOOL_HOME}}?path=mult_coll&limit=500">Objects linked to more than one collection</a></li>
-            <li><a href="{{ADMINTOOL_HOME}}?path=objects_large">Large Objects</a></li>
-            <li><a href="{{ADMINTOOL_HOME}}?path=objects_many_files">Objects with Many Files</a></li>
+            <li class="objects"><a href="{{ADMINTOOL_HOME}}?path=mult_coll&limit=500">Objects linked to more than one collection</a></li>
+            <li class="objects"><a href="{{ADMINTOOL_HOME}}?path=objects_large">Large Objects</a></li>
+            <li class="objects"><a href="{{ADMINTOOL_HOME}}?path=objects_many_files">Objects with Many Files</a></li>
           </ul>
         </li>
         <li>
           <h3>Local Ids</h3>
           <ul>
-            <li><a href="{{ADMINTOOL_HOME}}?path=doi">DOI Ark Conflicts</a></li>
+            <li class="objects"><a href="{{ADMINTOOL_HOME}}?path=doi">DOI Ark Conflicts</a></li>
           </ul>
         </li>
       </ul>

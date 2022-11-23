@@ -90,7 +90,7 @@ class CollectionNodesQuery < AdminQuery
   end
 
   def get_types(results)
-    ['', '', '', 'dataint', '', 'dataint', '', 'dataint', '', 'dataint', 'dataint' ]
+    ['', 'colllist', '', 'dataint', '', 'dataint', '', 'dataint', '', 'dataint', 'dataint' ]
   end
 
 end

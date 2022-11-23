@@ -98,23 +98,28 @@ class IngestBytesByHourQuery < AdminQuery
     [
       {
         label: "Last 3 days (hourly)", 
-        url: "path=ingest_bytes_by_hour&days=3"
+        url: "path=ingest_bytes_by_hour&days=3",
+        class: 'graph'
       },
       {
         label: "Last 14 days (4 hour)", 
-        url: "path=ingest_bytes_by_hour&days=14"
+        url: "path=ingest_bytes_by_hour&days=14",
+        class: 'graph'
       },
       {
         label: "Last 30 days (24 hours)", 
-        url: "path=ingest_bytes_by_hour&days=30"
+        url: "path=ingest_bytes_by_hour&days=30",
+        class: 'graph'
       },
       {
         label: "Month to date", 
-        url: "path=ingest_bytes_by_hour&start=#{this_month_start}"
+        url: "path=ingest_bytes_by_hour&start=#{this_month_start}",
+        class: 'graph'
       },
       {
         label: "Last Month", 
-        url: "path=ingest_bytes_by_hour&start=#{last_month_start}&end=#{this_month_start}"
+        url: "path=ingest_bytes_by_hour&start=#{last_month_start}&end=#{this_month_start}",
+        class: 'graph'
       },
     ]
   end

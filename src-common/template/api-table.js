@@ -279,10 +279,11 @@ function createTable(headers, types, data, filter_col, group_col, show_grand_tot
     } else {
       url = document.location.pathname + "?" + q['url'];
     }
+    var c = ('class' in q) ? q['class'] : '';
     $('#alternative ul').show().append(
       $("<li/>").append(
         $("<a/>").text(q['label']).attr('href', url)
-      )
+      ).addClass(c)
     );
   });
   $("#exportJson").attr("href", urlbase + document.location.search + "&format=json");
