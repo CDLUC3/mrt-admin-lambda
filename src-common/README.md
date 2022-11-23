@@ -19,73 +19,73 @@ docker build --pull --build-arg ECR_REGISTRY=${ECR_REGISTRY} -t ${ECR_REGISTRY}/
 - status
 
 ### Linked Types
-- node
+- node 🗄
   - links to Count Objects Residing on a Storage Node
-- own
+- own 🏫
   - links to Collections for a Specific Merritt Owner
-- mime
+- mime 🎨
   - links to Collections Containing a specific Mime Type
-- gmime
+- gmime 🎨
   - links to Collections Containing a specific Mime Group
-- coll
+- coll 🎨
   - links to Mime type usage within a collection 
-- colllist
+- colllist 🧺
   - links to Consolidated page containing all the links relevant to a specific Merritt collection 
-- coll-date
+- coll-date ⌛
   - links to Objects Most Recently Ingested for a Specific Collection
-- ogroup
+- ogroup 🎨
   - links to Campus Specific Mime type usage within a collection
-- batch
+- batch 📚
   - links to Objects Ingested from an Ingest Batch
-- batchnote
+- batchnote 📚
   - links to Objects Ingested from an Ingest Batch
   - format: batch;job
-- jobnote
+- jobnote 📚
   - format: batch;job
   - links to Objects Ingested from an Ingest Job
-- job
+- job 📚
   - links to Objects Ingested from an Ingest Job
-- container
+- container 📚
   - links to Objects by Ingest Container Name Query
-- qbatch
+- qbatch 🔷
   - links to Ingest Batch
-- ldapuid
+- ldapuid 🆔
   - links to List details for an Merritt LDAP User
-- ldapcoll
+- ldapcoll 🟣
   - links to List Details for an LDAP Collection
-- ldapark
+- ldapark 🆔
   - links to List LDAP Users for a specific collection ARK
-- qbatchnote
+- qbatchnote 🔷
   - format: batch;job
   - links to Ingest Batch
-- qjob
+- qjob 🗂
   - format: batch;job
   - links to Ingest Job Manifest Contents
-- snodes
+- snodes ⚙
   - links to PAGE Manage Storage Nodes for {COLLNAME}
-- mnemonic
+- mnemonic 🖼
   - links to External PAGE - Merritt Collection Page
-- ark
+- ark 🖼
   - links to External PAGE - Merritt Collection Page
-- objlist
+- objlist 📚
   - links to File List for an object
-- profile
+- profile 🏷
   - links to List Ingest Profiles (deployed on the Ingest Server)
-- ldapuidlist
+- ldapuidlist 🟪
   - links to List details for an Merritt LDAP User
-- report
+- report 🧪
   - links to Consistency Reports
-- aggrole
+- aggrole 📚
   - links to Merritt Admin Objects with a Specific Role
-- astatus
+- astatus 📚
   - links to Objects with a specific audit status
-- collnode
+- collnode ⚙
   - links to PAGE Manage Storage Nodes for a Collection
-- fprofile
+- fprofile 🔵
   - links to Ingest Queue Jobs
-- fstatus
+- fstatus 🔵
   - links to Ingest Queue Jobs
-- fprofilestatus
+- fprofilestatus 🔵
   - links to Ingest Queue Jobs
 ## Action links/buttons
 - cognito

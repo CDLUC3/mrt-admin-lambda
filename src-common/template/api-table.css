@@ -375,3 +375,78 @@ span.navlabel {
   font-weight: bold;
   color: red;
 }
+
+td.ogroup:not(:empty)::before,
+td.coll:not(:empty)::before,
+td.mime:not(:empty)::before,
+td.gmime:not(:empty)::before {
+  content: "🎨 ";
+}
+
+td.mnemonic:not(:empty)::before,
+td.ark:not(:empty)::before {
+  content: "🖼 ";
+}
+
+td.node:not(:empty)::before {
+  content: "🗄 ";
+}
+
+td.own:not(:empty)::before {
+  content: "🏫 ";
+}
+
+td.colllist:not(:empty)::before {
+  content: "🧺 ";
+}
+
+td.coll-date:not(:empty)::before {
+  content: "⌛ ";
+}
+
+td.objlist:not(:empty)::before,
+td.aggrole:not(:empty)::before,
+td.astatus:not(:empty)::before,
+td.container:not(:empty)::before,
+td.job:not(:empty)::before,
+td.jobnote:not(:empty)::before,
+td.batchnote:not(:empty)::before,
+td.batch:not(:empty)::before {
+  content: "📚 ";
+}
+
+td.fprofile:not(:empty)::before,
+td.fstatus:not(:empty)::before,
+td.fprofilestatus:not(:empty)::before {
+  content: "🔵 ";
+}
+
+td.qbatch:not(:empty)::before,
+td.qbatchnote:not(:empty)::before {
+  content: "⚙ ";
+}
+
+td.snodes:not(:empty)::before,
+td.collnode:not(:empty)::before {
+  content: "⚙ ";
+}
+
+td.ldapark:not(:empty)::before,
+td.ldapuid:not(:empty)::before {
+  content: "🆔 ";
+}
+td.ldapcoll:not(:empty)::before {
+  content: "🟣 ";
+}
+td.ldapuidlist:not(:empty)::before {
+  content: "🟪 ";
+}
+td.qjob:not(:empty)::before {
+  content: "🗂 ";
+}
+td.profile:not(:empty)::before {
+  content: "🏷 ";
+}
+td.report:not(:empty)::before {
+  content: "🧪 ";
+}
