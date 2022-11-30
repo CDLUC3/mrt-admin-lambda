@@ -431,6 +431,14 @@ con_versions:
     - Gap in version numbers (has never occurred)
     This has occurred when an object was simultaneously modified by 2 ingest workers at the same time.
     The Merritt Team is implementing changes to prevent this issue from occurring in the future.
+con_localid:
+  class: ConsistencyLocalIdQuery
+  category: objects
+  description: |
+    This report will examine objects without a localid that seem to expect one based on `inv_objects.erc_where`.
+
+    - Objects older than 1 year will be treated as an INFO.
+    - Objects older than 1 month will be treated as a WARN.
 obj_version_clobber:
   class: ObjectsVersionClobberQuery
   category: concurrent update
@@ -466,6 +474,11 @@ object_copies_needed:
   description: |
     Enumerate a list of objects that have not been consistently replicated according to standard collection configuration (primary + 2 replicated copies).
     Result of this report may directly correlate with those in the ObjectsFileCopiesNeededQuery report.
+object_localid_needed:
+  class: ObjectsLocalidNeededQuery
+  category: objects
+  description: |
+    Enumerate a list of objects that do not exist in the LocalId table but seem to have a localid in erc_where (illustrated below in the mislabeled "Local Id" column).
 mult_coll:
   class: MultipleCollectionsQuery
   category: objects
