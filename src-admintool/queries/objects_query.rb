@@ -83,7 +83,7 @@ class ObjectsQuery < AdminQuery
   end
 
   def get_headers(results)
-    ['Object Id','Ark', 'Title', 'Author', 'Local Id', 'Version', 'Coll Id', 'Collection', 'File Count', 'Billable Size', 'Modified']
+    ['Object Id','Ark', 'Title', 'Author', 'Local Id (erc_where)', 'Version', 'Coll Id', 'Collection', 'File Count', 'Billable Size', 'Modified']
   end
 
   def get_types(results)
