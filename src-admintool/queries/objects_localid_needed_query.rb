@@ -40,6 +40,10 @@ class ObjectsLocalidNeededQuery < ObjectsQuery
         label: "Count Objects missing localid", 
         url: "path=con_localid"
       },
+      {
+        label: "Object Localid Fix", 
+        url: "path=con_localid_fix"
+      }
     ]
   end
 

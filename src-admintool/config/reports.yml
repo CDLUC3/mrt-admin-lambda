@@ -439,6 +439,11 @@ con_localid:
 
     - Objects older than 1 year will be treated as an INFO.
     - Objects older than 1 month will be treated as a WARN.
+con_localid_fix:
+  class: ConsistencyLocalIdFixQuery
+  category: objects
+  description: |
+    This reqport generates SQL to fix missing localids.
 obj_version_clobber:
   class: ObjectsVersionClobberQuery
   category: concurrent update
