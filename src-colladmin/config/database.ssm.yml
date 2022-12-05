@@ -38,11 +38,9 @@ default:
     ingest: 
       state: "{!SSM: ingest/port}/state?t=json"
       build-info: "{!SSM: ingest/port}/static/build.content.txt"
-      alb-health: "{!SSM: ingest/port}/container/healthcheck.html"
     store: 
       state: "{!SSM: store/port}/state?t=json"
       build-info: "{!SSM: store/port}/static/build.content.txt"
-      alb-health: "{!SSM: store/port}/container/healthcheck.html"
     access: 
       state: "{!SSM: store/port}/state?t=json"
       build-info: "{!SSM: store/port}/static/build.content.txt"
@@ -52,27 +50,22 @@ default:
       build-info: "{!SSM: inventory/port}/mrtinv/static/build.content.txt"
       start: "{!SSM: inventory/port}/mrtinv/service/start?t=json"
       stop: "{!SSM: inventory/port}/mrtinv/service/stop?t=json"
-      alb-health: "{!SSM: inventory/port}/container/healthcheck.html"
     audit: 
       state: "{!SSM: audit/port}/mrtaudit/state?t=json"
       build-info: "{!SSM: audit/port}/mrtaudit/static/build.content.txt"
       start: "{!SSM: audit/port}/mrtaudit/service/start?t=json"
       stop: "{!SSM: audit/port}/mrtaudit/service/stop?t=json"
-      alb-health: "{!SSM: audit/port}/container/healthcheck.html"
     replic: 
       state: "{!SSM: replic/port}/mrtreplic/state?t=json"
       build-info: "{!SSM: replic/port}/mrtreplic/static/build.content.txt"
       start: "{!SSM: replic/port}/mrtreplic/service/start?t=json"
       stop: "{!SSM: replic/port}/mrtreplic/service/stop?t=json"
-      alb-health: "{!SSM: replic/port}/container/healthcheck.html"
     sword: 
       state: "{!SSM: sword/port}/mrtsword/servicedocument"
       build-info: "{!SSM: sword/port}/mrtsword/static/build.content.txt"
-      alb-health: "{!SSM: sword/port}/container/healthcheck.html"
     oai: 
       state: "{!SSM: oai/port}/mrtoai/state?t=json"
       # build-info: "{!SSM: oai/port}/mrtoai/static/build.content.txt"
-      alb-health: "{!SSM: oai/port}/container/healthcheck.html"
     ui: 
       state: "/state"
   replic-service: "{!SSM: colladmin/replic-service}"
