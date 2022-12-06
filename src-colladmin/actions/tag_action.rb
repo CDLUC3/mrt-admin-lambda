@@ -29,7 +29,9 @@ class Ec2Info
       "IP",
       "AZ",
       "Endpoint",
-      "Notes"
+      "Notes",
+      "Build Tag",
+      "Service Start"
     ]
   end
 
@@ -42,7 +44,9 @@ class Ec2Info
       "",
       "",
       "endpoint",
-      ""
+      "",
+      "buildtag",
+      "srvstart"
     ]
   end
 
@@ -104,7 +108,9 @@ class Ec2Info
       @publicip,
       @az,
       format_urls,
-      notes(action)
+      notes(action),
+      urls.key?('build-info') ? '' : '---',
+      urls.key?('state') ? '' : '---'
     ]
   end
 end
@@ -183,7 +189,8 @@ class TagAction < AdminAction
       resp = cli.get(url)
     end
     ret = resp.body
-    if resp.status == 200
+    if resp.status == 200 && @label = 'build-info'
+    elsif resp.status == 200
       begin
         JSON.parse(resp.body)
       rescue => exception
