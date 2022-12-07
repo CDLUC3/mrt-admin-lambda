@@ -398,7 +398,8 @@ class InvoicesQuery < AdminQuery
     campuses.each do |campus|
       queries.append({
         label: campus.empty? ? "All Campuses" : campus, 
-        url: params_to_str(campus_params(campus))
+        url: params_to_str(campus_params(campus)),
+        class: 'campus'
       })
     end
     queries

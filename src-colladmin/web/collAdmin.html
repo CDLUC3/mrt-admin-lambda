@@ -24,82 +24,83 @@
 
     <h2>Action Index</h2>
     <p><a href="{{COLLADMIN_ROOT}}/web/describeActions.html">Collection Admin Action Descriptions</a></p>
+    <p><a href="{{COLLADMIN_ROOT}}/web/navActions.html">Collection Admin Action Descriptions (Nav)</a></p>
 
     <h2>Collection Profiles</h2>
     <ul>
-      <li><a href="{{COLLADMIN_HOME}}?path=profiles">Collection Profiles (ingest)</a></li>
-      <li><a href="{{COLLADMIN_HOME}}?path=adminprofiles">Admin Profile List</a></li>
+      <li class="profile"><a href="{{COLLADMIN_HOME}}?path=profiles">Collection Profiles (ingest)</a></li>
+      <li class="profile"><a href="{{COLLADMIN_HOME}}?path=adminprofiles">Admin Profile List</a></li>
     </ul>
 
     <h2>Ingest, Inventory and Access Queues</h2>
     <ul>
-      <li><a href="{{COLLADMIN_HOME}}?path=ingest-queue-by-profile">Ingest Queues - Counts by Profile</a></li>
-      <li><a href="{{COLLADMIN_HOME}}?path=queues">Ingest Queues</a></li>
-      <li><a href="{{COLLADMIN_HOME}}?path=inv-queues">Inventory Queues</a></li>
-      <li><a href="{{COLLADMIN_HOME}}?path=acc-queues">Access Queues</a></li>
+      <li class="graph"><a href="{{COLLADMIN_HOME}}?path=ingest-queue-by-profile">Ingest Queues - Counts by Profile</a></li>
+      <li class="job"><a href="{{COLLADMIN_HOME}}?path=queues">Ingest Queues</a></li>
+      <li class="job"><a href="{{COLLADMIN_HOME}}?path=inv-queues">Inventory Queues</a></li>
+      <li class="job"><a href="{{COLLADMIN_HOME}}?path=acc-queues">Access Queues</a></li>
     </ul>
 
     <h2>Ingest Queues and Batch Jobs</h2>
     <ul>
-      <li><a href="{{COLLADMIN_HOME}}?path=state">Ingest Service State Request</a></li>
-      <li><a href="{{COLLADMIN_HOME}}?path=submissions/pause">Pause Submissions</a></li>
-      <li><a href="{{COLLADMIN_HOME}}?path=submissions/unpause">Unpause Submissions</a></li>
-      <li><a href="{{COLLADMIN_HOME}}?path=batchFolders&days=7">Batch Folders Created in the last 7 days</a></li>      
-      <li><a href="{{COLLADMIN_HOME}}?path=sword">Ingest Service Show Sword Jobs</a></li>
+      <li class="report"><a href="{{COLLADMIN_HOME}}?path=state">Ingest Service State Request</a></li>
+      <li class="config"><a href="{{COLLADMIN_HOME}}?path=submissions/pause">Pause Submissions</a></li>
+      <li class="config"><a href="{{COLLADMIN_HOME}}?path=submissions/unpause">Unpause Submissions</a></li>
+      <li class="batches"><a href="{{COLLADMIN_HOME}}?path=batchFolders&days=7">Batch Folders Created in the last 7 days</a></li>      
+      <li class="job"><a href="{{COLLADMIN_HOME}}?path=sword">Ingest Service Show Sword Jobs</a></li>
     </ul>
 
     <h2>Ingest Locks</h2>
     <ul>
-      <li><a href="{{COLLADMIN_HOME}}?path=ingest-locks">Ingest Locks</a></li>
-      <li><a href="{{COLLADMIN_HOME}}?path=collection-locks">Collection Locks</a></li>
+      <li class="config"><a href="{{COLLADMIN_HOME}}?path=ingest-locks">Ingest Locks</a></li>
+      <li class="config"><a href="{{COLLADMIN_HOME}}?path=collection-locks">Collection Locks</a></li>
     </ul>
 
     <h2>Merritt Admin Tool (Cognito) User Management</h2>
     <ul>
-      <li><a href="{{COLLADMIN_HOME}}?path=cognito-users">Cognito Users</a></li>
+      <li class="config"><a href="{{COLLADMIN_HOME}}?path=cognito-users">Cognito Users</a></li>
     </ul>
 
     <h2>Merritt LDAP User Management</h2>
     <ul>
-      <li><a href="{{COLLADMIN_HOME}}?path=ldap/users">LDAP Users</a></li>
-      <li><a href="{{COLLADMIN_HOME}}?path=ldap/roles">LDAP Roles</a></li>
-      <li><a href="{{COLLADMIN_HOME}}?path=ldap/colls">LDAP Collections</a></li>
-      <li><a href="{{COLLADMIN_HOME}}?path=ldap/collmap">Find Missing LDAP Collections</a></li>
+      <li class="ldapuid"><a href="{{COLLADMIN_HOME}}?path=ldap/users">LDAP Users</a></li>
+      <li class="ldaprole"><a href="{{COLLADMIN_HOME}}?path=ldap/roles">LDAP Roles</a></li>
+      <li class="ldapcoll"><a href="{{COLLADMIN_HOME}}?path=ldap/colls">LDAP Collections</a></li>
+      <li class="report"><a href="{{COLLADMIN_HOME}}?path=ldap/collmap">Find Missing LDAP Collections</a></li>
     </ul>
 
     <h2>Create Collection Assets</h2>
     <ul>
-      <li><a href="{{COLLADMIN_ROOT}}/web/collProfile.html">Create Collection Profiles and Admin Objects</a></li>
+      <li class="config"><a href="{{COLLADMIN_ROOT}}/web/collProfile.html">Create Collection Profiles and Admin Objects</a></li>
       <li>
         Submit Admin Objects
         <ul>
-          <li><a href="{{COLLADMIN_ROOT}}/web/collAdminObjs.html?type=collection">Submit Merritt Collection Admin Obj</a></li>
-          <li><a href="{{COLLADMIN_ROOT}}/web/collAdminObjs.html?type=owner">Submit Merritt Owners Admin Obj</a></li>
-          <li><a href="{{COLLADMIN_ROOT}}/web/collAdminObjs.html?type=sla">Submit Merritt SLAS Admin Obj</a></li>    
+          <li class="config"><a href="{{COLLADMIN_ROOT}}/web/collAdminObjs.html?type=collection">Submit Merritt Collection Admin Obj</a></li>
+          <li class="config"><a href="{{COLLADMIN_ROOT}}/web/collAdminObjs.html?type=owner">Submit Merritt Owners Admin Obj</a></li>
+          <li class="config"><a href="{{COLLADMIN_ROOT}}/web/collAdminObjs.html?type=sla">Submit Merritt SLAS Admin Obj</a></li>    
         </ul>
       </li>
       <li>
         Set Artifact Properties
         <ul>
-          <li><a href="{{COLLADMIN_ROOT}}/web/artifactProperties.html?type=collection">Set Collection Properties</a></li>
-          <li><a href="{{COLLADMIN_ROOT}}/web/artifactProperties.html?type=owner">Set Owner Properties</a></li>
-          <li><a href="{{COLLADMIN_ROOT}}/web/artifactProperties.html?type=sla">Set SLA Properties</a></li>    
+          <li class="config"><a href="{{COLLADMIN_ROOT}}/web/artifactProperties.html?type=collection">Set Collection Properties</a></li>
+          <li class="config"><a href="{{COLLADMIN_ROOT}}/web/artifactProperties.html?type=owner">Set Owner Properties</a></li>
+          <li class="config"><a href="{{COLLADMIN_ROOT}}/web/artifactProperties.html?type=sla">Set SLA Properties</a></li>    
         </ul>
       </li>
     </ul>
 
     <h2>Storage Admin</h2>
     <ul>
-      <li><a href="{{COLLADMIN_ROOT}}/web/storeCollNodes.html">Manage Storage Nodes for a Collection</a></li>
-      <li><a href="{{COLLADMIN_ROOT}}/web/storeNodes.html">Manage Storage Nodes</a></li>
-      <li><a href="{{COLLADMIN_ROOT}}/web/storeObjects.html">Manage Object Storage</a></li>
-      <li><a href="{{COLLADMIN_ROOT}}/web/storeQueues.html">Manage Audit Queues and Audit Status</a></li>
+      <li class="config"><a href="{{COLLADMIN_ROOT}}/web/storeCollNodes.html">Manage Storage Nodes for a Collection</a></li>
+      <li class="config"><a href="{{COLLADMIN_ROOT}}/web/storeNodes.html">Manage Storage Nodes</a></li>
+      <li class="objects"><a href="{{COLLADMIN_ROOT}}/web/storeObjects.html">Manage Object Storage</a></li>
+      <li class="config"><a href="{{COLLADMIN_ROOT}}/web/storeQueues.html">Manage Audit Queues and Audit Status</a></li>
     </ul>
 
     <h2>System Introspection</h2>
     <ul>
-      <li><a href="{{COLLADMIN_HOME}}?path=instances">Merritt Servers</a></li>
-      <li><a href="{{COLLADMIN_HOME}}?path=ssm-describe">SSM Parameter Registry</a></li>
+      <li class="config"><a href="{{COLLADMIN_HOME}}?path=instances">Merritt Servers</a></li>
+      <li class="config"><a href="{{COLLADMIN_HOME}}?path=ssm-describe">SSM Parameter Registry</a></li>
     </ul>
 
   </div>

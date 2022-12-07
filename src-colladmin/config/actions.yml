@@ -24,12 +24,22 @@
 #   sensitivity: [readonly | reversible change | irreversible change | sensitive]
 #   description: |
 #     markdown description of the purpose of the action
+#   documentation: |
+#    technical summary of what the action will perform
 #   testing: [automated | contextually automatable | automatable | manual]
 #   testing_instructions: url to internal documentation describing how to perform a test
 #   format: [text|json|xml], default: json
 #   test_params: key/value pairs needed for testing
+#   link-title: link title
+#   nav:
+#     path: navigation path
+#     conditional:
+#       param: navigation path with qualifying param
 
 profiles:
+  link-title: List Ingest Profiles (deployed on the Ingest Server)
+  nav:
+    path: /ingest/profiles
   class: IngestProfileAction
   category: Ingest Profiles
   sensitivity: readonly
@@ -38,7 +48,15 @@ profiles:
     List all *ingest profiles* known to the ingest server.
     An ingest profile describes characteristics associated with a collection's configuration, such as its context mnemonic, description and primary storage node. 
     These profiles are managed in a github repository and are deployed to the server.
+  report-datatypes:
+  - profile
+  documentation: |
+    Ingest: GET /admin/profiles-full
+    Ingest: GET /admin/profile/{profile}
 collection-locks:
+  link-title: List Merritt Collections and Collection Level Locks
+  nav:
+    path: /collections/locks
   class: IngestCollectionLocksAction
   category: Ingest Profiles
   sensitivity: readonly
@@ -51,7 +69,13 @@ collection-locks:
     Once ingest processing for a collection has been thawed, any items that have accumulated into the Held queue for the collection must be released.  
 
     Items can be individually released from the [queue page](/web/collIndex.html?path=queues) or they can be released as a set from this page.
+  documentation: |
+    Ingest: GET /admin/profiles-full 
+    Ingest: GET /admin/queues 
 adminprofiles:
+  link-title: List Merritt Admin Profiles
+  nav:
+    path: /ingest/admin-profiles
   class: AdminProfileAction
   category: Ingest Admin Profiles
   sensitivity: readonly
@@ -62,14 +86,25 @@ adminprofiles:
     Every collection must sit beneath a campus-specific SLA and a library or unit-specific owner profile. 
     Admin profiles also provide a basis on which to roll up annual storage recharge calculations.
     These profiles are managed in a github repository and are deployed to the server.
+  documentation: |
+    Ingest: GET /admin/profiles/admin
+    Ingest: GET /admin/profiles/admin/{type}
 state:
+  link-title: Ingest Service Status
+  nav:
+    path: /ingest/status
   class: IngestStateAction
   category: Queue Management
   sensitivity: readonly
   testing: automated
   description: |
     Display the state of the ingest service.
+  documentation: |
+    Ingest: GET /state
 queues:
+  link-title: Ingest Queue Jobs
+  nav:
+    path: /ingest/activity
   class: IngestQueueAction
   category: Queue Management
   sensitivity: readonly
@@ -77,14 +112,30 @@ queues:
   description: |
     Display the contents of the *ingest queue*. Items in this queue are slated to be processed by the Ingest service.
     From this screen, items can be requeued.
+  report-datatypes:
+  - fprofile
+  - fstatus
+  - fprofilestatus
+  documentation: |
+    Ingest: GET /admin/queues
+    Ingest: GET /admin/queue/{node}
 ingest-queue-by-profile:
+  link-title: Ingest Queue Activity by Profile
+  nav:
+    path: /ingest/activity
   class: IngestQueueProfileCountAction
   category: Queue Management
   sensitivity: readonly
   testing: contextually automated
   description: |
     Display the counts of the *ingest queue* items by profile.
+  documentation: |
+    Ingest: GET /admin/queues
+    Ingest: GET /admin/queue/{node}
 inv-queues:
+  link-title: Inventory Queue Jobs
+  nav:
+    path: /inventory/activity
   class: InventoryQueueAction
   category: Queue Management
   sensitivity: readonly
@@ -92,7 +143,13 @@ inv-queues:
   description: |
     Display the contents of the *inventory queue*. Items in this queue are slated to be processed by the Ingest service.
     From this screen, items can be requeued.
+  documentation: |
+    Ingest: GET /admin/queues-inv
+    Ingest: GET /admin/queue-inv/{node}
 acc-queues:
+  link-title: Access Queue Jobs
+  nav:
+    path: /access/activity
   class: AccessQueueAction
   category: Queue Management
   sensitivity: readonly
@@ -103,7 +160,13 @@ acc-queues:
     Items in this queue are slated to be processed by the Store Access service. 
     More specifically, each queue item pertains to an end-user request to download an entire digital object. 
     Requests are routed to Access worker hosts based on object size (large or small).
+  documentation: |
+    Ingest: GET /admin/queues-acc
+    Ingest: GET /admin/queue-acc/{node}
 batchFolders:
+  link-title: Ingest Batch Folders
+  nav:
+    path: /ingest/folders
   class: IngestBatchFoldersAction
   category: Ingest Batches and Folders
   sensitivity: readonly
@@ -117,28 +180,56 @@ batchFolders:
     - PASS: Once the batch has been registered in the inventory database
     - WARN: The folder has existed for over one HOUR without registering in the inventory database
     - FAIL: The folder has existed for over one DAY without registering in the inventory database
+  documentation: |
+    Ingest: GET /admin/bids/{days}
+    Ingest: GET /admin/queues-acc
+    Ingest: GET /admin/queue-acc/{node}
 batch:
+  link-title: Ingest Batch
+  nav:
+    path: /ingest/activity
   class: IngestBatchAction
   category: Ingest Batches and Folders
   sensitivity: readonly
   testing: contextually automated
   description: |
     Display details about an *ingest batch*.  A *batch* may contain one or more *jobs*.
+  report-datatypes:
+  - qbatch
+  - qbatchnote
+  documentation: |
+    Ingest: GET /admin/queues
+    Ingest: GET /admin/queue/{node}
 job:
+  link-title: Ingest Job
+  nav:
+    path: /ingest/activity
   class: IngestJobMetadataAction
   category: Ingest Batches and Folders
   sensitivity: readonly
   testing: contextually automated
   description: |
     Display details about a specific *job* within an ingest batch.
+  documentation: |
+    Ingest: GET /admin/jid-erc/{batch}/{job}
 manifest:
+  link-title: Ingest Job Manifest Contents
+  nav:
+    path: /ingest/activity
   class: IngestJobManifestAction
   category: Ingest Batches and Folders
   sensitivity: readonly
   testing: contextually automated
   description: |
     Display the manifest defining the content to ingest in a specific *ingest job*.
+  report-datatypes:
+  - manifest
+  documentation: |
+    Ingest: GET /admin/jid-manifest/{batch}/{job}
 files:
+  link-title: Ingest Job Folder File List
+  nav:
+    path: /ingest/folders
   class: IngestJobFilesAction
   category: Ingest Batches and Folders
   sensitivity: readonly
@@ -148,7 +239,12 @@ files:
     After a successful submission:
     - producer files will be removed
     - system files will be retained
+  documentation: |
+    Ingest: GET /admin/jid-file/{batch}/{job}
 sword:
+  link-title: Dryad Recent Jobs
+  nav:
+    path: /ingest/activity
   class: IngestSwordJobsAction
   category: Ingest Batches and Folders
   sensitivity: readonly
@@ -156,14 +252,24 @@ sword:
   description: |
     Display the most recent ingest jobs initiated from Dryad via the Sword service.
     After the page is displayed, a separate search is run to display the ARK and DOI associated with each job.
+  documentation: |
+    Ingest: GET /admin/bid/JOB_ONLY/{days}
 ldap/users:
+  link-title: List Merritt LDAP Users
+  nav:
+    path: /ldap/users
   class: LDAPActionUsers
   category: LDAP
   sensitivity: readonly
   testing: automated
   description: | 
     Display the list of Merritt users defined in the Merritt LDAP database.
+  documentation: |
+    Ldap: Query
 ldap/user:
+  link-title: List details for an Merritt LDAP User
+  nav:
+    path: /ldap/users
   class: LDAPActionUserDetailed
   category: LDAP
   sensitivity: readonly
@@ -171,14 +277,27 @@ ldap/user:
   description: | 
     Display the details for a specific Merritt user defined in the Merritt LDAP database.
     The report conveys the permissions granted to the user on a collection basis.
+  report-datatypes:
+  - ldapuid
+  - ldapuidlist
+  documentation: |
+    Ldap: Query
 ldap/roles:
+  link-title: List Merritt LDAP Roles
+  nav:
+    path: /ldap/roles
   class: LDAPActionRoles
   category: LDAP
   sensitivity: readonly
   testing: automated
   description: | 
     Display the set of permission groups (roles) defined in the Merritt LDAP database.
+  documentation: |
+    Ldap: Query
 ldap/role:
+  link-title: List details for an Merritt LDAP Role
+  nav:
+    path: /ldap/roles
   class: LDAPAction
   category: LDAP
   sensitivity: readonly
@@ -186,7 +305,12 @@ ldap/role:
   description: | 
     Display information about a specific role defined in the Merritt LDAP database.
     *This report does not seem to be linked in the application**.
+  documentation: |
+    Ldap: Query
 ldap/colls:
+  link-title: List Merritt LDAP Collections
+  nav:
+    path: /ldap/collections
   class: LDAPActionColls
   category: LDAP
   sensitivity: readonly
@@ -194,7 +318,12 @@ ldap/colls:
   description: | 
     Display the Merritt collections as defined in the  Merritt LDAP database.
     Oddly, the Merritt UI uses the Collection name defined in LDAP as the definitive display name for the collection.
+  documentation: |
+    Ldap: Query
 ldap/coll:
+  link-title: List Details for an LDAP Collection
+  nav:
+    path: /ldap/collections
   class: LDAPActionCollDetailed
   category: LDAP
   sensitivity: readonly
@@ -203,7 +332,14 @@ ldap/coll:
     coll: merritt_demo
   description: | 
     List user details for a Merritt collection as defined in the  Merritt LDAP database, including user roles.
+  report-datatypes:
+  - ldapcoll
+  documentation: |
+    Ldap: Query
 ldap/collmap:
+  link-title: Merritt LDAP / Inventory Database Mismatches
+  nav:
+    path: /ldap/issue-list
   class: LDAPActionCollmap
   category: LDAP
   sensitivity: readonly
@@ -211,21 +347,40 @@ ldap/collmap:
   description: | 
     Generate a report that maps entities in the Merritt LDAP database to entries in the Merritt inventory database.
     For any items that do not match, an error will be reported in the report.  This indicates that maintenance needs to be performed on the LDAP entries for Merritt.
+  documentation: |
+    Ldap: Query
 ldap/collark:
+  link-title: List LDAP Users for a specific collection ARK
+  nav:
+    path: /ldap/collections
   class: LDAPActionCollArk
   category: LDAP
   sensitivity: readonly
   testing: automated
   description: |
     This report maps a *collection ark* (from the inventory database) to the set of LDAP permissions defined for that collection.
+  report-datatypes:
+  - ldapcollark
+  documentation: |
+    Ldap: Query
 instances:
+  link-title: List and Describe Merritt EC2 Servers
+  nav:
+    path: /merritt-internal/servers
   class: TagAction
   category: Dev Ops
   sensitivity: readonly
   testing: automated
   description: |
     Generate a report describing the EC2 servers used by Merritt domain.  Server details are discovered by querying EC2 tags.
+  report-datatypes:
+  - instances
+  documentation: |
+    Aws: Tag Query
 ssm-describe:
+  link-title: List and Describe Merritt SSM Variables
+  nav:
+    path: /merritt-internal/ssm-variables
   class: SsmDescribeAction
   category: Dev Ops
   sensitivity: readonly
@@ -233,7 +388,12 @@ ssm-describe:
   description: |
     Generate a report describing the SSM variables used by a Merritt domain.
     These variables are compared against a [registry of expected SSM variables](https://github.com/CDLUC3/mrt-admin-lambda/blob/main/src-colladmin/config/ssm.registry.yml).
+  documentation: |
+    Aws: SSM Query
 storage-get-manifest:
+  link-title: Get Storage Manifest for an Object from Cloud Storage
+  nav:
+    path: /storage/manifest
   class: StorageAction
   category: Storage Manifest
   sensitivity: readonly
@@ -244,7 +404,12 @@ storage-get-manifest:
     nodenum: 9502
   description: |
     Download the XML *storage manifest* representation of a object on a specific storage node.  This request will be forwarded to the storage service.
+  documentation: |
+    Storage: GET /manifest/{nodenum}/{ark}
 storage-get-augmented-manifest:
+  link-title: Fix and Regenerate Storage Manifest for an Object from Cloud Storage
+  nav:
+    path: /storage/manifest
   implemented: false
   category: Storage Manifest
   sensitivity: readonly
@@ -253,7 +418,12 @@ storage-get-augmented-manifest:
     #### Future Feature
     Download a programmatically repaired manifest generated by the storage/replication service.
     This feature is anticipated to be utilized to resolve specific problems that occur infrequently.
+  documentation: |
+    Not yet implemented
 storage-get-ingest-checkm:
+  link-title: Generate Ingest Checkm Manifest Using Content from Cloud Storage
+  nav:
+    path: /storage/manifest
   class: StorageAction
   category: Storage Manifest
   sensitivity: readonly
@@ -265,7 +435,12 @@ storage-get-ingest-checkm:
   description: |
     Download an *ingest manifest checkm* representation of an object on a specific storage node.  
     This file could be utilized to re-ingest an object under a new ark.
+  documentation: |
+    Storage: GET /ingestlink/{nodenum}/{ark}/{ver}?presign=true
 cognito-users:
+  link-title: List Merritt Admin Tools Users
+  nav:
+    path: /merritt-internal/users
   class: CognitoAction
   category: Cognito
   sensitivity: readonly
@@ -276,7 +451,12 @@ cognito-users:
     This screen contains buttons that could trigger the addition/removal of specific users from a *Cognito User Group*.
 
     Note: While the tool supports non-SAML users, in practice, we have not authorized any non-SAML users.  This is intended for partners such as Dryad staff.
+  documentation: |
+    Aws: Lambda Invoke (Lambda interface to Cognito enpoints)
 replication-state:
+  link-title: Display the Status of the Replciation Microservice
+  nav:
+    path: /replic/status
   class: ReplicationAction
   category: Dev Ops
   sensitivity: readonly
@@ -285,7 +465,12 @@ replication-state:
   description: |
     Display the *storage scan status* of the replication service.
     This function determines whether or not to enable the *Stop Storage Scan* and *Enable Storage Scan* buttons.
+  documentation: |
+    Replication: GET /state
 storage-review-csv:
+  link-title: Generate and download a CSV of storage scan exceptions
+  nav:
+    path: /storage-scan/csv
   class: ReplicationAction
   category: Storage Scan
   sensitivity: readonly
@@ -293,17 +478,29 @@ storage-review-csv:
   description: |
     Download a CSV file for all scan results from a specific storage node that have been marked with a *Review* status.
     This CSV can be edited in Excel in order to apply bulk status/note changes to the scan results.
+  documentation: |
+    SQL: select inv_storage_maints
+    Aws: S3 PUT 
+    Aws: S3 presign
 ingest-locks:
+  link-title: Display ingest storage locks on specific object arks
+  nav:
+    path: /merritt-internal/object-locks
   class: IngestLockAction
   category: Lock Management
   sensitivity: readonly
   testing: contextually automated
   description: |
     Display the ingest storage locks existing for object arks.
+  documentation: |
+    Ingest: GET /admin/lock/mrt.lock
 
 # Operations that change system state - Reversible
 
 submissions/pause:
+  link-title: Pause all ingest processing
+  nav:
+    path: /ingest/pause
   class: PostToIngestAction
   params: ["admin/submissions/freeze"]
   category: Queue Management
@@ -312,7 +509,12 @@ submissions/pause:
   description: |
     Pause all ingest processing.  Return the effective state of the ingest queues.
     This is typically done before a patching cycle or a software release that impacts ingest or storage.
+  documentation: |
+    Ingest: POST /admin/submissions/freeze
 submissions/unpause:
+  link-title: Unpause all ingest processing
+  nav:
+    path: /ingest/unpause
   class: PostToIngestAction
   params: ["admin/submissions/thaw"]
   category: Queue Management
@@ -320,7 +522,12 @@ submissions/unpause:
   testing: automatable
   description: |
     Unpause ingest processing.  Return the effective state of the ingest queues.
+  documentation: |
+    Ingest: POST /admin/submissions/thaw
 toggle_harvest:
+  link-title: Toggle the harvest flag for a collection
+  nav:
+    path: /collection-admin/properties
   class: AdminProfileAction
   category: Ingest Admin Profiles
   sensitivity: reversible change
@@ -328,7 +535,12 @@ toggle_harvest:
   description: |
     Toggle the *harvest* flag for a collection.
     The harvest flag determines whether or not a collection can be crawled from the OAI service.    
+  documentation: |
+    SQL: update inv_collections set harvest_privilege 
 unlock-coll:
+  link-title: Unlock ingest for a collection
+  nav:
+    path: /ingest/collection-lock
   class: CollQueueAction
   params: ["admin/submission/thaw/coll"]
   category: Queue Management
@@ -336,7 +548,14 @@ unlock-coll:
   testing: automatable
   description: |
     Unlock ingest for a collection.
+  report-datatypes:
+  - colllock
+  documentation: |
+    Ingest: POST /admin/submission/thaw/{coll}
 lock-coll:
+  link-title: Lock ingest for a collection
+  nav:
+    path: /ingest/collection-lock
   class: CollQueueAction
   params: ["admin/submission/freeze/coll"]
   category: Queue Management
@@ -344,7 +563,14 @@ lock-coll:
   testing: automatable
   description: |
     Lock ingest for a collection.
+  report-datatypes:
+  - colllock
+  documentation: |
+    Ingest: POST /admin/submission/freeze/{coll}
 release-coll-queue-items:
+  link-title: Release any held items for a collection
+  nav:
+    path: /ingest/queue-items
   class: CollIterateQueueAction
   params: ["admin/release-all/queue/coll"]
   category: Queue Management
@@ -352,14 +578,26 @@ release-coll-queue-items:
   testing: automatable
   description: |
     Release any held items for a collection.
+  report-datatypes:
+  - collqitems
+  documentation: |
+    Ingest: POST /admin/release-all/queue/{coll}
 storage-force-audit-for-object:
+  link-title: Trigger audit processing for all files in an object on a specific node
+  nav:
+    path: /audit/object
   class: StorageAction
   category: Audit
   sensitivity: reversible change
   testing: automatable
   description: |
     Trigger audit processing for all files in an object on a specific node.
+  documentation: |
+    SQL: update inv_audits set verified
 storage-rerun-audit-for-object:
+  link-title: Trigger audit processing for all unverified files in an object on a specific node
+  nav:
+    path: /audit/object
   class: StorageAction
   category: Audit
   sensitivity: reversible change
@@ -367,7 +605,12 @@ storage-rerun-audit-for-object:
   description: |
     Trigger audit processing for all *unverified* files in an object on a specific node.
     This action is occasionally needed when the audit server is halted or experienced a networking issue on a previous audit.
+  documentation: |
+    SQL: update inv_audits set verified
 storage-force-replic-for-object:
+  link-title: Re-trigger replication for an existing object
+  nav:
+    path: /replic/object
   class: StorageAction
   category: Replication
   sensitivity: reversible change
@@ -375,7 +618,12 @@ storage-force-replic-for-object:
   description: |
     Re-trigger replication for an existing object.  The replication service will resolve incomplete replications for files in the object.
     This action is occasionally needed when the replic server is halted or experienced a networking issue on a previous replication.
+  documentation: |
+    SQL: update inv_nodes_inv_objects inio set replicated
 storage-clear-audit-batch:
+  link-title: Release old audit batches
+  nav:
+    path: /audit/batches
   class: StorageAction
   category: Audit
   sensitivity: reversible change
@@ -384,42 +632,72 @@ storage-clear-audit-batch:
     The audit service processes a block of objects at one time.  All database updates are written back to the database in a batch.
     If the audit service is shut down while processing a batch, some batches may appear to still be actively processing.
     This function clears all audit batches older than a specified amount of time.
+  documentation: |
+    SQL: UPDATE inv_audits SET status='unknown', verified=null
 storage-retry-audit-status:
+  link-title: Trigger an audit retry for all audit records with a specific status
+  nav:
+    path: /audit/retry
   class: StorageAction
   category: Audit
   sensitivity: reversible change
   testing: automatable
   description: |
     Trigger an audit retry for all audit records with a specific status.
+  documentation: |
+    SQL: UPDATE inv_audits SET status='unknown', verified=null
 storage-cancel-all-scans:
+  link-title: Halt all storage scan processing by the replciation service
+  nav:
+    path: /storage-scan/pause
   class: ReplicationAction
   category: Storage Scan
   sensitivity: reversible change
   testing: automatable
   description: |
     Halt all storage scan processing by the replciation service.  This will give priority to content replication.
+  documentation: |
+    Replication: POST /scan/allow/false
 storage-allow-all-scans:
+  link-title: Re-enable storage scan processing by the replciation service
+  nav:
+    path: /storage-scan/pause
   class: ReplicationAction
   category: Storage Scan
   sensitivity: reversible change
   testing: automatable
   description: |
     Re-enable storage scan processing by the replciation service.  This can be run after halting/canceling all scans.
+  documentation: |
+    Replication: POST /scan/allow/true
 storage-cancel-scan-node:
+  link-title:  Cancel storage scan processing on a specific storage node by the replication service
+  nav:
+    path: /storage-scan/pause
   class: ReplicationAction
   category: Storage Scan
   sensitivity: reversible change
   testing: automatable
   description: |
     Cancel storage scan processing *on a specific storage node* by the replication service.  
+  documentation: |
+    Replication: POST /scan/cancel/{scanid}
 storage-resume-scan-node:
+  link-title:  Resume storage scan processing on a specific storage node by the replication service
+  nav:
+    path: /storage-scan/pause
   class: ReplicationAction
   category: Storage Scan
   sensitivity: reversible change
   testing: automatable
   description: |
     Resume storage scan processing *on a specific storage node* by the replication service.  
+  documentation: |
+    Replication: POST /scan/restart/{scanid}
 storage-clear-scan-entries:
+  link-title:  Clear storage scan entries for a specific ark
+  nav:
+    path: /storage-scan/clear
   class: StorageAction
   category: Storage Scan Review
   sensitivity: reversible change
@@ -427,7 +705,12 @@ storage-clear-scan-entries:
   description: |
     Clear storage scan entries for a specific ark.
     This function is intended to be run after *rebuilding an inventory record* via the admin tool.  
+  documentation: |
+    SQL: DELETE FROM inv_storage_maints WHERE s3key like
 storage-scan-node:
+  link-title: Initiate storage scan processing on a specific storage node by the replication service
+  nav:
+    path: /storage-scan/initiate
   class: ReplicationAction
   category: Storage Scan
   sensitivity: reversible change
@@ -438,52 +721,87 @@ storage-scan-node:
     In general, the storage scan process uses the S3 API to iterate over items found on a storage node.
     For SDSC storage, the iterator api call does not function properly.  
     Instead, an inventory dump must be manually requested from SDSC and uploaded to S3 for comparison processing.
+  documentation: |
+    Replication: POST /scan/start/{nodeid}
 storage-delete-node-key:
+  link-title: Mark a single scan result with a DELETE status
+  nav:
+    path: /storage-scan/review
   class: ReplicationAction
   category: Storage Scan Review
   sensitivity: reversible change
   testing: manual
   description: |
     Mark a single scan result with a *DELETE* status.  
+  documentation: |
+    SQL: UPDATE inv_storage_maints SET maint_status
 storage-delete-node-page:
+  link-title: Mark a page of scan results with a DELETE status
+  nav:
+    path: /storage-scan/review
   class: ReplicationAction
   category: Storage Scan Review
   sensitivity: reversible change
   testing: manual
   description: |
     Mark a page of scan results with a *DELETE* status.  
+  documentation: |
+    SQL: UPDATE inv_storage_maints SET maint_status
 storage-hold-node-key:
+  link-title: Mark a single scan result with a HOLD status
+  nav:
+    path: /storage-scan/review
   class: ReplicationAction
   category: Storage Scan Review
   sensitivity: reversible change
   testing: manual
   description: |
     Mark a single scan result with a *HOLD* status.  
+  documentation: |
+    SQL: UPDATE inv_storage_maints SET maint_status
 storage-hold-node-page:
+  link-title: Mark a page of scan results with a HOLD status
+  nav:
+    path: /storage-scan/review
   class: ReplicationAction
   category: Storage Scan Review
   sensitivity: reversible change
   testing: manual
   description: |
     Mark a page of scan results with a *HOLD* status.  
+  documentation: |
+    SQL: UPDATE inv_storage_maints SET maint_status
 storage-review-node-key:
+  link-title: Mark a single scan result with a REVIEW status
+  nav:
+    path: /storage-scan/review
   class: ReplicationAction
   category: Storage Scan Review
   sensitivity: reversible change
   testing: manual
   description: |
     Mark a single scan result with a *REVIEW* status.  
+  documentation: |
+    SQL: UPDATE inv_storage_maints SET maint_status
 storage-review-node-page:
+  link-title: Mark a page of scan results with a REVIEW status
+  nav:
+    path: /storage-scan/review
   class: ReplicationAction
   category: Storage Scan Review
   sensitivity: reversible change
   testing: manual
   description: |
     Mark a page of scan results with a *REVIEW* status.  
+  documentation: |
+    SQL: UPDATE inv_storage_maints SET maint_status
 
 # Operations that change system state - Not reversible
 
 submit-profile:
+  link-title: Submit a dummy object using a newly created admin profile
+  nav:
+    path: /collection-admin/dummy-object
   class: SubmitProfileAction
   params: ["poster/update"]
   category: Ingest Admin Profiles
@@ -492,7 +810,12 @@ submit-profile:
   description: |
     Submit a dummy object using a newly created admin profile.
     This will trigger the creation of an object in the Merritt inventory database.
+  documentation: |
+    Ingest: POST /poster/update
 set_mnemonic:
+  link-title:  Set the mnemonic field for a collection to match the value defined in the collection admin profile
+  nav:
+    path: /collection-admin/properties
   class: AdminProfileAction
   category: Ingest Admin Profiles
   sensitivity: irreversible change
@@ -501,7 +824,12 @@ set_mnemonic:
     Set the *mnemonic* field for a collection to match the value defined in the collection admin profile.
     Once set, this value cannot be reset.
     This option must be manually run due to a legacy limitation of the collection creation process for Merritt.
+  documentation: |
+    SQL: update inv_collections set mnemonic
 set_coll_name:
+  link-title:  Set the description field for a collection to match the value defined in the collection admin profile
+  nav:
+    path: /collection-admin/properties
   class: AdminProfileAction
   category: Ingest Admin Profiles
   sensitivity: irreversible change
@@ -509,7 +837,12 @@ set_coll_name:
   description: |
     Set the *description* field for a collection to match the value defined in the collection admin profile.
     To apply future changes to this field, you must update the collection admin profile.
+  documentation: |
+    SQL: update inv_collections set name
 set_sla_name:
+  link-title:  Set the description field for an SLA to match the value defined in the SLA admin profile
+  nav:
+    path: /collection-admin/properties
   class: AdminProfileAction
   category: Ingest Admin Profiles
   sensitivity: irreversible change
@@ -517,7 +850,12 @@ set_sla_name:
   description: |
     Set the *description* field for an SLA to match the value defined in the SLA admin profile.
     To apply future changes to this field, you must update the SLA admin profile.
+  documentation: |
+    SQL: update inv_collections set name
 set_own_name:
+  link-title: Set the description field for an Owner to match the value defined in the Owner admin profile
+  nav:
+    path: /collection-admin/properties
   class: AdminProfileAction
   category: Ingest Admin Profiles
   sensitivity: irreversible change
@@ -525,21 +863,36 @@ set_own_name:
   description: |
     Set the *description* field for an Owner to match the value defined in the Owner admin profile.
     To apply future changes to this field, you must update the Owner admin profile.
+  documentation: |
+    SQL: update inv_owners set name=
 create_owner_record:
+  link-title: Generate an owner record in the Merritt inventory database based on the submission of a dummy object using the Owner Admin profile
+  nav:
+    path: /collection-admin/create
   class: AdminProfileAction
   category: Ingest Admin Profiles
   sensitivity: irreversible change
   testing: manual
   description: |
     Generate an owner record in the Merritt inventory database based on the submission of a dummy object using the Owner Admin profile.
+  documentation: |
+    SQL: insert into inv_owners(inv_object_id, ark) 
 create_coll_record:
+  link-title: Generate an SLA record in the Merritt inventory database based on the submission of a dummy object using the SLA Admin profile
+  nav:
+    path: /collection-admin/create
   class: AdminProfileAction
   category: Ingest Admin Profiles
   sensitivity: irreversible change
   testing: manual
   description: |
     Generate an SLA record in the Merritt inventory database based on the submission of a dummy object using the SLA Admin profile.
+  documentation: |
+    SQL: insert into inv_collections(inv_object_id, ark)
 createProfile/profile:
+  link-title: Send a request to the ingest service to generate a new Ingest Profile
+  nav:
+    path: /collection-admin/create
   class: PostToIngestMultipartAction
   params: ["admin/profile/profile"]
   category: Ingest Admin Profiles
@@ -548,7 +901,12 @@ createProfile/profile:
   description: |
     Send a request to the ingest service to generate a new *Ingest Profile*.
     A new ARK will be minted as needed.
+  documentation: |
+    Ingest: POST /admin/profile/profile
 createProfile/collection:
+  link-title: Send a request to the ingest service to generate a new Collection Admin Profile
+  nav:
+    path: /collection-admin/create
   class: PostToIngestMultipartAction
   params: ["admin/profile/collection"]
   category: Ingest Admin Profiles
@@ -557,7 +915,12 @@ createProfile/collection:
   description: |
     Send a request to the ingest service to generate a new *Collection Admin Profile*.
     A new ARK will be minted as needed.
+  documentation: |
+    Ingest: POST /admin/profile/collection
 createProfile/owner:
+  link-title: Send a request to the ingest service to generate a new Owner Admin Profile
+  nav:
+    path: /collection-admin/create
   class: PostToIngestMultipartAction
   params: ["admin/profile/owner"]
   category: Ingest Admin Profiles
@@ -566,7 +929,12 @@ createProfile/owner:
   description: |
     Send a request to the ingest service to generate a new *Owner Admin Profile*.
     A new ARK will be minted as needed.
+  documentation: |
+    Ingest: POST /admin/profile/owner
 createProfile/sla:
+  link-title: Send a request to the ingest service to generate a new SLA Admin Profile
+  nav:
+    path: /collection-admin/create
   class: PostToIngestMultipartAction
   params: ["admin/profile/sla"]
   category: Ingest Admin Profiles
@@ -575,7 +943,12 @@ createProfile/sla:
   description: |
     Send a request to the ingest service to generate a new *SLA Admin Profile*.
     A new ARK will be minted as needed.
+  documentation: |
+    Ingest: POST /admin/profile/sla
 queue-delete:
+  link-title: Remove an item from a Zookeeper queue
+  nav:
+    path: /queue/action
   class: QueueAction
   params: ["admin/deleteq"]
   category: Queue Management
@@ -583,7 +956,14 @@ queue-delete:
   testing: manual
   description: |
     Remove an item from a Zookeeper queue.
+  report-datatypes:
+  - qdelete
+  documentation: |
+    Ingest: POST /admin/deleteq
 requeue:
+  link-title: Re-queue an item from a Zookeeper queue
+  nav:
+    path: /queue/action
   class: QueueAction
   params: ["admin/requeue"]
   category: Queue Management
@@ -591,7 +971,14 @@ requeue:
   testing: manual
   description: |
     Re-queue an item from a Zookeeper queue.
+  report-datatypes:
+  - requeue
+  documentation: |
+    Ingest: POST /admin/requeue
 hold-queue-item:
+  link-title: Move a pending item from in Zookeeper queue to a Held status
+  nav:
+    path: /queue/action
   class: QueueAction
   params: ["admin/hold"]
   category: Queue Management
@@ -599,7 +986,14 @@ hold-queue-item:
   testing: manual
   description: |
     Move a pending item from in Zookeeper queue to a Held status.
+  report-datatypes:
+  - hold
+  documentation: |
+    Ingest: POST /admin/hold
 release-queue-item:
+  link-title: Release a held item from in Zookeeper queue to a Pending status
+  nav:
+    path: /queue/action
   class: QueueAction
   params: ["admin/release"]
   category: Queue Management
@@ -607,31 +1001,57 @@ release-queue-item:
   testing: manual
   description: |
     Release a held item from in Zookeeper queue to a Pending status.
+  report-datatypes:
+  - release
+  documentation: |
+    Ingest: POST /admin/release
 apply-review-changes:
+  link-title: Apply bulk changes to storage scan results by uploading a CSV containing a set of desired changes
+  nav:
+    path: /storage-scan/review
   class: ReplicationAction
   category: Storage Scan Review
   sensitivity: irreversible change
   testing: manual
   description: |
     Apply bulk changes to storage scan results by uploading a CSV containing a set of desired changes.
+  documentation: |
+    SQL: update inv_storage_maints set maint_status = ?, note = ?
 
 # Sensitive Operations
 
 cognito-remove-user-from-group:
+  link-title: Remove a Cognito User from a specific Cognito User Group
+  nav:
+    path: /merritt-internal/users
   class: CognitoAction
   category: Cognito
   sensitivity: sensitive
   testing: automatable
   description: |
     Remove a *Cognito User* from a specific *Cognito User Group*.
+  report-datatypes:
+  - cognito
+  documentation: |
+    Aws: invoke lambda
 cognito-add-user-to-group:
+  link-title: Add a Cognito User to a specific Cognito User Group
+  nav:
+    path: /merritt-internal/users
   class: CognitoAction
   category: Cognito
   sensitivity: sensitive
   testing: automatable
   description: |
     Add a *Cognito User* to a specific *Cognito User Group*.
+  report-datatypes:
+  - cognito
+  documentation: |
+    Aws: invoke lambda
 storage-rebuild-inventory:
+  link-title: Rebuild inventory record from storage manifest
+  nav:
+    path: /storage/repair
   class: StorageAction
   category: Inventory and Manifest
   sensitivity: sensitive
@@ -639,21 +1059,39 @@ storage-rebuild-inventory:
   description: |
     Retrieve a storage manifest from the storage service.  
     Send that manifest to the Inventory service in order to re-build the inventory record from the storage manifest.
+  documentation: |
+    Inventory: DELETE /object/{ark}
+    Storage: GET /manifest/{nodenum}/{ark}
+    Inventory: POST /add
 storage-update-manifest:
+  link-title: Upload a repaired storage manifest to override an existing one
+  nav:
+    path: /storage/repair
   implemented: false
   category: Inventory and Manifest
   sensitivity: sensitive
   testing: manual
   description: |
     #### Future Feature: upload a repaired storage manifest to override an existing one
+  documentation: |
+    Not yet implemented
 storage-add-node-for-collection:
+  link-title: Add a secondary storage node to the configuration for a collection
+  nav:
+    path: /storage/node-configuration
   class: StorageAction
   category: Storage Node Configuration
   sensitivity: sensitive
   testing: manual
   description: |
     Add a secondary storage node to the configuration for a collection.
+  documentation: |
+    SQL: INSERT INTO inv_collections_inv_nodes(inv_collection_id, inv_node_id)
+    SQL: update inv_nodes_inv_objects inio set replicated = null
 storage-del-node-for-collection:
+  link-title: Remove a storage node from a collection configuration
+  nav:
+    path: /storage/node-configuration
   class: StorageAction
   category: Storage Node Configuration
   sensitivity: sensitive
@@ -661,14 +1099,25 @@ storage-del-node-for-collection:
   description: |
     Remove a storage node from a collection configuration.
     All objects in the collection will need to be cleared from the storage node.
+  documentation: |
+    SQL: DELETE FROM inv_collections_inv_nodes WHERE inv_collection_id = ?
 replic-delete-coll-batch-from-node:
+  link-title: Delete a batch of objects from the collection from storage node
+  nav:
+    path: /storage/node-configuration/contents
   class: ReplicationAction
   category: Storage Node Configuration
   sensitivity: sensitive
   testing: manual
   description: |
     Delete a batch of objects from the collection from this node.  This may need to run iteratively.
+  documentation: |
+    SQL: SELECT o.ark from inv_objects o
+    Replication: DELETE /delete/{nodenum}/{ark}
 storage-del-object-from-node:
+  link-title: Delete object from storage node
+  nav:
+    path: /storage/node-configuration/contents
   implemented: false
   category: Delete object
   sensitivity: sensitive
@@ -676,7 +1125,12 @@ storage-del-object-from-node:
   description: |
     #### Future feature - Probably not needed
     [Feature Design](https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-node-obj)
+  documentation: |
+    Not yet implemented
 storage-change-primary-for-collection:
+  link-title: Change primary storage node for collection
+  nav:
+    path: /storage/node-configuration
   implemented: false
   category: Storage Node Configuration
   sensitivity: sensitive
@@ -684,7 +1138,12 @@ storage-change-primary-for-collection:
   description: |
     #### Future feature
     [Feature Design](https://cdluc3.github.io/mrt-doc/diagrams/store-admin-change-primary-node)
+  documentation: |
+    Not yet implemented
 storage-reroute-ui-for-collection:
+  link-title: Re-route UI storage node for collection
+  nav:
+    path: /storage/node-configuration
   implemented: false
   class: ReplicationAction
   sensitivity: sensitive
@@ -692,23 +1151,36 @@ storage-reroute-ui-for-collection:
   description: |
     #### Future feature - Probably not in scope for the project
     [Feature Design](https://cdluc3.github.io/mrt-doc/diagrams/store-admin-reroute-uistorage-perform-delete-node-key)
+  documentation: |
+    Not yet implemented
 storage-perform-delete-node-key:
-  # prod_support: false
+  link-title: Delete copy of a file from a storage node
+  nav:
+    path: /storage-scan/repair
   class: ReplicationAction
   category: Storage Scan Review
   sensitivity: sensitive
   testing: manual
   description: |
     Process the delete of a single storage scan record.
+  documentation: |
+    Replication: DELETE /scandelete/{maintid}
 storage-perform-delete-node-batch:
-  # prod_support: false
+  link-title: Process all scan results marked with a DELETE status
+  nav:
+    path: /storage-scan/repair
   class: ReplicationAction
   category: Storage Scan Review
   sensitivity: sensitive
   testing: manual
   description: |
     Process all scan results marked with a *DELETE* status.
+  documentation: |
+    Replication: DELETE /scandelete-list/{nodenum}
 storage-delete-obj:
+  link-title: Trigger the deletion of a Merritt Object
+  nav:
+    path: /inventory/delete
   implemented: false
   category: Storage Scan Review
   sensitivity: sensitive
@@ -717,3 +1189,5 @@ storage-delete-obj:
     #### Future feature
     Trigger the deletion of a Merritt Object.  Save a tombstone record.
     [Feature Design](https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-obj)
+  documentation: |
+    Not yet implemented

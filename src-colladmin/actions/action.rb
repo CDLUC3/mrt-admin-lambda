@@ -64,7 +64,8 @@ class AdminAction < AdminTask
   def get_this_query
     {
       label: "This Query",
-      url: "#{LambdaBase.colladmin_url}?#{params_to_str(@myparams.clone)}"
+      url: "#{LambdaBase.colladmin_url}?#{params_to_str(@myparams.clone)}",
+      class: "rerun"
     }
   end
 

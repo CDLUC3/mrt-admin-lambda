@@ -31,25 +31,31 @@
     <h1>Admin Report Index - Merritt</h1>
     {{{ADMINNAV}}}
     <div>
-      <table class="sortable results">
-        <thead>
-          <tr>
-            <th class="name">Navigation</th>
-            <th class="description">Description</th>
-          </tr>
-        </thead>
-        <tbody>
-          {{#REPORTS}}
-          <tr>
-            <td class="name">{{path}}</td>
-            <td class="description">
-              <h3>{{title}} (<span class="navlabel">{{report}}</span>)</h3>
-              <div class="markdown">{{description_doc}}</div>
-            </td>
-          </tr>
-          {{/REPORTS}}
-        </tbody>      
-      </table>
-    </div>
+      <dl>
+        {{#REPORTSMAP}}
+        <di>
+          <dt>{{path}}</dt>
+          <dd>
+            <ul>
+            {{#reports}}
+              <li>
+                <span class="navhead">
+                <a href="{{ADMINTOOL_HOME}}?path={{report}}">
+                  {{title}} 
+                </a>
+                (<span class="navlabel">{{report}}</span>)
+                <input class="doc" type="checkbox" title="Show Documentation">📖</input>
+                </span>
+                <div class="documentation">
+                  <div class="markdown">{{description_doc}}</div>
+                </div>
+              </li>
+            {{/reports}}
+            </ul>
+          </dd>
+        </di>
+        {{/REPORTSMAP}}
+      </dl>
+      </div>
  </body>
 </html>

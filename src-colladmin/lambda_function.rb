@@ -302,25 +302,73 @@ module LambdaFunctions
         ).objects
         map['OBJS'] = objects
       elsif path == '/web/describeActions.html'
-        actions = YAML.load_file("config/actions.yml")
-        map['ACTIONS'] = []
-        actions.keys.each do |k|
-          act = actions[k]
-          map['ACTIONS'].append({
-            action: k,
-            class: act.fetch('class', 'Undefied'), 
-            description: act.fetch('description', ''), 
-            implemented: act.fetch('implemented', true), 
-            prod_support: act.fetch('prod_support', true), 
-            sensitivity: act.fetch('sensitivity', ''), 
-            category: act.fetch('category', ''), 
-            testing: act.fetch('testing_instructions', act.fetch('testing', '')), 
-          })
-        end
+        map['ACTIONS'] = getActionsList
+      elsif path == '/web/navActions.html'
+        map['ACTIONSMAP'] = getActionsMap
       elsif path == '/web/storeQueues.html'
         map['AUDIT_INFO'] = AuditInfo.new(@config).data
       end
       map
+    end
+
+    def description_doc(act)
+      desc = act.fetch('description', '')
+      doc = act.fetch('documentation', '')
+      datatypes = act.fetch('report-datatypes', [])
+
+      s = desc
+      s += "\n\n*Technical Documentation:*\n```\n#{doc}\n```" unless doc.empty?
+      s += "\n\n_Report Data Types that Link Here:_ \n" unless datatypes.empty?
+      datatypes.each do |dt|
+        s += "- #{dt}\n"
+      end
+      s
+    end
+
+    def getActionsArr
+      actions = YAML.load_file("config/actions.yml")
+      actlist = []
+      actions.keys.each do |k|
+        act = actions[k]
+        actlist.append({
+          action: k,
+          title: act.fetch('link-title', '--'), 
+          path: act.fetch('nav', {}).fetch('path', ''), 
+          class: act.fetch('class', 'Undefied'), 
+          description: act.fetch('description', ''), 
+          description_doc: description_doc(act),
+          documentation: act.fetch('documentation', ''), 
+          implemented: act.fetch('implemented', true), 
+          prod_support: act.fetch('prod_support', true), 
+          sensitivity: act.fetch('sensitivity', ''), 
+          is_readonly: act.fetch('sensitivity', '') == 'readonly',
+          category: act.fetch('category', ''), 
+          testing: act.fetch('testing_instructions', act.fetch('testing', '')), 
+        })
+      end
+      actlist
+    end
+  
+    def getActionsList
+      actlist = getActionsArr
+      actlist.sort!{
+        |a,b| "#{a[:path]}/#{a[:report]}" <=> "#{b[:path]}/#{b[:report]}"  
+      }
+      actlist
+    end
+
+    def getActionsMap
+      actmap = {}
+      getActionsArr.each do |act|
+        path = act.fetch(:path, '')
+        actmap[path] = [] unless actmap.key?(path)
+        actmap[path].push(act)
+      end
+      maplist = []
+      actmap.keys.sort.each do |p|
+        maplist.push({path: p, actions: actmap[p]})
+      end
+      maplist
     end
   end
 

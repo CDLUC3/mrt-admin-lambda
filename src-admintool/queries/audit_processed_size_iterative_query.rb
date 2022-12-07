@@ -228,11 +228,13 @@ class AuditProcessedSizeIterativeQuery < AdminQuery
     [
       {
         label: 'Prior Day', 
-        url: 'path=audit_processed_hours&iterate=1&day=' + (Time.parse(@day) - 24*60*60).strftime('%Y-%m-%d')
+        url: 'path=audit_processed_hours&iterate=1&day=' + (Time.parse(@day) - 24*60*60).strftime('%Y-%m-%d'),
+        class: 'graph'
       },
       {
         label: 'Next Day', 
-        url: 'path=audit_processed_hours&iterate=1&day=' + (Time.parse(@day) + 24*60*60).strftime('%Y-%m-%d')
+        url: 'path=audit_processed_hours&iterate=1&day=' + (Time.parse(@day) + 24*60*60).strftime('%Y-%m-%d'),
+        class: 'graph'
       }
     ]
   end

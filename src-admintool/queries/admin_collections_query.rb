@@ -48,7 +48,7 @@ class AdminCollectionsQuery < AdminQuery
   end
 
   def get_types(results)
-    ['', 'ark', 'name', 'mnemonic', '', '', 'datetime', 'status']
+    ['colllist', 'ark', 'name', 'mnemonic', '', '', 'datetime', 'status']
   end
 
 end

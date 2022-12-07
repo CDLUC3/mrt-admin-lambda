@@ -109,9 +109,7 @@ table.results td.list,
 table.results th.vallist,
 table.results td.vallist,
 table.results th.list-doc,
-table.results td.list-doc,
-table.results th.list-host,
-table.results td.list-host {
+table.results td.list-doc {
   width: 250px !important;
 }
 
@@ -359,4 +357,142 @@ tr.head td, tr.head th {
 
 #chartdiv canvas {
   max-height: 400px;
+}
+
+.documentation {
+  border: solid thin black;
+  background-color: #EEEEEE;
+  padding: 2px 8px;
+  margin: 5px 0px;
+}
+
+li .documentation {
+  display: none;
+}
+
+li:has(input:checked) .documentation {
+  display: block;
+}
+
+span.navhead {
+  font-weight: bold;
+}
+
+span.navlabel {
+  font-weight: bold;
+  color: red;
+}
+
+td.ogroup:not(:empty)::before,
+td.coll:not(:empty)::before,
+td.mime:not(:empty)::before,
+td.gmime:not(:empty)::before {
+  content: "🎨 ";
+}
+
+td.mnemonic:not(:empty)::before,
+td.ark:not(:empty)::before {
+  content: "🖼 ";
+}
+
+li.node::before,
+td.node:not(:empty)::before {
+  content: "🗄 ";
+}
+
+li.campus::before,
+td.own:not(:empty)::before {
+  content: "🏫 ";
+}
+
+div.collinfo::before,
+li.coll::before,
+td.colllist:not(:empty)::before {
+  content: "🧺 ";
+}
+
+li.coll-date::before,
+td.coll-date:not(:empty)::before {
+  content: "⌛ ";
+}
+
+li.files::before,
+td.files::before,
+td.objlist:not(:empty)::before{
+  content: "📑 ";
+}
+
+li.objects::before,
+td.aggrole:not(:empty)::before,
+td.astatus:not(:empty)::before,
+td.container:not(:empty)::before,
+td.job:not(:empty)::before,
+td.jobnote:not(:empty)::before,
+td.batchnote:not(:empty)::before,
+td.batch:not(:empty)::before {
+  content: "📚 ";
+}
+
+li.batches::before,
+td.fprofile:not(:empty)::before,
+td.fstatus:not(:empty)::before,
+td.fprofilestatus:not(:empty)::before {
+  content: "🔵 ";
+}
+
+li.job::before,
+td.qbatch:not(:empty)::before,
+td.qbatchnote:not(:empty)::before {
+  content: "🔷 ";
+}
+
+li.config::before,
+td.config:not(:empty)::before,
+td.snodes:not(:empty)::before,
+td.collnode:not(:empty)::before {
+  content: "⚙ ";
+}
+
+li.ldapuid::before,
+td.ldapark:not(:empty)::before,
+td.ldapuid:not(:empty)::before {
+  content: "🆔 ";
+}
+li.ldapcoll::before,
+td.ldapcoll:not(:empty)::before {
+  content: "🟣 ";
+}
+li.ldaprole::before,
+td.ldapuidlist:not(:empty)::before {
+  content: "🟪 ";
+}
+
+li.jobmeta::before,
+td.qjob:not(:empty)::before {
+  content: "🗂 ";
+}
+li.profile::before,
+td.profile:not(:empty)::before {
+  content: "🏷 ";
+}
+li.report::before,
+td.report:not(:empty)::before {
+  content: "🧪 ";
+}
+
+li.graph::before {
+  content: "📈 ";
+}
+
+li.rerun::before {
+  content: "🔄 ";
+}
+
+li form {
+  display: inline;
+}
+
+button.scanreview::before,
+li.review::before {
+  content: "☑ ";
 }

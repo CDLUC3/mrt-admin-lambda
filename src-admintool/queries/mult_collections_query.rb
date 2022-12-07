@@ -56,7 +56,8 @@ class MultipleCollectionsQuery < AdminQuery
     [
       {
         label: "Object List - Objects in Multiple Collections", 
-        url: "path=object_mult_coll&limit=500"
+        url: "path=object_mult_coll&limit=500",
+        class: 'objects'
       }
     ]
   end

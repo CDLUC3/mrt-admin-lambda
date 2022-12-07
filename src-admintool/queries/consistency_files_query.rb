@@ -132,7 +132,8 @@ class ConsistencyFilesQuery < AdminQuery
     [
       {
         label: "Object List - File Copies Needed, Older than 2 days", 
-        url: "path=file_copies_needed&copies=#{@copies}&days=2&limit=500"
+        url: "path=file_copies_needed&copies=#{@copies}&days=2&limit=500",
+        class: 'objects'
       }
     ]
   end

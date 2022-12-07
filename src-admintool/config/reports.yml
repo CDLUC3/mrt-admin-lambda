@@ -6,25 +6,44 @@
 #     objects | replication | reports | storage nodes
 #   description: |
 #     markdown description of the purpose of the action
+#   documentation: |
+#     technical documentation
+#   link-title: link title
+#   nav:
+#     path: navigation path
+#     conditional:
+#       param: navigation path with qualifying param
 owners:
+  link-title: File Counts by Owners
+  nav:
+    path: /campus/owners
   class: OwnerQuery
   category: collections
   description: |
     This reports lists the Merritt Owner objects defined in the inventory database.
     A [view in the Merritt Billing database](https://github.com/CDLUC3/mrt-admin-lambda/blob/main/merrit-billing/views.sql) helps to group each of the collection objects by campus. 
 collections:
+  link-title: File Counts by Collection
+  nav:
+    path: /campus/collections
   class: CollectionQuery
   category: collections
   description: |
     This reports lists the Merritt Collection objects defined in the inventory database.
     A [view in the Merritt Billing database](https://github.com/CDLUC3/mrt-admin-lambda/blob/main/merrit-billing/views.sql) helps to group each of the collection objects by campus. 
 mimes:
+  link-title: Mime Groups
+  nav:
+    path: /content/mimes
   class: MimeQuery 
   category: mime types
   description: |
     This report categorizes Merritt content by Mime Type.  A high-level _Mime Group_ is assigned to each Mime Type based on the work of the UC Digital Preservation Strategy working group.
     A [view in the Merritt Billing database](https://github.com/CDLUC3/mrt-admin-lambda/blob/main/merrit-billing/views.sql) created the Mime Group organization based on Mime Type strings. 
 collnodes:
+  link-title: Primary and Secondary Storage Nodes for a Collection
+  nav:
+    path: /storage/configuration
   class: CollectionNodesQuery
   category: storage nodes
   description: |
@@ -33,6 +52,9 @@ collnodes:
     _If more than 2 secondary nodes are configured, only 2 nodes will be displayed._
     #### Deprecated: This report has been superseded by the collection admin report *Manage Storage Nodes for a Collection*.
 nodes:
+  link-title: Storage Nodes
+  nav:
+    path: /storage/configuration
   class: NodesQuery
   category: storage nodes
   description: |
@@ -41,6 +63,9 @@ nodes:
 
     Click the **Filter Data** button to remove empty nodes from the report.
 objects_by_ark:
+  link-title: Objects by Ark Query
+  nav:
+    path: /objects/query
   class: ObjectsByArkQuery
   category: objects
   description: |
@@ -52,6 +77,9 @@ objects_by_ark:
     
     A more feature rich version of this report is available in the Collection Admin Tool report **Manage Object Storage**. 
 objects_by_title:
+  link-title: Objects by Title Query
+  nav:
+    path: /objects/query
   class: ObjectsByTitleQuery
   category: objects
   description: |
@@ -59,6 +87,9 @@ objects_by_title:
     
     Click the Object Id link to see a detailed listing of the files contained in the object.
 objects_by_local_id:
+  link-title: Objects by Local Id Query
+  nav:
+    path: /objects/query
   class: ObjectsByLocalIdQuery
   category: objects
   description: |
@@ -67,11 +98,19 @@ objects_by_local_id:
     
     Click the Object Id link to see a detailed listing of the files contained in the object.
 objects_by_container_name:
+  link-title: Objects by Ingest Container Name Query
+  nav:
+    path: /objects/query
   class: ObjectsByContainerNameQuery
   category: objects
   description: |
     This report displays an object with a batch container file such as a .checkm file or a .zip file.
+  report-datatypes:
+  - container
 objects_by_author:
+  link-title: Objects by Author/Creator Query
+  nav:
+    path: /objects/query
   class: ObjectsByAuthorQuery
   category: objects
   description: |
@@ -79,6 +118,9 @@ objects_by_author:
     
     Click the Object Id link to see a detailed listing of the files contained in the object.
 objects_large:
+  link-title: Sample Objects Larger than 1GB
+  nav:
+    path: /objects/issue-list
   class: ObjectsLargeQuery
   category: objects
   description: |
@@ -86,6 +128,9 @@ objects_large:
     To keep the query reasonably quick, results are not in sorted order.
     The intention of this report is to identify objects that might be useful for performance related testing.
 objects_many_files:
+  link-title: Sample Objects containing more than 1000 files
+  nav:
+    path: /objects/issue-list
   class: ObjectsManyFilesQuery
   category: objects
   description: |
@@ -93,30 +138,53 @@ objects_many_files:
     To keep the query reasonably quick, results are not in sorted order.
     The intention of this report is to identify objects that might be useful for performance related testing.
 objects_recent:
+  link-title: Last ingest performed for each Merritt Collection
+  nav:
+    path: /ingest/activity
   class: ObjectsRecentQuery
   category: objects
   description: |
     This report lists the last ingest performed for each Merritt collection.  
     Results are sorted from collection most recently updated to least recently updated.
 objects_recent_coll:
+  link-title: Objects Most Recently Ingested for a Specific Collection
+  nav:
+    path: /ingest/activity
   class: ObjectsRecentCollQuery
   category: objects
   description: |
     This report lists the most recently ingested objects for a specific collection.  
     Results are sorted from object most recently updated to least recently updated.
+  report-datatypes:
+  - coll-date
 objects_by_batch:
+  link-title: Objects Ingested from an Ingest Batch
+  nav:
+    path: /objects/issue-list
   class: ObjectsByBatchQuery
   category: objects
   description: |
     This report lists the objects ingested in a Ingest Batch.
     This report is accessed from the **Recent Ingests/Ingests for Day** report.
+  report-datatypes:
+  - batch
+  - batchnote
 objects_by_job:
+  link-title: Objects Ingested from an Ingest Job
+  nav:
+    path: /objects/issue-list
   class: ObjectsByJobQuery
   category: objects
   description: |
     This report lists the objects ingested in an Ingest Batch/Job.
     This report is accessed from links in the Collection Admin Tool.
+  report-datatypes:
+  - job
+  - jobnote
 files_by_name_coll:
+  link-title: Objects cotnaining Files matching a particluar filename
+  nav:
+    path: /files/query
   class: FilesByNameCollQuery
   category: files
   description: |
@@ -125,48 +193,80 @@ files_by_name_coll:
 
     Click the Object Id link to see a detailed listing of the files contained in the object.
 filesize:
+  link-title: File Size Averages
+  nav:
+    path: /content/size
   class: FilesizeQuery
   category: files
   description: |
     Generate a report on producer files size max/min/average within Merritt.
 filesizedist:
+  link-title: File Size Distribution
+  nav:
+    path: /content/size
   class: FilesizeDistributionQuery
   category: files
   iterative: true
   description: |
     Generate a report on the distribution of producer files of a specific size ranges within Merritt.
 count_objects:
+  link-title: Count Objects by Collection
+  nav:
+    path: /campus/content
   class: CountObjectsQuery
   category: collections
   description: |
     This report provides a count of objects by collection. The results are summarized at a campus level.
 collections_by_node:
+  link-title: Count Objects Residing on a Storage Node
+  nav:
+    path: /storage/content
   class: CollectionsByNodeQuery
   category: storage nodes
   description: |
     This report provides a count of objects by collection residing on a specific storage node.
     This report is accessed from the **Storage Nodes** report.
+  report-datatypes:
+  - node
 collections_by_owner:
+  link-title: Collections for a Specific Merritt Owner
+  nav:
+    path: /campus/content
   class: CollectionsByOwnerQuery
   category: collections
   description: |
     This report lists the collections owned by a Merritt Owner.
     This report is accessed from the **File Counts by Owner** report.
+  report-datatypes:
+  - own
 collections_by_mime_type:
+  link-title: Collections Containing a specific Mime Type
+  nav:
+    path: /campus/content
   class: CollectionsByMimeQuery
   category: mime types
   params: ['mime_type']
   description: |
     This report breaks down the count of objects by collection for a specific Mime Type.
     This report is accessed from the **Mime Groups** report.
+  report-datatypes:
+  - mime
 collections_by_mime_group:
+  link-title: Collections Containing a specific Mime Group
+  nav:
+    path: /campus/content
   class: CollectionsByMimeQuery
   category: mime types
   params: ['mime_group']
   description: |
     This report breaks down the count of objects by collection for a specific Mime Group.
     This report is accessed from the **Mime Groups** report.
+  report-datatypes:
+  - gmime
 collections_by_time_count_producer:
+  link-title: Producer Files Added by Date 
+  nav: 
+    path: /ingest/counts
   class: CollectionsByTimeQuery
   category: collections/time
   params: ['count_files', 'producer']
@@ -177,6 +277,9 @@ collections_by_time_count_producer:
     - day by day for the past week
     - week by week for the last 4 weeks
 collections_by_time_count:
+  link-title: Files Added by Date 
+  nav: 
+    path: /ingest/counts
   class: CollectionsByTimeQuery
   category: collections/time
   params: ['count_files', '']
@@ -188,6 +291,9 @@ collections_by_time_count:
     - day by day for the past week
     - week by week for the last 4 weeks
 collections_by_time_size:
+  link-title: Bytes Added by Date 
+  nav: 
+    path: /ingest/counts
   class: CollectionsByTimeQuery
   category: collections/time
   params: ['billable_size', '']
@@ -198,30 +304,53 @@ collections_by_time_size:
     - day by day for the past week
     - week by week for the last 4 weeks
 collections_by_time_size_cumulative:
+  link-title: Cumulative Bytes Added by Date 
+  nav: 
+    path: /ingest/cumulative
   class: CollectionsByTimeCumulativeQuery
   category: collections/time
   params: ['billable_size', '']
   description: |
     This report shows the cumulative byte count totals in each Merritt collection year by year since the Merritt system was established.
 collection_details:
+  link-title: Mime type usage within a collection 
+  nav: 
+    path: /collections/content
   class: CollectionDetailsQuery
   category: collections
   params: ['inv_collection_id']
   description: |
     This report describes the contents of a collection by mime type and mime group.
+  report-datatypes:
+  - coll
 collection_info:
+  link-title: Consolidated page containing all the links relevant to a specific Merritt collection 
+  nav: 
+    path: /collections/details
   class: CollectionInfoQuery
   category: collections
   params: ['inv_collection_id']
   description: |
     This report provides a landing page that links to all useful reports related to a Merritt collection.
+  report-datatypes:
+  - colllist
 collection_group_details:
+  link-title: Campus Specific Mime type usage within a collection 
+  nav: 
+    path: /content/mimes
   class: CollectionDetailsQuery
   category: collections
   params: ['ogroup']
   description: |
     This report describes the contents of collections for a campus by mime type and mime group.
+  report-datatypes:
+  - ogroup
 invoices:
+  link-title: Campus Invoices
+  nav: 
+    path: /campus/invoices
+    conditional:
+      campus: /campus/invoices/{campus}
   class: InvoicesQuery
   category: collections
   description: |
@@ -230,6 +359,9 @@ invoices:
     The report also accounts for the significant recharge calculations that were implemented in FY2019, 
     including the 10TB storage allocation made available to each main campus library free of recharge.
 audit_status:
+  link-title: Audit - Irregular Status
+  nav: 
+    path: /audit/status
   class: AuditStatusQuery
   category: audit
   description: |
@@ -240,6 +372,9 @@ audit_status:
     - A status of `size-mismatch` or `digest-mismatch` indicates that either a copy error occurred or this could show evidence of bit rot.  Immediate investigation is required.
     - Files with a status of `verified` are explicitly excluded from this report for performance reasons.
 audit_status_time:
+  link-title: Audit Status - Recent Processing
+  nav: 
+    path: /audit/activity
   class: AuditStatusTimeQuery
   category: audit
   description: |
@@ -247,6 +382,9 @@ audit_status_time:
     Note: the audit service performs database updates in batches, so these number will tend to be reported in multiples of 248 records.
     #### Consider retiring this report in favor of other existing reports.
 audit_oldest:
+  link-title: Audit - Oldest Unprocessed Item
+  nav: 
+    path: /audit/status
   class: AuditOldestQuery
   category: audit
   description: |
@@ -255,6 +393,9 @@ audit_oldest:
     - If 60-90 days old, WARN.  Consider adding capacity to the audit service.
     - If more than 90 days, ERROR.  The system is not meeting expectations for active fixity checking.
 audit_size:
+  link-title: Audit - Size of Queue
+  nav: 
+    path: /audit/activity
   class: AuditQueueSizeQuery
   category: audit
   description: |
@@ -263,6 +404,9 @@ audit_size:
     Once these entries are older than 10 hours old, an error will be reported.
     The collection admin tool has an action defined to clear old queue entries from the database.
 audit_processed_size:
+  link-title: Audit - Historical Audits Processed Over Time
+  nav: 
+    path: /audit/performance
   class: AuditProcessedSizeQuery
   category: audit
   description: |
@@ -290,6 +434,9 @@ audit_processed_size:
     | WARN   | Process more than 1.55m files **OR**  more than 8T of online content. Ignore after 6 days |
 
 audit_processed_hours:
+  link-title: Audit - Hourly Audits Processed on the Current Day
+  nav: 
+    path: /audit/performance
   class: AuditProcessedSizeIterativeQuery
   category: audit
   iterative: true
@@ -298,11 +445,17 @@ audit_processed_hours:
     This report uses real-time data from the inv_audits table.
     The query is iterative looking at counts hour-by-hour to prevent timeouts.
 replication_needed:
+  link-title: Replication - Objects Needing Replication
+  nav: 
+    path: /replic/activity
   class: ReplicationNeededQuery
   category: replication
   description: |
     This report generates a list of objects requiring replication, based on entries in the `inv_nodes_inv_objects` table that have a primary copy of an object but no secondary copy.
 replication_initiated:
+  link-title: Replication Initiated
+  nav: 
+    path: /replic/activity
   class: ReplicationInitiatedQuery
   category: replication
   description: |
@@ -320,12 +473,18 @@ replication_initiated:
       - Known replication exception has been coded into the report
       - Replication not yet started, it has been more than 4 hours since the object was created/modified.
 replication_failed:
+  link-title: Replication Failed
+  nav: 
+    path: /replic/activity
   class: ReplicationFailedQuery
   category: replication
   description: |
     This report generates a list of objects for which replication has failed.
     For objects with specific know replication issues, a category can be assigned to an object.
 replic_processed:
+  link-title: Replication Processed Over Time
+  nav: 
+    path: /replic/performance
   class: ReplicProcessedQuery
   category: replication
   iterative: true
@@ -333,23 +492,35 @@ replic_processed:
     Count the number of object replications performed over a period of time.
     The need for replication is driven by ingest actions or by the reconfiguration of storage nodes, so the number of records processed over time may be irregular.
 doi:
+  link-title: DOI Ark Conflicts
+  nav: 
+    path: /localid/status
   class: DoiConflictQuery
   category: objects
   description: |
     Identify potential localid conflicts by looking for duplicate DOI's within `inv_objects.erc_where`.  
     This issue has occasionally occurred for Dryad content.
 big_ingest:
+  link-title: Big Ingests (conatining 200+ objects) - Last 14 days
+  nav: 
+    path: /ingest/activity
   class: BigIngestQuery
   category: ingest
   description: |
     Enumerate large batch ingests (by object count) in the last X days.
 recent_ingests:
+  link-title: Recent Ingests
+  nav: 
+    path: /ingest/activity
   class: RecentIngestsQuery
   category: ingest
   description: |
     Enumerate the ingest batches that were processed on a specific date.
     All Dryad submissions for the specific date will be counted as a single batch.
 arklist:
+  link-title: Objects by Ark List Query
+  nav: 
+    path: /objects/query  
   class: ArklistQuery
   category: objects
   test_params:
@@ -358,6 +529,9 @@ arklist:
     This report supports the [Multiple Ark Query](/web/ark.html) page.
     This page will allow you to copy/paste text containing one or more arks and convert that into a parameter list for the report.
 locallist:
+  link-title: Objects by Local Id List Query
+  nav: 
+    path: /objects/query  
   class: LocalidListQuery
   category: objects
   test_params:
@@ -368,6 +542,9 @@ locallist:
     Upon form execution, a page is returned with a list of requested objects and their details.
     Options are presented to enable retrieval or either object summary or object metadata details.
 arkcompare:
+  link-title: Object Comparison by Ark List Query
+  nav: 
+    path: /objects/compare  
   class: ArklistCompareQuery
   category: objects
   test_params:
@@ -376,6 +553,9 @@ arkcompare:
     This report supports the [Multiple Ark Compare](/web/ark.html) query page.
     Select `Compare Rpt` to run this report.
 localcompare:
+  link-title: Object Comparison by Local Id List Query
+  nav: 
+    path: /objects/compare  
   class: LocalidListCompareQuery
   category: objects
   test_params:
@@ -384,6 +564,9 @@ localcompare:
     This report supports the [Multiple LocalId Compare](/web/localid.html) OR [Multiple DOI Compare](/web/doi.html) query page.
     Select `Compare Rpt` to run this report.
 con_primary:
+  link-title: Primary Storage Node Configuration Report
+  nav: 
+    path: /storage/profile
   class: ConsistencyPrimaryNodeQuery
   category: storage nodes
   description: |
@@ -391,12 +574,18 @@ con_primary:
     Collections that have been configured as "Public Collections" are currently recorded with an INFO status.  
     Eventually, each of these collections will be re-configured to use SDSC as a primary node. 
 con_secondary:
+  link-title: Secondary Storage Node Configuration Report
+  nav: 
+    path: /storage/profile
   class: ConsistencySecondaryNodeQuery
   category: storage nodes
   description: |
     Report on collections with non-standard secondary node configurations.
     Current standard configurations for secondary nodes include Glacier and Wasabi, or SDSC and Wasabi.
 con_files:
+  link-title: Files By Replication Copy Count
+  nav: 
+    path: /replic/status
   class: ConsistencyFilesQuery
   category: replication
   description: |
@@ -407,12 +596,18 @@ con_files:
     Files with more than 3 copies could indicate a misconfiguration of storage nodes for a collection.
     An error captured by this report can often be directly correlated with an error in the ConsistencyObjectsQuery report.
 ccon_no_audit:
+  link-title: Files Not In the Audit Table (too slow to run from web)
+  nav: 
+    path: /replic/status
   class: ConsistencyFilesNoAuditQuery
   category: replication
   description: |
     Identify files in `inv_files` that have not yet been recorded in `inv_audits`.
     #### Note: this report is too slow to be run from the Admin Tool.  It is initiated from AWS CLI as a part of the daily consistency reports.
 con_objects:
+  link-title: Objects By Replication Copy Count
+  nav: 
+    path: /replic/status
   class: ConsistencyObjectsQuery
   category: replication
   description: |
@@ -423,6 +618,9 @@ con_objects:
     Objects with more than 3 copies could indicate a misconfiguration of storage nodes for a collection.
     An error captured by this report can often be directly correlated with an error in the ConsistencyFilesQuery report.
 con_versions:
+  link-title: Version Consistency Report
+  nav: 
+    path: /versions/status
   class: ConsistencyVersionsQuery
   category: replication
   description: |
@@ -445,6 +643,9 @@ con_localid_fix:
   description: |
     This reqport generates SQL to fix missing localids.
 obj_version_clobber:
+  link-title: Object Version Clobber Report
+  nav: 
+    path: /versions/status
   class: ObjectsVersionClobberQuery
   category: concurrent update
   description: |
@@ -453,12 +654,18 @@ obj_version_clobber:
     A couple of items required manual reassembly of the inventory record from cloud storage entries.
     The Merritt Team is implementing changes to prevent this issue from occurring in the future.
 obj_version_gap:
+  link-title: Version Gap Report
+  nav: 
+    path: /versions/status
   class: ObjectsVersionGapQuery
   category: concurrent update
   description: |
     Enumerate objects containing irregularities in the `inv_versions` table: Gap in version numbers 
     (issue has never occurred).
 con_replic:
+  link-title: Outstanding Replication
+  nav: 
+    path: /replic/activity
   class: ConsistencyReplicationReqQuery
   category: replication
   description: |
@@ -468,12 +675,18 @@ con_replic:
     From this report, you can navigate to a list of objects needing replication.  
     From that report, you can navigate to the object's storage management page to re-initiate replication.
 file_copies_needed:
+  link-title: Objects with irregular file copy count
+  nav: 
+    path: /objects/issue-list
   class: ObjectsFileCopiesNeededQuery
   category: replication
   description: |
     Enumerate a list of objects containing files that have not been consistently replicated according to standard collection configuration (primary + 2 replicated copies).
     Results of this report may directly correlate with those in the ObjectsObjectCopiesNeededQuery report.
 object_copies_needed:
+  link-title: Objects with irregular object copy count
+  nav: 
+    path: /objects/issue-list
   class: ObjectsObjectCopiesNeededQuery
   category: replication
   description: |
@@ -485,23 +698,37 @@ object_localid_needed:
   description: |
     Enumerate a list of objects that do not exist in the LocalId table but seem to have a localid in erc_where (illustrated below in the mislabeled "Local Id" column).
 mult_coll:
+  link-title: Count of Objects in multiple Collections
+  nav: 
+    path: /objects/issue-count
   class: MultipleCollectionsQuery
   category: objects
   description: |
     Count objects that have been assigned to multiple Merritt collections.
     Objects residing in multiple collections is a legacy Merritt feature.
 object_mult_coll:
+  link-title: Objects in multiple Collections
+  nav: 
+    path: /objects/issue-list
   class: ObjectsMultipleCollQuery
   category: objects
   description: |
     Enumerate objects that have been assigned to multiple Merritt collections.
     Objects residing in multiple collections is a legacy Merritt feature.
 admin_obj:
+  link-title: Merritt Admin Objects with a Specific Role
+  nav: 
+    path: /objects/issue-list
   class: AdminObjectsQuery
   category: admin obj
   description: |
     Enumerate Merritt Admin Objects for a specific aggregate role.
+  report-datatypes:
+  - aggrole
 admin_obj_files:
+  link-title: Display inv_files list for a Merritt Admin Object
+  nav:
+    path: /system/internal
   class: AdminObjectsFilesQuery
   category: admin obj
   description: |
@@ -509,23 +736,37 @@ admin_obj_files:
     In reality, these objects are always dummy objects with no meaningful producer files. 
     The system files exist to help reconstruct the inventory database from cloud storage if a disaster occurs.
 admin_obj_agg:
+  link-title: Merritt Admin Object Counts
+  nav:
+    path: /system/internal
   class: AdminObjectsAggQuery
   category: admin obj
   description: |
     Count all Merritt Admin Objects by aggregate role.
 admin_coll:
+  link-title: Collections Table Special Cases
+  nav:
+    path: /system/internal
   class: AdminCollectionsQuery
   category: admin obj
   description: |
     Merritt SLA objects have corresponding entries in the `inv_collections` table. 
     List the known information for these admin objects.
 report:
+  link-title: Consistency Reports
+  nav:
+    path: /system/consistency-reports
   class: ReportRetrieve
   category: reports
   description: |
     Retrieve a previously run conistency report.
     Consistency reports are defined in the [mrt-cron](https://github.com/CDLUC3/mrt-cron/blob/main/consistency-driver/reports.yml) repo.
+  report-datatypes:
+  - report
 filelist:
+  link-title: File List for an object
+  nav:
+    path: /object/details
   class: ObjectIdFilesQuery
   category: objects
   description: |
@@ -534,19 +775,32 @@ filelist:
     For each replication, list any instances in which the audit process has not been successful.
 
     Due to lambda resource constraints, a maximum of 2,000 files will be listed.
+  report-datatypes:
+  - filelist
 obj_audit_status:
+  link-title: Objects with a specific audit status
+  nav:
+    path: /object/issue-list
   class: ObjectsAuditStatusQuery
   category: audit
   description: |
     Enumerate the specific files that have been characterized with an incomplete OR error audit status.
     From the report, navigate to the object storage admin page to re-initiate the audit process.
+  report-datatypes:
+  - astatus
 collection_node_cleanup_required:
+  link-title: List sectondary object copies that no longer exist in inv_collections_inv_nodes
+  nav:
+    path: /object/issue-list
   class: CollectionNodeCleanupQuery
   category: storage nodes
   description: |
     For a specific collection, identify any secondary replicated copies of the object stored on a node that is no longer configured in `inv_collections_inv_nodes`. 
     Results will appear in this report after a secondary node has been removed for a specific collection.
 ingest_bytes_by_hour:
+  link-title: Graph bytes ingested by hour or day for a range of time
+  nav:
+    path: /ingest/activity
   class: IngestBytesByHourQuery
   category: files
   description: |
@@ -558,8 +812,17 @@ ingest_bytes_by_hour:
     - ranges over 100 days will not be graphed.  The data retrieval is too slow for ranges that large. 
 
 update_billing:
+  link-title: Update the Merritt Billing database (via stored procedure)
+  nav:
+    path: /merritt-internal
   class: UpdateBillingDatabaseQuery
   category: reports
   description: |
     Call stored procedures to update the billing database.
     These queries run nightly.  This process is in place for ad-hoc updates during the day.
+  documentation: |
+    SQL: call update_object_size()
+    SQL: call update_node_counts()
+    SQL: call update_billing_range()
+    SQL: call update_audits_processed()
+    SQL: call update_ingests_processed()

@@ -293,10 +293,11 @@ function createTable(headers, types, data, filter_col, group_col, show_grand_tot
     } else {
       url = document.location.pathname + "?" + q['url'];
     }
+    var c = ('class' in q) ? q['class'] : '';
     $('#alternative ul').show().append(
       $("<li/>").append(
         $("<a/>").text(q['label']).attr('href', url)
-      )
+      ).addClass(c)
     );
   });
   $("#exportJson").attr("href", urlbase + document.location.search + "&format=json");
@@ -643,12 +644,6 @@ function format(cell, v, type, merritt_path) {
     $.each(v.split(","), function(i,txt){
       makeLiLink(ul, txt.replace(/https:.*github\.com./, ''), txt);
     });
-  } else if (type == 'list-host' && v != ''){
-    var ul = makeUl(cell);
-    $.each(v.split(","), function(i,txt){
-      makeLiLink(ul, txt, admintool_home + "?path=yaml&datatype=hosts&host=" + txt);
-    });
-    cell.addClass("hasdata");
   } else if (type == 'ldapuidlist' && v != ''){
     var ul = makeUl(cell);
     $.each(v.split(","), function(i,txt){

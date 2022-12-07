@@ -95,15 +95,18 @@ class AuditProcessedSizeQuery < AdminQuery
     [
       {
         label: 'Last 30 days', 
-        url: 'path=audit_processed_size&days=30'
+        url: 'path=audit_processed_size&days=30',
+        class: 'graph'
       },
       {
         label: 'Last 60 days', 
-        url: 'path=audit_processed_size&days=60'
+        url: 'path=audit_processed_size&days=60',
+        class: 'graph'
       },
       {
         label: 'Last 90 days', 
-        url: 'path=audit_processed_size&days=90'
+        url: 'path=audit_processed_size&days=90',
+        class: 'graph'
       }
     ]
   end

@@ -49,7 +49,8 @@ class CollectionInfoQuery < AdminQuery
     [
       {
         label: "File counts for collection #{@coll}", 
-        url: "path=collection_details&coll=#{@coll}"
+        url: "path=collection_details&coll=#{@coll}",
+        class: 'graph'
       }
     ]
   end

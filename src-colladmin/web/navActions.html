@@ -40,26 +40,36 @@
       Most actions generate a report.  
       Other actions trigger changes in the Merritt system by forwarding POST/PUT/DELETE requests to Merritt microservices.
     </div>
-    <table class="sortable results">
-      <thead>
-        <tr>
-          <th class="name">Navigation</th>
-          <th class="description">Description</th>
-        </tr>
-      </thead>
-      <tbody>
-        {{#ACTIONS}}
-        <tr>
-          <th class="name">{{path}}</th>
-          <td class="description">
-            <h3>{{title}} (<span class="navlabel">{{action}}</span>)</h3>
-            <div class="markdown">{{description_doc}}</div>
-          </td>
-        </tr>
-        {{/ACTIONS}}
-      </tbody>      
-    </table>
-
+    <div>
+    <dl>
+      {{#ACTIONSMAP}}
+      <di>
+        <dt>{{path}}</dt>
+        <dd>
+          <ul>
+          {{#actions}}
+            <li>
+              <span class="navhead">
+              {{#is_readonly}}
+              <a href="{{COLLADMIN_HOME}}?path={{action}}">
+              {{/is_readonly}}
+                {{title}} 
+              {{#is_readonly}}
+              </a>
+              {{/is_readonly}}
+              (<span class="navlabel">{{action}}</span>)
+              <input class="doc" type="checkbox" title="Show Documentation">📖</input>
+              </span>
+              <div class="documentation">
+                <div class="markdown">{{description_doc}}</div>
+              </div>
+            </li>
+          {{/actions}}
+          </ul>
+        </dd>
+      </di>
+      {{/ACTIONSMAP}}
+    </dl>
     </div>
   </body>
 </html>

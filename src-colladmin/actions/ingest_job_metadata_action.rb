@@ -34,11 +34,13 @@ class IngestJobMetadataAction < ForwardToIngestAction
     [
       {
         label: 'Job Manifest', 
-        url: "#{LambdaBase.colladmin_url}?path=manifest&batch=#{@batch}&job=#{@job}"
+        url: "#{LambdaBase.colladmin_url}?path=manifest&batch=#{@batch}&job=#{@job}",
+        class: 'jobmeta'
       },
       {
         label: 'Job Files', 
-        url: "#{LambdaBase.colladmin_url}?path=files&batch=#{@batch}&job=#{@job}"
+        url: "#{LambdaBase.colladmin_url}?path=files&batch=#{@batch}&job=#{@job}",
+        class: 'jobmeta'
       },
     ]
   end
