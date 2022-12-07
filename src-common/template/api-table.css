@@ -97,6 +97,13 @@ table.results td.description {
   width: 500px !important;
 }
 
+table.results th.sql,
+table.results td.sql {
+  width: 500px !important;
+  font-family: monospace;
+  white-space: pre;
+}
+
 table.results th.list,
 table.results td.list,
 table.results th.vallist,
