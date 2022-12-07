@@ -223,7 +223,7 @@ function postLoad() {
     $("tr:has('td.srvstart:empty'):first").each(function(){
       var tr = $(this);
       //colladmin function
-      srvstart(tr);
+      srvstartPing(tr);
     });  
   } else {
     $("tr:has('td.buildtag:empty'):first").each(function(){

@@ -25,13 +25,14 @@ class Ec2Info
       "Name",
       "Subservice",
       "Type",
-      "State",
+      "SERVER State",
       "IP",
       "AZ",
       "Endpoint",
       "Notes",
       "Build Tag",
-      "Service Start"
+      "Service Start",
+      "SERVICE State"
     ]
   end
 
@@ -46,7 +47,8 @@ class Ec2Info
       "endpoint",
       "",
       "buildtag",
-      "srvstart"
+      "srvstart",
+      "srvstate"
     ]
   end
 
@@ -110,6 +112,7 @@ class Ec2Info
       format_urls,
       notes(action),
       urls.key?('build-info') ? '' : '---',
+      urls.key?('state') || urls.key?('ping') ? '' : '---',
       urls.key?('state') ? '' : '---'
     ]
   end
