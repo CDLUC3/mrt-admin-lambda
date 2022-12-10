@@ -685,6 +685,8 @@ function format(cell, v, type, merritt_path) {
       if (atext.match(/^\*/)) {
         li = makeLi(ul, atext.replace(/^\*/, ""));
         li.attr("title", "Use curl for this request" + title);
+      } else if (atext.match(/^\+/)) {
+          li = makeLiLink(ul, atext.replace(/^\+/, ""), title);
       } else {
         li = makeLiLink(ul, atext, href);
         li.attr("title", title);
