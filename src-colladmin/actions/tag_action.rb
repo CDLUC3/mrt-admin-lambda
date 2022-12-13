@@ -70,6 +70,11 @@ class Ec2Info
       elsif k == 'state' && @subservice == "sword"
         # The following should be tested with curl
         res["*#{k}"] = "http://foo:bar@#{@name}.cdlib.org:39001/mrtsword/servicedocument"
+      elsif v =~ %r[^https]
+        # directly route to url
+        res["+#{k}"] = v
+      elsif v =~ %r[^http]
+        res[k] = v
       else
         res[k] = "http://#{@name}.cdlib.org:#{v}"
       end
@@ -96,7 +101,7 @@ class Ec2Info
       return "Large Assembly Server, Threshold: #{threshold}M"
     end
     if @subservice == "ui"
-      return "ui05 is a preview server" if LambdaBase.is_prod
+      # return "ui05 is a preview server" if LambdaBase.is_prod
     end
     ""
   end

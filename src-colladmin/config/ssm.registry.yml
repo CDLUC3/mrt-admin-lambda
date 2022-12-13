@@ -109,6 +109,8 @@ collad-ldap:
     description: Hostname for the ldap server accessed from the Collection Admin Tool
     deprecated: Consider renaming to colladmin/ldap/host
 colladmin:
+  access-service:
+    description: URL to access ALB - not collection admin functions currently utilize this parameter
   api-path:
     description: Path to access the Merritt Collection Admin Tool
   cognito-groups-allowed:
@@ -119,15 +121,17 @@ colladmin:
     description: "DEV Only: base name of the ecr image used to deploy the lambda"
     skip: true
     deprecated: No longer needed
+  ingest-service:
+    description: URLs to the ingest load balancer
   ingest-services:
     description: URLs to the running ingest instances
-    deprecated: Consider performing an ec2 tag lookup instead since all instances are queried
+    deprecated: Favor the ALB reference above once access issues are resolved
   replic-service:
-    description: URL to replic instance for storage admin actions
+    description: URL to replic instance for storage admin actions - no ALB exists
   storage-service:
-    description: URL to storage service for storage admin actions
+    description: URL to storage ALB for storage admin actions
   inventory-service:
-    description: URL to inventory service for storage admin actions
+    description: URL to inventory ALB for inventory admin actions
   lambda-arn-base:
     description: "DEV Only: base arn name for the lambda to which code will be deployed"
     skip: true

@@ -38,20 +38,24 @@ default:
     ingest: 
       state: "{!SSM: ingest/port}/state?t=json"
       build-info: "{!SSM: ingest/port}/static/build.content.txt"
+      ALB: "{!SSM: colladmin/ingest-service}state?t=json"
     store: 
       state: "{!SSM: store/port}/state?t=json"
       ping: "{!SSM: store/port}/ping?t=json"
       build-info: "{!SSM: store/port}/static/build.content.txt"
+      ALB: "{!SSM: colladmin/storage-service}/state?t=json"
     access: 
       state: "{!SSM: store/port}/state?t=json"
       ping: "{!SSM: store/port}/ping?t=json"
       build-info: "{!SSM: store/port}/static/build.content.txt"
       alb-health: "{!SSM: store/port}/container/healthcheck.html"
+      ALB: "{!SSM: colladmin/access-service}/state?t=json"
     inventory: 
       state: "{!SSM: inventory/port}/mrtinv/state?t=json"
       build-info: "{!SSM: inventory/port}/mrtinv/static/build.content.txt"
       start: "{!SSM: inventory/port}/mrtinv/service/start?t=json"
       stop: "{!SSM: inventory/port}/mrtinv/service/stop?t=json"
+      ALB: "{!SSM: colladmin/inventory-service}/state?t=json"
     audit: 
       state: "{!SSM: audit/port}/mrtaudit/state?t=json"
       build-info: "{!SSM: audit/port}/mrtaudit/static/build.content.txt"
@@ -70,6 +74,7 @@ default:
       # build-info: "{!SSM: oai/port}/mrtoai/static/build.content.txt"
     ui: 
       state: "/state"
+      ALB: "{!ENV: MERRITT_PATH}/state.json"
   replic-service: "{!SSM: colladmin/replic-service}"
   storage-service: "{!SSM: colladmin/storage-service}"
   inventory-service: "{!SSM: colladmin/inventory-service}"

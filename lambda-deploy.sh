@@ -28,10 +28,10 @@ ECR_IMAGE_TAG=${ECR_REGISTRY}/${FUNCTNAME}:${DEPLOY_ENV}
 # Get the URL for links to Merritt
 if [ $DEPLOY_ENV == 'stg' ]
 then
-  MERRITT_PATH=http://merritt-stage.cdlib.org
+  MERRITT_PATH=https://merritt-stage.cdlib.org
 elif [ $DEPLOY_ENV == 'prd' ]
 then
-  MERRITT_PATH=http://merritt.cdlib.org
+  MERRITT_PATH=https://merritt.cdlib.org
 fi
 
 # login to ecr
@@ -92,3 +92,4 @@ then
     --no-cli-pager \
     --environment "Variables={SSM_ROOT_PATH=${SSM_DEPLOY_PATH},MERRITT_PATH=${MERRITT_PATH},ADMIN_ALB_URL=${ADMIN_ALB_URL},COLLADMIN_ALB_URL=${COLLADMIN_ALB_URL}}" 
 fi
+date
