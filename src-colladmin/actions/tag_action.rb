@@ -70,9 +70,6 @@ class Ec2Info
       elsif k == 'state' && @subservice == "sword"
         # The following should be tested with curl
         res["*#{k}"] = "http://foo:bar@#{@name}.cdlib.org:39001/mrtsword/servicedocument"
-      elsif v =~ %r[^https]
-        # directly route to url
-        res["+#{k}"] = v
       elsif v =~ %r[^http]
         res[k] = v
       else
@@ -192,12 +189,14 @@ class TagAction < AdminAction
     cli = HTTPClient.new
     cli.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
     if @label == "stop" || @label == "start"
+      puts "POST #{url}"
       resp = cli.post(url)
     else
-      resp = cli.get(url)
+      puts "GET #{url}"
+      resp = cli.get(url, :follow_redirect => true)
     end
     ret = resp.body
-    if resp.status == 200 && @label = 'build-info'
+    if resp.status == 200 && @label == 'build-info'
     elsif resp.status == 200
       begin
         JSON.parse(resp.body)

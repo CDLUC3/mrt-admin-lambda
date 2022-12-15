@@ -38,7 +38,7 @@ default:
     ingest: 
       state: "{!SSM: ingest/port}/state?t=json"
       build-info: "{!SSM: ingest/port}/static/build.content.txt"
-      ALB: "{!SSM: colladmin/ingest-service}state?t=json"
+      +ALB: "{!SSM: colladmin/ingest-service}state?t=json"
     store: 
       state: "{!SSM: store/port}/state?t=json"
       ping: "{!SSM: store/port}/ping?t=json"
@@ -74,7 +74,9 @@ default:
       # build-info: "{!SSM: oai/port}/mrtoai/static/build.content.txt"
     ui: 
       state: "/state"
-      ALB: "{!ENV: MERRITT_PATH}/state.json"
+      +ALB: "{!ENV: MERRITT_PATH}/state.json"
+    ldap: 
+      -ALB: "https://{!SSM: ldap/host}"
   replic-service: "{!SSM: colladmin/replic-service}"
   storage-service: "{!SSM: colladmin/storage-service}"
   inventory-service: "{!SSM: colladmin/inventory-service}"

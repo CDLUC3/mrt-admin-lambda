@@ -373,6 +373,11 @@ instances:
   testing: automated
   description: |
     Generate a report describing the EC2 servers used by Merritt domain.  Server details are discovered by querying EC2 tags.
+
+    ### ALB Links
+    - `ALB`: Route a state request through the ALB, process the response by the Collection Admin Tool
+    - `+ALB`: Route a state request to an ALB from the browser -- the ALB is not accessible to the Collection Admin Tool
+    - `-ALB`: Fyi, note the url for the ALB.  The request requires authentication to perform.
   report-datatypes:
   - instances
   documentation: |
