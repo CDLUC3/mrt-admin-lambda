@@ -1,18 +1,6 @@
   - **_page_actions**
-    - **ingest**
-      - **collection-lock**
-        - act_unlock-coll: Unlock ingest for a collection
-        - act_lock-coll: Lock ingest for a collection
-      - **queue-items**
-        - act_release-coll-queue-items: Release any held items for a collection
     - **merritt-internal**
       - rpt_update_billing: Update the Merritt Billing database (via stored procedure)
-    - **queue**
-      - **action**
-        - act_queue-delete: Remove an item from a Zookeeper queue
-        - act_requeue: Re-queue an item from a Zookeeper queue
-        - act_hold-queue-item: Move a pending item from in Zookeeper queue to a Held status
-        - act_release-queue-item: Release a held item from in Zookeeper queue to a Pending status
     - **sub-application**
       - **audit-batches**
         - act_storage-clear-audit-batch: Release old audit batches
@@ -44,6 +32,19 @@
         - **storage**
           - **repair**
             - act_storage-rebuild-inventory: Rebuild inventory record from storage manifest
+      - **queue-management**
+        - **ingest**
+          - **collection-lock**
+            - act_unlock-coll: Unlock ingest for a collection
+            - act_lock-coll: Lock ingest for a collection
+          - **queue-items**
+            - act_release-coll-queue-items: Release any held items for a collection
+        - **queue**
+          - **action**
+            - act_queue-delete: Remove an item from a Zookeeper queue
+            - act_requeue: Re-queue an item from a Zookeeper queue
+            - act_hold-queue-item: Move a pending item from in Zookeeper queue to a Held status
+            - act_release-queue-item: Release a held item from in Zookeeper queue to a Pending status
       - **storage-node-configuration**
         - act_storage-add-node-for-collection: Add a secondary storage node to the configuration for a collection
         - act_storage-del-node-for-collection: Remove a storage node from a collection configuration

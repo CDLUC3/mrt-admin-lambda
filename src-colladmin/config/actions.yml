@@ -545,7 +545,7 @@ toggle_harvest:
 unlock-coll:
   link-title: Unlock ingest for a collection
   nav:
-    path: /_page_actions/ingest/collection-lock
+    path: /_page_actions/sub-application/queue-management/ingest/collection-lock
   class: CollQueueAction
   params: ["admin/submission/thaw/coll"]
   category: Queue Management
@@ -560,7 +560,7 @@ unlock-coll:
 lock-coll:
   link-title: Lock ingest for a collection
   nav:
-    path: /_page_actions/ingest/collection-lock
+    path: /_page_actions/sub-application/queue-management/ingest/collection-lock
   class: CollQueueAction
   params: ["admin/submission/freeze/coll"]
   category: Queue Management
@@ -575,7 +575,7 @@ lock-coll:
 release-coll-queue-items:
   link-title: Release any held items for a collection
   nav:
-    path: /_page_actions/ingest/queue-items
+    path: /_page_actions/sub-application/queue-management/ingest/queue-items
   class: CollIterateQueueAction
   params: ["admin/release-all/queue/coll"]
   category: Queue Management
@@ -953,7 +953,7 @@ createProfile/sla:
 queue-delete:
   link-title: Remove an item from a Zookeeper queue
   nav:
-    path: /_page_actions/queue/action
+    path: /_page_actions/sub-application/queue-management/queue/action
   class: QueueAction
   params: ["admin/deleteq"]
   category: Queue Management
@@ -968,7 +968,7 @@ queue-delete:
 requeue:
   link-title: Re-queue an item from a Zookeeper queue
   nav:
-    path: /_page_actions/queue/action
+    path: /_page_actions/sub-application/queue-management/queue/action
   class: QueueAction
   params: ["admin/requeue"]
   category: Queue Management
@@ -983,7 +983,7 @@ requeue:
 hold-queue-item:
   link-title: Move a pending item from in Zookeeper queue to a Held status
   nav:
-    path: /_page_actions/queue/action
+    path: /_page_actions/sub-application/queue-management/queue/action
   class: QueueAction
   params: ["admin/hold"]
   category: Queue Management
@@ -998,7 +998,7 @@ hold-queue-item:
 release-queue-item:
   link-title: Release a held item from in Zookeeper queue to a Pending status
   nav:
-    path: /_page_actions/queue/action
+    path: /_page_actions/sub-application/queue-management/queue/action
   class: QueueAction
   params: ["admin/release"]
   category: Queue Management
