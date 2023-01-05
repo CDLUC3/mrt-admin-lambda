@@ -1,0 +1,259 @@
+  - **_page_actions**
+    - **ingest**
+      - **collection-lock**
+        - act_unlock-coll: Unlock ingest for a collection
+        - act_lock-coll: Lock ingest for a collection
+      - **queue-items**
+        - act_release-coll-queue-items: Release any held items for a collection
+    - **merritt-internal**
+      - rpt_update_billing: Update the Merritt Billing database (via stored procedure)
+    - **queue**
+      - **action**
+        - act_queue-delete: Remove an item from a Zookeeper queue
+        - act_requeue: Re-queue an item from a Zookeeper queue
+        - act_hold-queue-item: Move a pending item from in Zookeeper queue to a Held status
+        - act_release-queue-item: Release a held item from in Zookeeper queue to a Pending status
+    - **sub-application**
+      - **audit-batches**
+        - act_storage-clear-audit-batch: Release old audit batches
+        - act_storage-retry-audit-status: Trigger an audit retry for all audit records with a specific status
+      - **collection-admin**
+        - **create**
+          - act_create_owner_record: Generate an owner record in the Merritt inventory database based on the submission of a dummy object using the Owner Admin profile
+          - act_create_coll_record: Generate an SLA record in the Merritt inventory database based on the submission of a dummy object using the SLA Admin profile
+          - act_createProfile/profile: Send a request to the ingest service to generate a new Ingest Profile
+          - act_createProfile/collection: Send a request to the ingest service to generate a new Collection Admin Profile
+          - act_createProfile/owner: Send a request to the ingest service to generate a new Owner Admin Profile
+          - act_createProfile/sla: Send a request to the ingest service to generate a new SLA Admin Profile
+        - **dummy-object**
+          - act_submit-profile: Submit a dummy object using a newly created admin profile
+        - **properties**
+          - act_toggle_harvest: Toggle the harvest flag for a collection
+          - act_set_mnemonic: Set the mnemonic field for a collection to match the value defined in the collection admin profile
+          - act_set_coll_name: Set the description field for a collection to match the value defined in the collection admin profile
+          - act_set_sla_name: Set the description field for an SLA to match the value defined in the SLA admin profile
+          - act_set_own_name: Set the description field for an Owner to match the value defined in the Owner admin profile
+      - **object-management**
+        - **audit**
+          - **object**
+            - act_storage-force-audit-for-object: Trigger audit processing for all files in an object on a specific node
+            - act_storage-rerun-audit-for-object: Trigger audit processing for all unverified files in an object on a specific node
+        - **replic**
+          - **object**
+            - act_storage-force-replic-for-object: Re-trigger replication for an existing object
+        - **storage**
+          - **repair**
+            - act_storage-rebuild-inventory: Rebuild inventory record from storage manifest
+      - **storage-node-configuration**
+        - act_storage-add-node-for-collection: Add a secondary storage node to the configuration for a collection
+        - act_storage-del-node-for-collection: Remove a storage node from a collection configuration
+        - act_replic-delete-coll-batch-from-node: Delete a batch of objects from the collection from storage node
+      - **storage-scan**
+        - **clear**
+          - act_storage-clear-scan-entries: Clear storage scan entries for a specific ark
+        - **csv**
+          - act_storage-review-csv: Generate and download a CSV of storage scan exceptions
+        - **initiate**
+          - act_storage-scan-node: Initiate storage scan processing on a specific storage node by the replication service
+        - **pause**
+          - act_storage-cancel-all-scans: Halt all storage scan processing by the replciation service
+          - act_storage-allow-all-scans: Re-enable storage scan processing by the replciation service
+          - act_storage-cancel-scan-node: Cancel storage scan processing on a specific storage node by the replication service
+          - act_storage-resume-scan-node: Resume storage scan processing on a specific storage node by the replication service
+        - **repair**
+          - act_storage-perform-delete-node-key: Delete copy of a file from a storage node
+          - act_storage-perform-delete-node-batch: Process all scan results marked with a DELETE status
+        - **review**
+          - act_storage-delete-node-key: Mark a single scan result with a DELETE status
+          - act_storage-delete-node-page: Mark a page of scan results with a DELETE status
+          - act_storage-hold-node-key: Mark a single scan result with a HOLD status
+          - act_storage-hold-node-page: Mark a page of scan results with a HOLD status
+          - act_storage-review-node-key: Mark a single scan result with a REVIEW status
+          - act_storage-review-node-page: Mark a page of scan results with a REVIEW status
+          - act_apply-review-changes: Apply bulk changes to storage scan results by uploading a CSV containing a set of desired changes
+  - **campus**
+    - **collections**
+      - rpt_collections: File Counts by Collection
+    - **content**
+      - rpt_count_objects: Count Objects by Collection
+      - rpt_collections_by_owner: Collections for a Specific Merritt Owner
+      - rpt_collections_by_mime_type: Collections Containing a specific Mime Type
+      - rpt_collections_by_mime_group: Collections Containing a specific Mime Group
+    - **invoices**
+      - rpt_invoices: Campus Invoices
+    - **owners**
+      - rpt_owners: File Counts by Owners
+  - **collections**
+    - **content**
+      - rpt_collection_details: Mime type usage within a collection
+    - **details**
+      - rpt_collection_info: Consolidated page containing all the links relevant to a specific Merritt collection
+    - **locks**
+      - act_collection-locks: List Merritt Collections and Collection Level Locks
+  - **merritt-internal**
+    - rpt_admin_obj_files: Display inv_files list for a Merritt Admin Object
+    - rpt_admin_obj_agg: Merritt Admin Object Counts
+    - rpt_admin_coll: Collections Table Special Cases
+    - **object-locks**
+      - act_ingest-locks: Display ingest storage locks on specific object arks
+    - **servers**
+      - act_instances: List and Describe Merritt EC2 Servers
+    - **ssm-variables**
+      - act_ssm-describe: List and Describe Merritt SSM Variables
+    - **users**
+      - act_cognito-users: List Merritt Admin Tools Users
+      - act_cognito-remove-user-from-group: Remove a Cognito User from a specific Cognito User Group
+      - act_cognito-add-user-to-group: Add a Cognito User to a specific Cognito User Group
+  - **microservice**
+    - **access**
+      - **activity**
+        - act_acc-queues: Access Queue Jobs
+    - **audit**
+      - **activity**
+        - rpt_audit_status_time: Audit Status - Recent Processing
+        - rpt_audit_size: Audit - Size of Queue
+      - **performance**
+        - rpt_audit_processed_size: Audit - Historical Audits Processed Over Time
+        - rpt_audit_processed_hours: Audit - Hourly Audits Processed on the Current Day
+      - **status**
+        - rpt_audit_status: Audit - Irregular Status
+        - rpt_audit_oldest: Audit - Oldest Unprocessed Item
+    - **ingest**
+      - **activity**
+        - rpt_objects_recent: Last ingest performed for each Merritt Collection
+        - rpt_objects_recent_coll: Objects Most Recently Ingested for a Specific Collection
+        - rpt_big_ingest: Big Ingests (conatining 200+ objects) - Last 14 days
+        - rpt_recent_ingests: Recent Ingests
+        - rpt_ingest_bytes_by_hour: Graph bytes ingested by hour or day for a range of time
+        - act_queues: Ingest Queue Jobs
+        - act_ingest-queue-by-profile: Ingest Queue Activity by Profile
+        - act_batch: Ingest Batch
+        - act_job: Ingest Job
+        - act_manifest: Ingest Job Manifest Contents
+        - act_sword: Dryad Recent Jobs
+      - **admin-profiles**
+        - act_adminprofiles: List Merritt Admin Profiles
+      - **counts**
+        - rpt_collections_by_time_count_producer: Producer Files Added by Date
+        - rpt_collections_by_time_count: Files Added by Date
+        - rpt_collections_by_time_size: Bytes Added by Date
+      - **cumulative**
+        - rpt_collections_by_time_size_cumulative: Cumulative Bytes Added by Date
+      - **folders**
+        - act_batchFolders: Ingest Batch Folders
+        - act_files: Ingest Job Folder File List
+      - **pause**
+        - act_submissions/pause: Pause all ingest processing
+      - **profiles**
+        - act_profiles: List Ingest Profiles (deployed on the Ingest Server)
+      - **status**
+        - act_state: Ingest Service Status
+      - **unpause**
+        - act_submissions/unpause: Unpause all ingest processing
+    - **inventory**
+      - **activity**
+        - act_inv-queues: Inventory Queue Jobs
+      - **delete**
+        - act_storage-delete-obj: Trigger the deletion of a Merritt Object
+    - **replic**
+      - **activity**
+        - rpt_replication_needed: Replication - Objects Needing Replication
+        - rpt_replication_initiated: Replication Initiated
+        - rpt_replication_failed: Replication Failed
+        - rpt_con_replic: Outstanding Replication
+      - **performance**
+        - rpt_replic_processed: Replication Processed Over Time
+      - **status**
+        - rpt_con_files: Files By Replication Copy Count
+        - rpt_ccon_no_audit: Files Not In the Audit Table (too slow to run from web)
+        - rpt_con_objects: Objects By Replication Copy Count
+        - act_replication-state: Display the Status of the Replciation Microservice
+    - **storage**
+      - **configuration**
+        - rpt_collnodes: Primary and Secondary Storage Nodes for a Collection
+        - rpt_nodes: Storage Nodes
+      - **content**
+        - rpt_collections_by_node: Count Objects Residing on a Storage Node
+      - **manifest**
+        - act_storage-get-manifest: Get Storage Manifest for an Object from Cloud Storage
+        - act_storage-get-augmented-manifest: Fix and Regenerate Storage Manifest for an Object from Cloud Storage
+        - act_storage-get-ingest-checkm: Generate Ingest Checkm Manifest Using Content from Cloud Storage
+      - **node-configuration**
+        - act_storage-change-primary-for-collection: Change primary storage node for collection
+        - act_storage-reroute-ui-for-collection: Re-route UI storage node for collection
+        - **contents**
+          - act_storage-del-object-from-node: Delete object from storage node
+      - **profile**
+        - rpt_con_primary: Primary Storage Node Configuration Report
+        - rpt_con_secondary: Secondary Storage Node Configuration Report
+    - **sub-application**
+      - **object-management**
+        - **storage**
+          - **repair**
+            - act_storage-update-manifest: Upload a repaired storage manifest to override an existing one
+  - **object**
+    - **details**
+      - rpt_filelist: File List for an object
+  - **objects**
+    - **compare**
+      - rpt_arkcompare: Object Comparison by Ark List Query
+      - rpt_localcompare: Object Comparison by Local Id List Query
+    - **files**
+      - **query**
+        - rpt_files_by_name_coll: Objects cotnaining Files matching a particluar filename
+    - **issue-count**
+      - rpt_mult_coll: Count of Objects in multiple Collections
+    - **issue-list**
+      - rpt_objects_large: Sample Objects Larger than 1GB
+      - rpt_objects_many_files: Sample Objects containing more than 1000 files
+      - rpt_objects_by_batch: Objects Ingested from an Ingest Batch
+      - rpt_objects_by_job: Objects Ingested from an Ingest Job
+      - rpt_file_copies_needed: Objects with irregular file copy count
+      - rpt_object_copies_needed: Objects with irregular object copy count
+      - rpt_object_mult_coll: Objects in multiple Collections
+      - rpt_admin_obj: Merritt Admin Objects with a Specific Role
+      - rpt_obj_audit_status: Objects with a specific audit status
+      - rpt_collection_node_cleanup_required: List sectondary object copies that no longer exist in inv_collections_inv_nodes
+    - **localid**
+      - rpt_con_localid: Count objects missing a local id
+      - rpt_con_localid_fix: SQL to illustrate how to insert a missing localid from erc_where
+      - rpt_object_localid_needed: List of objects missing a localid
+      - **status**
+        - rpt_doi: DOI Ark Conflicts
+    - **query**
+      - rpt_objects_by_ark: Objects by Ark Query
+      - rpt_objects_by_title: Objects by Title Query
+      - rpt_objects_by_local_id: Objects by Local Id Query
+      - rpt_objects_by_container_name: Objects by Ingest Container Name Query
+      - rpt_objects_by_author: Objects by Author/Creator Query
+      - rpt_arklist: Objects by Ark List Query
+      - rpt_locallist: Objects by Local Id List Query
+    - **versions**
+      - **status**
+        - rpt_con_versions: Version Consistency Report
+        - rpt_obj_version_clobber: Object Version Clobber Report
+        - rpt_obj_version_gap: Version Gap Report
+  - **repository**
+  - **repository-content**
+    - **mimes**
+      - rpt_mimes: Mime Groups
+      - rpt_collection_group_details: Campus Specific Mime type usage within a collection
+    - **size**
+      - rpt_filesize: File Size Averages
+      - rpt_filesizedist: File Size Distribution
+    - **consistency-reports**
+      - rpt_report: Consistency Reports
+  - **user-accounts**
+    - **ldap**
+      - **collections**
+        - act_ldap/colls: List Merritt LDAP Collections
+        - act_ldap/coll: List Details for an LDAP Collection
+        - act_ldap/collark: List LDAP Users for a specific collection ARK
+      - **issue-list**
+        - act_ldap/collmap: Merritt LDAP / Inventory Database Mismatches
+      - **roles**
+        - act_ldap/roles: List Merritt LDAP Roles
+        - act_ldap/role: List details for an Merritt LDAP Role
+      - **users**
+        - act_ldap/users: List Merritt LDAP Users
+        - act_ldap/user: List details for an Merritt LDAP User

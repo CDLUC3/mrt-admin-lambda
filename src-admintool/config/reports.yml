@@ -34,7 +34,7 @@ collections:
 mimes:
   link-title: Mime Groups
   nav:
-    path: /content/mimes
+    path: /repository-content/mimes
   class: MimeQuery 
   category: mime types
   description: |
@@ -43,7 +43,7 @@ mimes:
 collnodes:
   link-title: Primary and Secondary Storage Nodes for a Collection
   nav:
-    path: /storage/configuration
+    path: /microservice/storage/configuration
   class: CollectionNodesQuery
   category: storage nodes
   description: |
@@ -54,7 +54,7 @@ collnodes:
 nodes:
   link-title: Storage Nodes
   nav:
-    path: /storage/configuration
+    path: /microservice/storage/configuration
   class: NodesQuery
   category: storage nodes
   description: |
@@ -140,7 +140,7 @@ objects_many_files:
 objects_recent:
   link-title: Last ingest performed for each Merritt Collection
   nav:
-    path: /ingest/activity
+    path: /microservice/ingest/activity
   class: ObjectsRecentQuery
   category: objects
   description: |
@@ -149,7 +149,7 @@ objects_recent:
 objects_recent_coll:
   link-title: Objects Most Recently Ingested for a Specific Collection
   nav:
-    path: /ingest/activity
+    path: /microservice/ingest/activity
   class: ObjectsRecentCollQuery
   category: objects
   description: |
@@ -184,7 +184,7 @@ objects_by_job:
 files_by_name_coll:
   link-title: Objects cotnaining Files matching a particluar filename
   nav:
-    path: /files/query
+    path: /objects/files/query
   class: FilesByNameCollQuery
   category: files
   description: |
@@ -195,7 +195,7 @@ files_by_name_coll:
 filesize:
   link-title: File Size Averages
   nav:
-    path: /content/size
+    path: /repository-content/size
   class: FilesizeQuery
   category: files
   description: |
@@ -203,7 +203,7 @@ filesize:
 filesizedist:
   link-title: File Size Distribution
   nav:
-    path: /content/size
+    path: /repository-content/size
   class: FilesizeDistributionQuery
   category: files
   iterative: true
@@ -220,7 +220,7 @@ count_objects:
 collections_by_node:
   link-title: Count Objects Residing on a Storage Node
   nav:
-    path: /storage/content
+    path: /microservice/storage/content
   class: CollectionsByNodeQuery
   category: storage nodes
   description: |
@@ -266,7 +266,7 @@ collections_by_mime_group:
 collections_by_time_count_producer:
   link-title: Producer Files Added by Date 
   nav: 
-    path: /ingest/counts
+    path: /microservice/ingest/counts
   class: CollectionsByTimeQuery
   category: collections/time
   params: ['count_files', 'producer']
@@ -279,7 +279,7 @@ collections_by_time_count_producer:
 collections_by_time_count:
   link-title: Files Added by Date 
   nav: 
-    path: /ingest/counts
+    path: /microservice/ingest/counts
   class: CollectionsByTimeQuery
   category: collections/time
   params: ['count_files', '']
@@ -293,7 +293,7 @@ collections_by_time_count:
 collections_by_time_size:
   link-title: Bytes Added by Date 
   nav: 
-    path: /ingest/counts
+    path: /microservice/ingest/counts
   class: CollectionsByTimeQuery
   category: collections/time
   params: ['billable_size', '']
@@ -306,7 +306,7 @@ collections_by_time_size:
 collections_by_time_size_cumulative:
   link-title: Cumulative Bytes Added by Date 
   nav: 
-    path: /ingest/cumulative
+    path: /microservice/ingest/cumulative
   class: CollectionsByTimeCumulativeQuery
   category: collections/time
   params: ['billable_size', '']
@@ -337,7 +337,7 @@ collection_info:
 collection_group_details:
   link-title: Campus Specific Mime type usage within a collection 
   nav: 
-    path: /content/mimes
+    path: /repository-content/mimes
   class: CollectionDetailsQuery
   category: collections
   params: ['ogroup']
@@ -361,7 +361,7 @@ invoices:
 audit_status:
   link-title: Audit - Irregular Status
   nav: 
-    path: /audit/status
+    path: /microservice/audit/status
   class: AuditStatusQuery
   category: audit
   description: |
@@ -374,7 +374,7 @@ audit_status:
 audit_status_time:
   link-title: Audit Status - Recent Processing
   nav: 
-    path: /audit/activity
+    path: /microservice/audit/activity
   class: AuditStatusTimeQuery
   category: audit
   description: |
@@ -384,7 +384,7 @@ audit_status_time:
 audit_oldest:
   link-title: Audit - Oldest Unprocessed Item
   nav: 
-    path: /audit/status
+    path: /microservice/audit/status
   class: AuditOldestQuery
   category: audit
   description: |
@@ -395,7 +395,7 @@ audit_oldest:
 audit_size:
   link-title: Audit - Size of Queue
   nav: 
-    path: /audit/activity
+    path: /microservice/audit/activity
   class: AuditQueueSizeQuery
   category: audit
   description: |
@@ -406,7 +406,7 @@ audit_size:
 audit_processed_size:
   link-title: Audit - Historical Audits Processed Over Time
   nav: 
-    path: /audit/performance
+    path: /microservice/audit/performance
   class: AuditProcessedSizeQuery
   category: audit
   description: |
@@ -436,7 +436,7 @@ audit_processed_size:
 audit_processed_hours:
   link-title: Audit - Hourly Audits Processed on the Current Day
   nav: 
-    path: /audit/performance
+    path: /microservice/audit/performance
   class: AuditProcessedSizeIterativeQuery
   category: audit
   iterative: true
@@ -447,7 +447,7 @@ audit_processed_hours:
 replication_needed:
   link-title: Replication - Objects Needing Replication
   nav: 
-    path: /replic/activity
+    path: /microservice/replic/activity
   class: ReplicationNeededQuery
   category: replication
   description: |
@@ -455,7 +455,7 @@ replication_needed:
 replication_initiated:
   link-title: Replication Initiated
   nav: 
-    path: /replic/activity
+    path: /microservice/replic/activity
   class: ReplicationInitiatedQuery
   category: replication
   description: |
@@ -475,7 +475,7 @@ replication_initiated:
 replication_failed:
   link-title: Replication Failed
   nav: 
-    path: /replic/activity
+    path: /microservice/replic/activity
   class: ReplicationFailedQuery
   category: replication
   description: |
@@ -484,7 +484,7 @@ replication_failed:
 replic_processed:
   link-title: Replication Processed Over Time
   nav: 
-    path: /replic/performance
+    path: /microservice/replic/performance
   class: ReplicProcessedQuery
   category: replication
   iterative: true
@@ -494,7 +494,7 @@ replic_processed:
 doi:
   link-title: DOI Ark Conflicts
   nav: 
-    path: /localid/status
+    path: /objects/localid/status
   class: DoiConflictQuery
   category: objects
   description: |
@@ -503,7 +503,7 @@ doi:
 big_ingest:
   link-title: Big Ingests (conatining 200+ objects) - Last 14 days
   nav: 
-    path: /ingest/activity
+    path: /microservice/ingest/activity
   class: BigIngestQuery
   category: ingest
   description: |
@@ -511,7 +511,7 @@ big_ingest:
 recent_ingests:
   link-title: Recent Ingests
   nav: 
-    path: /ingest/activity
+    path: /microservice/ingest/activity
   class: RecentIngestsQuery
   category: ingest
   description: |
@@ -566,7 +566,7 @@ localcompare:
 con_primary:
   link-title: Primary Storage Node Configuration Report
   nav: 
-    path: /storage/profile
+    path: /microservice/storage/profile
   class: ConsistencyPrimaryNodeQuery
   category: storage nodes
   description: |
@@ -576,7 +576,7 @@ con_primary:
 con_secondary:
   link-title: Secondary Storage Node Configuration Report
   nav: 
-    path: /storage/profile
+    path: /microservice/storage/profile
   class: ConsistencySecondaryNodeQuery
   category: storage nodes
   description: |
@@ -585,7 +585,7 @@ con_secondary:
 con_files:
   link-title: Files By Replication Copy Count
   nav: 
-    path: /replic/status
+    path: /microservice/replic/status
   class: ConsistencyFilesQuery
   category: replication
   description: |
@@ -598,7 +598,7 @@ con_files:
 ccon_no_audit:
   link-title: Files Not In the Audit Table (too slow to run from web)
   nav: 
-    path: /replic/status
+    path: /microservice/replic/status
   class: ConsistencyFilesNoAuditQuery
   category: replication
   description: |
@@ -607,7 +607,7 @@ ccon_no_audit:
 con_objects:
   link-title: Objects By Replication Copy Count
   nav: 
-    path: /replic/status
+    path: /microservice/replic/status
   class: ConsistencyObjectsQuery
   category: replication
   description: |
@@ -620,7 +620,7 @@ con_objects:
 con_versions:
   link-title: Version Consistency Report
   nav: 
-    path: /versions/status
+    path: /objects/versions/status
   class: ConsistencyVersionsQuery
   category: replication
   description: |
@@ -630,6 +630,9 @@ con_versions:
     This has occurred when an object was simultaneously modified by 2 ingest workers at the same time.
     The Merritt Team is implementing changes to prevent this issue from occurring in the future.
 con_localid:
+  link-title: Count objects missing a local id
+  nav: 
+    path: /objects/localid
   class: ConsistencyLocalIdQuery
   category: objects
   description: |
@@ -638,14 +641,17 @@ con_localid:
     - Objects older than 1 year will be treated as an INFO.
     - Objects older than 1 month will be treated as a WARN.
 con_localid_fix:
+  link-title: SQL to illustrate how to insert a missing localid from erc_where
+  nav: 
+    path: /objects/localid
   class: ConsistencyLocalIdFixQuery
   category: objects
   description: |
-    This reqport generates SQL to fix missing localids.
+    This report generates SQL to fix missing localids.
 obj_version_clobber:
   link-title: Object Version Clobber Report
   nav: 
-    path: /versions/status
+    path: /objects/versions/status
   class: ObjectsVersionClobberQuery
   category: concurrent update
   description: |
@@ -656,7 +662,7 @@ obj_version_clobber:
 obj_version_gap:
   link-title: Version Gap Report
   nav: 
-    path: /versions/status
+    path: /objects/versions/status
   class: ObjectsVersionGapQuery
   category: concurrent update
   description: |
@@ -665,7 +671,7 @@ obj_version_gap:
 con_replic:
   link-title: Outstanding Replication
   nav: 
-    path: /replic/activity
+    path: /microservice/replic/activity
   class: ConsistencyReplicationReqQuery
   category: replication
   description: |
@@ -693,6 +699,9 @@ object_copies_needed:
     Enumerate a list of objects that have not been consistently replicated according to standard collection configuration (primary + 2 replicated copies).
     Result of this report may directly correlate with those in the ObjectsFileCopiesNeededQuery report.
 object_localid_needed:
+  link-title: List of objects missing a localid
+  nav: 
+    path: /objects/localid
   class: ObjectsLocalidNeededQuery
   category: objects
   description: |
@@ -728,7 +737,7 @@ admin_obj:
 admin_obj_files:
   link-title: Display inv_files list for a Merritt Admin Object
   nav:
-    path: /system/internal
+    path: /merritt-internal
   class: AdminObjectsFilesQuery
   category: admin obj
   description: |
@@ -738,7 +747,7 @@ admin_obj_files:
 admin_obj_agg:
   link-title: Merritt Admin Object Counts
   nav:
-    path: /system/internal
+    path: /merritt-internal
   class: AdminObjectsAggQuery
   category: admin obj
   description: |
@@ -746,7 +755,7 @@ admin_obj_agg:
 admin_coll:
   link-title: Collections Table Special Cases
   nav:
-    path: /system/internal
+    path: /merritt-internal
   class: AdminCollectionsQuery
   category: admin obj
   description: |
@@ -755,7 +764,7 @@ admin_coll:
 report:
   link-title: Consistency Reports
   nav:
-    path: /system/consistency-reports
+    path: /repository/consistency-reports
   class: ReportRetrieve
   category: reports
   description: |
@@ -780,7 +789,7 @@ filelist:
 obj_audit_status:
   link-title: Objects with a specific audit status
   nav:
-    path: /object/issue-list
+    path: /objects/issue-list
   class: ObjectsAuditStatusQuery
   category: audit
   description: |
@@ -791,7 +800,7 @@ obj_audit_status:
 collection_node_cleanup_required:
   link-title: List sectondary object copies that no longer exist in inv_collections_inv_nodes
   nav:
-    path: /object/issue-list
+    path: /objects/issue-list
   class: CollectionNodeCleanupQuery
   category: storage nodes
   description: |
@@ -800,7 +809,7 @@ collection_node_cleanup_required:
 ingest_bytes_by_hour:
   link-title: Graph bytes ingested by hour or day for a range of time
   nav:
-    path: /ingest/activity
+    path: /microservice/ingest/activity
   class: IngestBytesByHourQuery
   category: files
   description: |
@@ -814,7 +823,7 @@ ingest_bytes_by_hour:
 update_billing:
   link-title: Update the Merritt Billing database (via stored procedure)
   nav:
-    path: /merritt-internal
+    path: /_page_actions/merritt-internal
   class: UpdateBillingDatabaseQuery
   category: reports
   description: |

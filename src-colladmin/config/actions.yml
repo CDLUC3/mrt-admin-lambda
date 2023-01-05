@@ -39,7 +39,7 @@
 profiles:
   link-title: List Ingest Profiles (deployed on the Ingest Server)
   nav:
-    path: /ingest/profiles
+    path: /microservice/ingest/profiles
   class: IngestProfileAction
   category: Ingest Profiles
   sensitivity: readonly
@@ -75,7 +75,7 @@ collection-locks:
 adminprofiles:
   link-title: List Merritt Admin Profiles
   nav:
-    path: /ingest/admin-profiles
+    path: /microservice/ingest/admin-profiles
   class: AdminProfileAction
   category: Ingest Admin Profiles
   sensitivity: readonly
@@ -92,7 +92,7 @@ adminprofiles:
 state:
   link-title: Ingest Service Status
   nav:
-    path: /ingest/status
+    path: /microservice/ingest/status
   class: IngestStateAction
   category: Queue Management
   sensitivity: readonly
@@ -104,7 +104,7 @@ state:
 queues:
   link-title: Ingest Queue Jobs
   nav:
-    path: /ingest/activity
+    path: /microservice/ingest/activity
   class: IngestQueueAction
   category: Queue Management
   sensitivity: readonly
@@ -122,7 +122,7 @@ queues:
 ingest-queue-by-profile:
   link-title: Ingest Queue Activity by Profile
   nav:
-    path: /ingest/activity
+    path: /microservice/ingest/activity
   class: IngestQueueProfileCountAction
   category: Queue Management
   sensitivity: readonly
@@ -135,7 +135,7 @@ ingest-queue-by-profile:
 inv-queues:
   link-title: Inventory Queue Jobs
   nav:
-    path: /inventory/activity
+    path: /microservice/inventory/activity
   class: InventoryQueueAction
   category: Queue Management
   sensitivity: readonly
@@ -149,7 +149,7 @@ inv-queues:
 acc-queues:
   link-title: Access Queue Jobs
   nav:
-    path: /access/activity
+    path: /microservice/access/activity
   class: AccessQueueAction
   category: Queue Management
   sensitivity: readonly
@@ -166,7 +166,7 @@ acc-queues:
 batchFolders:
   link-title: Ingest Batch Folders
   nav:
-    path: /ingest/folders
+    path: /microservice/ingest/folders
   class: IngestBatchFoldersAction
   category: Ingest Batches and Folders
   sensitivity: readonly
@@ -187,7 +187,7 @@ batchFolders:
 batch:
   link-title: Ingest Batch
   nav:
-    path: /ingest/activity
+    path: /microservice/ingest/activity
   class: IngestBatchAction
   category: Ingest Batches and Folders
   sensitivity: readonly
@@ -203,7 +203,7 @@ batch:
 job:
   link-title: Ingest Job
   nav:
-    path: /ingest/activity
+    path: /microservice/ingest/activity
   class: IngestJobMetadataAction
   category: Ingest Batches and Folders
   sensitivity: readonly
@@ -215,7 +215,7 @@ job:
 manifest:
   link-title: Ingest Job Manifest Contents
   nav:
-    path: /ingest/activity
+    path: /microservice/ingest/activity
   class: IngestJobManifestAction
   category: Ingest Batches and Folders
   sensitivity: readonly
@@ -229,7 +229,7 @@ manifest:
 files:
   link-title: Ingest Job Folder File List
   nav:
-    path: /ingest/folders
+    path: /microservice/ingest/folders
   class: IngestJobFilesAction
   category: Ingest Batches and Folders
   sensitivity: readonly
@@ -244,7 +244,7 @@ files:
 sword:
   link-title: Dryad Recent Jobs
   nav:
-    path: /ingest/activity
+    path: /microservice/ingest/activity
   class: IngestSwordJobsAction
   category: Ingest Batches and Folders
   sensitivity: readonly
@@ -257,7 +257,7 @@ sword:
 ldap/users:
   link-title: List Merritt LDAP Users
   nav:
-    path: /ldap/users
+    path: /user-accounts/ldap/users
   class: LDAPActionUsers
   category: LDAP
   sensitivity: readonly
@@ -269,7 +269,7 @@ ldap/users:
 ldap/user:
   link-title: List details for an Merritt LDAP User
   nav:
-    path: /ldap/users
+    path: /user-accounts/ldap/users
   class: LDAPActionUserDetailed
   category: LDAP
   sensitivity: readonly
@@ -285,7 +285,7 @@ ldap/user:
 ldap/roles:
   link-title: List Merritt LDAP Roles
   nav:
-    path: /ldap/roles
+    path: /user-accounts/ldap/roles
   class: LDAPActionRoles
   category: LDAP
   sensitivity: readonly
@@ -297,7 +297,7 @@ ldap/roles:
 ldap/role:
   link-title: List details for an Merritt LDAP Role
   nav:
-    path: /ldap/roles
+    path: /user-accounts/ldap/roles
   class: LDAPAction
   category: LDAP
   sensitivity: readonly
@@ -310,7 +310,7 @@ ldap/role:
 ldap/colls:
   link-title: List Merritt LDAP Collections
   nav:
-    path: /ldap/collections
+    path: /user-accounts/ldap/collections
   class: LDAPActionColls
   category: LDAP
   sensitivity: readonly
@@ -323,7 +323,7 @@ ldap/colls:
 ldap/coll:
   link-title: List Details for an LDAP Collection
   nav:
-    path: /ldap/collections
+    path: /user-accounts/ldap/collections
   class: LDAPActionCollDetailed
   category: LDAP
   sensitivity: readonly
@@ -339,7 +339,7 @@ ldap/coll:
 ldap/collmap:
   link-title: Merritt LDAP / Inventory Database Mismatches
   nav:
-    path: /ldap/issue-list
+    path: /user-accounts/ldap/issue-list
   class: LDAPActionCollmap
   category: LDAP
   sensitivity: readonly
@@ -352,7 +352,7 @@ ldap/collmap:
 ldap/collark:
   link-title: List LDAP Users for a specific collection ARK
   nav:
-    path: /ldap/collections
+    path: /user-accounts/ldap/collections
   class: LDAPActionCollArk
   category: LDAP
   sensitivity: readonly
@@ -398,7 +398,7 @@ ssm-describe:
 storage-get-manifest:
   link-title: Get Storage Manifest for an Object from Cloud Storage
   nav:
-    path: /storage/manifest
+    path: /microservice/storage/manifest
   class: StorageAction
   category: Storage Manifest
   sensitivity: readonly
@@ -414,7 +414,7 @@ storage-get-manifest:
 storage-get-augmented-manifest:
   link-title: Fix and Regenerate Storage Manifest for an Object from Cloud Storage
   nav:
-    path: /storage/manifest
+    path: /microservice/storage/manifest
   implemented: false
   category: Storage Manifest
   sensitivity: readonly
@@ -428,7 +428,7 @@ storage-get-augmented-manifest:
 storage-get-ingest-checkm:
   link-title: Generate Ingest Checkm Manifest Using Content from Cloud Storage
   nav:
-    path: /storage/manifest
+    path: /microservice/storage/manifest
   class: StorageAction
   category: Storage Manifest
   sensitivity: readonly
@@ -461,7 +461,7 @@ cognito-users:
 replication-state:
   link-title: Display the Status of the Replciation Microservice
   nav:
-    path: /replic/status
+    path: /microservice/replic/status
   class: ReplicationAction
   category: Dev Ops
   sensitivity: readonly
@@ -475,7 +475,7 @@ replication-state:
 storage-review-csv:
   link-title: Generate and download a CSV of storage scan exceptions
   nav:
-    path: /storage-scan/csv
+    path: /_page_actions/sub-application/storage-scan/csv
   class: ReplicationAction
   category: Storage Scan
   sensitivity: readonly
@@ -505,7 +505,7 @@ ingest-locks:
 submissions/pause:
   link-title: Pause all ingest processing
   nav:
-    path: /ingest/pause
+    path: /microservice/ingest/pause
   class: PostToIngestAction
   params: ["admin/submissions/freeze"]
   category: Queue Management
@@ -519,7 +519,7 @@ submissions/pause:
 submissions/unpause:
   link-title: Unpause all ingest processing
   nav:
-    path: /ingest/unpause
+    path: /microservice/ingest/unpause
   class: PostToIngestAction
   params: ["admin/submissions/thaw"]
   category: Queue Management
@@ -532,7 +532,7 @@ submissions/unpause:
 toggle_harvest:
   link-title: Toggle the harvest flag for a collection
   nav:
-    path: /collection-admin/properties
+    path: /_page_actions/sub-application/collection-admin/properties
   class: AdminProfileAction
   category: Ingest Admin Profiles
   sensitivity: reversible change
@@ -545,7 +545,7 @@ toggle_harvest:
 unlock-coll:
   link-title: Unlock ingest for a collection
   nav:
-    path: /ingest/collection-lock
+    path: /_page_actions/ingest/collection-lock
   class: CollQueueAction
   params: ["admin/submission/thaw/coll"]
   category: Queue Management
@@ -560,7 +560,7 @@ unlock-coll:
 lock-coll:
   link-title: Lock ingest for a collection
   nav:
-    path: /ingest/collection-lock
+    path: /_page_actions/ingest/collection-lock
   class: CollQueueAction
   params: ["admin/submission/freeze/coll"]
   category: Queue Management
@@ -575,7 +575,7 @@ lock-coll:
 release-coll-queue-items:
   link-title: Release any held items for a collection
   nav:
-    path: /ingest/queue-items
+    path: /_page_actions/ingest/queue-items
   class: CollIterateQueueAction
   params: ["admin/release-all/queue/coll"]
   category: Queue Management
@@ -590,7 +590,7 @@ release-coll-queue-items:
 storage-force-audit-for-object:
   link-title: Trigger audit processing for all files in an object on a specific node
   nav:
-    path: /audit/object
+    path: /_page_actions/sub-application/object-management/audit/object
   class: StorageAction
   category: Audit
   sensitivity: reversible change
@@ -602,7 +602,7 @@ storage-force-audit-for-object:
 storage-rerun-audit-for-object:
   link-title: Trigger audit processing for all unverified files in an object on a specific node
   nav:
-    path: /audit/object
+    path: /_page_actions/sub-application/object-management/audit/object
   class: StorageAction
   category: Audit
   sensitivity: reversible change
@@ -615,7 +615,7 @@ storage-rerun-audit-for-object:
 storage-force-replic-for-object:
   link-title: Re-trigger replication for an existing object
   nav:
-    path: /replic/object
+    path: /_page_actions/sub-application/object-management/replic/object
   class: StorageAction
   category: Replication
   sensitivity: reversible change
@@ -628,7 +628,7 @@ storage-force-replic-for-object:
 storage-clear-audit-batch:
   link-title: Release old audit batches
   nav:
-    path: /audit/batches
+    path: /_page_actions/sub-application/audit-batches
   class: StorageAction
   category: Audit
   sensitivity: reversible change
@@ -642,7 +642,7 @@ storage-clear-audit-batch:
 storage-retry-audit-status:
   link-title: Trigger an audit retry for all audit records with a specific status
   nav:
-    path: /audit/retry
+    path: /_page_actions/sub-application/audit-batches
   class: StorageAction
   category: Audit
   sensitivity: reversible change
@@ -654,7 +654,7 @@ storage-retry-audit-status:
 storage-cancel-all-scans:
   link-title: Halt all storage scan processing by the replciation service
   nav:
-    path: /storage-scan/pause
+    path: /_page_actions/sub-application/storage-scan/pause
   class: ReplicationAction
   category: Storage Scan
   sensitivity: reversible change
@@ -666,7 +666,7 @@ storage-cancel-all-scans:
 storage-allow-all-scans:
   link-title: Re-enable storage scan processing by the replciation service
   nav:
-    path: /storage-scan/pause
+    path: /_page_actions/sub-application/storage-scan/pause
   class: ReplicationAction
   category: Storage Scan
   sensitivity: reversible change
@@ -678,7 +678,7 @@ storage-allow-all-scans:
 storage-cancel-scan-node:
   link-title:  Cancel storage scan processing on a specific storage node by the replication service
   nav:
-    path: /storage-scan/pause
+    path: /_page_actions/sub-application/storage-scan/pause
   class: ReplicationAction
   category: Storage Scan
   sensitivity: reversible change
@@ -690,7 +690,7 @@ storage-cancel-scan-node:
 storage-resume-scan-node:
   link-title:  Resume storage scan processing on a specific storage node by the replication service
   nav:
-    path: /storage-scan/pause
+    path: /_page_actions/sub-application/storage-scan/pause
   class: ReplicationAction
   category: Storage Scan
   sensitivity: reversible change
@@ -702,7 +702,7 @@ storage-resume-scan-node:
 storage-clear-scan-entries:
   link-title:  Clear storage scan entries for a specific ark
   nav:
-    path: /storage-scan/clear
+    path: /_page_actions/sub-application/storage-scan/clear
   class: StorageAction
   category: Storage Scan Review
   sensitivity: reversible change
@@ -715,7 +715,7 @@ storage-clear-scan-entries:
 storage-scan-node:
   link-title: Initiate storage scan processing on a specific storage node by the replication service
   nav:
-    path: /storage-scan/initiate
+    path: /_page_actions/sub-application/storage-scan/initiate
   class: ReplicationAction
   category: Storage Scan
   sensitivity: reversible change
@@ -731,7 +731,7 @@ storage-scan-node:
 storage-delete-node-key:
   link-title: Mark a single scan result with a DELETE status
   nav:
-    path: /storage-scan/review
+    path: /_page_actions/sub-application/storage-scan/review
   class: ReplicationAction
   category: Storage Scan Review
   sensitivity: reversible change
@@ -743,7 +743,7 @@ storage-delete-node-key:
 storage-delete-node-page:
   link-title: Mark a page of scan results with a DELETE status
   nav:
-    path: /storage-scan/review
+    path: /_page_actions/sub-application/storage-scan/review
   class: ReplicationAction
   category: Storage Scan Review
   sensitivity: reversible change
@@ -755,7 +755,7 @@ storage-delete-node-page:
 storage-hold-node-key:
   link-title: Mark a single scan result with a HOLD status
   nav:
-    path: /storage-scan/review
+    path: /_page_actions/sub-application/storage-scan/review
   class: ReplicationAction
   category: Storage Scan Review
   sensitivity: reversible change
@@ -767,7 +767,7 @@ storage-hold-node-key:
 storage-hold-node-page:
   link-title: Mark a page of scan results with a HOLD status
   nav:
-    path: /storage-scan/review
+    path: /_page_actions/sub-application/storage-scan/review
   class: ReplicationAction
   category: Storage Scan Review
   sensitivity: reversible change
@@ -779,7 +779,7 @@ storage-hold-node-page:
 storage-review-node-key:
   link-title: Mark a single scan result with a REVIEW status
   nav:
-    path: /storage-scan/review
+    path: /_page_actions/sub-application/storage-scan/review
   class: ReplicationAction
   category: Storage Scan Review
   sensitivity: reversible change
@@ -791,7 +791,7 @@ storage-review-node-key:
 storage-review-node-page:
   link-title: Mark a page of scan results with a REVIEW status
   nav:
-    path: /storage-scan/review
+    path: /_page_actions/sub-application/storage-scan/review
   class: ReplicationAction
   category: Storage Scan Review
   sensitivity: reversible change
@@ -806,7 +806,7 @@ storage-review-node-page:
 submit-profile:
   link-title: Submit a dummy object using a newly created admin profile
   nav:
-    path: /collection-admin/dummy-object
+    path: /_page_actions/sub-application/collection-admin/dummy-object
   class: SubmitProfileAction
   params: ["poster/update"]
   category: Ingest Admin Profiles
@@ -820,7 +820,7 @@ submit-profile:
 set_mnemonic:
   link-title:  Set the mnemonic field for a collection to match the value defined in the collection admin profile
   nav:
-    path: /collection-admin/properties
+    path: /_page_actions/sub-application/collection-admin/properties
   class: AdminProfileAction
   category: Ingest Admin Profiles
   sensitivity: irreversible change
@@ -834,7 +834,7 @@ set_mnemonic:
 set_coll_name:
   link-title:  Set the description field for a collection to match the value defined in the collection admin profile
   nav:
-    path: /collection-admin/properties
+    path: /_page_actions/sub-application/collection-admin/properties
   class: AdminProfileAction
   category: Ingest Admin Profiles
   sensitivity: irreversible change
@@ -847,7 +847,7 @@ set_coll_name:
 set_sla_name:
   link-title:  Set the description field for an SLA to match the value defined in the SLA admin profile
   nav:
-    path: /collection-admin/properties
+    path: /_page_actions/sub-application/collection-admin/properties
   class: AdminProfileAction
   category: Ingest Admin Profiles
   sensitivity: irreversible change
@@ -860,7 +860,7 @@ set_sla_name:
 set_own_name:
   link-title: Set the description field for an Owner to match the value defined in the Owner admin profile
   nav:
-    path: /collection-admin/properties
+    path: /_page_actions/sub-application/collection-admin/properties
   class: AdminProfileAction
   category: Ingest Admin Profiles
   sensitivity: irreversible change
@@ -873,7 +873,7 @@ set_own_name:
 create_owner_record:
   link-title: Generate an owner record in the Merritt inventory database based on the submission of a dummy object using the Owner Admin profile
   nav:
-    path: /collection-admin/create
+    path: /_page_actions/sub-application/collection-admin/create
   class: AdminProfileAction
   category: Ingest Admin Profiles
   sensitivity: irreversible change
@@ -885,7 +885,7 @@ create_owner_record:
 create_coll_record:
   link-title: Generate an SLA record in the Merritt inventory database based on the submission of a dummy object using the SLA Admin profile
   nav:
-    path: /collection-admin/create
+    path: /_page_actions/sub-application/collection-admin/create
   class: AdminProfileAction
   category: Ingest Admin Profiles
   sensitivity: irreversible change
@@ -897,7 +897,7 @@ create_coll_record:
 createProfile/profile:
   link-title: Send a request to the ingest service to generate a new Ingest Profile
   nav:
-    path: /collection-admin/create
+    path: /_page_actions/sub-application/collection-admin/create
   class: PostToIngestMultipartAction
   params: ["admin/profile/profile"]
   category: Ingest Admin Profiles
@@ -911,7 +911,7 @@ createProfile/profile:
 createProfile/collection:
   link-title: Send a request to the ingest service to generate a new Collection Admin Profile
   nav:
-    path: /collection-admin/create
+    path: /_page_actions/sub-application/collection-admin/create
   class: PostToIngestMultipartAction
   params: ["admin/profile/collection"]
   category: Ingest Admin Profiles
@@ -925,7 +925,7 @@ createProfile/collection:
 createProfile/owner:
   link-title: Send a request to the ingest service to generate a new Owner Admin Profile
   nav:
-    path: /collection-admin/create
+    path: /_page_actions/sub-application/collection-admin/create
   class: PostToIngestMultipartAction
   params: ["admin/profile/owner"]
   category: Ingest Admin Profiles
@@ -939,7 +939,7 @@ createProfile/owner:
 createProfile/sla:
   link-title: Send a request to the ingest service to generate a new SLA Admin Profile
   nav:
-    path: /collection-admin/create
+    path: /_page_actions/sub-application/collection-admin/create
   class: PostToIngestMultipartAction
   params: ["admin/profile/sla"]
   category: Ingest Admin Profiles
@@ -953,7 +953,7 @@ createProfile/sla:
 queue-delete:
   link-title: Remove an item from a Zookeeper queue
   nav:
-    path: /queue/action
+    path: /_page_actions/queue/action
   class: QueueAction
   params: ["admin/deleteq"]
   category: Queue Management
@@ -968,7 +968,7 @@ queue-delete:
 requeue:
   link-title: Re-queue an item from a Zookeeper queue
   nav:
-    path: /queue/action
+    path: /_page_actions/queue/action
   class: QueueAction
   params: ["admin/requeue"]
   category: Queue Management
@@ -983,7 +983,7 @@ requeue:
 hold-queue-item:
   link-title: Move a pending item from in Zookeeper queue to a Held status
   nav:
-    path: /queue/action
+    path: /_page_actions/queue/action
   class: QueueAction
   params: ["admin/hold"]
   category: Queue Management
@@ -998,7 +998,7 @@ hold-queue-item:
 release-queue-item:
   link-title: Release a held item from in Zookeeper queue to a Pending status
   nav:
-    path: /queue/action
+    path: /_page_actions/queue/action
   class: QueueAction
   params: ["admin/release"]
   category: Queue Management
@@ -1013,7 +1013,7 @@ release-queue-item:
 apply-review-changes:
   link-title: Apply bulk changes to storage scan results by uploading a CSV containing a set of desired changes
   nav:
-    path: /storage-scan/review
+    path: /_page_actions/sub-application/storage-scan/review
   class: ReplicationAction
   category: Storage Scan Review
   sensitivity: irreversible change
@@ -1056,7 +1056,7 @@ cognito-add-user-to-group:
 storage-rebuild-inventory:
   link-title: Rebuild inventory record from storage manifest
   nav:
-    path: /storage/repair
+    path: /_page_actions/sub-application/object-management/storage/repair
   class: StorageAction
   category: Inventory and Manifest
   sensitivity: sensitive
@@ -1071,7 +1071,7 @@ storage-rebuild-inventory:
 storage-update-manifest:
   link-title: Upload a repaired storage manifest to override an existing one
   nav:
-    path: /storage/repair
+    path: /microservice/sub-application/object-management/storage/repair
   implemented: false
   category: Inventory and Manifest
   sensitivity: sensitive
@@ -1083,7 +1083,7 @@ storage-update-manifest:
 storage-add-node-for-collection:
   link-title: Add a secondary storage node to the configuration for a collection
   nav:
-    path: /storage/node-configuration
+    path: /_page_actions/sub-application/storage-node-configuration
   class: StorageAction
   category: Storage Node Configuration
   sensitivity: sensitive
@@ -1096,7 +1096,7 @@ storage-add-node-for-collection:
 storage-del-node-for-collection:
   link-title: Remove a storage node from a collection configuration
   nav:
-    path: /storage/node-configuration
+    path: /_page_actions/sub-application/storage-node-configuration
   class: StorageAction
   category: Storage Node Configuration
   sensitivity: sensitive
@@ -1109,7 +1109,7 @@ storage-del-node-for-collection:
 replic-delete-coll-batch-from-node:
   link-title: Delete a batch of objects from the collection from storage node
   nav:
-    path: /storage/node-configuration/contents
+    path: /_page_actions/sub-application/storage-node-configuration
   class: ReplicationAction
   category: Storage Node Configuration
   sensitivity: sensitive
@@ -1122,7 +1122,7 @@ replic-delete-coll-batch-from-node:
 storage-del-object-from-node:
   link-title: Delete object from storage node
   nav:
-    path: /storage/node-configuration/contents
+    path: /microservice/storage/node-configuration/contents
   implemented: false
   category: Delete object
   sensitivity: sensitive
@@ -1135,7 +1135,7 @@ storage-del-object-from-node:
 storage-change-primary-for-collection:
   link-title: Change primary storage node for collection
   nav:
-    path: /storage/node-configuration
+    path: /microservice/storage/node-configuration
   implemented: false
   category: Storage Node Configuration
   sensitivity: sensitive
@@ -1148,7 +1148,7 @@ storage-change-primary-for-collection:
 storage-reroute-ui-for-collection:
   link-title: Re-route UI storage node for collection
   nav:
-    path: /storage/node-configuration
+    path: /microservice/storage/node-configuration
   implemented: false
   class: ReplicationAction
   sensitivity: sensitive
@@ -1161,7 +1161,7 @@ storage-reroute-ui-for-collection:
 storage-perform-delete-node-key:
   link-title: Delete copy of a file from a storage node
   nav:
-    path: /storage-scan/repair
+    path: /_page_actions/sub-application/storage-scan/repair
   class: ReplicationAction
   category: Storage Scan Review
   sensitivity: sensitive
@@ -1173,7 +1173,7 @@ storage-perform-delete-node-key:
 storage-perform-delete-node-batch:
   link-title: Process all scan results marked with a DELETE status
   nav:
-    path: /storage-scan/repair
+    path: /_page_actions/sub-application/storage-scan/repair
   class: ReplicationAction
   category: Storage Scan Review
   sensitivity: sensitive
@@ -1185,7 +1185,7 @@ storage-perform-delete-node-batch:
 storage-delete-obj:
   link-title: Trigger the deletion of a Merritt Object
   nav:
-    path: /inventory/delete
+    path: /microservice/inventory/delete
   implemented: false
   category: Storage Scan Review
   sensitivity: sensitive
