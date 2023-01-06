@@ -39,7 +39,7 @@
 profiles:
   link-title: List Ingest Profiles (deployed on the Ingest Server)
   nav:
-    path: /microservice/ingest/profiles
+    path: /home/microservice/ingest/profiles
   class: IngestProfileAction
   category: Ingest Profiles
   sensitivity: readonly
@@ -56,7 +56,7 @@ profiles:
 collection-locks:
   link-title: List Merritt Collections and Collection Level Locks
   nav:
-    path: /collections/locks
+    path: /home/collections/locks
   class: IngestCollectionLocksAction
   category: Ingest Profiles
   sensitivity: readonly
@@ -75,7 +75,7 @@ collection-locks:
 adminprofiles:
   link-title: List Merritt Admin Profiles
   nav:
-    path: /microservice/ingest/admin-profiles
+    path: /home/microservice/ingest/admin-profiles
   class: AdminProfileAction
   category: Ingest Admin Profiles
   sensitivity: readonly
@@ -92,7 +92,7 @@ adminprofiles:
 state:
   link-title: Ingest Service Status
   nav:
-    path: /microservice/ingest/status
+    path: /home/microservice/ingest/status
   class: IngestStateAction
   category: Queue Management
   sensitivity: readonly
@@ -104,7 +104,7 @@ state:
 queues:
   link-title: Ingest Queue Jobs
   nav:
-    path: /microservice/ingest/activity
+    path: /home/microservice/ingest/activity
   class: IngestQueueAction
   category: Queue Management
   sensitivity: readonly
@@ -122,7 +122,7 @@ queues:
 ingest-queue-by-profile:
   link-title: Ingest Queue Activity by Profile
   nav:
-    path: /microservice/ingest/activity
+    path: /home/microservice/ingest/activity
   class: IngestQueueProfileCountAction
   category: Queue Management
   sensitivity: readonly
@@ -135,7 +135,7 @@ ingest-queue-by-profile:
 inv-queues:
   link-title: Inventory Queue Jobs
   nav:
-    path: /microservice/inventory/activity
+    path: /home/microservice/inventory/activity
   class: InventoryQueueAction
   category: Queue Management
   sensitivity: readonly
@@ -149,7 +149,7 @@ inv-queues:
 acc-queues:
   link-title: Access Queue Jobs
   nav:
-    path: /microservice/access/activity
+    path: /home/microservice/access/activity
   class: AccessQueueAction
   category: Queue Management
   sensitivity: readonly
@@ -166,7 +166,7 @@ acc-queues:
 batchFolders:
   link-title: Ingest Batch Folders
   nav:
-    path: /microservice/ingest/folders
+    path: /home/microservice/ingest/folders
   class: IngestBatchFoldersAction
   category: Ingest Batches and Folders
   sensitivity: readonly
@@ -187,7 +187,7 @@ batchFolders:
 batch:
   link-title: Ingest Batch
   nav:
-    path: /microservice/ingest/activity
+    path: /home/microservice/ingest/activity
   class: IngestBatchAction
   category: Ingest Batches and Folders
   sensitivity: readonly
@@ -203,7 +203,7 @@ batch:
 job:
   link-title: Ingest Job
   nav:
-    path: /microservice/ingest/activity
+    path: /home/microservice/ingest/activity
   class: IngestJobMetadataAction
   category: Ingest Batches and Folders
   sensitivity: readonly
@@ -215,7 +215,7 @@ job:
 manifest:
   link-title: Ingest Job Manifest Contents
   nav:
-    path: /microservice/ingest/activity
+    path: /home/microservice/ingest/activity
   class: IngestJobManifestAction
   category: Ingest Batches and Folders
   sensitivity: readonly
@@ -229,7 +229,7 @@ manifest:
 files:
   link-title: Ingest Job Folder File List
   nav:
-    path: /microservice/ingest/folders
+    path: /home/microservice/ingest/folders
   class: IngestJobFilesAction
   category: Ingest Batches and Folders
   sensitivity: readonly
@@ -244,7 +244,7 @@ files:
 sword:
   link-title: Dryad Recent Jobs
   nav:
-    path: /microservice/ingest/activity
+    path: /home/microservice/ingest/activity
   class: IngestSwordJobsAction
   category: Ingest Batches and Folders
   sensitivity: readonly
@@ -257,7 +257,7 @@ sword:
 ldap/users:
   link-title: List Merritt LDAP Users
   nav:
-    path: /user-accounts/ldap/users
+    path: /home/user-accounts/ldap/users
   class: LDAPActionUsers
   category: LDAP
   sensitivity: readonly
@@ -269,7 +269,7 @@ ldap/users:
 ldap/user:
   link-title: List details for an Merritt LDAP User
   nav:
-    path: /user-accounts/ldap/users
+    path: /home/user-accounts/ldap/users
   class: LDAPActionUserDetailed
   category: LDAP
   sensitivity: readonly
@@ -285,7 +285,7 @@ ldap/user:
 ldap/roles:
   link-title: List Merritt LDAP Roles
   nav:
-    path: /user-accounts/ldap/roles
+    path: /home/user-accounts/ldap/roles
   class: LDAPActionRoles
   category: LDAP
   sensitivity: readonly
@@ -297,7 +297,7 @@ ldap/roles:
 ldap/role:
   link-title: List details for an Merritt LDAP Role
   nav:
-    path: /user-accounts/ldap/roles
+    path: /home/user-accounts/ldap/roles
   class: LDAPAction
   category: LDAP
   sensitivity: readonly
@@ -310,7 +310,7 @@ ldap/role:
 ldap/colls:
   link-title: List Merritt LDAP Collections
   nav:
-    path: /user-accounts/ldap/collections
+    path: /home/user-accounts/ldap/collections
   class: LDAPActionColls
   category: LDAP
   sensitivity: readonly
@@ -323,7 +323,7 @@ ldap/colls:
 ldap/coll:
   link-title: List Details for an LDAP Collection
   nav:
-    path: /user-accounts/ldap/collections
+    path: /home/user-accounts/ldap/collections
   class: LDAPActionCollDetailed
   category: LDAP
   sensitivity: readonly
@@ -339,7 +339,7 @@ ldap/coll:
 ldap/collmap:
   link-title: Merritt LDAP / Inventory Database Mismatches
   nav:
-    path: /user-accounts/ldap/issue-list
+    path: /home/user-accounts/ldap/issue-list
   class: LDAPActionCollmap
   category: LDAP
   sensitivity: readonly
@@ -352,7 +352,7 @@ ldap/collmap:
 ldap/collark:
   link-title: List LDAP Users for a specific collection ARK
   nav:
-    path: /user-accounts/ldap/collections
+    path: /home/user-accounts/ldap/collections
   class: LDAPActionCollArk
   category: LDAP
   sensitivity: readonly
@@ -366,7 +366,7 @@ ldap/collark:
 instances:
   link-title: List and Describe Merritt EC2 Servers
   nav:
-    path: /merritt-internal/servers
+    path: /home/merritt-internal/servers
   class: TagAction
   category: Dev Ops
   sensitivity: readonly
@@ -385,7 +385,7 @@ instances:
 ssm-describe:
   link-title: List and Describe Merritt SSM Variables
   nav:
-    path: /merritt-internal/ssm-variables
+    path: /home/merritt-internal/ssm-variables
   class: SsmDescribeAction
   category: Dev Ops
   sensitivity: readonly
@@ -398,7 +398,7 @@ ssm-describe:
 storage-get-manifest:
   link-title: Get Storage Manifest for an Object from Cloud Storage
   nav:
-    path: /microservice/storage/manifest
+    path: /_page_actions/sub-application/object-management/storage/manifest
   class: StorageAction
   category: Storage Manifest
   sensitivity: readonly
@@ -414,7 +414,7 @@ storage-get-manifest:
 storage-get-augmented-manifest:
   link-title: Fix and Regenerate Storage Manifest for an Object from Cloud Storage
   nav:
-    path: /microservice/storage/manifest
+    path: /_page_actions/sub-application/object-management/storage/manifest
   implemented: false
   category: Storage Manifest
   sensitivity: readonly
@@ -428,7 +428,7 @@ storage-get-augmented-manifest:
 storage-get-ingest-checkm:
   link-title: Generate Ingest Checkm Manifest Using Content from Cloud Storage
   nav:
-    path: /microservice/storage/manifest
+    path: /_page_actions/sub-application/object-management/storage/manifest
   class: StorageAction
   category: Storage Manifest
   sensitivity: readonly
@@ -445,7 +445,7 @@ storage-get-ingest-checkm:
 cognito-users:
   link-title: List Merritt Admin Tools Users
   nav:
-    path: /merritt-internal/users
+    path: /home/merritt-internal/users
   class: CognitoAction
   category: Cognito
   sensitivity: readonly
@@ -461,7 +461,7 @@ cognito-users:
 replication-state:
   link-title: Display the Status of the Replciation Microservice
   nav:
-    path: /microservice/replic/status
+    path: /home/microservice/replic/status
   class: ReplicationAction
   category: Dev Ops
   sensitivity: readonly
@@ -490,7 +490,7 @@ storage-review-csv:
 ingest-locks:
   link-title: Display ingest storage locks on specific object arks
   nav:
-    path: /merritt-internal/object-locks
+    path: /home/merritt-internal/object-locks
   class: IngestLockAction
   category: Lock Management
   sensitivity: readonly
@@ -505,7 +505,7 @@ ingest-locks:
 submissions/pause:
   link-title: Pause all ingest processing
   nav:
-    path: /microservice/ingest/pause
+    path: /home/microservice/ingest/pause
   class: PostToIngestAction
   params: ["admin/submissions/freeze"]
   category: Queue Management
@@ -519,7 +519,7 @@ submissions/pause:
 submissions/unpause:
   link-title: Unpause all ingest processing
   nav:
-    path: /microservice/ingest/unpause
+    path: /home/microservice/ingest/unpause
   class: PostToIngestAction
   params: ["admin/submissions/thaw"]
   category: Queue Management
@@ -1028,7 +1028,7 @@ apply-review-changes:
 cognito-remove-user-from-group:
   link-title: Remove a Cognito User from a specific Cognito User Group
   nav:
-    path: /merritt-internal/users
+    path: /home/merritt-internal/users
   class: CognitoAction
   category: Cognito
   sensitivity: sensitive
@@ -1042,7 +1042,7 @@ cognito-remove-user-from-group:
 cognito-add-user-to-group:
   link-title: Add a Cognito User to a specific Cognito User Group
   nav:
-    path: /merritt-internal/users
+    path: /home/merritt-internal/users
   class: CognitoAction
   category: Cognito
   sensitivity: sensitive
@@ -1071,7 +1071,7 @@ storage-rebuild-inventory:
 storage-update-manifest:
   link-title: Upload a repaired storage manifest to override an existing one
   nav:
-    path: /microservice/sub-application/object-management/storage/repair
+    path: /_page_actions/sub-application/object-management/storage/repair
   implemented: false
   category: Inventory and Manifest
   sensitivity: sensitive
@@ -1122,7 +1122,7 @@ replic-delete-coll-batch-from-node:
 storage-del-object-from-node:
   link-title: Delete object from storage node
   nav:
-    path: /microservice/storage/node-configuration/contents
+    path: /_page_actions/sub-application/storage-node-configuration
   implemented: false
   category: Delete object
   sensitivity: sensitive
@@ -1135,7 +1135,7 @@ storage-del-object-from-node:
 storage-change-primary-for-collection:
   link-title: Change primary storage node for collection
   nav:
-    path: /microservice/storage/node-configuration
+    path: /_page_actions/sub-application/storage-node-configuration
   implemented: false
   category: Storage Node Configuration
   sensitivity: sensitive
@@ -1148,7 +1148,7 @@ storage-change-primary-for-collection:
 storage-reroute-ui-for-collection:
   link-title: Re-route UI storage node for collection
   nav:
-    path: /microservice/storage/node-configuration
+    path: /_page_actions/sub-application/storage-node-configuration
   implemented: false
   class: ReplicationAction
   sensitivity: sensitive
@@ -1185,7 +1185,7 @@ storage-perform-delete-node-batch:
 storage-delete-obj:
   link-title: Trigger the deletion of a Merritt Object
   nav:
-    path: /microservice/inventory/delete
+    path: /_page_actions/sub-application/object-management/delete
   implemented: false
   category: Storage Scan Review
   sensitivity: sensitive
