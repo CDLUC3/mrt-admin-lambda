@@ -80,9 +80,10 @@ function srvstart(tr) {
                         success: function(data) {
                                 var t = "No date";
                                 if (tr.find("td.srvstart").text() == "") {
-                                        //t = stateFetch(stateFetch(data, 'repsvc:replicationServiceState', {}), 'repsvc:currentReportDate', t);
-                                        //t = stateFetch(stateFetch(data, 'fix:fixityServiceState', {}), 'fix:currentReportDate', t);
-                                        //t = stateFetch(stateFetch(data, 'invsv:invServiceState', {}), 'invsv:currentReportDate', t);
+                                        t = stateFetch(stateFetch(data, 'repsvc:replicationServiceState', {}), 'repsvc:serviceStartTime', t);
+                                        t = stateFetch(stateFetch(data, 'fix:fixityServiceState', {}), 'fix:serviceStartTime', t);
+                                        t = stateFetch(stateFetch(data, 'invsv:invServiceState', {}), 'invsv:serviceStartTime', t);
+                                        t = stateFetch(stateFetch(data, 'ing:ingestServiceState', {}), 'ing:serviceStartTime', t);
                                         tr.find("td.srvstart").text(t);
                                 }
 
