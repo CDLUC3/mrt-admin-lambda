@@ -1106,6 +1106,18 @@ storage-del-node-for-collection:
     All objects in the collection will need to be cleared from the storage node.
   documentation: |
     SQL: DELETE FROM inv_collections_inv_nodes WHERE inv_collection_id = ?
+storage-set-flag:
+  link-title: Storage set zookeeper flag
+  nav:
+    path: /_page_actions/sub-application/queue-management/access
+  class: StorageAction
+  category: Queue Management
+  sensitivity: reversible change
+  testing: manual
+  description: |
+    Change the state of a zookeeper flag (SET or CLEAR).
+  documentation: |
+    ZK: set boolean flag
 replic-delete-coll-batch-from-node:
   link-title: Delete a batch of objects from the collection from storage node
   nav:

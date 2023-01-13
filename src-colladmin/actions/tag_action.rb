@@ -57,7 +57,7 @@ class Ec2Info
     return res unless @state == "running"
 
     @config.fetch("endpoints", {}).fetch(@subservice, {}).each do |k,v|
-      if k == 'state' && @subservice == "ui"
+      if k == 'state'  && @subservice == "ui"
         m = @name.match(%r[(ui0[0-9])x2-stg]) 
         if m 
           res["#{k}"] = "https://#{m[1]}-aws-stg.cdlib.org/state.json"
@@ -65,6 +65,16 @@ class Ec2Info
           m = @name.match(%r[(ui0[0-9])x2]) 
           if m 
             res["#{k}"] = "https://#{m[1]}-aws.cdlib.org/state.json"
+          end
+        end
+      elsif k == 'audit_rep' && @subservice == "ui"
+        m = @name.match(%r[(ui0[0-9])x2-stg]) 
+        if m 
+          res["#{k}"] = "https://#{m[1]}-aws-stg.cdlib.org/state-audit-replic.json"
+        else
+          m = @name.match(%r[(ui0[0-9])x2]) 
+          if m 
+            res["#{k}"] = "https://#{m[1]}-aws.cdlib.org/state-audit-replic.json"
           end
         end
       elsif k == 'state' && @subservice == "sword"

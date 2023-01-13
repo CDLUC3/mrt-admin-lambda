@@ -73,12 +73,14 @@ default:
       state: "{!SSM: oai/port}/mrtoai/state?t=json"
       # build-info: "{!SSM: oai/port}/mrtoai/static/build.content.txt"
     ui: 
-      state: "/state"
+      state: "/state.json"
+      audit_rep: "/state-audit-replic.json"
       +ALB: "{!ENV: MERRITT_PATH}/state.json"
     ldap: 
       -ALB: "https://{!SSM: ldap/host}"
   replic-service: "{!SSM: colladmin/replic-service}"
   storage-service: "{!SSM: colladmin/storage-service}"
+  access-service: "{!SSM: colladmin/access-service}"
   inventory-service: "{!SSM: colladmin/inventory-service}"
   scan-use-keylist:
   - node: 9501

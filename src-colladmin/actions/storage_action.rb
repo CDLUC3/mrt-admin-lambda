@@ -264,11 +264,28 @@ class StorageAction < AdminAction
 
     # if @path == "storage-update-manifest"
     # end
+    if @path == "storage-set-flag"
+      op = @myparams.fetch("op", "set")
+      op = "set" unless op == "set" || op == "clear"
+      qobj = @myparams.fetch("object", "")
+      srvc = get_access_service
+      endpoint = "/flag/#{op}/access/#{qobj}?t=json"
+      qjson = HttpPostJson.new(srvc, endpoint)
+      return {message: "Access ZK flag set failed"}.to_json if qjson.status != 200
+      ts = JSON.parse(qjson.body).fetch("tok:zooTokenState", {})
+      tss = ts.fetch("tok:tokenStatus", "")
+      tso = ts.fetch("tok:zooFlagPath", "na")
+      {message: "Token result: #{tso}=#{tss}"}.to_json
+    end
 
   end
 
   def get_storage_service
     @config.fetch('storage-service', '')
+  end
+
+  def get_access_service
+    @config.fetch('access-service', '')
   end
 
   def get_inventory_service

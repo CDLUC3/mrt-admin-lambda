@@ -84,6 +84,7 @@ function srvstart(tr) {
                                         t = stateFetch(stateFetch(data, 'fix:fixityServiceState', {}), 'fix:serviceStartTime', t);
                                         t = stateFetch(stateFetch(data, 'invsv:invServiceState', {}), 'invsv:serviceStartTime', t);
                                         t = stateFetch(stateFetch(data, 'ing:ingestServiceState', {}), 'ing:serviceStartTime', t);
+                                        t = stateFetch(data, 'start_time', t);
                                         tr.find("td.srvstart").text(t);
                                 }
 
@@ -92,6 +93,12 @@ function srvstart(tr) {
                                 t = stateFetch(stateFetch(data, 'fix:fixityServiceState', {}), 'fix:status', t);
                                 t = stateFetch(stateFetch(data, 'invsv:invServiceState', {}), 'invsv:systemStatus', t);
                                 tr.find("td.srvstate").text(t);        
+
+                                t = "";
+                                t = stateFetch(data, 'version', t);
+                                if (t != '') {
+                                        tr.find("td.buildtag").text(t);
+                                }
 
                                 postLoad();
                         },
