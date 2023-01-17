@@ -190,7 +190,7 @@ class StorageAction < AdminAction
 
       begin
         qxml = HttpGetXml.new(srvc, endpoint)
-        return "<message>Status #{qjson.status} for #{endpoint}</message>" unless qxml.status == 200
+        return "<message>Status #{qxml.status} for #{endpoint}</message>" unless qxml.status == 200
         return "<message>Manifest is too large to download:  use curl: #{srvc}#{endpoint}</message>" if qxml.body.length > 5000000
         return qxml.body
       rescue => e
@@ -213,7 +213,7 @@ class StorageAction < AdminAction
 
       begin
         qxml = HttpGetXml.new(srvc, endpoint)
-        return "<message>Status #{qjson.status} for #{endpoint}</message>" unless qxml.status == 200
+        return "<message>Status #{qxml.status} for #{endpoint}</message>" unless qxml.status == 200
         return "<message>Manifest is too large to download:  use curl: #{srvc}#{endpoint}</message>" if qxml.body.length > 5000000
         return qxml.body
       rescue => e
