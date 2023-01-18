@@ -48,7 +48,6 @@ default:
       state: "{!SSM: store/port}/state?t=json"
       ping: "{!SSM: store/port}/ping?t=json"
       build-info: "{!SSM: store/port}/static/build.content.txt"
-      alb-health: "{!SSM: store/port}/container/healthcheck.html"
       ALB: "{!SSM: colladmin/access-service}/state?t=json"
     inventory: 
       state: "{!SSM: inventory/port}/mrtinv/state?t=json"
@@ -69,9 +68,6 @@ default:
     sword: 
       state: "{!SSM: sword/port}/mrtsword/servicedocument"
       build-info: "{!SSM: sword/port}/mrtsword/static/build.content.txt"
-    oai: 
-      state: "{!SSM: oai/port}/mrtoai/state?t=json"
-      # build-info: "{!SSM: oai/port}/mrtoai/static/build.content.txt"
     ui: 
       state: "/state.json"
       audit_rep: "/state-audit-replic.json"
