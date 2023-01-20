@@ -289,7 +289,12 @@ tr.latest td, tr.latest th {
   background-color: #EEEEEE;
 }
 
-td.qdelete a, td.requeue a, td.hold a, td.release a, td.colllock a, td.collqitems a {
+td.qdelete a, 
+td.requeue a, 
+td.hold a, 
+td.release a, 
+td.colllock a, 
+td.collqitems a {
   display: block;
   text-align: center;
   border-radius: 5px;
@@ -301,7 +306,22 @@ td.qdelete a, td.requeue a, td.hold a, td.release a, td.colllock a, td.collqitem
   padding: 2px 6px;
 }
 
-td.qdelete a.disabled, td.requeue a.disabled, td.hold a.disabled, td.release a.disabled, td.colllock a.disabled, td.collqitems a.disabled {
+
+div.admin-tool td.qdelete a, 
+div.admin-tool td.requeue a, 
+div.admin-tool td.hold a, 
+div.admin-tool td.release a, 
+div.admin-tool td.colllock a, 
+div.admin-tool td.collqitems a {
+    display: none;
+}
+
+td.qdelete a.disabled, 
+td.requeue a.disabled, 
+td.hold a.disabled, 
+td.release a.disabled, 
+td.colllock a.disabled, 
+td.collqitems a.disabled {
   border: thin solid gray;
   color: gray;
 }
@@ -504,3 +524,4 @@ span.min1 {
 span.min3 {
   background-color: yellow;
 }
+
