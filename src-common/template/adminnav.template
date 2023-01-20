@@ -1,7 +1,7 @@
 <p>
-  <span title="{{USERNAME}}: [{{GROUPS}}]; {{HASPERM}}">👤</span>
+  <span class="{{RECENT}}" title="{{VERTIME}}">🏷️</span>
   <span>/</span>
-  <a href="{{UC3INV_HOME}}">Merritt Service Inventory</a>
+  <span title="{{USERNAME}}: [{{GROUPS}}]; {{HASPERM}}">👤</span>
   <span>/</span>
   <a href="{{ADMINTOOL_HOME}}">Admin Tool Home</a>
 </p>

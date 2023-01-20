@@ -154,6 +154,13 @@ class LambdaBase
   end
 
   def default_template_parameters
+    recent = ""
+    begin
+      secs = Time.now - File.mtime("/etc/timezone")
+      recent = "min3" if secs < 240
+      recent = "min1" if secs < 120
+    rescue
+    end
     {
       UC3INV_HOME: @config.fetch('uc3inv_home', ''), 
       ADMINTOOL_BASE: LambdaBase.admintool_base, 
@@ -162,6 +169,8 @@ class LambdaBase
       COLLADMIN_ROOT: LambdaBase.colladmin_root_url,
       COLLADMIN_ADMIN: LambdaBase.colladmin_url_admin,
       NOW: Time.now.strftime("%Y-%m-%dT%H:%M:%S%z"),
+      VERTIME: File.mtime("/etc/timezone").strftime("%Y-%m-%dT%H:%M:%S"),
+      RECENT: recent,
       MYENV: LambdaBase.get_environment,
       IS_DOCKER: LambdaBase.is_docker,
       NOT_DOCKER: !LambdaBase.is_docker,

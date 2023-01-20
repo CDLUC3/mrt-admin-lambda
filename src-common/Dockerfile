@@ -17,7 +17,3 @@ COPY . /var/task/
 
 # Bundle dependencies
 RUN bundle install 
-
-# https://serverfault.com/questions/683605/docker-container-time-timezone-will-not-reflect-changes
-ENV TZ=America/Los_Angeles
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone

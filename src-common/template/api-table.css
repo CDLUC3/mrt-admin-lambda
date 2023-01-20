@@ -496,3 +496,11 @@ button.scanreview::before,
 li.review::before {
   content: "☑ ";
 }
+
+span.min1 {
+  background-color: red;
+}
+
+span.min3 {
+  background-color: yellow;
+}
