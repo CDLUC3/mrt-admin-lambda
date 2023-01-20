@@ -82,7 +82,7 @@ class StorageAction < AdminAction
           WHERE 
             status='processing'
           AND 
-            verified < date_add(now(), INTERVAL -1 DAY)
+            ifnull(verified, '1970-01-01') < date_add(now(), INTERVAL -1 DAY)
         }, 
         [],
         "Audit Batches Cleared"
