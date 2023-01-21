@@ -500,6 +500,14 @@ doi:
   description: |
     Identify potential localid conflicts by looking for duplicate DOI's within `inv_objects.erc_where`.  
     This issue has occasionally occurred for Dryad content.
+localid_no_ark:
+  link-title: Local Id No Ark
+  nav: 
+    path: /home/objects/localid/status
+  class: LocalidNoIdQuery
+  category: objects
+  description: |
+    List counts of localids with no corresponding arks.  No [resolution](https://github.com/CDLUC3/mrt-doc/issues/1047) has been implemented yet.
 big_ingest:
   link-title: Big Ingests (conatining 200+ objects) - Last 14 days
   nav: 
