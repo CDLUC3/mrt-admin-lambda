@@ -55,6 +55,7 @@ class IngestBytesByHourQuery < AdminQuery
         and f.created >= '#{@tstart}'
         and f.created < '#{@tend}'
       group by timeblock
+      order by timeblock
       ; 
     }
     sql
