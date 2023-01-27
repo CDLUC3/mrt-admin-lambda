@@ -67,7 +67,7 @@ class IngestBytesByHourQuery < AdminQuery
 
   # do not use the "bytes" type for import into excel
   def get_types(results)
-    ['', 'dataint']
+    ['', 'bytes']
   end
   
   def bytes_unit
@@ -93,6 +93,10 @@ class IngestBytesByHourQuery < AdminQuery
   def last_month_start
     t = Time.parse(last_month_end)
     ((t - t.mday * spd) + spd).strftime('%Y-%m-%d')
+  end
+
+  def show_grand_total
+    true
   end
 
   def get_alternative_queries
