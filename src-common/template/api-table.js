@@ -811,3 +811,9 @@ function exportTable(rows) {
   var ReportObj = new Report();
   ReportObj.export(rows);
 }
+
+function show_nav_section(name) {
+  $(".nav_section").hide();
+  $('#menu').show();
+  $(name).show();
+}

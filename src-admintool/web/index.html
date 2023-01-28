@@ -4,8 +4,10 @@
     <script	src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
     <link rel="stylesheet" type="text/css" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.css"></link>
+    <!-- https://www.w3schools.com/howto/howto_css_dropdown_navbar.asp -->
     <style type="text/css">
-    {{{APITABLE_CSS}}}
+      {{{APITABLE_CSS}}}
+      {{{NAVMENU_CSS}}}
     </style>
     <script type="text/javascript">
     {{{LAMBDABASE_JS}}}
@@ -16,54 +18,111 @@
     <script type="text/javascript">
     {{{DRAWDOWN_JS}}}
     </script>
+    <script type="text/javascript">
+      var nav_to_hash= function() {
+        var h = window.location.hash;
+        if (h) {
+          if (h!='') {
+            show_nav_section(h.replace('#', ''));
+          }
+        } 
+      }
+      $(document).ready(nav_to_hash);
+      $(window).on('hashchange', nav_to_hash);
+    </script>
     <script src="sorttable.js" type="text/javascript"></script>
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>            
     <title>AdminTool - Merritt</title>
   </head>
   <body>
+    {{{NAVMENU}}}
     <h1>AdminTool - Merritt</h1>
     <h4 class="report_path"></h4>
     {{{ADMINNAV}}}
     {{{BUTTONS}}}
     <div id="report-description">
     </div>
+    <div id="menu">
+
     <div id="chartdiv">
       <canvas id="myChart"></canvas>
     </div>          
-    <div id="menu">
 
-      <h2>Report Index</h2>
-      <p><a href="{{ADMINTOOL_BASE}}/web/describeReports.html">Admin Report Descriptions</a></p>
-      <p><a href="{{ADMINTOOL_BASE}}/web/navReports.html">Admin Report Descriptions (Nav)</a></p>
+    <div class="nav_section nav_campus">
+      <h2>Campus Reports</h2>
+    </div>
 
-      <h2>Applications</h2>
-      <ul>
-        <li class="report">
-          <a class="json" href="{{ADMINTOOL_HOME}}?path=report">Consistency Reports</a>
-          <span id="consistency">...</span>
-        </li>
-        <li class="config"><a href="{{COLLADMIN_ADMIN}}">Collection Admin</a></li>
-      </ul>
-
-      <h2>Understanding Merritt Content</h2>
+    <div class="nav_section nav_campus nav_campus_collections">
+      <h2>Campus Collections</h2>
       <ul>
         <li class="graph"><a class="json" href="{{ADMINTOOL_HOME}}?path=collections">File Counts by Collections</a></li>
-        <li class="graph"><a class="json" href="{{ADMINTOOL_HOME}}?path=owners">File Counts by Owner</a></li>
-        <li class="graph"><a class="json" href="{{ADMINTOOL_HOME}}?path=mimes">Mime Groups</a></li>
-        <li class="graph"><a class="json" href="{{ADMINTOOL_HOME}}?path=filesize">File Size Averages</a></li>
-        <li class="graph"><a class="json" href="{{ADMINTOOL_HOME}}?path=filesizedist&iterate=1">File Size Distribution (Iterative)</a></li>
-        <li class="graph"><a class="json" href="{{ADMINTOOL_HOME}}?path=admin_obj_agg">Merritt Admin Objects Count</a></li>
-        <li class="coll"><a class="json" href="{{ADMINTOOL_HOME}}?path=admin_coll">Collections Table Special Cases</a></li>
       </ul>
+    </div>
 
+    <div class="nav_section nav_campus nav_campus_content">
+      <h2>Campus Content</h2>
+    </div>
+
+    <div class="nav_section nav_campus nav_campus_invoices">
       <h2>Campus Invoices</h2>
       <ul>
         <li class="campus"><a class="json" href="{{ADMINTOOL_HOME}}?path=invoices&fy=2023">FY2023 Invoices</a></li>
         <li class="campus"><a class="json" href="{{ADMINTOOL_HOME}}?path=invoices&fy=2022">FY2022 Invoices</a></li>
         <li class="campus"><a class="json" href="{{ADMINTOOL_HOME}}?path=invoices&fy=2021">FY2021 Invoices</a></li>
       </ul>
+    </div>
 
+    <div class="nav_section nav_campus nav_campus_owners">
+      <h2>Campus Owners</h2>
+      <ul>
+        <li class="graph"><a class="json" href="{{ADMINTOOL_HOME}}?path=owners">File Counts by Owner</a></li>
+      </ul>
+    </div>
+
+    <div class="nav_section nav_repo">
+      <h2>Repository Content</h2>
+      <ul>
+        <li class="graph"><a class="json" href="{{ADMINTOOL_HOME}}?path=mimes">Mime Groups</a></li>
+        <li class="graph"><a class="json" href="{{ADMINTOOL_HOME}}?path=filesize">File Size Averages</a></li>
+        <li class="graph"><a class="json" href="{{ADMINTOOL_HOME}}?path=filesizedist&iterate=1">File Size Distribution (Iterative)</a></li>
+      </ul>
+    </div>
+
+    <div class="nav_section nav_collections">
+      <h2>Collections Reports</h2>
+    </div>
+    <div class="nav_section nav_collections nav_collections_counts">
+      <h2>Collections Counts</h2>
+      <ul>
+        <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=count_objects">Object Counts by Owner and Collection</a></li>
+      </ul>
+    </div>
+    <div class="nav_section nav_collections nav_collections_activity">
+      <h2>Collections Activity</h2>
+      <ul>
+        <li class="coll-date"><a class="json" href="{{ADMINTOOL_HOME}}?path=objects_recent">Recent object updates by collection (object details)</a></li>
+      </ul>
+    </div>
+
+    <div class="nav_section nav_collections nav_collections_details">
+      <h2>Collection Details</h2>
+    </div>
+    <div class="nav_section nav_collections nav_collections_content">
+      <h2>Collections Content</h2>
+    </div>
+    <div class="nav_section nav_collections nav_collections_locks">
+      <h2>Collections Locks</h2>
+      <ul>
+        <li class="config"><a href="{{COLLADMIN_HOME}}?path=ingest-locks">Ingest Locks</a></li>
+        <li class="config"><a href="{{COLLADMIN_HOME}}?path=collection-locks">Collection Locks</a></li>
+      </ul>
+    </div>
+
+    <div class="nav_section nav_objects">
+      <h2>Objects Reports</h2>
+    </div>
+    <div class="nav_section nav_objects_search">
       <h2>Metadata Queries: Objects</h2>
       <ul>
         <li class="objects">
@@ -101,9 +160,22 @@
             <input type="button" onclick="javascript:document.location='localid.html';" value="Multiple Localids"/>
           </form>
         </li>
+        <li class="objects">
+          <form action="{{ADMINTOOL_HOME}}">
+            Object(s) by Batch Container Name:
+            <input name="container" type="text" value="" size=40 title="This would generally be a .checkm or .zip file"/>
+            <input name="path" type="hidden" value="objects_by_container_name"/>
+            <input type="submit" value="Go!"/>
+          </form>
+        </li>
       </ul>
 
-      <h2>Metadata Queries: Files</h2>
+    </div>
+    <div class="nav_section nav_objects nav_objects_compare">
+      <h2>Objects Compare</h2>
+    </div>
+    <div class="nav_section nav_objects nav_objects_files">
+      <h2>Objects Files</h2>
       <ul>
         <li class="files">
           <form action="{{ADMINTOOL_HOME}}">
@@ -117,9 +189,103 @@
           </form>
         </li>
       </ul>
+    </div>
+    <div class="nav_section nav_objects nav_objects_issue_count">
+      <h2>Objects Issue Count</h2>
+    </div>
+    <div class="nav_section nav_objects nav_objects_issue_list">
+      <h2>Objects Issue List</h2>
+    </div>
+    <div class="nav_section nav_objects nav_objects_localid">
+      <h2>Objects Local Id</h2>
+      <ul>
+        <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=doi">DOI Ark Conflicts</a></li>
+        <li class="objects"><a href="{{ADMINTOOL_HOME}}?path=con_localid">Counts: Objects Missing LocalId</a></li>
+        <li class="objects"><a href="{{ADMINTOOL_HOME}}?path=object_localid_needed">Objects Missing LocalId</a></li>
+        <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=localid_no_ark">Local id without Ark Counts</a></li>
+       </ul>
+    </div>
+    <div class="nav_section nav_objects nav_objects_versions">
+      <h2>Objects Versions</h2>
+      <ul>
+        <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=con_versions">Version Inconsistencies</a></li>
+      </ul>
+    </div>
+    <div class="nav_section nav_objects nav_objects_special">
+      <h2>Objects Special Cases</h2>
+      <ul>
+        <li class="objects"><a href="{{ADMINTOOL_HOME}}?path=mult_coll&limit=500">Objects linked to more than one collection</a></li>
+        <li class="objects"><a href="{{ADMINTOOL_HOME}}?path=objects_large">Large Objects</a></li>
+        <li class="objects"><a href="{{ADMINTOOL_HOME}}?path=objects_many_files">Objects with Many Files</a></li>
+      </ul>
+    </div>
+    <div class="nav_section nav_merritt_internals">
+      <h2>Merritt Internals</h2>
+      <ul>
+        <li class="graph"><a class="json" href="{{ADMINTOOL_HOME}}?path=admin_obj_agg">Merritt Admin Objects Count</a></li>
+        <li class="coll"><a class="json" href="{{ADMINTOOL_HOME}}?path=admin_coll">Collections Table Special Cases</a></li>
+      </ul>
+    </div>
+    <div class="nav_section nav_merritt_users">
+      <h2>Merritt User Accounts</h2>
+      <ul>
+        <li class="ldapuid"><a href="{{COLLADMIN_HOME}}?path=ldap/users">LDAP Users</a></li>
+        <li class="ldaprole"><a href="{{COLLADMIN_HOME}}?path=ldap/roles">LDAP Roles</a></li>
+        <li class="ldapcoll"><a href="{{COLLADMIN_HOME}}?path=ldap/colls">LDAP Collections</a></li>
+        <li class="report"><a href="{{COLLADMIN_HOME}}?path=ldap/collmap">Find Missing LDAP Collections</a></li>
+        <li class="config"><a href="{{COLLADMIN_HOME}}?path=cognito-users">Cognito Users</a></li>
+      </ul>
+    </div>
 
+    <div class="nav_section nav_audit">
+      <h2>Audit Service</h2>
+    </div>
+    <div class="nav_section nav_audit nav_audit_status">
+      <h2>Audit Status</h2>
+      <ul>
+        <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=audit_status">Audit - Irregular Status</a></li>
+      </ul>
+    </div>
+    <div class="nav_section nav_audit nav_audit_activity">
+      <h2>Audit Activity</h2>
+      <ul>
+        <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=audit_status_time&unit=HOUR&count=-1">Audit Status - Last Hour</a></li>
+        <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=audit_size">Audit - Size of Queue</a></li>
+      </ul>
+    </div>
+    <div class="nav_section nav_audit nav_audit_performance">
+      <h2>Audit Performance</h2>
+      <ul>
+        <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=audit_oldest">Audit - Oldest Unprocessed Item</a></li>
+        <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=audit_processed_size">Historical Audits processed + bytes over time</a></li>
+        <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=audit_processed_hours&iterate=1">Hourly Audits processed + bytes over time</a></li>
+      </ul>
+    </div>
 
-      <h2>Queries by ingest date</h2>
+    <div class="nav_section nav_ingest">
+      <h2>Ingest Service</h2>
+    </div>
+    <div class="nav_section nav_ingest nav_ingest_activity nav_manage_queues">
+      <h2>Ingest Activity</h2>
+      <ul>
+        <li class="report"><a href="{{COLLADMIN_HOME}}?path=state">Ingest Service State Request</a></li>
+        <li class="config"><a href="{{COLLADMIN_HOME}}?path=submissions/pause">Pause Submissions</a></li>
+        <li class="config"><a href="{{COLLADMIN_HOME}}?path=submissions/unpause">Unpause Submissions</a></li>
+        <li class="graph"><a href="{{COLLADMIN_HOME}}?path=ingest-queue-by-profile">Ingest Queues - Counts by Profile</a></li>
+        <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=ingest_bytes_by_hour">Recent Bytes ingested by hour</a></li>
+        <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=recent_ingests">Recent Ingests</a></li>
+        <li class="objects"><a href="{{ADMINTOOL_HOME}}?path=big_ingest&items=200&days=14">Big Ingests (200+) - Last 14 days</a></li>
+      </ul>
+      </div>
+    <div class="nav_section nav_ingest nav_ingest_profiles">
+      <h2>Ingest Profiles</h2>
+      <ul>
+        <li class="profile"><a href="{{COLLADMIN_HOME}}?path=profiles">Collection Profiles (ingest)</a></li>
+        <li class="profile"><a href="{{COLLADMIN_HOME}}?path=adminprofiles">Admin Profile List</a></li>
+      </ul>
+    </div>
+    <div class="nav_section nav_ingest nav_ingest_counts">
+      <h2>Ingest Counts</h2>
       <ul>
         <li class="graph"><a class="json" href="{{ADMINTOOL_HOME}}?path=collections_by_time_count_producer">Producer Files Added by Date (All time)</a></li>
         <li class="graph"><a class="json" href="{{ADMINTOOL_HOME}}?path=collections_by_time_count">Files Added by Date (All time)</a></li>
@@ -132,100 +298,119 @@
         <li class="graph"><a class="json" href="{{ADMINTOOL_HOME}}?path=collections_by_time_count&interval=weeks">Files Added by Date (Last 4 weeks)</a></li>
         <li class="graph"><a class="json" href="{{ADMINTOOL_HOME}}?path=collections_by_time_size&interval=weeks">File Size Added by Date (Last 4 weeks)</a></li>
       </ul>
-
-      <h2>Operational Information</h2>
+    </div>
+    <div class="nav_section nav_ingest nav_ingest_folders">
+      <h2>Ingest Folders</h2>
       <ul>
-        <li class="config">
-          <a href="https://github.com/CDLUC3/mrt-cron/blob/main/consistency-driver/reports.yml">Consistency Report Configuration</a>
-        </li>
-        <li class="config"><a href="{{ADMINTOOL_HOME}}?path=update_billing">Update Billing Database</a></li>
-        <li class="config"><a href="{{ADMINTOOL_HOME}}?path=update_billing&all-tables=Y">Update Billing Database (recalcuate yesterday's totals)</a></li>
+        <li class="batches"><a href="{{COLLADMIN_HOME}}?path=batchFolders&days=7">Batch Folders Created in the last 7 days</a></li>      
+        <li class="job"><a href="{{COLLADMIN_HOME}}?path=sword">Ingest Service Show Sword Jobs</a></li>
+      </ul>
+    </div>
+
+    <div class="nav_section nav_replic">
+      <h2>Replication Service</h2>
+    </div>
+    <div class="nav_section nav_replic nav_replic_activity">
+      <h2>Replication Activity</h2>
+      <ul>
+        <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=replication_needed">Objects - Replication needed</a></li>
+        <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=con_replic">Outstanding replication</a></li>
+        <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=replication_initiated">Replication Initiated</a></li>
+        <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=replication_failed">Replication Failed</a></li>
+      </ul>
+    </div>
+    <div class="nav_section nav_replic nav_replic_performance">
+      <h2>Replication Performance</h2>
+      <ul>
+        <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=replic_processed&iterate=1">Replic processed over time</a></li>
+      </ul>
+    </div>
+    <div class="nav_section nav_replic nav_replic_status">
+      <h2>Replication Status</h2>
+      <ul>
+        <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=con_objects&copies=1">Objects with <em>1</em> copy (Replication Needed?)</a></li>
+        <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=con_objects&copies=2">Objects with <em>2</em> copies (Replication Needed?)</a></li>
+        <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=con_objects&copies=4">Objects with <em>4</em> copies (Cleanup Needed?)</a></li>
+        <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=con_files&copies=1">Files with <em>1</em> copy (Replication Needed?)</a></li>
+        <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=con_files&copies=2">Files with <em>2</em> copies (Replication Needed?)</a></li>
+        <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=con_files&copies=4">Files with <em>4</em> copies (Cleanup Needed?)</a></li>
+        <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=con_no_audit">Files not in the audit table (too slow to run from web)</a></li>
+  </ul>
+    </div>
+    <div class="nav_section nav_inventory">
+      <h2>Inventory Service</h2>
+    </div>
+    <div class="nav_section nav_inventory nav_inventory_activity nav_manage_queues">
+      <h2>Inventory Activity</h2>
+      <ul>
+        <li class="job"><a href="{{COLLADMIN_HOME}}?path=inv-queues">Inventory Queues</a></li>
+      </ul>
+    </div>
+    <div class="nav_section nav_storage">
+      <h2>Storage Service</h2>
+    </div>
+    <div class="nav_section nav_storage nav_storage_config">
+      <h2>Storage Configuration</h2>
+      <ul>
+        <li class="node"><a href="{{ADMINTOOL_HOME}}?path=nodes">Storage Nodes</a></li>
+        <li class="node"><a href="{{ADMINTOOL_HOME}}?path=collnodes">Storage Nodes by Collection</a></li>
+        <li class="node"><a href="{{ADMINTOOL_HOME}}?path=collection_node_cleanup_required">Storage Node/Collection Cleanup Needed</a></li>
+        <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=con_primary">Collections with Non-standard Primary Nodes (Not SDSC or Dryad S3)</a></li>
+        <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=con_secondary">Collections with Non-standard Secondary Nodes (Not Glacier+Wasabi or SDSC+Wasabi)</a></li>
+      </ul>
+    </div>
+    <div class="nav_section nav_storage nav_storage_content">
+      <h2>Storage Content</h2>
+    </div>
+    <div class="nav_section nav_storage nav_storage_profile">
+      <h2>Storage Profile</h2>
+    </div>
+    <div class="nav_section nav_storage nav_storage_queues nav_manage_queues">
+      <h2>Access Queues</h2>
+      <ul>
+        <li class="job"><a href="{{COLLADMIN_HOME}}?path=acc-queues">Access Queues</a></li>
+        <li class="config"><a href="{{COLLADMIN_HOME}}?path=storage-set-flag&op=set&object=LargeAccessHold">Pause Large Access</a></li>
+        <li class="config"><a href="{{COLLADMIN_HOME}}?path=storage-set-flag&op=clear&object=LargeAccessHold">Clear Large Access</a></li>
+        <li class="config"><a href="{{COLLADMIN_HOME}}?path=storage-set-flag&op=set&object=SmallAccessHold">Pause Small Access</a></li>
+        <li class="config"><a href="{{COLLADMIN_HOME}}?path=storage-set-flag&op=clear&object=SmallAccessHold">Clear Small Access</a></li>
+      </ul>
+    </div>
+    <div class="nav_section nav_manage">
+      <h2>Administer Merritt</h2>
+    </div>
+    <div class="nav_section nav_manage">
+      <h2>Administer Merritt</h2>
+    </div>
+    <div class="nav_section nav_manage nav_manage_queues">
+      <h2>Manage Merritt Queues</h2>
+      <ul>
+        <li class="graph"><a href="{{COLLADMIN_HOME}}?path=ingest-queue-by-profile">Ingest Queues - Counts by Profile</a></li>
+        <li class="job"><a href="{{COLLADMIN_HOME}}?path=queues">Ingest Queues</a></li>
+        <li class="job"><a href="{{COLLADMIN_HOME}}?path=inv-queues">Inventory Queues</a></li>
+        <li class="job"><a href="{{COLLADMIN_HOME}}?path=acc-queues">Access Queues</a></li>
+      </ul>
+    </div>
+    <div class="nav_section nav_manage nav_manage_coll">
+      <h2>Manage Admin Objects</h2>
+      <ul>
         <li>
-          <h3>Audit</h3>
+          Submit Admin Objects
           <ul>
-            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=audit_status">Audit - Irregular Status</a></li>
-            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=audit_status_time&unit=HOUR&count=-1">Audit Status - Last Hour</a></li>
-            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=audit_oldest">Audit - Oldest Unprocessed Item</a></li>
-            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=audit_size">Audit - Size of Queue</a></li>
-            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=audit_processed_size">Historical Audits processed + bytes over time</a></li>
-            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=audit_processed_hours&iterate=1">Hourly Audits processed + bytes over time</a></li>
+            <li class="config"><a href="{{COLLADMIN_ROOT}}/web/collAdminObjs.html?type=collection">Submit Merritt Collection Admin Obj</a></li>
+            <li class="config"><a href="{{COLLADMIN_ROOT}}/web/collAdminObjs.html?type=owner">Submit Merritt Owners Admin Obj</a></li>
+            <li class="config"><a href="{{COLLADMIN_ROOT}}/web/collAdminObjs.html?type=sla">Submit Merritt SLAS Admin Obj</a></li>    
           </ul>
         </li>
         <li>
-          <h3>Replication - Objects</h3>
+          Set Artifact Properties
           <ul>
-            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=replication_needed">Objects - Replication needed</a></li>
-            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=replic_processed&iterate=1">Replic processed over time</a></li>
-            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=con_objects&copies=1">Objects with <em>1</em> copy (Replication Needed?)</a></li>
-            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=con_objects&copies=2">Objects with <em>2</em> copies (Replication Needed?)</a></li>
-            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=con_objects&copies=4">Objects with <em>4</em> copies (Cleanup Needed?)</a></li>
-            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=con_replic">Outstanding replication</a></li>
-            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=replication_initiated">Replication Initiated</a></li>
-            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=replication_failed">Replication Failed</a></li>
-            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=con_versions">Version Inconsistencies</a></li>
+            <li class="config"><a href="{{COLLADMIN_ROOT}}/web/artifactProperties.html?type=collection">Set Collection Properties</a></li>
+            <li class="config"><a href="{{COLLADMIN_ROOT}}/web/artifactProperties.html?type=owner">Set Owner Properties</a></li>
+            <li class="config"><a href="{{COLLADMIN_ROOT}}/web/artifactProperties.html?type=sla">Set SLA Properties</a></li>    
           </ul>
-        </li>
-        <li>
-          <h3>Replication - File View</h3>
-          <ul>
-            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=con_files&copies=1">Files with <em>1</em> copy (Replication Needed?)</a></li>
-            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=con_files&copies=2">Files with <em>2</em> copies (Replication Needed?)</a></li>
-            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=con_files&copies=4">Files with <em>4</em> copies (Cleanup Needed?)</a></li>
-            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=con_no_audit">Files not in the audit table (too slow to run from web)</a></li>
-          </ul>
-        </li>
-        <li>
-          <h3>Storage</h3>
-          <ul>
-            <li class="node"><a href="{{ADMINTOOL_HOME}}?path=nodes">Storage Nodes</a></li>
-            <li class="node"><a href="{{ADMINTOOL_HOME}}?path=collnodes">Storage Nodes by Collection</a></li>
-            <li class="node"><a href="{{ADMINTOOL_HOME}}?path=collection_node_cleanup_required">Storage Node/Collection Cleanup Needed</a></li>
-            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=con_primary">Collections with Non-standard Primary Nodes (Not SDSC or Dryad S3)</a></li>
-            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=con_secondary">Collections with Non-standard Secondary Nodes (Not Glacier+Wasabi or SDSC+Wasabi)</a></li>
-          </ul>
-        </li>
-        <li>
-          <h3>Collections</h3>
-          <ul>
-            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=count_objects">Object Counts by Owner and Collection</a></li>
-            <li class="coll-date"><a class="json" href="{{ADMINTOOL_HOME}}?path=objects_recent">Recent object updates by collection (object details)</a></li>
-          </ul>
-        </li>
-        <li>
-          <h3>Ingests</h3>
-          <ul>
-            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=ingest_bytes_by_hour">Recent Bytes ingested by hour</a></li>
-            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=recent_ingests">Recent Ingests</a></li>
-            <li class="objects"><a href="{{ADMINTOOL_HOME}}?path=big_ingest&items=200&days=14">Big Ingests (200+) - Last 14 days</a></li>
-            <li class="objects">
-              <form action="{{ADMINTOOL_HOME}}">
-                Object(s) by Batch Container Name:
-                <input name="container" type="text" value="" size=40 title="This would generally be a .checkm or .zip file"/>
-                <input name="path" type="hidden" value="objects_by_container_name"/>
-                <input type="submit" value="Go!"/>
-              </form>
-            </li>
-          </ul>
-        </li>
-        <li>
-          <h3>Objects</h3>
-          <ul>
-            <li class="objects"><a href="{{ADMINTOOL_HOME}}?path=mult_coll&limit=500">Objects linked to more than one collection</a></li>
-            <li class="objects"><a href="{{ADMINTOOL_HOME}}?path=objects_large">Large Objects</a></li>
-            <li class="objects"><a href="{{ADMINTOOL_HOME}}?path=objects_many_files">Objects with Many Files</a></li>
-          </ul>
-        </li>
-        <li>
-          <h3>Local Ids</h3>
-          <ul>
-            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=doi">DOI Ark Conflicts</a></li>
-            <li class="objects"><a href="{{ADMINTOOL_HOME}}?path=con_localid">Counts: Objects Missing LocalId</a></li>
-            <li class="objects"><a href="{{ADMINTOOL_HOME}}?path=object_localid_needed">Objects Missing LocalId</a></li>
-            <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=localid_no_ark">Local id without Ark Counts</a></li>
-           </ul>
         </li>
       </ul>
-
+      </div>
     </div>
     <div id="data" class="admin-tool">
       <div id="alternative">

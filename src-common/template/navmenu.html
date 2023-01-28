@@ -1,0 +1,115 @@
+<header>
+  <div class="navbar">
+    <div class="dropdown">
+      <button class="dropbtn">About
+        <i class="fa fa-caret-down"></i>
+      </button>
+      <div class="dropdown-content">
+        <a><span class="{{RECENT}}">🏷️ {{VERTIME}}</span></a>
+        <a><span>👤 {{USERNAME}}: [{{GROUPS}}]; {{HASPERM}}</span></a>
+        <a href="{{ADMINTOOL_BASE}}/web/describeReports.html">Admin Report Descriptions</a>
+        <a href="{{COLLADMIN_ROOT}}/web/describeActions.html">Collection Admin Action Descriptions</a>
+      </div>
+    </div>
+    <div class="dropdown">
+      <button class="dropbtn">System Status
+        <i class="fa fa-caret-down"></i>
+      </button>
+      <div class="dropdown-content">
+        <a href="{{ADMINTOOL_HOME}}?path=report">Consistency Reports <span id="consistency">...</span></a>
+        <a href="{{COLLADMIN_HOME}}?path=ingest-queue-by-profile">Active Ingest Jobs</a>
+      </div>
+    </div>
+    <div class="dropdown">
+      <button class="dropbtn">Reports
+        <i class="fa fa-caret-down"></i>
+      </button>
+      <div class="dropdown-content">
+        <a href="{{ADMINTOOL_HOME}}#.nav_campus">Campus</a>
+        <a href="{{ADMINTOOL_HOME}}#.nav_campus_collections">Campus Collections</a>
+        <a href="{{ADMINTOOL_HOME}}#.nav_campus_content">Campus Content</a>
+        <a href="{{ADMINTOOL_HOME}}#.nav_campus_invoices">Campus Invoices</a>
+        <a href="{{ADMINTOOL_HOME}}#.nav_campus_owners">Campus Owners</a>
+        <a href="{{ADMINTOOL_HOME}}#.nav_repo">Repository Content</a>
+        <a href="{{ADMINTOOL_HOME}}#.nav_collections">Collections</a>
+        <a href="{{ADMINTOOL_HOME}}#.nav_collections_counts">Collections Counts</a>
+        <a href="{{ADMINTOOL_HOME}}#.nav_collections_activity">Collections Activity</a>
+        <a href="{{ADMINTOOL_HOME}}#.nav_collections_details">Collections Details</a>
+        <a href="{{ADMINTOOL_HOME}}#.nav_collections_content">Collections Content</a>
+        <a href="{{ADMINTOOL_HOME}}#.nav_collections_locks">Collections Locks</a>
+        <a href="{{ADMINTOOL_HOME}}#.nav_objects">Objects</a>
+        <a href="{{ADMINTOOL_HOME}}#.nav_objects_compare">Objects Compare</a>
+        <a href="{{ADMINTOOL_HOME}}#.nav_objects_files">Objects Files</a>
+        <a href="{{ADMINTOOL_HOME}}#.nav_objects_issue_count">Objects Issue Count</a>
+        <a href="{{ADMINTOOL_HOME}}#.nav_objects_issue_list">Objects Issue List</a>
+        <a href="{{ADMINTOOL_HOME}}#.nav_objects_localid">Objects Local Id</a>
+        <a href="{{ADMINTOOL_HOME}}#.nav_objects_versions">Objects Versions</a>
+        <a href="{{ADMINTOOL_HOME}}#.nav_objects_special">Objects Special Cases</a>
+        <a href="{{ADMINTOOL_HOME}}#.nav_merritt_internals">Merritt Internals</a>
+        <a href="{{ADMINTOOL_HOME}}#.nav_merritt_users">Merritt User Accounts</a>
+        <a href="{{ADMINTOOL_HOME}}?path=update_billing">Update Billing Database</a>
+        <a href="{{ADMINTOOL_HOME}}?path=update_billing&all-tables=Y">Update Billing Database (recalcuate yesterday's totals)</a>
+      </div>
+    </div>
+    <div class="dropdown">
+      <button class="dropbtn">Microservice Reports
+        <i class="fa fa-caret-down"></i>
+      </button>
+      <div class="dropdown-content">
+        <a href="{{ADMINTOOL_HOME}}#.nav_audit">Audit</a>
+        <a href="{{ADMINTOOL_HOME}}#.nav_audit_activity">Audit Activity</a>
+        <a href="{{ADMINTOOL_HOME}}#.nav_audit_performance">Audit Performance</a>
+        <a href="{{ADMINTOOL_HOME}}#.nav_audit_status">Audit Status</a>
+        <a href="{{ADMINTOOL_HOME}}#.nav_ingest">Ingest</a>
+        <a href="{{ADMINTOOL_HOME}}#.nav_ingest_activity">Ingest Activity</a>
+        <a href="{{ADMINTOOL_HOME}}#.nav_ingest_profiles">Ingest Profiles</a>
+        <a href="{{ADMINTOOL_HOME}}#.nav_ingest_counts">Ingest Counts</a>
+        <a href="{{ADMINTOOL_HOME}}#.nav_ingest_folders">Ingest Folders</a>
+        <a href="{{ADMINTOOL_HOME}}#.nav_inventory">Inventory</a>
+        <a href="{{ADMINTOOL_HOME}}#.nav_inventory_activity">Inventory Activity</a>
+        <a href="{{ADMINTOOL_HOME}}#.nav_replic">Replic</a>
+        <a href="{{ADMINTOOL_HOME}}#.nav_replic_activity">Replic Activity</a>
+        <a href="{{ADMINTOOL_HOME}}#.nav_replic_performance">Replic Performance</a>
+        <a href="{{ADMINTOOL_HOME}}#.nav_replic_status">Replic Status</a>
+        <a href="{{ADMINTOOL_HOME}}#.nav_storage">Storage</a>
+        <a href="{{ADMINTOOL_HOME}}#.nav_storage_config">Storage Configuration</a>
+        <a href="{{ADMINTOOL_HOME}}#.nav_storage_content">Storage Content</a>
+        <a href="{{ADMINTOOL_HOME}}#.nav_storage_profile">Storage Profile</a>
+        <a href="{{ADMINTOOL_HOME}}#.nav_storage_queues">Access Queues</a>
+      </div>
+    </div>
+    <div class="dropdown">
+      <button class="dropbtn">Administer Merritt
+        <i class="fa fa-caret-down"></i>
+      </button>
+      <div class="dropdown-content">
+        <a href="{{ADMINTOOL_HOME}}#.nav_manage_queues">Manage Queues</a>
+        <a href="{{COLLADMIN_ROOT}}/web/collProfile.html">Collection Creation</a>
+        <a href="{{ADMINTOOL_HOME}}#.nav_manage_coll">Manage Admin Objects</a>
+        <a href="{{COLLADMIN_ROOT}}/web/storeCollNodes.html">Manage Storage Nodes for a Collection</a>
+        <a href="{{COLLADMIN_ROOT}}/web/storeNodes.html">Storage Node Management</a>
+        <a href="{{COLLADMIN_ROOT}}/web/storeQueues.html">Manage Audit Queues and Audit Status</a>
+        <a href="{{COLLADMIN_HOME}}?path=instances">Merritt Servers</a>
+        <a href="{{COLLADMIN_HOME}}?path=ssm-describe">SSM Parameter Registry</a>
+      </div>
+    </div>
+    <div class="dropdown">
+      <button class="dropbtn">Search
+        <i class="fa fa-caret-down"></i>
+      </button>
+      <div class="dropdown-content">
+        <fieldset>
+          <legend>Go To Ark:</legend>
+          <form action="storeObjectNodes.html">
+            <input type="text" name="ark" value="" size="50" />
+            <input type='submit' />
+          </form>
+        </fieldset>
+        <a>Search for object by metadata</a>
+        <a href="{{ADMINTOOL_BASE}}/web/ark.html">Find Multiple Objects by ARK</a>
+        <a href="{{ADMINTOOL_BASE}}/web/localid.html">Find Multiple Objects by Local Id</a>
+        <a href="{{ADMINTOOL_BASE}}/web/doi.html">Find Multiple Objects by DOI</a>
+      </div>
+    </div>
+  </div>
+</header>
