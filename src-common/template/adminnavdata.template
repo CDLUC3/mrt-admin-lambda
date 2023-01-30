@@ -1,0 +1,6 @@
+<span class="breadpath breadpath_home">
+  <a href="{{ADMINTOOL_HOME}}">Admin Tool Home</a>
+</span>
+<span class="breadpath breadpath_node">
+  <a href="{{ADMINTOOL_HOME}}">...</a>
+</span>

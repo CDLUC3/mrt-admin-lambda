@@ -525,3 +525,6 @@ span.min3 {
   background-color: yellow;
 }
 
+span.breadpath::before {
+  content: "/";
+}
