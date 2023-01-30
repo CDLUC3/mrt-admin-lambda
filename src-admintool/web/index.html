@@ -24,8 +24,10 @@
         if (h) {
           if (h!='') {
             show_nav_section(h.replace('#', ''));
+            return;
           }
         } 
+        show_nav_section('.nav_section_default');
       }
       $(document).ready(nav_to_hash);
       $(window).on('hashchange', nav_to_hash);
@@ -48,6 +50,31 @@
     <div id="chartdiv">
       <canvas id="myChart"></canvas>
     </div>          
+
+    <div class="nav_section nav_section_default">
+      <h2>System Consistency</h2>
+      <ul>
+        <li><a href="{{ADMINTOOL_HOME}}?path=report">Consistency Reports <span id="consistency">...</span></a></li>
+      </ul>
+ 
+      <h2>Current Jobs</h2>
+      <ul>
+        <li><a href="{{COLLADMIN_HOME}}?path=ingest-queue-by-profile">Active Ingest Jobs</a></li>
+      </ul>
+
+      <h2>Object Management</h2>
+      <ul>
+        <li>
+          <fieldset>
+            <legend>Go To Ark:</legend>
+            <form action="storeObjectNodes.html">
+              <input type="text" name="ark" value="" size="50"/>
+              <input type='submit'/>
+            </form>
+            </fieldset>      
+        </li>
+      </ul>
+    </div>
 
     <div class="nav_section nav_campus">
       <h2>Campus Reports</h2>
@@ -122,7 +149,7 @@
     <div class="nav_section nav_objects">
       <h2>Objects Reports</h2>
     </div>
-    <div class="nav_section nav_objects_search">
+    <div class="nav_section nav_objects nav_objects_search">
       <h2>Metadata Queries: Objects</h2>
       <ul>
         <li class="objects">

@@ -5,10 +5,12 @@
         <i class="fa fa-caret-down"></i>
       </button>
       <div class="dropdown-content">
+        <a href="{{ADMINTOOL_HOME}}">🏠 Admin Home</a>
         <a><span class="{{RECENT}}">🏷️ {{VERTIME}}</span></a>
-        <a><span>👤 {{USERNAME}}: [{{GROUPS}}]; {{HASPERM}}</span></a>
+        <a><span title="[{{GROUPS}}]; {{HASPERM}}">👤 {{USERNAME}}</span></a>
         <a href="{{ADMINTOOL_BASE}}/web/describeReports.html">Admin Report Descriptions</a>
         <a href="{{COLLADMIN_ROOT}}/web/describeActions.html">Collection Admin Action Descriptions</a>
+        <a href="{{ADMINTOOL_HOME}}#.nav_section">Reveal All Links</a>
       </div>
     </div>
     <div class="dropdown">
@@ -16,7 +18,7 @@
         <i class="fa fa-caret-down"></i>
       </button>
       <div class="dropdown-content">
-        <a href="{{ADMINTOOL_HOME}}?path=report">Consistency Reports <span id="consistency">...</span></a>
+        <a href="{{ADMINTOOL_HOME}}?path=report">Consistency Reports</a>
         <a href="{{COLLADMIN_HOME}}?path=ingest-queue-by-profile">Active Ingest Jobs</a>
       </div>
     </div>
@@ -105,7 +107,7 @@
             <input type='submit' />
           </form>
         </fieldset>
-        <a>Search for object by metadata</a>
+        <a href="{{ADMINTOOL_HOME}}#.nav_objects_search">Search for object by metadata</a>
         <a href="{{ADMINTOOL_BASE}}/web/ark.html">Find Multiple Objects by ARK</a>
         <a href="{{ADMINTOOL_BASE}}/web/localid.html">Find Multiple Objects by Local Id</a>
         <a href="{{ADMINTOOL_BASE}}/web/doi.html">Find Multiple Objects by DOI</a>
