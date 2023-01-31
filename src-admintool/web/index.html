@@ -27,7 +27,9 @@
             return;
           }
         } 
-        show_nav_section('.nav_section_default');
+        if (document.location.search == "") {
+          show_nav_section('.nav_section_default');
+        }
       }
       $(document).ready(nav_to_hash);
       $(window).on('hashchange', nav_to_hash);
@@ -470,6 +472,7 @@
       </ul>
     </div>
 
+    </div>
     <div id="data" class="admin-tool">
       <div id="alternative">
         <ul style="display: none">
