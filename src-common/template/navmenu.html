@@ -6,11 +6,11 @@
       </button>
       <div class="dropdown-content">
         <a href="{{ADMINTOOL_HOME}}">🏠 Admin Home</a>
-        <a><span class="{{RECENT}}">🏷️ {{VERTIME}}</span></a>
-        <a><span title="[{{GROUPS}}]; {{HASPERM}}">👤 {{USERNAME}}</span></a>
-        <a href="{{ADMINTOOL_BASE}}/web/describeReports.html">Admin Report Descriptions</a>
-        <a href="{{COLLADMIN_ROOT}}/web/describeActions.html">Collection Admin Action Descriptions</a>
-        <a href="{{ADMINTOOL_HOME}}#.nav_section">Reveal All Links</a>
+        <a class="taginfo"><span class="{{RECENT}}">{{VERTIME}}</span></a>
+        <a class="userinfo"><span title="[{{GROUPS}}]; {{HASPERM}}">{{USERNAME}}</span></a>
+        <a class="helpinfo" href="{{ADMINTOOL_BASE}}/web/describeReports.html">Admin Report Descriptions</a>
+        <a class="helpinfo" href="{{COLLADMIN_ROOT}}/web/describeActions.html">Collection Admin Action Descriptions</a>
+        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_section">Reveal All Links</a>
       </div>
     </div>
     <div class="dropdown">
@@ -18,8 +18,8 @@
         <i class="fa fa-caret-down"></i>
       </button>
       <div class="dropdown-content">
-        <a href="{{ADMINTOOL_HOME}}?path=report">Consistency Reports</a>
-        <a href="{{COLLADMIN_HOME}}?path=ingest-queue-by-profile">Active Ingest Jobs</a>
+        <a class="graph" href="{{ADMINTOOL_HOME}}?path=report">Consistency Reports</a>
+        <a class="graph" href="{{COLLADMIN_HOME}}?path=ingest-queue-by-profile">Ingest Jobs by Profile</a>
       </div>
     </div>
     <div class="dropdown">
@@ -27,28 +27,28 @@
         <i class="fa fa-caret-down"></i>
       </button>
       <div class="dropdown-content">
-        <a href="{{ADMINTOOL_HOME}}#.nav_campus;.bp_campus">Campus</a>
-        <a href="{{ADMINTOOL_HOME}}#.nav_campus_collections;.bp_campus">Campus Collections</a>
-        <a href="{{ADMINTOOL_HOME}}#.nav_campus_content;.bp_campus">Campus Content</a>
-        <a href="{{ADMINTOOL_HOME}}#.nav_campus_invoices;.bp_campus">Campus Invoices</a>
-        <a href="{{ADMINTOOL_HOME}}#.nav_campus_owners;.bp_campus">Campus Owners</a>
-        <a href="{{ADMINTOOL_HOME}}#.nav_repo;.bp_repo">Repository Content</a>
-        <a href="{{ADMINTOOL_HOME}}#.nav_collections;.bp_coll">Collections</a>
-        <a href="{{ADMINTOOL_HOME}}#.nav_collections_counts;.bp_coll">Collections Counts</a>
-        <a href="{{ADMINTOOL_HOME}}#.nav_collections_activity;.bp_coll">Collections Activity</a>
-        <a href="{{ADMINTOOL_HOME}}#.nav_collections_details;.bp_coll">Collections Details</a>
-        <a href="{{ADMINTOOL_HOME}}#.nav_collections_content;.bp_coll">Collections Content</a>
-        <a href="{{ADMINTOOL_HOME}}#.nav_collections_locks;.bp_coll">Collections Locks</a>
-        <a href="{{ADMINTOOL_HOME}}#.nav_objects;.bp_obj">Objects</a>
-        <a href="{{ADMINTOOL_HOME}}#.nav_objects_compare;.bp_obj">Objects Compare</a>
-        <a href="{{ADMINTOOL_HOME}}#.nav_objects_files;.bp_obj">Objects Files</a>
-        <a href="{{ADMINTOOL_HOME}}#.nav_objects_issue_count;.bp_obj">Objects Issue Count</a>
-        <a href="{{ADMINTOOL_HOME}}#.nav_objects_issue_list;.bp_obj">Objects Issue List</a>
-        <a href="{{ADMINTOOL_HOME}}#.nav_objects_localid;.bp_obj">Objects Local Id</a>
-        <a href="{{ADMINTOOL_HOME}}#.nav_objects_versions;.bp_obj">Objects Versions</a>
-        <a href="{{ADMINTOOL_HOME}}#.nav_objects_special;.bp_obj">Objects Special Cases</a>
-        <a href="{{ADMINTOOL_HOME}}#.nav_merritt_internals;.bp_internals">Merritt Internals</a>
-        <a href="{{ADMINTOOL_HOME}}#.nav_merritt_users;.bp_users">Merritt User Accounts</a>
+        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_campus;.bp_campus">Campus</a>
+        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_campus_collections;.bp_campus">Campus Collections</a>
+        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_campus_content;.bp_campus">Campus Content</a>
+        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_campus_invoices;.bp_campus">Campus Invoices</a>
+        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_campus_owners;.bp_campus">Campus Owners</a>
+        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_repo;.bp_repo">Repository Content</a>
+        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_collections;.bp_coll">Collections</a>
+        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_collections_counts;.bp_coll">Collections Counts</a>
+        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_collections_activity;.bp_coll">Collections Activity</a>
+        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_collections_details;.bp_coll">Collections Details</a>
+        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_collections_content;.bp_coll">Collections Content</a>
+        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_collections_locks;.bp_coll">Collections Locks</a>
+        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_objects;.bp_obj">Objects</a>
+        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_objects_compare;.bp_obj">Objects Compare</a>
+        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_objects_files;.bp_obj">Objects Files</a>
+        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_objects_issue_count;.bp_obj">Objects Issue Count</a>
+        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_objects_issue_list;.bp_obj">Objects Issue List</a>
+        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_objects_localid;.bp_obj">Objects Local Id</a>
+        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_objects_versions;.bp_obj">Objects Versions</a>
+        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_objects_special;.bp_obj">Objects Special Cases</a>
+        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_merritt_internals;.bp_internals">Merritt Internals</a>
+        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_merritt_users;.bp_users">Merritt User Accounts</a>
       </div>
     </div>
     <div class="dropdown">
@@ -56,26 +56,26 @@
         <i class="fa fa-caret-down"></i>
       </button>
       <div class="dropdown-content">
-        <a href="{{ADMINTOOL_HOME}}#.nav_audit;.bp_audit">Audit</a>
-        <a href="{{ADMINTOOL_HOME}}#.nav_audit_activity;.bp_audit">Audit Activity</a>
-        <a href="{{ADMINTOOL_HOME}}#.nav_audit_performance;.bp_audit">Audit Performance</a>
-        <a href="{{ADMINTOOL_HOME}}#.nav_audit_status;.bp_audit">Audit Status</a>
-        <a href="{{ADMINTOOL_HOME}}#.nav_ingest;.bp_ingest">Ingest</a>
-        <a href="{{ADMINTOOL_HOME}}#.nav_ingest_activity;.bp_ingest">Ingest Activity</a>
-        <a href="{{ADMINTOOL_HOME}}#.nav_ingest_profiles;.bp_ingest">Ingest Profiles</a>
-        <a href="{{ADMINTOOL_HOME}}#.nav_ingest_counts;.bp_ingest">Ingest Counts</a>
-        <a href="{{ADMINTOOL_HOME}}#.nav_ingest_folders;.bp_ingest">Ingest Folders</a>
-        <a href="{{ADMINTOOL_HOME}}#.nav_inventory;.bp_inventory">Inventory</a>
-        <a href="{{ADMINTOOL_HOME}}#.nav_inventory_activity;.bp_inventory">Inventory Activity</a>
-        <a href="{{ADMINTOOL_HOME}}#.nav_replic;.bp_replic">Replic</a>
-        <a href="{{ADMINTOOL_HOME}}#.nav_replic_activity;.bp_replic"">Replic Activity</a>
-        <a href="{{ADMINTOOL_HOME}}#.nav_replic_performance;.bp_replic"">Replic Performance</a>
-        <a href="{{ADMINTOOL_HOME}}#.nav_replic_status;.bp_replic"">Replic Status</a>
-        <a href="{{ADMINTOOL_HOME}}#.nav_storage;.bp_storage">Storage</a>
-        <a href="{{ADMINTOOL_HOME}}#.nav_storage_config;.bp_storage">Storage Configuration</a>
-        <a href="{{ADMINTOOL_HOME}}#.nav_storage_content;.bp_storage">Storage Content</a>
-        <a href="{{ADMINTOOL_HOME}}#.nav_storage_profile;.bp_storage">Storage Profile</a>
-        <a href="{{ADMINTOOL_HOME}}#.nav_storage_queues;.bp_storage">Access Queues</a>
+        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_audit;.bp_audit">Audit</a>
+        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_audit_activity;.bp_audit">Audit Activity</a>
+        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_audit_performance;.bp_audit">Audit Performance</a>
+        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_audit_status;.bp_audit">Audit Status</a>
+        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_ingest;.bp_ingest">Ingest</a>
+        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_ingest_activity;.bp_ingest">Ingest Activity</a>
+        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_ingest_profiles;.bp_ingest">Ingest Profiles</a>
+        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_ingest_counts;.bp_ingest">Ingest Counts</a>
+        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_ingest_folders;.bp_ingest">Ingest Folders</a>
+        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_inventory;.bp_inventory">Inventory</a>
+        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_inventory_activity;.bp_inventory">Inventory Activity</a>
+        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_replic;.bp_replic">Replic</a>
+        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_replic_activity;.bp_replic">Replic Activity</a>
+        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_replic_performance;.bp_replic">Replic Performance</a>
+        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_replic_status;.bp_replic">Replic Status</a>
+        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_storage;.bp_storage">Storage</a>
+        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_storage_config;.bp_storage">Storage Configuration</a>
+        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_storage_content;.bp_storage">Storage Content</a>
+        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_storage_profile;.bp_storage">Storage Profile</a>
+        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_storage_queues;.bp_storage">Access Queues</a>
       </div>
     </div>
     <div class="dropdown">
@@ -83,14 +83,14 @@
         <i class="fa fa-caret-down"></i>
       </button>
       <div class="dropdown-content">
-        <a href="{{ADMINTOOL_HOME}}#.nav_manage_queues">Manage Queues</a>
-        <a href="{{COLLADMIN_ROOT}}/web/collProfile.html">Collection Creation</a>
-        <a href="{{ADMINTOOL_HOME}}#.nav_manage_coll">Manage Admin Objects</a>
-        <a href="{{COLLADMIN_ROOT}}/web/storeCollNodes.html">Manage Storage Nodes for a Collection</a>
-        <a href="{{COLLADMIN_ROOT}}/web/storeNodes.html">Storage Node Management</a>
-        <a href="{{COLLADMIN_ROOT}}/web/storeQueues.html">Manage Audit Queues and Audit Status</a>
-        <a href="{{ADMINTOOL_HOME}}?path=update_billing">Update Billing Database</a>
-        <a href="{{ADMINTOOL_HOME}}?path=update_billing&all-tables=Y">Update Billing Database (recalcuate yesterday's totals)</a>
+        <a class="config" href="{{ADMINTOOL_HOME}}#.nav_manage_queues">Manage Queues</a>
+        <a class="config" href="{{COLLADMIN_ROOT}}/web/collProfile.html">Collection Creation</a>
+        <a class="config" href="{{ADMINTOOL_HOME}}#.nav_manage_coll">Manage Admin Objects</a>
+        <a class="config" href="{{COLLADMIN_ROOT}}/web/storeCollNodes.html">Manage Storage Nodes for a Collection</a>
+        <a class="config" href="{{COLLADMIN_ROOT}}/web/storeNodes.html">Storage Node Management</a>
+        <a class="config" href="{{COLLADMIN_ROOT}}/web/storeQueues.html">Manage Audit Queues and Audit Status</a>
+        <a class="config" href="{{ADMINTOOL_HOME}}?path=update_billing">Update Billing Database</a>
+        <a class="config" href="{{ADMINTOOL_HOME}}?path=update_billing&all-tables=Y">Update Billing Database (recalcuate yesterday's totals)</a>
       </div>
     </div>
     <div class="dropdown">
@@ -98,12 +98,12 @@
         <i class="fa fa-caret-down"></i>
       </button>
       <div class="dropdown-content">
-        <a href="{{COLLADMIN_HOME}}?path=instances">Merritt Servers</a>
-        <a href="{{COLLADMIN_HOME}}?path=ssm-describe">SSM Parameter Registry</a>
+        <a class="config" href="{{COLLADMIN_HOME}}?path=instances">Merritt Servers</a>
+        <a class="config" href="{{COLLADMIN_HOME}}?path=ssm-describe">SSM Parameter Registry</a>
       </div>
     </div>
     <div class="dropdown">
-      <button class="dropbtn">Search
+      <button class="dropbtn search">Search
         <i class="fa fa-caret-down"></i>
       </button>
       <div class="dropdown-content">
@@ -114,10 +114,10 @@
             <input type='submit' />
           </form>
         </fieldset>
-        <a href="{{ADMINTOOL_HOME}}#.nav_objects_search">Search for object by metadata</a>
-        <a href="{{ADMINTOOL_BASE}}/web/ark.html">Find Multiple Objects by ARK</a>
-        <a href="{{ADMINTOOL_BASE}}/web/localid.html">Find Multiple Objects by Local Id</a>
-        <a href="{{ADMINTOOL_BASE}}/web/doi.html">Find Multiple Objects by DOI</a>
+        <a class="search" href="{{ADMINTOOL_HOME}}#.nav_objects_search">Search for object by metadata</a>
+        <a class="search" href="{{ADMINTOOL_BASE}}/web/ark.html">Find Multiple Objects by ARK</a>
+        <a class="search" href="{{ADMINTOOL_BASE}}/web/localid.html">Find Multiple Objects by Local Id</a>
+        <a class="search" href="{{ADMINTOOL_BASE}}/web/doi.html">Find Multiple Objects by DOI</a>
       </div>
     </div>
   </div>
