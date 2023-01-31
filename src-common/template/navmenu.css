@@ -1,10 +1,3 @@
-div.nav_section {
-        border: solid thin #77913B;
-        border-radius: 6px;
-        padding: 0px 4px;
-        margin: 5px;
-}
-
 .navbar {
         overflow: hidden;
         background-color: #F68D2E;
@@ -68,4 +61,16 @@ div.nav_section {
 
 .nav_section {
         display: none;
+}
+
+div.nav_section h2 {
+        border-bottom: solid #77913B 3px;
+}
+
+span.breadpath {
+        display: none;
+}
+
+span.breadpath.breadpath_home {
+        display: inline;
 }

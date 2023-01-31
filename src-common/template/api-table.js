@@ -813,7 +813,11 @@ function exportTable(rows) {
 }
 
 function show_nav_section(name) {
-  $(".nav_section").hide();
-  $('#menu').show();
-  $(name).show();
+  var arr = name.split(";");
+  var bread = arr.length > 1 ? arr[1] : "";
+  var sec = arr.length > 0 ? arr[0] : "";
+  $(".nav_section, .breadpath").hide();
+  $('#menu, .breadpath_home').show();
+  $(sec).show();
+  $(bread).show();
 }

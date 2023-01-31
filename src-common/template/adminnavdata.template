@@ -1,6 +1,42 @@
 <span class="breadpath breadpath_home">
   <a href="{{ADMINTOOL_HOME}}">Admin Tool Home</a>
 </span>
-<span class="breadpath breadpath_node">
-  <a href="{{ADMINTOOL_HOME}}">...</a>
+<span class="breadpath bp_campus bp_repo bp_coll bp_obj bp_internals bp_users">
+  <a>Reports</a>
+</span>
+<span class="breadpath bp_campus">
+  <a href="{{ADMINTOOL_HOME}}#.nav_campus;.bp_campus">Campus</a>
+</span>
+<span class="breadpath bp_repo">
+  <a href="{{ADMINTOOL_HOME}}#.nav_repo;.bp_repo">Repository Content</a>
+</span>
+<span class="breadpath bp_coll">
+  <a href="{{ADMINTOOL_HOME}}#.nav_collections;.bp_coll">Collections</a>
+</span>
+<span class="breadpath bp_obj">
+  <a href="{{ADMINTOOL_HOME}}#.nav_objects;.bp_obj">Objects</a>
+</span>
+<span class="breadpath bp_internals">
+  <a href="{{ADMINTOOL_HOME}}#.nav_merritt_internals;.bp_internals">Merritt Internals</a>
+</span>
+<span class="breadpath bp_users">
+  <a href="{{ADMINTOOL_HOME}}#.nav_merritt_users;.bp_users">Merritt Users</a>
+</span>
+<span class="breadpath bp_audit bp_storage bp_ingest bp_replic bp_inventory">
+  <a>Microservices</a>
+</span>
+<span class="breadpath bp_audit">
+  <a href="{{ADMINTOOL_HOME}}#.nav_audit;.bp_audit">Audit</a>
+</span>
+<span class="breadpath bp_ingest">
+  <a href="{{ADMINTOOL_HOME}}#.nav_ingest;.bp_ingest">Ingest</a>
+</span>
+<span class="breadpath bp_inventory">
+  <a href="{{ADMINTOOL_HOME}}#.nav_inventory;.bp_inventory">Inventory</a>
+</span>
+<span class="breadpath bp_replic">
+  <a href="{{ADMINTOOL_HOME}}#.nav_replic;.bp_replic">Replic</a>
+</span>
+<span class="breadpath bp_storage">
+  <a href="{{ADMINTOOL_HOME}}#.nav_storage;.bp_storage">Storage</a>
 </span>

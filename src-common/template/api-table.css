@@ -517,12 +517,12 @@ li.review::before {
   content: "☑ ";
 }
 
-span.min1 {
-  background-color: red;
+span.min1::before {
+  content: "(2m) ";
 }
 
-span.min3 {
-  background-color: yellow;
+span.min3::before {
+  content: "(4m) ";
 }
 
 span.breadpath::before {
