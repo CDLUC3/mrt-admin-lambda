@@ -186,8 +186,8 @@ class LambdaBase
     if path =~ %r[^/web/.*\.html]
       map = default_template_parameters
       map['BUTTONS'] = File.open("template/buttons.template").read
-      map['ADMINNAVDATA'] = Mustache.render(File.open("template/adminnavdata.template").read, map)
-      map['ADMINNAV'] = Mustache.render(File.open("template/adminnav.template").read, map)
+      map['ADMINNAVDATA'] = Mustache.render(File.open("template/adminnavdata.html").read, map)
+      map['ADMINNAV'] = Mustache.render(File.open("template/adminnav.html").read, map)
       map['APITABLE_CSS'] = Mustache.render(File.open("template/api-table.css").read, map)
       map['APITABLE_JS'] = Mustache.render(File.open("template/api-table.js").read, map)
       map['NAVMENU_CSS'] = Mustache.render(File.open("template/navmenu.css").read, map)
