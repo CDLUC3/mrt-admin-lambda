@@ -549,8 +549,8 @@ span.min3::before {
   content: "(4m) ";
 }
 
-span.breadpath::before {
-  content: "/";
+span.breadpath:not(:empty)::before {
+  content: "/ ";
 }
 
 button.taginfo::before,
