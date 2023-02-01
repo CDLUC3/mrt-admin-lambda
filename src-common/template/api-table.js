@@ -164,6 +164,14 @@ function processResult(data) {
         data.chart
       );
     }
+
+    if (data.breadcrumb) {
+      if (data.breadcrumb != '') {
+        $(".breadpath").hide();
+        $('.breadpath_home').show();
+        $("." + data.breadcrumb).show();
+      }
+    }
   } else {
     document.body.innerHTML = JSON.stringify(data);
   }

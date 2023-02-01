@@ -18,6 +18,10 @@ class AdminQuery < AdminTask
     @report_def.fetch('description', '')
   end
 
+  def get_breadcrumb
+    @report_def.fetch('breadcrumb', '')
+  end
+
   def get_title
     "Merritt Admin Query"
   end
@@ -122,6 +126,7 @@ class AdminQuery < AdminTask
       report = {
         format: 'report',
         title: get_title_with_pagination,
+        breadcrumb: get_breadcrumb,
         headers: headers,
         types: types,
         data: data,

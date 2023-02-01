@@ -40,6 +40,7 @@ profiles:
   link-title: List Ingest Profiles (deployed on the Ingest Server)
   nav:
     path: /home/microservice/ingest/profiles
+  breadcrumb: bp_ingest
   class: IngestProfileAction
   category: Ingest Profiles
   sensitivity: readonly
@@ -57,6 +58,7 @@ collection-locks:
   link-title: List Merritt Collections and Collection Level Locks
   nav:
     path: /home/collections/locks
+  breadcrumb: bp_coll
   class: IngestCollectionLocksAction
   category: Ingest Profiles
   sensitivity: readonly
@@ -76,6 +78,7 @@ adminprofiles:
   link-title: List Merritt Admin Profiles
   nav:
     path: /home/microservice/ingest/admin-profiles
+  breadcrumb: bp_ingest
   class: AdminProfileAction
   category: Ingest Admin Profiles
   sensitivity: readonly
@@ -93,6 +96,7 @@ state:
   link-title: Ingest Service Status
   nav:
     path: /home/microservice/ingest/status
+  breadcrumb: bp_ingest
   class: IngestStateAction
   category: Queue Management
   sensitivity: readonly
@@ -105,6 +109,7 @@ queues:
   link-title: Ingest Queue Jobs
   nav:
     path: /home/microservice/ingest/activity
+  breadcrumb: bp_ingest
   class: IngestQueueAction
   category: Queue Management
   sensitivity: readonly
@@ -123,6 +128,7 @@ ingest-queue-by-profile:
   link-title: Ingest Queue Activity by Profile
   nav:
     path: /home/microservice/ingest/activity
+  breadcrumb: bp_ingest
   class: IngestQueueProfileCountAction
   category: Queue Management
   sensitivity: readonly
@@ -136,6 +142,7 @@ inv-queues:
   link-title: Inventory Queue Jobs
   nav:
     path: /home/microservice/inventory/activity
+  breadcrumb: bp_inventory
   class: InventoryQueueAction
   category: Queue Management
   sensitivity: readonly
@@ -150,6 +157,7 @@ acc-queues:
   link-title: Access Queue Jobs
   nav:
     path: /home/microservice/access/activity
+  breadcrumb: bp_storage
   class: AccessQueueAction
   category: Queue Management
   sensitivity: readonly
@@ -167,6 +175,7 @@ batchFolders:
   link-title: Ingest Batch Folders
   nav:
     path: /home/microservice/ingest/folders
+  breadcrumb: bp_ingest
   class: IngestBatchFoldersAction
   category: Ingest Batches and Folders
   sensitivity: readonly
@@ -188,6 +197,7 @@ batch:
   link-title: Ingest Batch
   nav:
     path: /home/microservice/ingest/activity
+  breadcrumb: bp_ingest
   class: IngestBatchAction
   category: Ingest Batches and Folders
   sensitivity: readonly
@@ -204,6 +214,7 @@ job:
   link-title: Ingest Job
   nav:
     path: /home/microservice/ingest/activity
+  breadcrumb: bp_ingest
   class: IngestJobMetadataAction
   category: Ingest Batches and Folders
   sensitivity: readonly
@@ -216,6 +227,7 @@ manifest:
   link-title: Ingest Job Manifest Contents
   nav:
     path: /home/microservice/ingest/activity
+  breadcrumb: bp_ingest
   class: IngestJobManifestAction
   category: Ingest Batches and Folders
   sensitivity: readonly
@@ -230,6 +242,7 @@ files:
   link-title: Ingest Job Folder File List
   nav:
     path: /home/microservice/ingest/folders
+  breadcrumb: bp_ingest
   class: IngestJobFilesAction
   category: Ingest Batches and Folders
   sensitivity: readonly
@@ -245,6 +258,7 @@ sword:
   link-title: Dryad Recent Jobs
   nav:
     path: /home/microservice/ingest/activity
+  breadcrumb: bp_ingest
   class: IngestSwordJobsAction
   category: Ingest Batches and Folders
   sensitivity: readonly
@@ -258,6 +272,7 @@ ldap/users:
   link-title: List Merritt LDAP Users
   nav:
     path: /home/user-accounts/ldap/users
+  breadcrumb: bp_users
   class: LDAPActionUsers
   category: LDAP
   sensitivity: readonly
@@ -270,6 +285,7 @@ ldap/user:
   link-title: List details for an Merritt LDAP User
   nav:
     path: /home/user-accounts/ldap/users
+  breadcrumb: bp_users
   class: LDAPActionUserDetailed
   category: LDAP
   sensitivity: readonly
@@ -286,6 +302,7 @@ ldap/roles:
   link-title: List Merritt LDAP Roles
   nav:
     path: /home/user-accounts/ldap/roles
+  breadcrumb: bp_users
   class: LDAPActionRoles
   category: LDAP
   sensitivity: readonly
@@ -298,6 +315,7 @@ ldap/role:
   link-title: List details for an Merritt LDAP Role
   nav:
     path: /home/user-accounts/ldap/roles
+  breadcrumb: bp_users
   class: LDAPAction
   category: LDAP
   sensitivity: readonly
@@ -311,6 +329,7 @@ ldap/colls:
   link-title: List Merritt LDAP Collections
   nav:
     path: /home/user-accounts/ldap/collections
+  breadcrumb: bp_users
   class: LDAPActionColls
   category: LDAP
   sensitivity: readonly
@@ -324,6 +343,7 @@ ldap/coll:
   link-title: List Details for an LDAP Collection
   nav:
     path: /home/user-accounts/ldap/collections
+  breadcrumb: bp_users
   class: LDAPActionCollDetailed
   category: LDAP
   sensitivity: readonly
@@ -340,6 +360,7 @@ ldap/collmap:
   link-title: Merritt LDAP / Inventory Database Mismatches
   nav:
     path: /home/user-accounts/ldap/issue-list
+  breadcrumb: bp_users
   class: LDAPActionCollmap
   category: LDAP
   sensitivity: readonly
@@ -353,6 +374,7 @@ ldap/collark:
   link-title: List LDAP Users for a specific collection ARK
   nav:
     path: /home/user-accounts/ldap/collections
+  breadcrumb: bp_users
   class: LDAPActionCollArk
   category: LDAP
   sensitivity: readonly
@@ -367,6 +389,7 @@ instances:
   link-title: List and Describe Merritt EC2 Servers
   nav:
     path: /home/merritt-internal/servers
+  breadcrumb: bp_internals
   class: TagAction
   category: Dev Ops
   sensitivity: readonly
@@ -386,6 +409,7 @@ ssm-describe:
   link-title: List and Describe Merritt SSM Variables
   nav:
     path: /home/merritt-internal/ssm-variables
+  breadcrumb: bp_internals
   class: SsmDescribeAction
   category: Dev Ops
   sensitivity: readonly
@@ -446,6 +470,7 @@ cognito-users:
   link-title: List Merritt Admin Tools Users
   nav:
     path: /home/merritt-internal/users
+  breadcrumb: bp_users
   class: CognitoAction
   category: Cognito
   sensitivity: readonly
@@ -462,6 +487,7 @@ replication-state:
   link-title: Display the Status of the Replciation Microservice
   nav:
     path: /home/microservice/replic/status
+  breadcrumb: bp_replic
   class: ReplicationAction
   category: Dev Ops
   sensitivity: readonly
@@ -491,6 +517,7 @@ ingest-locks:
   link-title: Display ingest storage locks on specific object arks
   nav:
     path: /home/merritt-internal/object-locks
+  breadcrumb: bp_internals
   class: IngestLockAction
   category: Lock Management
   sensitivity: readonly
@@ -506,6 +533,7 @@ submissions/pause:
   link-title: Pause all ingest processing
   nav:
     path: /home/microservice/ingest/pause
+  breadcrumb: bp_ingest
   class: PostToIngestAction
   params: ["admin/submissions/freeze"]
   category: Queue Management
@@ -520,6 +548,7 @@ submissions/unpause:
   link-title: Unpause all ingest processing
   nav:
     path: /home/microservice/ingest/unpause
+  breadcrumb: bp_ingest
   class: PostToIngestAction
   params: ["admin/submissions/thaw"]
   category: Queue Management

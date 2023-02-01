@@ -102,6 +102,7 @@ module LambdaFunctions
           report: k,
           title: rpt.fetch('link-title', '--'), 
           path: rpt.fetch('nav', {}).fetch('path', '--'), 
+          breadcrumb: rpt.fetch('breadcrumb', ''), 
           class: rpt.fetch('class', 'Undefied'), 
           category: rpt.fetch('category', ''), 
           description: rpt.fetch('description', ''), 

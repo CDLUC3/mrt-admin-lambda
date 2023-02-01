@@ -22,6 +22,7 @@ class AdminAction < AdminTask
     report = {
       format: 'report',
       title: get_title_with_pagination,
+      breadcrumb: get_breadcrumb,
       headers: table_headers,
       types: table_types,
       data: data,
@@ -43,6 +44,10 @@ class AdminAction < AdminTask
 
   def get_description
     @action_def.fetch('description', '')
+  end
+
+  def get_breadcrumb
+    @action_def.fetch('breadcrumb', '')
   end
 
   def table_headers

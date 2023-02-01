@@ -334,6 +334,7 @@ module LambdaFunctions
           action: k,
           title: act.fetch('link-title', '--'), 
           path: act.fetch('nav', {}).fetch('path', ''), 
+          breadcrumb: act.fetch('breadcrumb', ''), 
           class: act.fetch('class', 'Undefied'), 
           description: act.fetch('description', ''), 
           description_doc: description_doc(act),

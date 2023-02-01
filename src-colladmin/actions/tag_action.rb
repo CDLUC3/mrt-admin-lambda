@@ -227,6 +227,7 @@ class TagAction < AdminAction
     {
       format: 'report',
       title: get_title_with_pagination,
+      breadcrumb: get_breadcrumb,
       headers: table_headers,
       types: table_types,
       data: get_table_rows,
