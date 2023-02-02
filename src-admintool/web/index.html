@@ -71,7 +71,7 @@
         <li>
           <fieldset>
             <legend>Go To Ark:</legend>
-            <form action="storeObjectNodes.html">
+            <form action="{{COLLADMIN_ROOT}}/web/storeObjectNodes.html">
               <input type="text" name="ark" value="" size="50"/>
               <input type='submit'/>
             </form>
@@ -157,7 +157,22 @@
       <h2>Objects Reports</h2>
     </div>
 
-    <div class="nav_section nav_objects nav_objects_search">
+    <div class="nav_section nav_objects nav_search nav_search_ark">
+      <h3>Search for a specific object</h3>
+      <ul>
+        <li>
+          <fieldset>
+            <legend>Go To Ark:</legend>
+            <form action="{{COLLADMIN_ROOT}}/web/storeObjectNodes.html">
+              <input type="text" name="ark" value="" size="50"/>
+              <input type='submit'/>
+            </form>
+            </fieldset>      
+        </li>
+      </ul>
+    </div>
+
+    <div class="nav_section nav_objects nav_search nav_search_metadata">
       <h3>Metadata Queries: Objects</h3>
       <ul>
         <li class="objects">
