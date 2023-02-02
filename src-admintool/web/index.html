@@ -158,13 +158,28 @@
     </div>
 
     <div class="nav_section nav_objects nav_search nav_search_ark">
-      <h3>Search for a specific object</h3>
+      <h3>Search for a specific object by ARK</h3>
       <ul>
         <li>
           <fieldset>
             <legend>Go To Ark:</legend>
             <form action="{{COLLADMIN_ROOT}}/web/storeObjectNodes.html">
               <input type="text" name="ark" value="" size="50"/>
+              <input type='submit'/>
+            </form>
+            </fieldset>      
+        </li>
+      </ul>
+    </div>
+
+    <div class="nav_section nav_objects nav_search nav_search_id">
+      <h3>Search for a specific object by Object Id</h3>
+      <ul>
+        <li>
+          <fieldset>
+            <legend>Go To Object Id:</legend>
+            <form action="{{COLLADMIN_ROOT}}/web/storeObjectNodes.html">
+              <input type="text" name="id" value="" size="50"/>
               <input type='submit'/>
             </form>
             </fieldset>      
