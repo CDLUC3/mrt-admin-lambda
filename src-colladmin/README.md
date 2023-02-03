@@ -19,6 +19,8 @@
   - Ingest
     - GET admin/queues
     - GET admin/queue/*QueueName*
+- Clean queues of completed|deleted states
+    - POST admin/cleanupq/*QueueName*
 - Display Ingest Locks
   - Ingest
     - GET admin/locks
@@ -110,6 +112,8 @@ Ingest Admin APIs
 - POST /admin/release/<queue>/<entry>   - Release held job
 - POST /admin/hold/<queue>/<entry>   	- Hold job
 - POST /admin/release-all/<queue>/<profile>   	- Release all held entries of a collection
+
+- POST /admin/cleanupq/<queue>  - Clean queue of completed and deleted states
 
 - POST /admin/profile/<profile|collection|owner|sla> - Create Ingest submission profiles
 
