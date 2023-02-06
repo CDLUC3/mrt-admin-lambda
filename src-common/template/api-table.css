@@ -403,6 +403,7 @@ span.navlabel {
   color: red;
 }
 
+a.coll::before,
 td.ogroup:not(:empty)::before,
 td.coll:not(:empty)::before,
 td.mime:not(:empty)::before,
@@ -410,38 +411,45 @@ td.gmime:not(:empty)::before {
   content: "🎨 ";
 }
 
+a.mnemonic::before,
 td.mnemonic:not(:empty)::before,
 td.ark:not(:empty)::before {
   content: "🖼 ";
 }
 
+a.node::before,
 li.node::before,
 td.node:not(:empty)::before {
   content: "🗄 ";
 }
 
+a.campus::before,
 li.campus::before,
 td.own:not(:empty)::before {
   content: "🏫 ";
 }
 
+a.collinfo::before,
 div.collinfo::before,
 li.coll::before,
 td.colllist:not(:empty)::before {
   content: "🧺 ";
 }
 
+a.coll-date::before,
 li.coll-date::before,
 td.coll-date:not(:empty)::before {
   content: "⌛ ";
 }
 
+a.files::before,
 li.files::before,
 td.files::before,
 td.objlist:not(:empty)::before{
   content: "📑 ";
 }
 
+a.objects::before,
 li.objects::before,
 td.aggrole:not(:empty)::before,
 td.astatus:not(:empty)::before,
@@ -453,6 +461,7 @@ td.batch:not(:empty)::before {
   content: "📚 ";
 }
 
+a.batches::before,
 li.batches::before,
 td.fprofile:not(:empty)::before,
 td.fstatus:not(:empty)::before,
@@ -460,12 +469,14 @@ td.fprofilestatus:not(:empty)::before {
   content: "🔵 ";
 }
 
+a.job::before,
 li.job::before,
 td.qbatch:not(:empty)::before,
 td.qbatchnote:not(:empty)::before {
   content: "🔷 ";
 }
 
+a.config::before,
 li.config::before,
 td.config:not(:empty)::before,
 td.snodes:not(:empty)::before,
@@ -473,37 +484,49 @@ td.collnode:not(:empty)::before {
   content: "⚙ ";
 }
 
+a.ldapuid::before,
 li.ldapuid::before,
 td.ldapark:not(:empty)::before,
 td.ldapuid:not(:empty)::before {
   content: "🆔 ";
 }
+
+a.ldapcoll::before,
 li.ldapcoll::before,
 td.ldapcoll:not(:empty)::before {
   content: "🟣 ";
 }
+
+a.ldaprole::before,
 li.ldaprole::before,
 td.ldapuidlist:not(:empty)::before {
   content: "🟪 ";
 }
 
+a.jobmeta::before,
 li.jobmeta::before,
 td.qjob:not(:empty)::before {
   content: "🗂 ";
 }
+
+a.profile::before,
 li.profile::before,
 td.profile:not(:empty)::before {
   content: "🏷 ";
 }
+
+a.report::before,
 li.report::before,
 td.report:not(:empty)::before {
   content: "🧪 ";
 }
 
+a.graph::before,
 li.graph::before {
   content: "📈 ";
 }
 
+a.rerun::before,
 li.rerun::before {
   content: "🔄 ";
 }
@@ -512,16 +535,51 @@ li form {
   display: inline;
 }
 
+a.scanreview::before,
 button.scanreview::before,
 li.review::before {
   content: "☑ ";
 }
 
-span.min1 {
-  background-color: red;
+span.min1::before {
+  content: "(2m) ";
 }
 
-span.min3 {
-  background-color: yellow;
+span.min3::before {
+  content: "(4m) ";
 }
 
+span.breadpath:not(:empty)::before {
+  content: "/ ";
+}
+
+button.taginfo::before,
+a.taginfo::before,
+li.taginfo::before {
+  content: "🪪 ";
+}
+
+button.reveal::before,
+a.reveal::before,
+li.reveal::before {
+  content: "🔦 ";
+}
+
+button.helpinfo::before,
+a.helpinfo::before,
+li.helpinfo::before {
+  content: "❓ ";
+}
+
+button.search::before,
+a.search::before,
+li.search::before {
+  content: "🔍 ";
+}
+
+button.userinfo::before,
+a.userinfo::before,
+li.userinfo::before {
+  content: "👤 ";
+}
+ 

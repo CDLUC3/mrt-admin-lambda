@@ -6,6 +6,7 @@
     <link rel="stylesheet" type="text/css" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.css"></link>
     <style type="text/css">
     {{{APITABLE_CSS}}}
+    {{{NAVMENU_CSS}}}
     </style>
     <script type="text/javascript">
     {{{LAMBDABASE_JS}}}
@@ -23,25 +24,26 @@
           var md = $(markdown($(this).text()));
           $(this).text("").append(md);
         });
+        $(".bp_sysinfo").show();
+        $(".bp_title").text("Admin Report Index - Merritt");
       });
     </script>
     <title>Admin Report Index - Merritt</title>
   </head>
   <body>
+    {{{NAVMENU}}}
     <h1>Admin Report Index - Merritt</h1>
     {{{ADMINNAV}}}
     <div>
       <table class="sortable results">
         <thead>
           <tr>
-            <th class="name">Navigation</th>
             <th class="description">Description</th>
           </tr>
         </thead>
         <tbody>
           {{#REPORTS}}
           <tr>
-            <td class="name">{{path}}</td>
             <td class="description">
               <h3>{{title}} (<span class="navlabel">{{report}}</span>)</h3>
               <div class="markdown">{{description_doc}}</div>

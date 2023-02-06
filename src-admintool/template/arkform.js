@@ -15,6 +15,8 @@ function init() {
   $("#parse").on("click", function(){
     parse();
   });
+  $(".bp_search").show();
+  $(".bp_title").text($("h1").text()).show();
 }
 
 window.onpageshow = function(event) {

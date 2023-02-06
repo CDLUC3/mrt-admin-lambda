@@ -164,6 +164,15 @@ function processResult(data) {
         data.chart
       );
     }
+
+    if (data.breadcrumb) {
+      if (data.breadcrumb != '') {
+        $(".breadpath").hide();
+        $('.breadpath_home').show();
+        $("." + data.breadcrumb).show();
+        $(".bp_title").text(data.title).show();
+      }
+    }
   } else {
     document.body.innerHTML = JSON.stringify(data);
   }
@@ -810,4 +819,16 @@ var Report = function() {
 function exportTable(rows) {
   var ReportObj = new Report();
   ReportObj.export(rows);
+}
+
+function show_nav_section(name) {
+  var arr = name.split(";");
+  var title = arr.length > 2 ? decodeURIComponent(arr[2]) : "";
+  var bread = arr.length > 1 ? arr[1] : "";
+  var sec = arr.length > 0 ? arr[0] : "";
+  $(".nav_section, .breadpath").hide();
+  $('#menu, .breadpath_home').show();
+  $(sec).show();
+  $(bread).show();
+  $(".bp_title").text(title).show();
 }

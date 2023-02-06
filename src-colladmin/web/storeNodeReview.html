@@ -7,6 +7,7 @@
     <link rel="stylesheet" type="text/css" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.css"></link>
     <style type="text/css">
     {{{APITABLE_CSS}}}
+    {{{NAVMENU_CSS}}}
     </style>
     <script type="text/javascript">
     {{{COLL_LAMBDABASE_JS}}}
@@ -22,10 +23,11 @@
     <title>Review Storage Node with Status {{maint_status}} for {{nodenum}}: Scan {{scanid}}</title>
   </head>
   <body>
+    {{{NAVMENU}}}
     <div class="form-body">
     <h1>Review Storage Node with Status {{maint_status}} for {{nodenum}}<span class="scan-{{scanid}}">: Scan {{scanid}}</span></h1>
     <p>
-    {{{COLLADMINNAV2}}}
+    {{{ADMINNAVDATA}}}
     <span> / </span>
     <a href='/web/storeNodes.html'>Storage Nodes</a>
     <span> / </span>

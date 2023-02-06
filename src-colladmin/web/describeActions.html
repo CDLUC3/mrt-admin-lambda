@@ -6,6 +6,7 @@
     <link rel="stylesheet" type="text/css" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.css"></link>
     <style type="text/css">
     {{{APITABLE_CSS}}}
+    {{{NAVMENU_CSS}}}
     </style>
     <script type="text/javascript">
     {{{COLL_LAMBDABASE_JS}}}
@@ -23,15 +24,18 @@
           var md = $(markdown($(this).text()));
           $(this).text("").append(md);
         });
+        $(".bp_sysinfo").show();
+        $(".bp_title").text("ollection Admin Action Descriptions");
       });
     </script>
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
-    <title>Collection Admin Actions</title>
+    <title>Collection Admin Action Descriptionss</title>
   </head>
   <body>
+    {{{NAVMENU}}}
     <div class="form-body">
     <h1>Collection Admin Actions</h1>
-    {{{COLLADMINNAV}}}
+    {{{ADMINNAV}}}
 
     <h2>Action Index</h2>
     <div class="page-description">
@@ -43,14 +47,12 @@
     <table class="sortable results">
       <thead>
         <tr>
-          <th class="name">Navigation</th>
           <th class="description">Description</th>
         </tr>
       </thead>
       <tbody>
         {{#ACTIONS}}
         <tr>
-          <th class="name">{{path}}</th>
           <td class="description">
             <h3>{{title}} (<span class="navlabel">{{action}}</span>)</h3>
             <div class="markdown">{{description_doc}}</div>

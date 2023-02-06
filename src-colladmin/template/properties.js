@@ -49,6 +49,8 @@ $(".create_coll_record").on("click", function(){
 });
 $("p.buttons").show();
 showCounts();
+$(".bp_colladmin").show();
+$(".bp_title").text($("h1").text()).show();
 }
 
 function do_action(formdata) {

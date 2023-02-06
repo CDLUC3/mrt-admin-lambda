@@ -9,14 +9,9 @@
 #   documentation: |
 #     technical documentation
 #   link-title: link title
-#   nav:
-#     path: navigation path
-#     conditional:
-#       param: navigation path with qualifying param
 owners:
   link-title: File Counts by Owners
-  nav:
-    path: /home/campus/owners
+  breadcrumb: bp_campus
   class: OwnerQuery
   category: collections
   description: |
@@ -24,8 +19,7 @@ owners:
     A [view in the Merritt Billing database](https://github.com/CDLUC3/mrt-admin-lambda/blob/main/merrit-billing/views.sql) helps to group each of the collection objects by campus. 
 collections:
   link-title: File Counts by Collection
-  nav:
-    path: /home/campus/collections
+  breadcrumb: bp_campus
   class: CollectionQuery
   category: collections
   description: |
@@ -33,8 +27,7 @@ collections:
     A [view in the Merritt Billing database](https://github.com/CDLUC3/mrt-admin-lambda/blob/main/merrit-billing/views.sql) helps to group each of the collection objects by campus. 
 mimes:
   link-title: Mime Groups
-  nav:
-    path: /home/repository-content/mimes
+  breadcrumb: bp_repo
   class: MimeQuery 
   category: mime types
   description: |
@@ -42,8 +35,7 @@ mimes:
     A [view in the Merritt Billing database](https://github.com/CDLUC3/mrt-admin-lambda/blob/main/merrit-billing/views.sql) created the Mime Group organization based on Mime Type strings. 
 collnodes:
   link-title: Primary and Secondary Storage Nodes for a Collection
-  nav:
-    path: /home/microservice/storage/configuration
+  breadcrumb: bp_storage
   class: CollectionNodesQuery
   category: storage nodes
   description: |
@@ -53,8 +45,7 @@ collnodes:
     #### Deprecated: This report has been superseded by the collection admin report *Manage Storage Nodes for a Collection*.
 nodes:
   link-title: Storage Nodes
-  nav:
-    path: /home/microservice/storage/configuration
+  breadcrumb: bp_storage
   class: NodesQuery
   category: storage nodes
   description: |
@@ -64,8 +55,7 @@ nodes:
     Click the **Filter Data** button to remove empty nodes from the report.
 objects_by_ark:
   link-title: Objects by Ark Query
-  nav:
-    path: /home/objects/query
+  breadcrumb: bp_obj
   class: ObjectsByArkQuery
   category: objects
   description: |
@@ -78,8 +68,7 @@ objects_by_ark:
     A more feature rich version of this report is available in the Collection Admin Tool report **Manage Object Storage**. 
 objects_by_title:
   link-title: Objects by Title Query
-  nav:
-    path: /home/objects/query
+  breadcrumb: bp_obj
   class: ObjectsByTitleQuery
   category: objects
   description: |
@@ -88,8 +77,7 @@ objects_by_title:
     Click the Object Id link to see a detailed listing of the files contained in the object.
 objects_by_local_id:
   link-title: Objects by Local Id Query
-  nav:
-    path: /home/objects/query
+  breadcrumb: bp_obj
   class: ObjectsByLocalIdQuery
   category: objects
   description: |
@@ -99,8 +87,7 @@ objects_by_local_id:
     Click the Object Id link to see a detailed listing of the files contained in the object.
 objects_by_container_name:
   link-title: Objects by Ingest Container Name Query
-  nav:
-    path: /home/objects/query
+  breadcrumb: bp_obj
   class: ObjectsByContainerNameQuery
   category: objects
   description: |
@@ -109,8 +96,7 @@ objects_by_container_name:
   - container
 objects_by_author:
   link-title: Objects by Author/Creator Query
-  nav:
-    path: /home/objects/query
+  breadcrumb: bp_obj
   class: ObjectsByAuthorQuery
   category: objects
   description: |
@@ -119,8 +105,7 @@ objects_by_author:
     Click the Object Id link to see a detailed listing of the files contained in the object.
 objects_large:
   link-title: Sample Objects Larger than 1GB
-  nav:
-    path: /home/objects/issue-list
+  breadcrumb: bp_obj
   class: ObjectsLargeQuery
   category: objects
   description: |
@@ -129,8 +114,7 @@ objects_large:
     The intention of this report is to identify objects that might be useful for performance related testing.
 objects_many_files:
   link-title: Sample Objects containing more than 1000 files
-  nav:
-    path: /home/objects/issue-list
+  breadcrumb: bp_obj
   class: ObjectsManyFilesQuery
   category: objects
   description: |
@@ -139,8 +123,7 @@ objects_many_files:
     The intention of this report is to identify objects that might be useful for performance related testing.
 objects_recent:
   link-title: Last ingest performed for each Merritt Collection
-  nav:
-    path: /home/microservice/ingest/activity
+  breadcrumb: bp_ingest
   class: ObjectsRecentQuery
   category: objects
   description: |
@@ -148,8 +131,7 @@ objects_recent:
     Results are sorted from collection most recently updated to least recently updated.
 objects_recent_coll:
   link-title: Objects Most Recently Ingested for a Specific Collection
-  nav:
-    path: /home/microservice/ingest/activity
+  breadcrumb: bp_ingest
   class: ObjectsRecentCollQuery
   category: objects
   description: |
@@ -159,8 +141,7 @@ objects_recent_coll:
   - coll-date
 objects_by_batch:
   link-title: Objects Ingested from an Ingest Batch
-  nav:
-    path: /home/objects/issue-list
+  breadcrumb: bp_obj
   class: ObjectsByBatchQuery
   category: objects
   description: |
@@ -171,8 +152,7 @@ objects_by_batch:
   - batchnote
 objects_by_job:
   link-title: Objects Ingested from an Ingest Job
-  nav:
-    path: /home/objects/issue-list
+  breadcrumb: bp_obj
   class: ObjectsByJobQuery
   category: objects
   description: |
@@ -183,8 +163,7 @@ objects_by_job:
   - jobnote
 files_by_name_coll:
   link-title: Objects cotnaining Files matching a particluar filename
-  nav:
-    path: /home/objects/files/query
+  breadcrumb: bp_obj
   class: FilesByNameCollQuery
   category: files
   description: |
@@ -194,16 +173,14 @@ files_by_name_coll:
     Click the Object Id link to see a detailed listing of the files contained in the object.
 filesize:
   link-title: File Size Averages
-  nav:
-    path: /home/repository-content/size
+  breadcrumb: bp_repo
   class: FilesizeQuery
   category: files
   description: |
     Generate a report on producer files size max/min/average within Merritt.
 filesizedist:
   link-title: File Size Distribution
-  nav:
-    path: /home/repository-content/size
+  breadcrumb: bp_repo
   class: FilesizeDistributionQuery
   category: files
   iterative: true
@@ -211,16 +188,14 @@ filesizedist:
     Generate a report on the distribution of producer files of a specific size ranges within Merritt.
 count_objects:
   link-title: Count Objects by Collection
-  nav:
-    path: /home/campus/content
+  breadcrumb: bp_campus
   class: CountObjectsQuery
   category: collections
   description: |
     This report provides a count of objects by collection. The results are summarized at a campus level.
 collections_by_node:
   link-title: Count Objects Residing on a Storage Node
-  nav:
-    path: /home/microservice/storage/content
+  breadcrumb: bp_storage
   class: CollectionsByNodeQuery
   category: storage nodes
   description: |
@@ -230,8 +205,7 @@ collections_by_node:
   - node
 collections_by_owner:
   link-title: Collections for a Specific Merritt Owner
-  nav:
-    path: /home/campus/content
+  breadcrumb: bp_campus  
   class: CollectionsByOwnerQuery
   category: collections
   description: |
@@ -241,8 +215,7 @@ collections_by_owner:
   - own
 collections_by_mime_type:
   link-title: Collections Containing a specific Mime Type
-  nav:
-    path: /home/campus/content
+  breadcrumb: bp_campus
   class: CollectionsByMimeQuery
   category: mime types
   params: ['mime_type']
@@ -253,8 +226,7 @@ collections_by_mime_type:
   - mime
 collections_by_mime_group:
   link-title: Collections Containing a specific Mime Group
-  nav:
-    path: /home/campus/content
+  breadcrumb: bp_campus
   class: CollectionsByMimeQuery
   category: mime types
   params: ['mime_group']
@@ -265,8 +237,7 @@ collections_by_mime_group:
   - gmime
 collections_by_time_count_producer:
   link-title: Producer Files Added by Date 
-  nav: 
-    path: /home/microservice/ingest/counts
+  breadcrumb: bp_ingest
   class: CollectionsByTimeQuery
   category: collections/time
   params: ['count_files', 'producer']
@@ -278,8 +249,7 @@ collections_by_time_count_producer:
     - week by week for the last 4 weeks
 collections_by_time_count:
   link-title: Files Added by Date 
-  nav: 
-    path: /home/microservice/ingest/counts
+  breadcrumb: bp_ingest
   class: CollectionsByTimeQuery
   category: collections/time
   params: ['count_files', '']
@@ -292,8 +262,7 @@ collections_by_time_count:
     - week by week for the last 4 weeks
 collections_by_time_size:
   link-title: Bytes Added by Date 
-  nav: 
-    path: /home/microservice/ingest/counts
+  breadcrumb: bp_ingest
   class: CollectionsByTimeQuery
   category: collections/time
   params: ['billable_size', '']
@@ -305,8 +274,7 @@ collections_by_time_size:
     - week by week for the last 4 weeks
 collections_by_time_size_cumulative:
   link-title: Cumulative Bytes Added by Date 
-  nav: 
-    path: /home/microservice/ingest/cumulative
+  breadcrumb: bp_ingest
   class: CollectionsByTimeCumulativeQuery
   category: collections/time
   params: ['billable_size', '']
@@ -314,8 +282,7 @@ collections_by_time_size_cumulative:
     This report shows the cumulative byte count totals in each Merritt collection year by year since the Merritt system was established.
 collection_details:
   link-title: Mime type usage within a collection 
-  nav: 
-    path: /home/collections/content
+  breadcrumb: bp_coll
   class: CollectionDetailsQuery
   category: collections
   params: ['inv_collection_id']
@@ -325,8 +292,7 @@ collection_details:
   - coll
 collection_info:
   link-title: Consolidated page containing all the links relevant to a specific Merritt collection 
-  nav: 
-    path: /home/collections/details
+  breadcrumb: bp_coll
   class: CollectionInfoQuery
   category: collections
   params: ['inv_collection_id']
@@ -336,8 +302,7 @@ collection_info:
   - colllist
 collection_group_details:
   link-title: Campus Specific Mime type usage within a collection 
-  nav: 
-    path: /home/repository-content/mimes
+  breadcrumb: bp_repo
   class: CollectionDetailsQuery
   category: collections
   params: ['ogroup']
@@ -347,10 +312,7 @@ collection_group_details:
   - ogroup
 invoices:
   link-title: Campus Invoices
-  nav: 
-    path: /home/campus/invoices
-    conditional:
-      campus: /campus/invoices/{campus}
+  breadcrumb: bp_campus
   class: InvoicesQuery
   category: collections
   description: |
@@ -360,8 +322,7 @@ invoices:
     including the 10TB storage allocation made available to each main campus library free of recharge.
 audit_status:
   link-title: Audit - Irregular Status
-  nav: 
-    path: /home/microservice/audit/status
+  breadcrumb: bp_audit
   class: AuditStatusQuery
   category: audit
   description: |
@@ -373,8 +334,7 @@ audit_status:
     - Files with a status of `verified` are explicitly excluded from this report for performance reasons.
 audit_status_time:
   link-title: Audit Status - Recent Processing
-  nav: 
-    path: /home/microservice/audit/activity
+  breadcrumb: bp_audit
   class: AuditStatusTimeQuery
   category: audit
   description: |
@@ -383,8 +343,7 @@ audit_status_time:
     #### Consider retiring this report in favor of other existing reports.
 audit_oldest:
   link-title: Audit - Oldest Unprocessed Item
-  nav: 
-    path: /home/microservice/audit/status
+  breadcrumb: bp_audit
   class: AuditOldestQuery
   category: audit
   description: |
@@ -394,8 +353,7 @@ audit_oldest:
     - If more than 90 days, ERROR.  The system is not meeting expectations for active fixity checking.
 audit_size:
   link-title: Audit - Size of Queue
-  nav: 
-    path: /home/microservice/audit/activity
+  breadcrumb: bp_audit
   class: AuditQueueSizeQuery
   category: audit
   description: |
@@ -405,8 +363,7 @@ audit_size:
     The collection admin tool has an action defined to clear old queue entries from the database.
 audit_processed_size:
   link-title: Audit - Historical Audits Processed Over Time
-  nav: 
-    path: /home/microservice/audit/performance
+  breadcrumb: bp_audit
   class: AuditProcessedSizeQuery
   category: audit
   description: |
@@ -435,8 +392,7 @@ audit_processed_size:
 
 audit_processed_hours:
   link-title: Audit - Hourly Audits Processed on the Current Day
-  nav: 
-    path: /home/microservice/audit/performance
+  breadcrumb: bp_audit
   class: AuditProcessedSizeIterativeQuery
   category: audit
   iterative: true
@@ -446,16 +402,14 @@ audit_processed_hours:
     The query is iterative looking at counts hour-by-hour to prevent timeouts.
 replication_needed:
   link-title: Replication - Objects Needing Replication
-  nav: 
-    path: /home/microservice/replic/activity
+  breadcrumb: bp_replic
   class: ReplicationNeededQuery
   category: replication
   description: |
     This report generates a list of objects requiring replication, based on entries in the `inv_nodes_inv_objects` table that have a primary copy of an object but no secondary copy.
 replication_initiated:
   link-title: Replication Initiated
-  nav: 
-    path: /home/microservice/replic/activity
+  breadcrumb: bp_replic
   class: ReplicationInitiatedQuery
   category: replication
   description: |
@@ -474,8 +428,7 @@ replication_initiated:
       - Replication not yet started, it has been more than 4 hours since the object was created/modified.
 replication_failed:
   link-title: Replication Failed
-  nav: 
-    path: /home/microservice/replic/activity
+  breadcrumb: bp_replic
   class: ReplicationFailedQuery
   category: replication
   description: |
@@ -483,8 +436,7 @@ replication_failed:
     For objects with specific know replication issues, a category can be assigned to an object.
 replic_processed:
   link-title: Replication Processed Over Time
-  nav: 
-    path: /home/microservice/replic/performance
+  breadcrumb: bp_replic
   class: ReplicProcessedQuery
   category: replication
   iterative: true
@@ -493,8 +445,7 @@ replic_processed:
     The need for replication is driven by ingest actions or by the reconfiguration of storage nodes, so the number of records processed over time may be irregular.
 doi:
   link-title: DOI Ark Conflicts
-  nav: 
-    path: /home/objects/localid/status
+  breadcrumb: bp_obj
   class: DoiConflictQuery
   category: objects
   description: |
@@ -502,24 +453,21 @@ doi:
     This issue has occasionally occurred for Dryad content.
 localid_no_ark:
   link-title: Local Id No Ark
-  nav: 
-    path: /home/objects/localid/status
+  breadcrumb: bp_obj
   class: LocalidNoIdQuery
   category: objects
   description: |
     List counts of localids with no corresponding arks.  No [resolution](https://github.com/CDLUC3/mrt-doc/issues/1047) has been implemented yet.
 big_ingest:
   link-title: Big Ingests (conatining 200+ objects) - Last 14 days
-  nav: 
-    path: /home/microservice/ingest/activity
+  breadcrumb: bp_ingest
   class: BigIngestQuery
   category: ingest
   description: |
     Enumerate large batch ingests (by object count) in the last X days.
 recent_ingests:
   link-title: Recent Ingests
-  nav: 
-    path: /home/microservice/ingest/activity
+  breadcrumb: bp_ingest
   class: RecentIngestsQuery
   category: ingest
   description: |
@@ -527,8 +475,7 @@ recent_ingests:
     All Dryad submissions for the specific date will be counted as a single batch.
 arklist:
   link-title: Objects by Ark List Query
-  nav: 
-    path: /home/objects/query  
+  breadcrumb: bp_obj
   class: ArklistQuery
   category: objects
   test_params:
@@ -538,8 +485,7 @@ arklist:
     This page will allow you to copy/paste text containing one or more arks and convert that into a parameter list for the report.
 locallist:
   link-title: Objects by Local Id List Query
-  nav: 
-    path: /home/objects/query  
+  breadcrumb: bp_obj
   class: LocalidListQuery
   category: objects
   test_params:
@@ -551,8 +497,7 @@ locallist:
     Options are presented to enable retrieval or either object summary or object metadata details.
 arkcompare:
   link-title: Object Comparison by Ark List Query
-  nav: 
-    path: /home/objects/compare  
+  breadcrumb: bp_obj
   class: ArklistCompareQuery
   category: objects
   test_params:
@@ -562,8 +507,7 @@ arkcompare:
     Select `Compare Rpt` to run this report.
 localcompare:
   link-title: Object Comparison by Local Id List Query
-  nav: 
-    path: /home/objects/compare  
+  breadcrumb: bp_obj
   class: LocalidListCompareQuery
   category: objects
   test_params:
@@ -573,8 +517,7 @@ localcompare:
     Select `Compare Rpt` to run this report.
 con_primary:
   link-title: Primary Storage Node Configuration Report
-  nav: 
-    path: /home/microservice/storage/profile
+  breadcrumb: bp_storage
   class: ConsistencyPrimaryNodeQuery
   category: storage nodes
   description: |
@@ -583,8 +526,7 @@ con_primary:
     Eventually, each of these collections will be re-configured to use SDSC as a primary node. 
 con_secondary:
   link-title: Secondary Storage Node Configuration Report
-  nav: 
-    path: /home/microservice/storage/profile
+  breadcrumb: bp_storage
   class: ConsistencySecondaryNodeQuery
   category: storage nodes
   description: |
@@ -592,8 +534,7 @@ con_secondary:
     Current standard configurations for secondary nodes include Glacier and Wasabi, or SDSC and Wasabi.
 con_files:
   link-title: Files By Replication Copy Count
-  nav: 
-    path: /home/microservice/replic/status
+  breadcrumb: bp_replic
   class: ConsistencyFilesQuery
   category: replication
   description: |
@@ -605,8 +546,7 @@ con_files:
     An error captured by this report can often be directly correlated with an error in the ConsistencyObjectsQuery report.
 ccon_no_audit:
   link-title: Files Not In the Audit Table (too slow to run from web)
-  nav: 
-    path: /home/microservice/replic/status
+  breadcrumb: bp_replic
   class: ConsistencyFilesNoAuditQuery
   category: replication
   description: |
@@ -614,8 +554,7 @@ ccon_no_audit:
     #### Note: this report is too slow to be run from the Admin Tool.  It is initiated from AWS CLI as a part of the daily consistency reports.
 con_objects:
   link-title: Objects By Replication Copy Count
-  nav: 
-    path: /home/microservice/replic/status
+  breadcrumb: bp_replic
   class: ConsistencyObjectsQuery
   category: replication
   description: |
@@ -627,8 +566,7 @@ con_objects:
     An error captured by this report can often be directly correlated with an error in the ConsistencyFilesQuery report.
 con_versions:
   link-title: Version Consistency Report
-  nav: 
-    path: /home/objects/versions/status
+  breadcrumb: bp_obj
   class: ConsistencyVersionsQuery
   category: replication
   description: |
@@ -639,8 +577,7 @@ con_versions:
     The Merritt Team is implementing changes to prevent this issue from occurring in the future.
 con_localid:
   link-title: Count objects missing a local id
-  nav: 
-    path: /home/objects/localid
+  breadcrumb: bp_obj
   class: ConsistencyLocalIdQuery
   category: objects
   description: |
@@ -650,16 +587,14 @@ con_localid:
     - Objects older than 1 month will be treated as a WARN.
 con_localid_fix:
   link-title: SQL to illustrate how to insert a missing localid from erc_where
-  nav: 
-    path: /home/objects/localid
+  breadcrumb: bp_obj
   class: ConsistencyLocalIdFixQuery
   category: objects
   description: |
     This report generates SQL to fix missing localids.
 obj_version_clobber:
   link-title: Object Version Clobber Report
-  nav: 
-    path: /home/objects/versions/status
+  breadcrumb: bp_obj
   class: ObjectsVersionClobberQuery
   category: concurrent update
   description: |
@@ -669,8 +604,7 @@ obj_version_clobber:
     The Merritt Team is implementing changes to prevent this issue from occurring in the future.
 obj_version_gap:
   link-title: Version Gap Report
-  nav: 
-    path: /home/objects/versions/status
+  breadcrumb: bp_obj
   class: ObjectsVersionGapQuery
   category: concurrent update
   description: |
@@ -678,8 +612,7 @@ obj_version_gap:
     (issue has never occurred).
 con_replic:
   link-title: Outstanding Replication
-  nav: 
-    path: /home/microservice/replic/activity
+  breadcrumb: bp_replic
   class: ConsistencyReplicationReqQuery
   category: replication
   description: |
@@ -690,8 +623,7 @@ con_replic:
     From that report, you can navigate to the object's storage management page to re-initiate replication.
 file_copies_needed:
   link-title: Objects with irregular file copy count
-  nav: 
-    path: /home/objects/issue-list
+  breadcrumb: bp_obj
   class: ObjectsFileCopiesNeededQuery
   category: replication
   description: |
@@ -699,8 +631,7 @@ file_copies_needed:
     Results of this report may directly correlate with those in the ObjectsObjectCopiesNeededQuery report.
 object_copies_needed:
   link-title: Objects with irregular object copy count
-  nav: 
-    path: /home/objects/issue-list
+  breadcrumb: bp_obj
   class: ObjectsObjectCopiesNeededQuery
   category: replication
   description: |
@@ -708,16 +639,14 @@ object_copies_needed:
     Result of this report may directly correlate with those in the ObjectsFileCopiesNeededQuery report.
 object_localid_needed:
   link-title: List of objects missing a localid
-  nav: 
-    path: /home/objects/localid
+  breadcrumb: bp_obj
   class: ObjectsLocalidNeededQuery
   category: objects
   description: |
     Enumerate a list of objects that do not exist in the LocalId table but seem to have a localid in erc_where (illustrated below in the mislabeled "Local Id" column).
 mult_coll:
   link-title: Count of Objects in multiple Collections
-  nav: 
-    path: /home/objects/issue-count
+  breadcrumb: bp_obj
   class: MultipleCollectionsQuery
   category: objects
   description: |
@@ -725,8 +654,7 @@ mult_coll:
     Objects residing in multiple collections is a legacy Merritt feature.
 object_mult_coll:
   link-title: Objects in multiple Collections
-  nav: 
-    path: /home/objects/issue-list
+  breadcrumb: bp_obj
   class: ObjectsMultipleCollQuery
   category: objects
   description: |
@@ -734,8 +662,7 @@ object_mult_coll:
     Objects residing in multiple collections is a legacy Merritt feature.
 admin_obj:
   link-title: Merritt Admin Objects with a Specific Role
-  nav: 
-    path: /home/objects/issue-list
+  breadcrumb: bp_obj
   class: AdminObjectsQuery
   category: admin obj
   description: |
@@ -744,8 +671,7 @@ admin_obj:
   - aggrole
 admin_obj_files:
   link-title: Display inv_files list for a Merritt Admin Object
-  nav:
-    path: /home/merritt-internal
+  breadcrumb: bp_internals
   class: AdminObjectsFilesQuery
   category: admin obj
   description: |
@@ -754,16 +680,14 @@ admin_obj_files:
     The system files exist to help reconstruct the inventory database from cloud storage if a disaster occurs.
 admin_obj_agg:
   link-title: Merritt Admin Object Counts
-  nav:
-    path: /home/merritt-internal
+  breadcrumb: bp_internals
   class: AdminObjectsAggQuery
   category: admin obj
   description: |
     Count all Merritt Admin Objects by aggregate role.
 admin_coll:
   link-title: Collections Table Special Cases
-  nav:
-    path: /home/merritt-internal
+  breadcrumb: bp_internals
   class: AdminCollectionsQuery
   category: admin obj
   description: |
@@ -771,8 +695,7 @@ admin_coll:
     List the known information for these admin objects.
 report:
   link-title: Consistency Reports
-  nav:
-    path: /home/repository-content/consistency-reports
+  breadcrumb: bp_repo
   class: ReportRetrieve
   category: reports
   description: |
@@ -782,8 +705,7 @@ report:
   - report
 filelist:
   link-title: File List for an object
-  nav:
-    path: /home/object/details
+  breadcrumb: bp_obj
   class: ObjectIdFilesQuery
   category: objects
   description: |
@@ -796,8 +718,7 @@ filelist:
   - filelist
 obj_audit_status:
   link-title: Objects with a specific audit status
-  nav:
-    path: /home/objects/issue-list
+  breadcrumb: bp_obj
   class: ObjectsAuditStatusQuery
   category: audit
   description: |
@@ -807,8 +728,7 @@ obj_audit_status:
   - astatus
 collection_node_cleanup_required:
   link-title: List sectondary object copies that no longer exist in inv_collections_inv_nodes
-  nav:
-    path: /home/objects/issue-list
+  breadcrumb: bp_obj
   class: CollectionNodeCleanupQuery
   category: storage nodes
   description: |
@@ -816,8 +736,7 @@ collection_node_cleanup_required:
     Results will appear in this report after a secondary node has been removed for a specific collection.
 ingest_bytes_by_hour:
   link-title: Graph bytes ingested by hour or day for a range of time
-  nav:
-    path: /home/microservice/ingest/activity
+  breadcrumb: bp_ingest
   class: IngestBytesByHourQuery
   category: files
   description: |
@@ -830,8 +749,7 @@ ingest_bytes_by_hour:
 
 update_billing:
   link-title: Update the Merritt Billing database (via stored procedure)
-  nav:
-    path: /_page_actions/merritt-internal
+  breadcrumb: bp_internals
   class: UpdateBillingDatabaseQuery
   category: reports
   description: |

@@ -306,6 +306,8 @@ function init() {
       false
     );
   }
+  $(".bp_storeadmin").show();
+  $(".bp_title").text($("h1").text()).show();
 }
 
 async function apply_changes(nodenum, changes) {

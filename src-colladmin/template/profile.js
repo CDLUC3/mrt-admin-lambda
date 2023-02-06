@@ -34,6 +34,8 @@ function init() {
   $("#owner-admin").val("{{ADMIN_OWNER}}");
   //default to most commonly used storage node
   $("#nodes options[1]").attr("selected", true);
+  $(".bp_colladmin").show();
+  $(".bp_title").text($("h1").text()).show();
 }
 
 function getFormData() {

@@ -73,8 +73,6 @@ module LambdaFunctions
       map['LAMBDABASE_JS'] = Mustache.render(File.open("template/lambda.base.js").read, map)
       if path == '/web/describeReports.html'
         map['REPORTS'] = getReportsList
-      elsif path == '/web/navReports.html'
-        map['REPORTSMAP'] = getReportsMap
       end
       map
     end
@@ -101,7 +99,7 @@ module LambdaFunctions
         rptlist.append({
           report: k,
           title: rpt.fetch('link-title', '--'), 
-          path: rpt.fetch('nav', {}).fetch('path', '--'), 
+          breadcrumb: rpt.fetch('breadcrumb', ''), 
           class: rpt.fetch('class', 'Undefied'), 
           category: rpt.fetch('category', ''), 
           description: rpt.fetch('description', ''), 
@@ -116,7 +114,7 @@ module LambdaFunctions
     def getReportsList
       rptlist = getReportsArr
       rptlist.sort!{
-        |a,b| "#{a[:path]}/#{a[:report]}" <=> "#{b[:path]}/#{b[:report]}"  
+        |a,b| a[:report] <=> b[:report]  
       }
       rptlist
     end

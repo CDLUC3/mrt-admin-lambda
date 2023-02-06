@@ -303,8 +303,6 @@ module LambdaFunctions
         map['OBJS'] = objects
       elsif path == '/web/describeActions.html'
         map['ACTIONS'] = getActionsList
-      elsif path == '/web/navActions.html'
-        map['ACTIONSMAP'] = getActionsMap
       elsif path == '/web/storeQueues.html'
         map['AUDIT_INFO'] = AuditInfo.new(@config).data
       end
@@ -333,7 +331,7 @@ module LambdaFunctions
         actlist.append({
           action: k,
           title: act.fetch('link-title', '--'), 
-          path: act.fetch('nav', {}).fetch('path', ''), 
+          breadcrumb: act.fetch('breadcrumb', ''), 
           class: act.fetch('class', 'Undefied'), 
           description: act.fetch('description', ''), 
           description_doc: description_doc(act),
@@ -352,7 +350,7 @@ module LambdaFunctions
     def getActionsList
       actlist = getActionsArr
       actlist.sort!{
-        |a,b| "#{a[:path]}/#{a[:report]}" <=> "#{b[:path]}/#{b[:report]}"  
+        |a,b| a[:report] <=> b[:report]  
       }
       actlist
     end

@@ -24,4 +24,6 @@ function init() {
     });
     $("p.buttons").show();
     showCounts();
+    $(".bp_colladmin").show();
+    $(".bp_title").text($("h1").text()).show();
 }
