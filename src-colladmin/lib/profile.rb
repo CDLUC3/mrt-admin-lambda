@@ -444,6 +444,7 @@ class Collections < MerrittQuery
       super(config)
       @collections = {}
       @mnemonics = {}
+      @ids = {}
       run_query(
           %{
               select 
@@ -479,6 +480,7 @@ class Collections < MerrittQuery
           @collections[c.ark] = c
           m = c.mnemonic.nil? ? "" : c.mnemonic
           @mnemonics[m] = c unless m.empty?
+          @ids[c.id] = c
       end
   end
 
@@ -488,6 +490,10 @@ class Collections < MerrittQuery
 
   def get_by_mnemonic(mnemonic)
     @mnemonics[mnemonic]
+  end
+
+  def get_by_id(id)
+    @ids[id]
   end
 
   def collections_select

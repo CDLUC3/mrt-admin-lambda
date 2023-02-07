@@ -208,12 +208,21 @@ module LambdaFunctions
         colls.merge_profiles
         map['COLLS'] = colls.collections_select
       elsif path == '/web/storeCollNode.html'
+        lockedcoll = IngestStateAction.new(@config, {}, "state", myparams).get_locked_collections
         coll = myparams.fetch("coll", "")
+        collrec = Collections.new(@config).get_by_id(coll.to_i)
+        mnemonic = collrec ? (collrec.mnemonic.nil? ? "" : collrec.mnemonic) : ""
+        profname = mnemonic.empty? ? "" : "#{collrec.mnemonic}_content"
+        is_locked = lockedcoll.include?(profname)
         info = CollectionNodeInfo.new(@config, coll.to_i)
         primary_node = info.primary_node
         map['COLLNAME'] = info.name
         map['COLL'] = coll.to_i
-        map['ingest_paused'] = false
+        map['profname'] = profname
+        map['has_profname'] = !profname.empty?
+        map['ingest_locks'] = is_locked ? "Locked" : "Unlocked"
+        map['ingest_paused'] = is_locked
+        map['ingest_unpaused'] = !is_locked
         map['CNODES'] = CollectionNodes.new(@config, coll.to_i, primary_node).collnodes         
         map['NODES'] = []
         skips = {}

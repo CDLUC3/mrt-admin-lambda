@@ -296,7 +296,30 @@ function init() {
     }
     invoke(params, false, true);
   });
-  
+
+  $("button.lock-coll").on("click", function(){
+    var coll = $(this).attr("data-collection");
+    invoke(
+      {
+        path: "lock-coll",
+        coll: coll
+      },
+      false,
+      true
+    );
+  });
+
+  $("button.unlock-coll").on("click", function(){
+    var coll = $(this).attr("data-collection");
+    invoke(
+      {
+        path: "unlock-coll",
+        coll: coll
+      },
+      false,
+      true
+    );
+  });
 
   if ($("button.storage-cancel-all-scans").is("*")) {
     invoke(
@@ -306,6 +329,7 @@ function init() {
       false
     );
   }
+
   $(".bp_storeadmin").show();
   $(".bp_title").text($("h1").text()).show();
 }

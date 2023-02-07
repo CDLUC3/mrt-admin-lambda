@@ -35,24 +35,27 @@
         <a href="{{ADMINTOOL_HOME}}?path=collection_info&coll={{COLL}}">{{COLLNAME}} / Collection {{COLL}}</a>
       </div>
       <h2>Collection Ingest Processing Status</h2>
+
+      {{#has_profname}}
       <div class="indent">
         <label for="ingest-status">Current Status: </label>
-        <output id="ingest-status">{{ingest_paused}}</output>
-        <input 
-          type="button" 
-          name="pause" 
-          data-collection="{{COLL}}"
-          value="Pause Ingest {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}" 
-          onclick="javascript:document.location='https://cdluc3.github.io/mrt-doc/diagrams/store-admin-pause-ing-for-coll'"
-        />
-        <input 
-          type="button" 
-          name="unpause" 
-          data-collection="{{COLL}}"
-          value="Unpause Ingest {{#NOT_DOCKER}}🚧{{/NOT_DOCKER}}" 
-          onclick="javascript:document.location='https://cdluc3.github.io/mrt-doc/diagrams/store-admin-pause-ing-for-coll'"
-        />
+        <output id="ingest-status">{{profname}}: {{ingest_locks}}</output>
+        {{#ingest_unpaused}}
+        <button
+          data-collection="{{profname}}"
+          class="colladmin lock-coll"
+        >Lock Collection</button>
+        {{/ingest_unpaused}}
+
+        {{#ingest_paused}}
+        <button
+          data-collection="{{profname}}"
+          class="colladmin unlock-coll"
+        >Unlock Collection</button>
+        {{/ingest_paused}}
       </div>
+      {{/has_profname}}
+      
       <h2>Storage Nodes for Collection</h2>
       <div>
         <table class="sortable results">
