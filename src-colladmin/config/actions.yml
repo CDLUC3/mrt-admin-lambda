@@ -897,6 +897,19 @@ release-queue-item:
   - release
   documentation: |
     Ingest: POST /admin/release
+cleanup-queue:
+  link-title: Cleanup Deleted and Completed items from a Zookeeper Queue
+  class: IterateQueueAction
+  params: ["admin/cleanupq/queue"]
+  category: Queue Management
+  sensitivity: irreversible change
+  testing: manual
+  description: |
+    Cleanup Deleted and Completed items from a Zookeeper Queue
+  report-datatypes:
+  - release
+  documentation: |
+    Ingest: POST /admin/cleanupq/{queue}
 apply-review-changes:
   link-title: Apply bulk changes to storage scan results by uploading a CSV containing a set of desired changes
   class: ReplicationAction

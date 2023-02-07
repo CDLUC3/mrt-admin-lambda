@@ -35,4 +35,13 @@ class AccessQueueAction < ForwardToIngestAction
     100
   end
 
+  def get_alternative_queries
+    arr = [
+      {
+        label: 'Cleanup Queue', 
+        url: "#{LambdaBase.colladmin_url}?path=cleanup-queue&queue=queues-inv&reload_path=inv-queues",
+        class: 'config'
+      }
+    ]
+  end
 end

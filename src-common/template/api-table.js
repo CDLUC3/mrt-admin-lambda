@@ -139,6 +139,10 @@ function showUrl(url) {
 }
 
 function processResult(data) {
+  if (data.redirect_location) {
+    document.location = data.redirect_location;
+    return;
+  }
   $("h1,title").text(data.title);
   $(".report_path").text(data.report_path);
 

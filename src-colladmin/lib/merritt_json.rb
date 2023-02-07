@@ -81,19 +81,27 @@ class MerrittJson
 
   # Handle issues with Merritt Core2 JSON calls
   # Address issue in which single values are not returned as a single value array
-  def fetchArrayVal(obj, key)
+  def self.jsonFetchArrayVal(obj, key)
     val = obj.fetch(key, [])
     val = [val] unless val.instance_of?(Array)
     val
   end
 
+  def fetchArrayVal(obj, key)
+    MerrittJson.jsonFetchArrayVal(obj, key)
+  end
+
   # Handle issues with Merritt Core2 JSON calls
   # Address issue in which an empty object is returned as an empty string
-  def fetchHashVal(obj, key)
+  def self.jsonFetchHashVal(obj, key)
     val = obj.fetch(key, {})
     # Ingest currently returns "" when empty
     val = {} if val == ""
     val
+  end
+
+  def fetchHashVal(obj, key)
+    MerrittJson.jsonFetchHashVal(obj, key)
   end
 
 end

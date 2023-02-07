@@ -46,6 +46,11 @@ class IngestQueueAction < ForwardToIngestAction
         label: 'Ingest Queue Counts by Profile', 
         url: "#{LambdaBase.colladmin_url}?path=ingest-queue-by-profile",
         class: 'graph'
+      },
+      {
+        label: 'Cleanup Queue', 
+        url: "#{LambdaBase.colladmin_url}?path=cleanup-queue&queue=queues&reload_path=queues",
+        class: 'config'
       }
     ]
     if @batch.empty?
