@@ -289,6 +289,7 @@ tr.latest td, tr.latest th {
   background-color: #EEEEEE;
 }
 
+li.action a,
 td.qdelete a, 
 td.requeue a, 
 td.hold a, 
@@ -316,6 +317,7 @@ div.admin-tool td.collqitems a {
     display: none;
 }
 
+li.action a.disabled,
 td.qdelete a.disabled, 
 td.requeue a.disabled, 
 td.hold a.disabled, 

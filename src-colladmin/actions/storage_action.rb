@@ -266,16 +266,22 @@ class StorageAction < AdminAction
     # end
     if @path == "storage-set-flag"
       op = @myparams.fetch("op", "set")
-      op = "set" unless op == "set" || op == "clear"
+      op = "state" unless op == "set" || op == "clear" || op == "state"
       qobj = @myparams.fetch("object", "")
       srvc = get_access_service
       endpoint = "/flag/#{op}/access/#{qobj}?t=json"
       qjson = HttpPostJson.new(srvc, endpoint)
-      return {message: "Access ZK flag set failed"}.to_json if qjson.status != 200
+      return message_as_table("Access ZK flag set failed").to_json if qjson.status != 200
       ts = JSON.parse(qjson.body).fetch("tok:zooTokenState", {})
       tss = ts.fetch("tok:tokenStatus", "")
       tso = ts.fetch("tok:zooFlagPath", "na")
-      {message: "Token result: #{tso}=#{tss}"}.to_json
+      reload_path = @myparams.fetch("reload_path", "")
+      unless reload_path.empty?
+        return {
+          redirect_location: "/web/collIndex.html?path=#{reload_path}"
+        }.to_json
+      end
+      message_as_table("Token result: #{tso}=#{tss}").to_json  
     end
 
   end

@@ -194,6 +194,16 @@ class AdminTask
     )
   end
 
+  def message_as_table(msg) 
+    return_data(
+      [[
+        msg
+      ]],
+      [''],
+      ['Message']
+    )
+  end
+
   def report_list(path, contents) 
     data = []
     contents.each do |c|
