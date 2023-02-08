@@ -40,7 +40,17 @@ class AccessQueueAction < ForwardToIngestAction
       {
         label: 'Cleanup Queue', 
         url: "#{LambdaBase.colladmin_url}?path=cleanup-queue&queue=queues-inv&reload_path=inv-queues",
-        class: 'config'
+        class: 'action'
+      },
+      {
+        label: 'Requeue All', 
+        url: "",
+        class: 'action requeue-all'
+      },
+      {
+        label: 'Delete All', 
+        url: "",
+        class: 'action deleteq-all'
       }
     ]
   end

@@ -50,7 +50,17 @@ class IngestQueueAction < ForwardToIngestAction
       {
         label: 'Cleanup Queue', 
         url: "#{LambdaBase.colladmin_url}?path=cleanup-queue&queue=queues&reload_path=queues",
-        class: 'config'
+        class: 'action'
+      },
+      {
+        label: 'Requeue All', 
+        url: "",
+        class: 'action requeue-all'
+      },
+      {
+        label: 'Delete All', 
+        url: "",
+        class: 'action deleteq-all'
       }
     ]
     if @batch.empty?

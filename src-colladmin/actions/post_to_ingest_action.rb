@@ -4,6 +4,7 @@ require_relative '../lib/http_post_json'
 
 class PostToIngestAction < ForwardToIngestAction
   def initialize(config, action, path, myparams, endpoint)
+    @reload_path = myparams.fetch("reload_path", "")
     super(config, action, path, myparams, endpoint)
   end
 
@@ -11,6 +12,11 @@ class PostToIngestAction < ForwardToIngestAction
     begin
       qjson = HttpPostJson.new(get_ingest_server, @endpoint)
       return { message: "Status #{qjson.status} for #{@endpoint}" }.to_json unless qjson.status == 200
+      unless @reload_path.empty?
+        return {
+          redirect_location: "/web/collIndex.html?path=#{@reload_path}"
+        }.to_json
+      end
       return convertJsonToTable(qjson.body) unless qjson.body.empty?
       { message: "No response for #{@endpoint}" }.to_json
     rescue => e

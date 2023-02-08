@@ -177,8 +177,61 @@ function processResult(data) {
         $(".bp_title").text(data.title).show();
       }
     }
+
+    setRequeueAll();
+    setDeleteAll();
   } else {
     document.body.innerHTML = JSON.stringify(data);
+  }
+}
+
+function setRequeueAll() {
+  $("li.requeue-all a").on("click", function(){
+    doRequeue();
+  });
+
+  testRequeue();  
+}
+
+function setDeleteAll() {
+  $("li.deleteq-all a").on("click", function(){
+    doDeleteQ();
+  });
+
+  testDeleteQ();  
+}
+
+function doRequeue() {
+  var link = $("a.ajax:contains('Requeue'):not(.disabled):first");
+  if (link.is("*")) {
+    link[0].click()
+    link.addClass("disabled");
+    setTimeout(function(){doRequeue()}, 1000);
+  }
+
+}
+
+function doDeleteQ() {
+  var link = $("a.ajax:contains('Delete'):not(.disabled):first");
+  if (link.is("*")) {
+    link[0].click()
+    link.addClass("disabled");
+    setTimeout(function(){doDeleteQ()}, 1000);
+  }
+
+}
+
+function testRequeue() {
+  $("li.requeue-all a").addClass("disabled");
+  if ($("a.ajax:contains('Requeue'):not(.disabled)").is("*")) {
+    $("li.requeue-all a").removeClass("disabled");
+  }
+}
+
+function testDeleteQ() {
+  $("li.deleteq-all a").addClass("disabled");
+  if ($("a.ajax:contains('Delete'):not(.disabled)").is("*")) {
+    $("li.deleteq-all a").removeClass("disabled");
   }
 }
 
@@ -299,7 +352,11 @@ function createTable(headers, types, data, filter_col, group_col, show_grand_tot
   $('#alternative ul').empty().hide();
   $.each(alternative_queries, function(i, q){
     var url = '';
-    if (q['url'].substr(0,4) == 'http'){
+    if (q['url'] == '') {
+      url = '#';
+    } else if (q['url'].substr(0,1) == '#'){
+      url = q['url'];
+    } else if (q['url'].substr(0,4) == 'http'){
       url = q['url'];
     } else if (q['url'].substr(0,1) == '/') {
       url = document.location.pathname.replace(/\/[^\/]*$/, '') + q['url'];
@@ -716,7 +773,7 @@ function format(cell, v, type, merritt_path) {
     makeLink(cell, 'Delete', "javascript:ajax_invoke('"+encodeURIComponent(p)+"')").addClass("ajax");
   } else if (type == 'requeue'  && v != '') {
     p = colladmin_root + "/lambda?path=requeue&queue-path="+v;
-    makeLink(cell, 'Requeue', "javascript:ajax_invoke('"+encodeURIComponent(p)+"')").addClass("ajax");
+    makeLink(cell, 'Requeue', "javascript:ajax_invoke('"+encodeURIComponent(p)+"');testRequeue()").addClass("ajax");
   } else if (type == 'hold'  && v != '') {
     p = colladmin_root + "/lambda?path=hold-queue-item&queue-path="+v;
     makeLink(cell, 'Hold', "javascript:ajax_invoke('"+encodeURIComponent(p)+"')").addClass("ajax");

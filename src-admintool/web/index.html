@@ -355,8 +355,8 @@
       <h3>Ingest Activity</h3>
       <ul>
         <li class="report"><a href="{{COLLADMIN_HOME}}?path=state">Ingest Service State Request</a></li>
-        <li class="config"><a href="{{COLLADMIN_HOME}}?path=submissions/pause">Pause Submissions</a></li>
-        <li class="config"><a href="{{COLLADMIN_HOME}}?path=submissions/unpause">Unpause Submissions</a></li>
+        <li class="action"><a href="{{COLLADMIN_HOME}}?path=submissions/pause&reload_path=state">Pause Submissions</a></li>
+        <li class="action"><a href="{{COLLADMIN_HOME}}?path=submissions/unpause&reload_path=state">Unpause Submissions</a></li>
         <li class="graph"><a href="{{COLLADMIN_HOME}}?path=ingest-queue-by-profile">Ingest Queues - Counts by Profile</a></li>
         <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=ingest_bytes_by_hour">Recent Bytes ingested by hour</a></li>
         <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=recent_ingests">Recent Ingests</a></li>
@@ -468,10 +468,12 @@
       <h3>Access Queues</h3>
       <ul>
         <li class="job"><a href="{{COLLADMIN_HOME}}?path=acc-queues">Access Queues</a></li>
-        <li class="config"><a href="{{COLLADMIN_HOME}}?path=storage-set-flag&op=set&object=LargeAccessHold">Pause Large Access</a></li>
-        <li class="config"><a href="{{COLLADMIN_HOME}}?path=storage-set-flag&op=clear&object=LargeAccessHold">Clear Large Access</a></li>
-        <li class="config"><a href="{{COLLADMIN_HOME}}?path=storage-set-flag&op=set&object=SmallAccessHold">Pause Small Access</a></li>
-        <li class="config"><a href="{{COLLADMIN_HOME}}?path=storage-set-flag&op=clear&object=SmallAccessHold">Clear Small Access</a></li>
+        <li class="report"><a href="{{COLLADMIN_HOME}}?path=storage-set-flag&op=state&object=LargeAccessHold">Get Large Access State</a></li>
+        <li class="action"><a href="{{COLLADMIN_HOME}}?path=storage-set-flag&op=set&object=LargeAccessHold">Pause Large Access</a></li>
+        <li class="action"><a href="{{COLLADMIN_HOME}}?path=storage-set-flag&op=clear&object=LargeAccessHold">Clear Large Access</a></li>
+        <li class="report"><a href="{{COLLADMIN_HOME}}?path=storage-set-flag&op=state&object=SmallAccessHold">Get Small Access State</a></li>
+        <li class="action"><a href="{{COLLADMIN_HOME}}?path=storage-set-flag&op=set&object=SmallAccessHold">Pause Small Access</a></li>
+        <li class="action"><a href="{{COLLADMIN_HOME}}?path=storage-set-flag&op=clear&object=SmallAccessHold">Clear Small Access</a></li>
       </ul>
     </div>
 
@@ -490,9 +492,9 @@
 
       <h3>Cleanup Merritt Queues</h3>
       <ul>
-        <li class="config"><a href="{{COLLADMIN_HOME}}?path=cleanup-queue&queue=queues&reload_path=queues">Cleanup Ingest Queues</a></li>
-        <li class="config"><a href="{{COLLADMIN_HOME}}?path=cleanup-queue&queue=queues-inv&reload_path=inv-queues">Cleanup Inventory Queues</a></li>
-        <li class="config"><a href="{{COLLADMIN_HOME}}?path=cleanup-queue&queue=queues-acc&reload_path=acc-queues">Cleanup Access Queues</a></li>
+        <li class="action"><a href="{{COLLADMIN_HOME}}?path=cleanup-queue&queue=queues&reload_path=queues">Cleanup Ingest Queues</a></li>
+        <li class="action"><a href="{{COLLADMIN_HOME}}?path=cleanup-queue&queue=queues-inv&reload_path=inv-queues">Cleanup Inventory Queues</a></li>
+        <li class="action"><a href="{{COLLADMIN_HOME}}?path=cleanup-queue&queue=queues-acc&reload_path=acc-queues">Cleanup Access Queues</a></li>
       </ul>
     </div>
 
