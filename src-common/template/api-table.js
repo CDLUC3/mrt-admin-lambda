@@ -204,9 +204,9 @@ function setDeleteAll() {
 function doRequeue() {
   var link = $("a.ajax:contains('Requeue'):not(.disabled):first");
   if (link.is("*")) {
-    link[0].click()
+    link[0].click();
     link.addClass("disabled");
-    setTimeout(function(){doRequeue()}, 1000);
+    setTimeout(function(){doRequeue()}, 3000);
   }
 
 }
@@ -214,9 +214,9 @@ function doRequeue() {
 function doDeleteQ() {
   var link = $("a.ajax:contains('Delete'):not(.disabled):first");
   if (link.is("*")) {
-    link[0].click()
+    link[0].click();
     link.addClass("disabled");
-    setTimeout(function(){doDeleteQ()}, 1000);
+    setTimeout(function(){doDeleteQ()}, 3000);
   }
 
 }

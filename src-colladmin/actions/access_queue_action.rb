@@ -38,11 +38,6 @@ class AccessQueueAction < ForwardToIngestAction
   def get_alternative_queries
     arr = [
       {
-        label: 'Cleanup Queue', 
-        url: "#{LambdaBase.colladmin_url}?path=cleanup-queue&queue=queues-inv&reload_path=inv-queues",
-        class: 'action'
-      },
-      {
         label: 'Requeue All', 
         url: "",
         class: 'action requeue-all'
@@ -51,6 +46,11 @@ class AccessQueueAction < ForwardToIngestAction
         label: 'Delete All', 
         url: "",
         class: 'action deleteq-all'
+      },
+      {
+        label: 'Cleanup Queue', 
+        url: "#{LambdaBase.colladmin_url}?path=cleanup-queue&queue=queues-inv&reload_path=inv-queues",
+        class: 'action'
       }
     ]
   end

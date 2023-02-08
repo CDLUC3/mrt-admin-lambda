@@ -48,11 +48,6 @@ class IngestQueueAction < ForwardToIngestAction
         class: 'graph'
       },
       {
-        label: 'Cleanup Queue', 
-        url: "#{LambdaBase.colladmin_url}?path=cleanup-queue&queue=queues&reload_path=queues",
-        class: 'action'
-      },
-      {
         label: 'Requeue All', 
         url: "",
         class: 'action requeue-all'
@@ -61,6 +56,11 @@ class IngestQueueAction < ForwardToIngestAction
         label: 'Delete All', 
         url: "",
         class: 'action deleteq-all'
+      },
+      {
+        label: 'Cleanup Queue', 
+        url: "#{LambdaBase.colladmin_url}?path=cleanup-queue&queue=queues&reload_path=queues",
+        class: 'action'
       }
     ]
     if @batch.empty?
