@@ -17,10 +17,7 @@ default:
     admin_password: "{!SSM: ldap/accounts/admin/password}"
     admin_user:     "{!SSM: ldap/accounts/admin/user}"
     group_base:     "{!SSM: ldap/group_base}"
-    # before private LB
-    host:           "{!SSM: collad-ldap/host}"
-    # after private LB
-    #host:           "{!SSM: ldap/host}"
+    host:           "{!SSM: ldap/host}"
     port:           "{!SSM: ldap/port}"
     user_base:      "{!SSM: ldap/user-base}"
     inst_base:      "{!SSM: ldap/inst-base}"
