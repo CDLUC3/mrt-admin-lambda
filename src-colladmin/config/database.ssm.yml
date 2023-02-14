@@ -9,10 +9,7 @@ default:
     username: "{!SSM: inv/readwrite/db-user}"
     password: "{!SSM: inv/readwrite/db-password}"
   merritt_path: "{!ENV: MERRITT_PATH !DEFAULT: https://merritt.cdlib.org}"
-  ## before private LB
-  ingest-services: "{!SSM: colladmin/ingest-services}"
-  # after private LB
-  # ingest-services: "{!SSM: colladmin/ingest-service}"
+  ingest-services: "{!SSM: colladmin/ingest-service}"
   ldap:
     admin_password: "{!SSM: ldap/accounts/admin/password}"
     admin_user:     "{!SSM: ldap/accounts/admin/user}"
@@ -40,10 +37,7 @@ default:
     ingest: 
       state: "{!SSM: ingest/port}/state?t=json"
       build-info: "{!SSM: ingest/port}/static/build.content.txt"
-      # before private LB
-      +ALB: "{!SSM: colladmin/ingest-service}state?t=json"
-      # after private LB
-      #ALB: "{!SSM: colladmin/ingest-service}state?t=json"
+      ALB: "{!SSM: colladmin/ingest-service}state?t=json"
     store: 
       state: "{!SSM: store/port}/state?t=json"
       ping: "{!SSM: store/port}/ping?t=json"
