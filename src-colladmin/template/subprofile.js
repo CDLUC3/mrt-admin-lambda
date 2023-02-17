@@ -3,6 +3,7 @@ $(document).ready(function(){
 });
 
 function init() {
+    $(this).attr("disabled", true);
     $("input.submit-admin").on("click", function(){
         data = {
             path: "submit-profile",
