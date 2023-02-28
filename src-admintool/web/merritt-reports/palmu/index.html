@@ -5,6 +5,12 @@
 <script	src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
 <link rel="stylesheet" type="text/css" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.css"></link>
+<style type="text/css">
+h1, .home {
+  text-align: center;
+  background-color: #F68D2E;
+}
+</style>
 <script src="{{JSON_REPORT_DATA}}"></script>
 <script type="text/javascript">
     $(document).ready(function(){
@@ -18,8 +24,9 @@
 </script>
 </head>
 <body>
-  <h1>Pal Museum Match: {{JSON_REPORT_DATE}}</h1>
-  <div><a href="/web/index.html">Merritt Admin Home</a></div>
+<h1>Pal Museum Match: {{JSON_REPORT_DATE}}</h1>
+<div class="home"><a href="/web/index.html">Admin Tool Home</a></div>
+<div>
   <div class="disp table-responsive">
     <table 
       class="table table-sm table-striped table-bordered" 
@@ -43,6 +50,7 @@
       </tbody>
     </table>
   </div>
+</div>
   <!--
     Use a bundled version of bootstrap (with popper) to allow for selectable page size
   -->
