@@ -7,6 +7,7 @@ class PalmuRefreshQuery < AdminQuery
     @not_loaded = 0
     @not_in_inventory = 0
     @ignored = 0
+    @prefixes = {}
 
     inventory = get_data_report('merritt-reports/palmu/inventory.txt')
 
@@ -47,15 +48,18 @@ class PalmuRefreshQuery < AdminQuery
     puts invcount
 
     @data = []
+
     @files.keys.sort.each do |k|
       v = @files[k]
       m = k.match(%r[(^|\/)(\d\d\d\d)\.\d\d\.])
       if (!m)
         v[:prefix] = "Other"
+        @prefixes['Other'] = @prefixes.fetch('Other', 0) + 1
         v[:status] = "Ignored"
         @ignored += 1
       else
         v[:prefix] = m[2]        
+        @prefixes[m[2]] = @prefixes.fetch(m[2], 0) + 1
         if v[:inventory] && v[:loaded]
           v[:status] = "Matched"
           @matched += 1
@@ -81,29 +85,33 @@ class PalmuRefreshQuery < AdminQuery
     "Pal Museum Inventory Refresh"
   end
 
-  def get_sql
-    %{
-      select 
-        'Matched' as status, 
-        #{@matched} as total, 
-        #{@files.length == 0 ? -1 : 100*@matched/@files.length} as percent
-      union
-      select 
-        'Not Loaded' as status, 
-        #{@not_loaded} as total, 
-        #{@files.length == 0 ? -1 : 100*@not_loaded/@files.length} as percent
-      union
-      select 
-        'Not in inventory' as status, 
-        #{@not_in_inventory} as total, 
-        #{@files.length == 0 ? -1 : 100*@not_in_inventory/@files.length} as percent
-      union
-      select 
-        'Ignored' as status, 
-        #{@ignored} as total, 
-        #{@files.length == 0 ? -1 : 100*@ignored/@files.length} as percent
-      ;
-    }
+  def run_query_sql
+    get_result_json(nil)
+  end
+
+  def get_result_data(results, types)
+    [
+      [
+        'Matched', 
+        @matched, 
+        @files.length == 0 ? -1 : 100 * @matched / @files.length
+      ],
+      [
+        'Not Loaded', 
+        @not_loaded, 
+        @files.length == 0 ? -1 : 100 * @not_loaded / @files.length
+      ],
+      [
+        'In Merritt, Not in Inventory', 
+        @not_in_inventory, 
+        @files.length == 0 ? -1 : 100 * @not_in_inventory / @files.length
+      ],
+      [
+        'Ignored', 
+        @ignored, 
+        @files.length == 0 ? -1 : 100 * @ignored / @files.length
+      ],
+    ]
   end
 
   def files_sql
