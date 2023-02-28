@@ -18,7 +18,7 @@
 </script>
 </head>
 <body>
-  <h1>Pal Museum Match</h1>
+  <h1>Pal Museum Match: {{JSON_REPORT_DATE}}</h1>
   <div class="disp table-responsive">
     <table 
       class="table table-sm table-striped table-bordered" 
@@ -32,12 +32,13 @@
     >
       <thead>
         <tr>
-          <th data-sortable="true" data-field="key" data-filter-control="input" data-filter-starts-with-search="true">File</th>
+          <th data-field="prefix" data-filter-control="input" data-filter-starts-with-search="true">Prefix</th>
+          <th data-sortable="true" data-field="key">File</th>
           <th data-sortable="true" data-field="status" data-filter-control="select">Status</th>
         </tr>
       </thead>
       <tbody>
-
+         
       </tbody>
     </table>
   </div>
