@@ -761,3 +761,14 @@ update_billing:
     SQL: call update_billing_range()
     SQL: call update_audits_processed()
     SQL: call update_ingests_processed()
+palmu:
+  link-title: Update the Pal Museum Inventory
+  breadcrumb: bp_content_projects
+  class: PalmuRefreshQuery
+  category: reports
+  description: |
+    Build a Palmu Inventory File and publish it to S3
+  documentation: |
+    SQL: get palmu file list
+    S3: get /merritt-reports/palmu/inventory.txt
+    S3: put /merritt-reports/palmu/match.json

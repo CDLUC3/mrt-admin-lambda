@@ -134,6 +134,14 @@ class AdminTask
     })
   end
 
+  def save_data_report(path, data)
+    @s3_client.put_object({
+      body: data,
+      bucket: @s3bucket,
+      key: path
+    })
+  end
+
   def paginate_data(fulldata)
     @known_total = fulldata.length
     return fulldata if page_size == 0 || fulldata.length <= page_size
@@ -236,6 +244,18 @@ class AdminTask
     })
     result = resp.body.read
     JSON.parse(result)
+  end
+
+  def get_data_report(path)
+    begin
+      resp = @s3_client.get_object({
+        bucket: @s3bucket,
+        key: path
+      })
+      result = resp.body
+    rescue
+      ""
+    end
   end
 
   def data_table_to_json(types, data, headers) 

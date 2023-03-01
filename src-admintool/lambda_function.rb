@@ -1,6 +1,7 @@
 require 'mysql2'
 require "base64"
 require "cgi"
+require 'aws-sdk-s3'
 require_relative 'lambda_base'
 require_relative 'queries/query'
 require_relative 'queries/query_factory'
@@ -73,10 +74,36 @@ module LambdaFunctions
       map['LAMBDABASE_JS'] = Mustache.render(File.open("template/lambda.base.js").read, map)
       if path == '/web/describeReports.html'
         map['REPORTS'] = getReportsList
+      elsif path =~ %r[/web/merritt-reports]
+        map['JSON_REPORT_DATA'] = get_report_url("merritt-reports/palmu/match.json")
+        map['JSON_REPORT_DATE'] = get_report_date("merritt-reports/palmu/match.json")
       end
       map
     end
- 
+
+    def get_report_url(key)
+      s3_client = Aws::S3::Client.new(region: 'us-west-2')
+      s3bucket = @config['s3-bucket']
+      signer = Aws::S3::Presigner.new
+      url, headers = signer.presigned_request(
+        :get_object, 
+        bucket: s3bucket, 
+        key: key
+      )
+      url
+    end
+
+    def get_report_date(key)
+      s3_client = Aws::S3::Client.new(region: 'us-west-2')
+      s3bucket = @config['s3-bucket']
+      data = s3_client.head_object(
+        bucket: s3bucket, 
+        key: key
+      )
+      return "" if data.nil?
+      "Updated #{data.last_modified.getlocal.strftime('%Y-%m-%d %H:%M:%S')}"
+    end
+
     def description_doc(rpt)
       desc = rpt.fetch('description', '')
       doc = rpt.fetch('documentation', '')

@@ -88,7 +88,7 @@ then
     --region us-west-2 \
     --output text \
     --timeout 180 \
-    --memory-size 128 \
+    --memory-size 512 \
     --no-cli-pager \
     --environment "Variables={SSM_ROOT_PATH=${SSM_DEPLOY_PATH},MERRITT_PATH=${MERRITT_PATH},ADMIN_ALB_URL=${ADMIN_ALB_URL},COLLADMIN_ALB_URL=${COLLADMIN_ALB_URL}}" 
 fi
