@@ -7,7 +7,6 @@ class PalmuRefreshQuery < AdminQuery
     @not_loaded = 0
     @not_in_inventory = 0
     @ignored = 0
-    @prefixes = {}
 
     inventory = get_data_report('merritt-reports/palmu/inventory.txt')
 
@@ -53,13 +52,11 @@ class PalmuRefreshQuery < AdminQuery
       v = @files[k]
       m = k.match(%r[(^|\/)(\d\d\d\d)\.\d\d\.])
       if (!m)
-        v[:prefix] = "Other"
-        @prefixes['Other'] = @prefixes.fetch('Other', 0) + 1
+        v[:prefixg] = "Other"
         v[:status] = "Ignored"
         @ignored += 1
       else
-        v[:prefix] = m[2]        
-        @prefixes[m[2]] = @prefixes.fetch(m[2], 0) + 1
+        v[:prefixg] = m[2]        
         if v[:inventory] && v[:loaded]
           v[:status] = "Matched"
           @matched += 1
