@@ -51,6 +51,10 @@ class PalmuRefreshQuery < AdminQuery
     @files.keys.sort.each do |k|
       v = @files[k]
       m = k.match(%r[(^|\/)(\d\d\d\d)\.\d\d\.])
+      v[:ext] = 'Other'
+      v[:ext] = 'Tiff' if k.downcase.match(%r[\.tiff?$])
+      v[:ext] = 'Jpeg' if k.downcase.match(%r[\.jpe?g$])
+      v[:ext] = 'PDF' if k.downcase.match(%r[\.pdf$])
       if (!m)
         v[:prefixg] = "Other"
         v[:status] = "Ignored"
