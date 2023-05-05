@@ -17,7 +17,7 @@ class MerrittLdap
       @ldap_connect[:encryption] = { 
         method: :simple_tls, 
         tls_options: { 
-          ssl_version: 'TLSv1_1' 
+          ssl_version: @ldapconf.fetch("tls", "TLSv1_2") 
         } 
       }
     end
