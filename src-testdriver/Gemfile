@@ -2,7 +2,7 @@ source "https://rubygems.org"
 gem 'rspec'
 gem 'colorize'
 gem 'byebug'
-gem 'uc3-ssm', git: 'https://github.com/CDLUC3/uc3-ssm.git', branch: 'main'
+gem 'uc3-ssm', git: 'https://github.com/CDLUC3/uc3-ssm.git', branch: 'ruby3.0'
 gem 'json'
 gem 'aws-sdk-lambda'
 gem 'base64'

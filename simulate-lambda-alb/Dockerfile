@@ -6,7 +6,7 @@
 # This image is intended to simulate an ALB fronting a Lambda
 # docker build -t ${ECR_REGISTRY}/simulate-lambda-alb .
 
-FROM ruby:2.7
+FROM ruby:3
 
 RUN apt-get update -y && apt-get -y upgrade
 
