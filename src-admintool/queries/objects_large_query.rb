@@ -3,13 +3,15 @@ class ObjectsLargeQuery < ObjectsQuery
     super(query_factory, path, myparams)
     subsql = %{
       select
-        f.inv_object_id
+        inv_object_id
       from
-        inv.inv_files f
-      group by
-        f.inv_object_id
-      having
-        sum(f.billable_size) > 1073741824
+        object_size os
+      inner join 
+        inv.inv_objects o
+      on 
+        os.inv_object_id = o.id
+      order by
+        billable_size desc
       limit #{get_limit.to_i} offset #{get_offset.to_i};
     }
     stmt = @client.prepare(subsql)
@@ -20,10 +22,11 @@ class ObjectsLargeQuery < ObjectsQuery
       @ids.push(r.values[0])
       @qs.push('?')
     end
+    @sort = 'size'
   end
 
   def get_title
-    "Large Objects (need to paginate)"
+    "Largest Objects"
   end
 
   def get_params
@@ -36,7 +39,7 @@ class ObjectsLargeQuery < ObjectsQuery
   end
 
   def get_max_limit
-    50
+    500
   end
 
   def page_size
@@ -45,6 +48,10 @@ class ObjectsLargeQuery < ObjectsQuery
 
   def get_obj_limit_query
     ""
+  end
+
+  def bytes_unit
+    "1000000000000"
   end
 
 end

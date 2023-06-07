@@ -55,9 +55,26 @@ CREATE TABLE object_size (
   inv_object_id int,
   file_count bigint,
   billable_size bigint,
+  max_size bigint,
+  average_size bigint,
   updated datetime,
   INDEX object_id(inv_object_id)
 );
+
+/*
+ALTER TABLE object_size add column max_size bigint;
+ALTER TABLE object_size add column average_size bigint;
+update 
+  object_size 
+set
+  max_size = (select max(billable_size) from inv.inv_files where inv_object_id=object_size.inv_object_id),
+  average_size = (select avg(billable_size) from inv.inv_files where inv_object_id=object_size.inv_object_id and billable_size = full_size)
+where
+  max_size is null
+and exists (select 1 from inv.inv_objects o where object_size.inv_object_id = o.id)
+limit 
+  10;
+*/
 
 /*
 DROP TABLE IF EXISTS audits_processed;

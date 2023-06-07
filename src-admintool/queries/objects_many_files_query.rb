@@ -3,13 +3,15 @@ class ObjectsManyFilesQuery < ObjectsQuery
     super(query_factory, path, myparams)
     subsql = %{
       select
-        f.inv_object_id
+        inv_object_id
       from
-        inv.inv_files f
-      group by
-        f.inv_object_id
-      having
-        count(f.id) > 1000
+        object_size os
+      inner join 
+        inv.inv_objects o
+      on 
+        os.inv_object_id = o.id
+      order by
+        file_count desc
       limit #{get_limit.to_i} offset #{get_offset.to_i};
     }
     stmt = @client.prepare(subsql)
@@ -20,10 +22,11 @@ class ObjectsManyFilesQuery < ObjectsQuery
       @ids.push(r.values[0])
       @qs.push('?')
     end
+    @sort = 'count'
   end
 
   def get_title
-    "Objects with Many Files (need to paginate)"
+    "Objects with Most Files"
   end
 
   def get_params
@@ -45,6 +48,10 @@ class ObjectsManyFilesQuery < ObjectsQuery
 
   def get_obj_limit_query
     ""
+  end
+
+  def bytes_unit
+    "1000000000"
   end
 
 end
