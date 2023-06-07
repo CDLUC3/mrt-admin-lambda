@@ -172,20 +172,12 @@ files_by_name_coll:
 
     Click the Object Id link to see a detailed listing of the files contained in the object.
 filesize:
-  link-title: File Size Averages
+  link-title: Largest Individual File Sizes
   breadcrumb: bp_repo
-  class: FilesizeQuery
+  class: ObjectsLargestFilesQuery
   category: files
   description: |
-    Generate a report on producer files size max/min/average within Merritt.
-filesizedist:
-  link-title: File Size Distribution
-  breadcrumb: bp_repo
-  class: FilesizeDistributionQuery
-  category: files
-  iterative: true
-  description: |
-    Generate a report on the distribution of producer files of a specific size ranges within Merritt.
+    Generate a report on largest individual producer files swithin Merritt.
 count_objects:
   link-title: Count Objects by Collection
   breadcrumb: bp_campus

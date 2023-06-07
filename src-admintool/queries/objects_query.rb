@@ -17,6 +17,7 @@ class ObjectsQuery < AdminQuery
     return 'o.modified desc' if sort == 'modified'
     return 'os.billable_size desc' if sort == 'size'
     return 'obj_count desc' if sort == 'count'
+    return 'max_size desc' if sort == 'maxfile'
     'o.id asc'
   end
 
