@@ -186,7 +186,7 @@ CREATE PROCEDURE update_object_size()
 BEGIN
 
   select
-    ifnull(max(updated), '1990-01-01')
+    ifnull(max(updated), '2013-01-01')
   into
     @lastupdated
   from
@@ -207,11 +207,20 @@ BEGIN
   );
 
   insert into
-    object_size(inv_object_id, file_count, billable_size, updated)
+    object_size(
+      inv_object_id, 
+      file_count, 
+      billable_size, 
+      max_size, 
+      average_size,
+      updated
+    )
   select
     inv_object_id,
     count(*) as file_count,
     sum(billable_size) as billable_size,
+    max(billable_size) as max_size,
+    avg(billable_size) as average_size,
     now()
   from
     inv.inv_files f

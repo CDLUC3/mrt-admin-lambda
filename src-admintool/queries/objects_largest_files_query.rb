@@ -1,4 +1,4 @@
-class ObjectsManyFilesQuery < ObjectsQuery
+class ObjectsLargestFilesQuery < ObjectsQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
     subsql = %{
@@ -11,7 +11,7 @@ class ObjectsManyFilesQuery < ObjectsQuery
       on 
         os.inv_object_id = o.id
       order by
-        file_count desc
+        max_size desc
       limit #{get_limit.to_i} offset #{get_offset.to_i};
     }
     stmt = @client.prepare(subsql)
@@ -22,11 +22,11 @@ class ObjectsManyFilesQuery < ObjectsQuery
       @ids.push(r.values[0])
       @qs.push('?')
     end
-    @sort = 'count'
+    @sort = 'maxfile'
   end
 
   def get_title
-    "Objects with Most Files"
+    "Objects with Largest Individual Files"
   end
 
   def get_params

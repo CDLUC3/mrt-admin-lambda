@@ -15,6 +15,9 @@ class ObjectsQuery < AdminQuery
   def get_object_sort(sort)
     return 'o.created desc' if sort == 'created'
     return 'o.modified desc' if sort == 'modified'
+    return 'os.billable_size desc' if sort == 'size'
+    return 'obj_count desc' if sort == 'count'
+    return 'max_size desc' if sort == 'maxfile'
     'o.id asc'
   end
 
@@ -50,25 +53,15 @@ class ObjectsQuery < AdminQuery
                 inv_object_id = o.id    
             )
         ) as mnemonic,
-        (
-          select
-            count(f.id)
-          from
-            inv.inv_files f
-          where
-            f.inv_object_id=o.id
-        ) as obj_count,
-        (
-          select
-            sum(f.billable_size)
-          from
-            inv.inv_files f
-          where
-            f.inv_object_id=o.id
-        ) as billable_size,
+        os.file_count as obj_count,
+        os.billable_size,
         o.modified as modified
       from
         inv.inv_objects o
+      inner join 
+        object_size os 
+      on 
+        os.inv_object_id = o.id
     } + get_where +
     %{  
       order by #{get_object_sort(@sort)}

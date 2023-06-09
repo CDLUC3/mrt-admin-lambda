@@ -5,7 +5,7 @@
 # This image is based on an architecture that matches the Lambda Ruby runtime
 # docker build -t ${ECR_REGISTRY}/mysql-ruby-lambda .
 
-FROM public.ecr.aws/lambda/ruby:2.7
+FROM public.ecr.aws/lambda/ruby:3
 
 RUN yum -y update
 
@@ -28,7 +28,7 @@ RUN bundle config --local build.mysql2 --with-mysql2-config=/usr/lib64/mysql/mys
     bundle config --local silence_root_warning true && \
     bundle config set path 'vendor/bundle' && \
     bundle install && \
-    gem install uc3-ssm/uc3-ssm*.gem --install-dir vendor/bundle/ruby/2.7.0
+    gem install uc3-ssm/uc3-ssm*.gem --install-dir vendor/bundle/ruby/3.2.0
 
 # This structure assumes the following:
 #   lambda_function.rb contains a module name LambdaFunctions which contains a class Handler

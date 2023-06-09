@@ -103,6 +103,13 @@ objects_by_author:
     This report displays an object with a matching author or matching a author wildcard string such as `Jane D%`.
     
     Click the Object Id link to see a detailed listing of the files contained in the object.
+filesize:
+  link-title: Largest Individual File Sizes
+  breadcrumb: bp_obj
+  class: ObjectsLargestFilesQuery
+  category: files
+  description: |
+    Generate a report on largest individual producer files swithin Merritt.
 objects_large:
   link-title: Sample Objects Larger than 1GB
   breadcrumb: bp_obj
@@ -171,21 +178,6 @@ files_by_name_coll:
     To keep the report efficient, it is recommended to scope the query to a specific collection mnemonic.
 
     Click the Object Id link to see a detailed listing of the files contained in the object.
-filesize:
-  link-title: File Size Averages
-  breadcrumb: bp_repo
-  class: FilesizeQuery
-  category: files
-  description: |
-    Generate a report on producer files size max/min/average within Merritt.
-filesizedist:
-  link-title: File Size Distribution
-  breadcrumb: bp_repo
-  class: FilesizeDistributionQuery
-  category: files
-  iterative: true
-  description: |
-    Generate a report on the distribution of producer files of a specific size ranges within Merritt.
 count_objects:
   link-title: Count Objects by Collection
   breadcrumb: bp_campus
