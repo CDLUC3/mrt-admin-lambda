@@ -1,7 +1,7 @@
 require 'json'
 require 'uc3-ssm'
 require 'mysql2'
-
+ 
 module LambdaFunctions
   class Handler
     def self.process(event:,context:)

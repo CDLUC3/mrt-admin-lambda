@@ -2,7 +2,8 @@ source "https://rubygems.org"
 
 gem 'json'
 gem 'mysql2'
-gem 'uc3-ssm', git: 'https://github.com/CDLUC3/uc3-ssm.git', branch: 'main'
+# carefully check that the right version of this gem is installed in the mysql-ruby-lambda image
+gem 'uc3-ssm', git: 'https://github.com/CDLUC3/uc3-ssm.git', branch: 'merritt'
 gem 'aws-sdk-s3'
 gem 'aws-sdk-lambda'
 gem 'aws-sdk-ec2'
