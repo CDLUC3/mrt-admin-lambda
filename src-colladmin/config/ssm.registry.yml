@@ -148,8 +148,6 @@ ingest:
   ezid-password:
     description: Merritt's EZID password
   zoo:
-    IngestQNames:
-      description: Zookeeper queue names used by Ingest workers
     lockName:
       description: Zookeeper lock name used by Ingest workers before submitting to Storage Service
   config:
