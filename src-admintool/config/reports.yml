@@ -310,8 +310,12 @@ invoices:
   description: |
     This report calculates the Merritt recharge for each campus.  
     This report can be run for all campuses or for a specific campus.
-    The report also accounts for the significant recharge calculations that were implemented in FY2019, 
+    The report accounts for the significant recharge calculations that were implemented in FY2019, 
     including the 10TB storage allocation made available to each main campus library free of recharge.
+    
+    As of June 2023, the pre-2019 chargeback calculations are no longer supported.
+
+    Legacy "Dash" collections are explicitly excluded from this report.
 audit_status:
   link-title: Audit - Irregular Status
   breadcrumb: bp_audit

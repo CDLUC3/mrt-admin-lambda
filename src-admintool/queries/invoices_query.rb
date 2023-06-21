@@ -2,7 +2,8 @@ class InvoicesQuery < AdminQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
     # Fiscal year to report on.  Starting with FY2019, there are significant changes to the rate and adjustments for charge backs.
-    @fy = get_param('fy', 2020).to_i
+    @fy = get_param('fy', DateTime.now.next_day(-182).year).to_i
+    @fy = 2019 if @fy < 2019
 
     # FY Start Date
     @dstart = "#{@fy}-07-01"
@@ -40,7 +41,8 @@ class InvoicesQuery < AdminQuery
     # Compute the charge rate.  Before FY19: $650/TB.  After: $150/TB.
     # rate = (dend <= '2019-07-01') ? 0.000000000001780822 : 0.000000000000410959
     # Using our published rate: https://github.com/CDLUC3/mrt-doc/wiki/Policies-and-Procedures#pricing
-    @rate = (@dend <= '2019-07-01') ? 0.00000000000178 : 0.000000000000410959
+    # @rate = (@dend <= '2019-07-01') ? 0.00000000000178 : 0.000000000000410959
+    @rate = 0.000000000000410959
 
     # Format the annual rate to 2 digits of precision
     @annrate = (@rate * 1_000_000_000_000 * 365).to_i
@@ -67,6 +69,19 @@ class InvoicesQuery < AdminQuery
   end
 
   def get_sql
+    libown = %{
+      'UCSF Library',
+      'UCI Library',
+      'UCSC Library',
+      'UCLA Library',
+      'UCR Library',
+      'UCB Library',
+      'UCSB Library',
+      'UCM Library',
+      'UCSD Library',
+      'UCD Library'
+    }
+
     sqlfrag = %{
       /*
         The following query fragment will be used 3 times to create 3 levels of groupings.
@@ -160,30 +175,13 @@ class InvoicesQuery < AdminQuery
         (
           select
             ((average_available * days_available) + (ytd_size * days_projected)) / datediff(dend, dstart)
-        ) as daily_average_projected      /* Projected average for the FY */,
-        (
-          select
-            case
-              /* exemptions only apply before FY19*/
-              when dstart < '2019-07-01' then
-                (
-                  select
-                    ifnull((
-                      select
-                        max(exempt_bytes)
-                      from
-                        billing_owner_exemptions be
-                      where
-                        be.inv_owner_id = c.inv_owner_id
-                    ), 0)
-                )
-              else 0
-            end
-        ) as owner_exempt_bytes                  /* If before FY19, compute storage exemption per owner */
+        ) as daily_average_projected      /* Projected average for the FY */
       from
         owner_collections c
       where 
         ogroup like ?
+      and
+        collection_name not like '% Dash'
     }
 
     %{
@@ -203,8 +201,6 @@ class InvoicesQuery < AdminQuery
         days_projected               /* number of days to "project" to the end of the FY*/,
         average_available            /* YTD average size */,
         daily_average_projected      /* Projected average for the FY */,
-        null as owner_exempt_bytes,
-        null as unexempt_average_projected,
         null as cost,
         null as cost_adj
       from
@@ -216,12 +212,8 @@ class InvoicesQuery < AdminQuery
 
       /*
         Aggregated usage at the CAMPUS level.
-        - Before FY19: invoices were produced at the "owner" level, but only a fraction (14 of 37) were sent.
-          - Grandfathered content has been designated as "exempt".
-          - Exemption totals are pulled from a separate table.
-          - A $50 minimum is applied to each invoice.
         - FY19 and beyond: invoices will be produced at a "campus" level.
-          - Each campus will receive 10TB of free storage -- this replaces the notion of "exempt" content.
+          - Each campus library will receive 10TB of free storage.
       */
       select
         max(dstart) as dstart,
@@ -236,25 +228,15 @@ class InvoicesQuery < AdminQuery
         max(days_projected) as days_projected,
         null as average_available,
         sum(daily_average_projected) as daily_average_projected,
-        null as owner_exempt_bytes,
-        null as unexempt_average_projected,
+        sum(daily_average_projected) * rate * 365 as cost,
         (
           select
             case
-              /* Before FY19, exemptions apply */
-              when dstart < '2019-07-01' then null
-              else sum(daily_average_projected)
-            end * rate * 365
-        ) as cost,
-        (
-          select
-            case
-              /* Before FY19, exemptions apply */
-              when dstart < '2019-07-01' then null
-              /* Starting in FY19, each campus receives 10TB of free storage */
+              when ogroup = 'CDL' then 0 
+              when ogroup = 'Other' then sum(daily_average_projected) * rate * 365 
               when sum(daily_average_projected) < 10000000000000 then 0
-              else sum(daily_average_projected) - 10000000000000
-            end * rate * 365
+              else (sum(daily_average_projected) - 10000000000000) * rate * 365
+            end
         ) as cost_adj
       from
       (
@@ -267,11 +249,6 @@ class InvoicesQuery < AdminQuery
 
       /*
         Aggregated usage at the Merritt owner object level.
-        - Before FY19: invoices were produced at the "owner" level, but only a fraction (14 of 37) were sent.
-          - Grandfathered content has been designated as "exempt".
-          - Exemption totals are pulled from a separate table.
-          - A $50 minimum is applied to each invoice.
-        - FY19 and beyond: invoices will be produced at a "campus" level.
           - Each campus will receive 10TB of free storage -- this replaces the notion of "exempt" content.
       */
       select
@@ -287,37 +264,15 @@ class InvoicesQuery < AdminQuery
         max(days_projected) as days_projected,
         null as average_available,
         sum(daily_average_projected) as daily_average_projected,
-        max(owner_exempt_bytes) as owner_exempt_bytes,
+        sum(daily_average_projected) * rate * 365 as cost,
         (
           select
             case
-              /* Before FY19, $50 minimum per Merritt Owner */
-              when dstart >= '2019-07-01' then null
-              when (sum(daily_average_projected) - max(owner_exempt_bytes)) > 0
-                then (sum(daily_average_projected) - max(owner_exempt_bytes))
-              else 0
-            end
-        ) as unexempt_average_projected,
-        (
-          select
-            case
-              /* Before FY19, $50 minimum per Merritt Owner */
-              when dstart >= '2019-07-01' then null
-              when (sum(daily_average_projected) - max(owner_exempt_bytes)) * rate * 365 > 0
-                then (sum(daily_average_projected) - max(owner_exempt_bytes)) * rate * 365
-              else 0
-            end
-        ) as cost,
-        (
-          select
-            case
-              /* Before FY19, $50 minimum per Merritt Owner */
-              when dstart >= '2019-07-01' then null
-              when (sum(daily_average_projected) - max(owner_exempt_bytes)) * rate * 365 > 50
-                then (sum(daily_average_projected) - max(owner_exempt_bytes)) * rate * 365
-              when (sum(daily_average_projected) - max(owner_exempt_bytes)) * rate * 365 < 0
-                then 0
-              else 50
+              when ogroup = 'CDL' then 0 
+              when ogroup = 'Other' then sum(daily_average_projected) * rate * 365
+              when own_name in (#{libown}) and sum(daily_average_projected) < 10000000000000 then 0
+              when own_name in (#{libown}) then (sum(daily_average_projected) - 10000000000000) * rate * 365
+              else sum(daily_average_projected) * rate * 365
             end
         ) as cost_adj
       from
@@ -351,11 +306,8 @@ class InvoicesQuery < AdminQuery
       'Avg -- Average bytes found for the days in which content was found',
 
       'Daily Avg (Projected) (over whole year) -- Average bytes projected to the end of the year AND prorated for collections that were begun over the course of the FY',
-      'Owner Exempt Bytes -- Pre FY2019 byte exemption for a Merritt Owner object',
-      'Unexempt Avg -- Average bytes minus exemption bytes for a Merritt Owner object',
-
-      "Cost/TB #{@annrate} -- Cumulative daily storage cost for the entire fiscal year",
-      "Adjusted Cost -- Adjusted cost. Before FY2019, all owners were assessed a $50 minimum charge.  Begining in FY2019, 10TB of complimentary storage are available to each campus."
+      "Cost -- $150/TB.",
+      "Adjusted Cost -- 10TB of complimentary storage are available to each campus library (remainder will apply to the campus)"
     ]
   end
 
@@ -374,16 +326,13 @@ class InvoicesQuery < AdminQuery
       'bytes', #average - particularly useful for partial year collections
 
       'bytes', #projected average
-      @dstart < '2019-07-01' ? 'bytes' : 'na', # exempt bytes
-      @dstart < '2019-07-01' ? 'bytes' : 'na', #unexempt average
-
-      'money', #cost
+      'money', #adj cost
       'money' #adj cost
     ]
   end
 
   def bytes_unit
-    "1000000"
+    "1000000000000"
   end
 
   def campus_params(campus)
