@@ -1,5 +1,6 @@
 # Explicitly include all parent classes
 require_relative 'query'
+require_relative 's3_query'
 require_relative 'objects_query'
 require_relative 'files_query'
 require_relative 'idlist_query'

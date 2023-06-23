@@ -110,6 +110,13 @@ filesize:
   category: files
   description: |
     Generate a report on largest individual producer files swithin Merritt.
+producer_files:
+  link-title: Producer Files for a Mnemonic
+  breadcrumb: bp_content_projects
+  class: ProducerFilesQuery
+  category: files
+  description: |
+    Producer Files for a Mnemonic.
 objects_large:
   link-title: Sample Objects Larger than 1GB
   breadcrumb: bp_obj

@@ -521,6 +521,13 @@
       <ul>
         <li class="graph"><a href="{{ADMINTOOL_BASE}}/web/merritt-reports/palmu/index.html">Pal Museum Inventory Report</a></li>
         <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=palmu">Refresh Pal Museum Inventory Report</a></li>
+        <li class="graph">
+          <form action="{{ADMINTOOL_HOME}}">
+            Producer Files for a Mnemonic:
+            <input name="mnemonic" type="text" value="merritt_demo" size=20/>
+            <input name="path" type="hidden" value="producer_files"/>
+            <input type="submit" value="Go!"/>
+          </form>
       </ul>
     </div>
 

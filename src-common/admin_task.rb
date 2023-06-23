@@ -443,4 +443,22 @@ class AdminTask
   def datestr_to_date(str)
     DateTime.parse(str.to_s).to_time
   end
+
+  def get_report_url(key)
+    s3_client = Aws::S3::Client.new(region: 'us-west-2')
+    s3bucket = @config['s3-bucket']
+    signer = Aws::S3::Presigner.new
+    url, headers = signer.presigned_request(
+      :get_object, 
+      bucket: s3bucket, 
+      key: key
+    )
+    url
+  end
+
+  def num_format(n)
+    return "" if n.nil?
+    n.to_s.chars.to_a.reverse.each_slice(3).map(&:join).join(',').reverse
+  end
+
 end
