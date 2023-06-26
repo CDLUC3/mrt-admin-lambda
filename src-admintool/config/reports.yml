@@ -750,12 +750,19 @@ ingest_bytes_by_hour:
     - the default is the most recent 7 days
     - ranges over 100 days will not be graphed.  The data retrieval is too slow for ranges that large. 
 ingest_bytes_by_week:
-  link-title: Graph bytes ingested by hour or day for a range of time
+  link-title: Graph bytes ingested by week for a range of time
   breadcrumb: bp_ingest
   class: IngestBytesByWeekQuery
   category: files
   description: |
     Generate a graphable list of total bytes ingested by week.
+ingest_bytes_by_month:
+  link-title: Graph bytes ingested by month for the last 10 years
+  breadcrumb: bp_ingest
+  class: IngestBytesByMonthQuery
+  category: files
+  description: |
+    Generate a graphable list of total bytes ingested by month.
 
 update_billing:
   link-title: Update the Merritt Billing database (via stored procedure)
