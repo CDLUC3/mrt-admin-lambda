@@ -87,8 +87,9 @@ then
     --function-name ${LAMBDA_ARN} \
     --region us-west-2 \
     --output text \
-    --timeout 180 \
-    --memory-size 512 \
+    --timeout 360 \
+    --memory-size 2500 \
+    --ephemeral-storage "Size=2048" \
     --no-cli-pager \
     --environment "Variables={SSM_ROOT_PATH=${SSM_DEPLOY_PATH},MERRITT_PATH=${MERRITT_PATH},ADMIN_ALB_URL=${ADMIN_ALB_URL},COLLADMIN_ALB_URL=${COLLADMIN_ALB_URL}}" 
 fi

@@ -26,19 +26,19 @@ class S3AdminQuery < AdminQuery
   end
 
   def create_result_csv(results, tf)
-    types = get_types(results)
-    data = get_result_data(results, types)
-    @csvlen = data.length
-    headers = get_headers(results)
+    types = get_types([[]])
+    headers = get_headers([[]])
     headers.each_with_index do |h, i|
       tf.write(',') unless i == 0
       tf.write("\"#{h}\"")
     end
     tf.write("\n")
-    data.each do |row|
-      row.each_with_index do |col,i|
+    results.each do |r|
+      @csvlen += 1
+      # puts @csvlen if @csvlen % 100000 == 0
+      r.values.each_with_index do |c,i|
         tf.write(",") unless i == 0
-        tf.write("\"#{col}\"")
+        tf.write("\"#{c}\"")
       end
       tf.write("\n")
     end
