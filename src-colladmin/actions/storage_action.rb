@@ -194,8 +194,8 @@ class StorageAction < AdminAction
         return "<message>Manifest is too large to download:  use curl: #{srvc}#{endpoint}</message>" if qxml.body.length > 5000000
         return qxml.body
       rescue => e
-        puts(e.message)
-        puts(e.backtrace)
+        log(e.message)
+        log(e.backtrace)
         return "<message>Error #{e.message}, try curl:  #{srvc}#{endpoint}</message>"
       end
   
@@ -217,8 +217,8 @@ class StorageAction < AdminAction
         return "<message>Manifest is too large to download:  use curl: #{srvc}#{endpoint}</message>" if qxml.body.length > 5000000
         return qxml.body
       rescue => e
-        puts(e.message)
-        puts(e.backtrace)
+        log(e.message)
+        log(e.backtrace)
         return "<message>Error #{e.message}, try curl:  #{srvc}#{endpoint}</message>"
       end
     end

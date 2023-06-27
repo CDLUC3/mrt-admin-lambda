@@ -141,8 +141,8 @@ class InvQueueList < MerrittJson
         next unless qjson.status == 200
         InventoryQueue.new(self, qjson.body)
       rescue => e
-        puts(e.message)
-        puts(e.backtrace)
+        LambdaBase.log(e.message)
+        LambdaBase.log(e.backtrace)
       end
     end
   end

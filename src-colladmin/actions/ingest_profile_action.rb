@@ -46,8 +46,8 @@ class IngestProfileAction < ForwardToIngestAction
       return nil unless qjson.status == 200
       SingleIngestProfileWrapper.new(qjson.body).profile
     rescue => e
-      puts(e.message)
-      puts(e.backtrace)
+      log(e.message)
+      log(e.backtrace)
     end
   end
 
@@ -65,8 +65,8 @@ class IngestProfileAction < ForwardToIngestAction
     begin
       ProfileList.new(get_body, @collections)
     rescue => e
-      puts(e.message)
-      puts(e.backtrace)
+      log(e.message)
+      log(e.backtrace)
       nil
     end
   end

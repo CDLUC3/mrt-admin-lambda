@@ -49,7 +49,7 @@ class LambdaBase
       @cognito_username = jtoken[0].fetch('username', '')
       @cognito_groups = jtoken[0].fetch("cognito:groups", [])
     rescue => e 
-      puts e
+      LambdaBase.log_config(config, e)
     end
   end
 
@@ -306,5 +306,13 @@ class LambdaBase
 
   def self.is_stage
     LambdaBase.get_environment =~ %r[stg]
+  end
+
+  def self.log_config(config, message)
+    puts "RequestId: #{config.fetch('request_id', $REQID)}; #{message}"
+  end
+
+  def self.log(message)
+    self.log_config({}, message)
   end
 end

@@ -108,7 +108,7 @@ class MerrittLdap
       else
         coll = LdapCollection.new(nil, role.coll)
         @collections[role.coll] = coll
-        puts("Not found: [#{role.coll}]")
+        LambdaBase.log("Not found: [#{role.coll}]")
       end
       role.set_collection(coll)
 
@@ -117,7 +117,7 @@ class MerrittLdap
         if @users.key?(u)
           user = @users[u]
         else
-          puts("Not found: [#{u}]")
+          LambdaBase.log("Not found: [#{u}]")
           user = LdapUser.new(nil, u)
           @users[u] = user
         end
@@ -171,7 +171,7 @@ class LdapRecord
     entry.to_s.split(",").each do |s|
       return s[part.length, s.length] if s.start_with?(part)
     end
-    puts("Part not found in [#{entry.to_s}], Part[#{part}]")
+    LambdaBase.log("Part not found in [#{entry.to_s}], Part[#{part}]")
     return defval
   end
 end
@@ -201,7 +201,7 @@ class LdapLinkedRecord < LdapRecord
     entry.to_s.split(",").each do |s|
       return s[part.length, s.length] if s.start_with?(part)
     end
-    puts("Part not found in [#{entry.to_s}], Part[#{part}]")
+    LambdaBase.log("Part not found in [#{entry.to_s}], Part[#{part}]")
     return defval
   end
 end

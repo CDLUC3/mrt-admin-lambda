@@ -3,14 +3,14 @@ require 'httpclient'
 class HttpPostJson
     def initialize(ingest_server, endpoint, data = {})
         url = "#{ingest_server}#{endpoint}"
-        puts("POST #{url}")
+        LambdaBase.log("POST #{url}")
         cli = HTTPClient.new( 
             default_header: {
                 "Content-Type": "*/*"
             }
         )
         @resp = cli.post(url, data)
-        puts(@resp.status)
+        LambdaBase.log(@resp.status)
         @resp    
     end
 

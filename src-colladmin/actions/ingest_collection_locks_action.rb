@@ -77,8 +77,8 @@ class IngestCollectionLocksAction < ForwardToIngestAction
         names.fetch(k, {})[:locked] = true
       end
     rescue => e
-      puts(e.message)
-      puts(e.backtrace)
+      log(e.message)
+      log(e.backtrace)
     end
     names
   end

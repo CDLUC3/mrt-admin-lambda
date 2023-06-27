@@ -35,8 +35,8 @@ class CollIterateQueueAction < PostToIngestAction
       begin
         resp = HttpPostJson.new(get_ingest_server, @it_endpoint.gsub("queue", node))
       rescue => e
-        puts(e.message)
-        puts(e.backtrace)
+        log(e.message)
+        log(e.backtrace)
       end
     end
     { message: "queue release submitted" }.to_json
@@ -65,8 +65,8 @@ class IterateQueueAction < PostToIngestAction
         resp = HttpPostJson.new(get_ingest_server, endpt)
         return { message: "Status #{resp.status} for #{endpt}" }.to_json unless resp.status == 200
       rescue => e
-        puts(e.message)
-        puts(e.backtrace)
+        log(e.message)
+        log(e.backtrace)
       end
     end
     {

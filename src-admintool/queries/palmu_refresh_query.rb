@@ -29,7 +29,6 @@ class PalmuRefreshQuery < AdminQuery
       @files[tt] = @files.fetch(tt, {key: tt})
       @files[tt][:loaded] = true
     end
-    puts rcount
 
     invcount = 0
     inventory.each_line do |line|
@@ -44,7 +43,6 @@ class PalmuRefreshQuery < AdminQuery
       @files[tt] = @files.fetch(tt, {key: tt})
       @files[tt][:inventory] = true
     end
-    puts invcount
 
     @data = []
 
@@ -70,7 +68,6 @@ class PalmuRefreshQuery < AdminQuery
         elsif v[:loaded]
           v[:status] = "Not in inventory"
           @not_in_inventory += 1
-          puts k
         end
       end
       v.delete(:inventory)

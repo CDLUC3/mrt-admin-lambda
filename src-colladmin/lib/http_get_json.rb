@@ -3,10 +3,10 @@ require 'httpclient'
 class HttpGetJson
     def initialize(ingest_server, endpoint)
         url = "#{ingest_server}#{endpoint}"
-        puts("GET #{url}")
+        LambdaBase.log("GET #{url}")
         cli = HTTPClient.new
         @resp = cli.get(url, {}, {"Accept": "application/json"})
-        puts(@resp.status)
+        LambdaBase.log(@resp.status)
         @resp    
     end
 
@@ -22,10 +22,10 @@ end
 class HttpGetXml
     def initialize(ingest_server, endpoint)
         url = "#{ingest_server}#{endpoint}"
-        puts("GET #{url}")
+        LambdaBase.log("GET #{url}")
         cli = HTTPClient.new
         @resp = cli.get(url, {}, {"Accept": "application/xml"})
-        puts(@resp.status)
+        LambdaBase.log(@resp.status)
         @resp    
     end
 

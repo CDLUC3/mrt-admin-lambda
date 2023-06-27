@@ -3,8 +3,8 @@ require 'rest-client'
 class HttpPostMultipartJson
     def initialize(ingest_server, endpoint, parms)
         url = "#{ingest_server}#{endpoint}"
-        puts("POST #{url}")
-        puts("PARAMETERS #{parms}")
+        LambdaBase.log("POST #{url}")
+        LambdaBase.log("PARAMETERS #{parms}")
         header = {:multipart => true}
 
         @resp = RestClient.post url,  parms.merge(header) if parms != nil

@@ -461,4 +461,7 @@ class AdminTask
     n.to_s.chars.to_a.reverse.each_slice(3).map(&:join).join(',').reverse
   end
 
+  def log(message)
+    LambdaBase.log_config(@config, message)
+  end
 end

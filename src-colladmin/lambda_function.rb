@@ -85,6 +85,8 @@ module LambdaFunctions
 
   class Handler < LambdaBase
     def self.process(event:,context:)
+      $REQID = context.aws_request_id
+      config = {}
       begin
         config_file = 'config/database.ssm.yml'
         config_block = ENV.key?('MERRITT_ADMIN_CONFIG') ? ENV['MERRITT_ADMIN_CONFIG'] : 'default'
@@ -94,6 +96,8 @@ module LambdaFunctions
           file: config_file, 
           return_key: config_block
         )
+        config['request_id'] = context.aws_request_id
+
         collHandler = LambdaFunctions::Handler.new(config, event, context.client_context)
         # Read the notes in LambdaBase for a description of how authentication is performed
         # A unique exception will be called if the user/client cannot authenticate
@@ -102,9 +106,9 @@ module LambdaFunctions
         collHandler.check_permission
   
         respath = event.fetch("path", "")
-        puts(respath)
+        LambdaBase.log_config(config, "PATH: #{respath}")
         myparams = collHandler.get_params_from_event(event)
-        puts(myparams)
+        LambdaBase.log_config(config, "PARAMS: #{myparams}")
         return collHandler.web_assets("/web/favicon.ico", myparams) if respath =~ %r[^/(favicon.ico).*]
         return collHandler.web_assets(respath, myparams) if collHandler.web_asset?(respath)
 
@@ -130,11 +134,11 @@ module LambdaFunctions
           body: result
         }
       rescue PermissionDeniedError => e
-        puts(e.message)
+        LambdaBase.log_config(config, e.message)
         return LambdaBase.error(401, e.message, false)
       rescue => e
-        puts(e.message)
-        puts(e.backtrace)
+        LambdaBase.log_config(config, e.message)
+        LambdaBase.log_config(config, e.backtrace)
         return LambdaBase.error(500, e.message, false)
       end
 

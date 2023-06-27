@@ -233,8 +233,8 @@ class ReplicationAction < AdminAction
             ids.push(r[0])
           end
         rescue => e
-          puts(e.message)
-          puts(e.backtrace)
+          log(e.message)
+          log(e.backtrace)
           return { error: "#{e.message} for #{endpoint}" }.to_json
         end
       end
@@ -258,8 +258,8 @@ class ReplicationAction < AdminAction
       return parseReplicResponse(qjson.body).to_json unless qjson.body.empty?
       { message: "No response for #{endpoint}" }.to_json
     rescue => e
-      puts(e.message)
-      puts(e.backtrace)
+      log(e.message)
+      log(e.backtrace)
       { error: "#{e.message} for #{endpoint}" }.to_json
     end
 

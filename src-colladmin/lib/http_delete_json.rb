@@ -3,14 +3,14 @@ require 'httpclient'
 class HttpDeleteJson
     def initialize(ingest_server, endpoint)
         url = "#{ingest_server}#{endpoint}"
-        puts("DELETE #{url}")
+        LambdaBase.log("DELETE #{url}")
         cli = HTTPClient.new( 
             default_header: {
                 "Content-Type": "*/*"
             }
         )
         @resp = cli.delete(url, {})
-        puts(@resp.status)
+        LambdaBase.log(@resp.status)
         @resp    
     end
 

@@ -81,8 +81,8 @@ class AdminQuery < AdminTask
     results = stmt.execute(*query_params)
     get_result_json(results)
   rescue => e
-    puts(e)
-    puts(get_sql)
+    log(e)
+    log(get_sql)
   end
 
   def run_query_sql
@@ -92,8 +92,8 @@ class AdminQuery < AdminTask
     results = stmt.execute(*query_params)
     get_result_json(results)
   rescue => e
-    puts(e)
-    puts(get_sql)
+    log(e)
+    log(get_sql)
   end
 
   def get_headers(results)

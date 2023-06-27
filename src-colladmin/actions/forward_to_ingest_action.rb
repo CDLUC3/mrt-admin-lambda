@@ -20,8 +20,8 @@ class ForwardToIngestAction < AdminAction
       return convertJsonToTable(body) unless body.empty?
       { message: "No response for #{@endpoint}" }.to_json
     rescue => e
-      puts(e.message)
-      puts(e.backtrace)
+      log(e.message)
+      log(e.backtrace)
       { error: "#{e.message} for #{@endpoint}" }.to_json
     end
   end

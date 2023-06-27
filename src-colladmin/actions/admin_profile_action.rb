@@ -58,8 +58,8 @@ class AdminProfileAction < ForwardToIngestAction
     begin
       AdminProfileList.new(get_body, get_objs, @type)
     rescue => e
-      puts(e.message)
-      puts(e.backtrace)
+      log(e.message)
+      log(e.backtrace)
       nil
     end
   end

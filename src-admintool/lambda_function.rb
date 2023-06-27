@@ -10,10 +10,14 @@ module LambdaFunctions
   class Handler < LambdaBase
 
     def self.process(event:,context:)
+      $REQID = context.aws_request_id
+      config = {}
       begin
         config_file = 'config/database.ssm.yml'
         config_block = ENV.key?('MERRITT_ADMIN_CONFIG') ? ENV['MERRITT_ADMIN_CONFIG'] : 'default'
         config = Uc3Ssm::ConfigResolver.new.resolve_file_values(file: config_file, resolve_key: config_block, return_key: config_block)
+        config['request_id'] = context.aws_request_id
+
         collHandler = Handler.new(config, event, context.client_context)
         # Read the notes in LambdaBase for a description of how authentication is performed
         # A unique exception will be called if the user/client cannot authenticate
@@ -29,7 +33,7 @@ module LambdaFunctions
         dbconf = config.fetch('dbconf', {})
         client = collHandler.get_mysql
 
-        puts(myparams)
+        LambdaBase.log_config(config, "PARAMS: #{myparams}")
 
         path = collHandler.get_key_val(myparams, 'path', 'na')
         query_factory = QueryFactory.new(
@@ -48,11 +52,11 @@ module LambdaFunctions
           body: result.to_json
         }
       rescue PermissionDeniedError => e
-        puts(e.message)
+        log_config(config, e.message)
         return LambdaBase.error(401, e.message, false)
       rescue => e
-        puts(e.message)
-        puts(e.backtrace)
+        LambdaBase.log_config(config, e.message)
+        LambdaBase.log_config(config, e.backtrace)
         {
           headers: {
             'Access-Control-Allow-Origin': '*',
