@@ -26,10 +26,10 @@ class IngestBytesByMonthQuery < AdminQuery
     end
     sql = sql + %{
         ) times
-      left join inv.inv_files f
-        on times.ts = date_add(date(f.created), interval - dayofyear(f.created) + 1 DAY) 
-        and f.created >= '#{@tstart}'
-        and f.created < '#{@tend}'
+      left join owner_coll_mime_use_details f
+        on times.ts = date_add(date(f.date_added), interval - dayofyear(f.date_added) + 1 DAY) 
+        and f.date_added >= '#{@tstart}'
+        and f.date_added < '#{@tend}'
       group by timeblock
       order by timeblock
       ; 
@@ -47,7 +47,7 @@ class IngestBytesByMonthQuery < AdminQuery
   end
   
   def bytes_unit
-    "1000000000"
+    "1000000000000"
   end
   
   def is_line_chart
