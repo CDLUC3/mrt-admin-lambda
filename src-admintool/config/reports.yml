@@ -192,6 +192,13 @@ count_objects:
   category: collections
   description: |
     This report provides a count of objects by collection. The results are summarized at a campus level.
+list_collections:
+  link-title: List Collections
+  breadcrumb: bp_campus
+  class: ListCollectionsQuery
+  category: collections
+  description: |
+    This report provides a list of collections.
 collections_by_node:
   link-title: Count Objects Residing on a Storage Node
   breadcrumb: bp_storage
