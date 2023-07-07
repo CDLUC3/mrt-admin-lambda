@@ -48,11 +48,13 @@ select
     select count(*) 
     from inv.inv_files f 
     where f.inv_object_id=o.id
+      and billable_size = full_size
   ) as filecount,
   (
     select count(*) 
     from inv.inv_files f 
     where f.inv_object_id=o.id and source='producer'
+      and billable_size = full_size
   ) as pfilecount,
   (
     select sum(billable_size) 
