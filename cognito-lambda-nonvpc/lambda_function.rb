@@ -77,8 +77,8 @@ module LambdaFunctions
           end
         end
       rescue => e
-        puts(e.message)
-        puts(e.backtrace)
+        self.log.log(e.message)
+        self.log.log(e.backtrace)
       end
       users
     end
@@ -101,8 +101,8 @@ module LambdaFunctions
           pagination_token = resp.next_token
         end 
       rescue => e
-        puts(e.message)
-        puts(e.backtrace)
+        self.log(e.message)
+        self.log(e.backtrace)
       end
       users
     end
@@ -127,6 +127,7 @@ module LambdaFunctions
 
     def self.process(event:,context:)
       begin
+        $REQID = context.aws_request_id
         handler = Handler.new(event)
         body = handler.do_request
         {
@@ -134,13 +135,17 @@ module LambdaFunctions
           body: body
         }
       rescue => e
-        puts(e.message)
-        puts(e.backtrace)
+        self.log(e.message)
+        self.log(e.backtrace)
         {
           statusCode: 500,
           body: e.message
         }        
       end
     end
+
+    def self.log(message)
+      puts "RequestId: #{$REQID}; #{message}"
+    end  
   end
 end
