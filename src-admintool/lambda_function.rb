@@ -11,6 +11,7 @@ module LambdaFunctions
 
     def self.process(event:,context:)
       $REQID = context.aws_request_id
+      $TASKNAME = 'assets'
       config = {}
       begin
         config_file = 'config/database.ssm.yml'
@@ -24,18 +25,20 @@ module LambdaFunctions
         collHandler.check_permission
 
         respath = event.fetch("path", "")
+        $TASKNAME = respath
         return LambdaBase.redirect("/web/index.html") if respath.empty?
         return LambdaBase.redirect("/web#{respath}") if respath =~ %r[^/index.html.*]
         myparams = collHandler.get_params_from_event(event)
+        path = collHandler.get_key_val(myparams, 'path', 'na')
+        $TASKNAME = path unless path == 'na'
         return collHandler.web_assets("/web/favicon.ico", myparams) if respath =~ %r[^/favicon.ico.*]
         return collHandler.web_assets(respath, myparams) if collHandler.web_asset?(respath)
 
         dbconf = config.fetch('dbconf', {})
         client = collHandler.get_mysql
 
-        LambdaBase.log_config(config, "PARAMS: #{myparams}")
+        LambdaBase.log_config(config, "PATH: #{respath}; PARAMS: #{myparams}")
 
-        path = collHandler.get_key_val(myparams, 'path', 'na')
         query_factory = QueryFactory.new(
           client, 
           config

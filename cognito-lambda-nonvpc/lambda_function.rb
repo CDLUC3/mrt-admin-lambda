@@ -77,8 +77,8 @@ module LambdaFunctions
           end
         end
       rescue => e
-        self.log.log(e.message)
-        self.log.log(e.backtrace)
+        self.log(e.message)
+        self.log(e.backtrace)
       end
       users
     end

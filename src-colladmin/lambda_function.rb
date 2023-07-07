@@ -86,6 +86,7 @@ module LambdaFunctions
   class Handler < LambdaBase
     def self.process(event:,context:)
       $REQID = context.aws_request_id
+      $TASKNAME = 'assets'
       config = {}
       begin
         config_file = 'config/database.ssm.yml'
@@ -106,16 +107,15 @@ module LambdaFunctions
         collHandler.check_permission
   
         respath = event.fetch("path", "")
-        LambdaBase.log_config(config, "PATH: #{respath}")
         myparams = collHandler.get_params_from_event(event)
-        LambdaBase.log_config(config, "PARAMS: #{myparams}")
+        path = CGI.unescape(collHandler.get_key_val(myparams, 'path', 'na'))
+        $TASKNAME = path unless path == 'na'
+        LambdaBase.log_config(config, "PATH: #{respath}; PARAMS: #{myparams}")
         return collHandler.web_assets("/web/favicon.ico", myparams) if respath =~ %r[^/(favicon.ico).*]
         return collHandler.web_assets(respath, myparams) if collHandler.web_asset?(respath)
 
         data = event ? event : {}
         
-        #myparams = get_key_val(data, 'queryStringParameters', data)
-        path = CGI.unescape(collHandler.get_key_val(myparams, 'path', 'na'))
         result = {message: "Path undefined"}.to_json
 
         content_type = "application/json; charset=utf-8"

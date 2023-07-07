@@ -206,6 +206,8 @@ class LambdaBase
     ext = path.split(".")[-1]
     ctype = content_type(ext)
     return LambdaBase.error(404, "Unsupported content type #{ext}", false) unless ctype
+    $TASKNAME = 'assets'
+    LambdaBase.log("web asset: #{path}")
     if ctype =~ %r[^image.*] 
       return {
         statusCode: 200,
@@ -309,7 +311,7 @@ class LambdaBase
   end
 
   def self.log_config(config, message)
-    puts "RequestId: #{config.fetch('request_id', $REQID)}; #{message}"
+    puts "RequestId: #{config.fetch('request_id', $REQID)}; task: #{$TASKNAME}; #{message}"
   end
 
   def self.log(message)
