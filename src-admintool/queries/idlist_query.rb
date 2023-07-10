@@ -57,6 +57,12 @@ select
       and billable_size = full_size
   ) as pfilecount,
   (
+    select group_concat(substr(f.pathname,10)) 
+    from inv.inv_files f 
+    where f.inv_object_id=o.id and source='producer'
+      and billable_size = full_size
+  ),
+  (
     select sum(billable_size) 
     from inv.inv_files f 
     where f.inv_object_id=o.id
@@ -92,7 +98,7 @@ end
 def get_headers(results)
   arr = ['Parsed erc_where', 'Ark', 'Created']
   if @fields == 'summary'
-    ['Num Ver', 'Num File', 'Producer Files', 'File Size', 'Producer Size'].each do |r|
+    ['Num Ver', 'Num File', 'Producer Files', 'Files', 'File Size', 'Producer Size'].each do |r|
       arr.append(r)
     end
   elsif @fields == 'metadata'
@@ -107,7 +113,7 @@ end
 def get_types(results)
   arr = ['localid', 'ark', 'date']
   if @fields == 'summary'
-    ['data', 'data', 'data', 'data', 'data'].each do |r|
+    ['data', 'data', 'data', 'list', 'data', 'data'].each do |r|
       arr.append(r)
     end
   elsif @fields == 'metadata'
