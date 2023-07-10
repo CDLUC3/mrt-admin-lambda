@@ -1086,6 +1086,7 @@ consistency-report-cleanup:
   testing: manual
   breadcrumb: bp_admin
   description: |
-    Remove old consistency reports saved to S3
+    Remove old consistency reports saved to S3.
+    A maximum of 5000 reports will be deleted in one invocation.
   documentation: |
     S3: DELETE consistency-reports/...

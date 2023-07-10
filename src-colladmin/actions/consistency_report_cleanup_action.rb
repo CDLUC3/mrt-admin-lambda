@@ -40,8 +40,8 @@ class ConsistencyReportCleanupAction < AdminAction
     ctime = (Time.now - 30 * 24 * 60 * 60)
     while !done do
       resp = @s3_client.list_objects_v2({
-        bucket: 'uc3-s3-stg',
-        prefix: 'consistency-reports/',
+        bucket: @s3bucket,
+        prefix: @s3consistency,
         continuation_token: token
       })
       resp.contents.each do |s3obj|
@@ -50,7 +50,7 @@ class ConsistencyReportCleanupAction < AdminAction
         @newest = s3obj.last_modified if @newest.nil? || s3obj.last_modified > @newest
         if s3obj.last_modified < ctime && @num_deleted < 5000
           @s3_client.delete_object({
-            bucket: 'uc3-s3-stg',
+            bucket: @s3bucket,
             key: s3obj.key
           })
           @num_deleted += 1
