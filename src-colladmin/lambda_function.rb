@@ -27,6 +27,7 @@ require_relative 'actions/tag_action.rb'
 require_relative 'actions/ssm_describe_action.rb'
 require_relative 'actions/replication_action.rb'
 require_relative 'actions/ingest_lock_action.rb'
+require_relative 'actions/consistency_report_cleanup_action.rb'
 require 'yaml'
 
 # Handle GET or POST event structures pass in via the ALB

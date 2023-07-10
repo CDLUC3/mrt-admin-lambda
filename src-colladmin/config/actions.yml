@@ -1078,3 +1078,14 @@ storage-delete-obj:
     [Feature Design](https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-obj)
   documentation: |
     Not yet implemented
+consistency-report-cleanup:
+  link-title: Cleanup Old Consistency Reports
+  class: ConsistencyReportCleanupAction
+  category: reports
+  sensitivity: sensitive
+  testing: manual
+  breadcrumb: bp_admin
+  description: |
+    Remove old consistency reports saved to S3
+  documentation: |
+    S3: DELETE consistency-reports/...
