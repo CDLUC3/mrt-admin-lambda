@@ -231,7 +231,7 @@ class QueueList < MerrittJson
     data = fetchHashVal(data, 'ingq:ingestQueueNameState')
     data = fetchHashVal(data, 'ingq:ingestQueueName')
     fetchArrayVal(data, 'ingq:ingestQueue').each do |qjson|
-      node = fetchHashVal(qjson, 'ingq:node')
+      node = fetchHashVal(qjson, 'ingq:node').gsub(%r[^\/], '')
       begin
         qjson = HttpGetJson.new(@ingest_server, "admin/queue/#{node}")
         next unless qjson.status == 200
