@@ -16,21 +16,21 @@ class ConsistencyReportCleanupAction < AdminAction
     "Merritt Consistency Report Task"
   end
 
-  def get_headers
-    ['Category','Count']
+  def table_headers
+    ['Category', 'Count', 'Status']
   end
 
-  def get_types
-    ['','']
+  def table_types
+    ['', '', 'status']
   end
 
-  def get_data
+  def table_rows(body)
     [
-      ["Oldest Report Found", @oldest.nil? ? "" : @oldest.to_s],
-      ["Newest Report Found", @newest.nil? ? "" : @newest.to_s],
-      ["Num Report Found", @num_found.to_s],
-      ["Num Report Deleted", @num_deleted.to_s],
-      ["Num Report Kept", (@num_found - @num_deleted).to_s],
+      ["Oldest Report Found", @oldest.nil? ? "" : @oldest.to_s, 'PASS'],
+      ["Newest Report Found", @newest.nil? ? "" : @newest.to_s, 'PASS'],
+      ["Num Report Found", @num_found.to_s, 'PASS'],
+      ["Num Report Deleted", @num_deleted.to_s, 'PASS'],
+      ["Num Report Kept", (@num_found - @num_deleted).to_s, 'PASS'],
     ]
   end
 
@@ -60,11 +60,15 @@ class ConsistencyReportCleanupAction < AdminAction
       done = token.nil?
     end
 
-    return_data(
-      get_data,
-      get_types,
-      get_headers
-    ).to_json
+    convertJsonToTable({}.to_json)
+  end
+
+  def hasTable
+    true
+  end
+
+  def init_status
+    :PASS
   end
 
 end
