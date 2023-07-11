@@ -60,6 +60,10 @@ class MerrittJson
     @propertyHash[symbol] = p
   end
 
+  def setProperty(symbol, p)
+    @propertyHash[symbol] = p
+  end
+
   def getValue(symbol, defval = "")
     return defval unless @propertyHash.key?(symbol)
     @propertyHash[symbol].value

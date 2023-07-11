@@ -9,9 +9,10 @@ class QueueEntry < QueueJson
 
   def initialize(json)
     super()
+    # until July 2023, Merritt had 3 separate queues identified as a queue node
     addProperty(
       :queueNode, 
-      MerrittJsonProperty.new("Queue Node").lookupValue(json, "que", "queueNode")
+      MerrittJsonProperty.new("Ingest Worker").lookupValue(json, "que", "queueNode")
     )
     addProperty(
       :bid, 
@@ -53,6 +54,11 @@ class QueueEntry < QueueJson
       :queueId, 
       MerrittJsonProperty.new("Queue ID").lookupValue(json, "que", "iD")
     )
+    # extract the ingest worker node from the queue id string
+    qid = getValue(:queueId, "")
+    qnode = getValue(:queueNode, "")
+    setProperty(:queueNode, MerrittJsonProperty.new("Ingest Worker", qid[7])) if qnode =~ %r[^\/?ingest$] && qid =~ %r[^mrtQ\-]
+
     qs = getValue(:qstatus, "")
     st = 'INFO'
     st = 'FAIL' if (qs == "Failed")
