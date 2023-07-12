@@ -251,7 +251,11 @@
             <input name="file" type="text" value="" size=60 title="Use a % as a wildcard search string"/>
             <br/>
             Collection (required for a performant query):
-            <input name="mnemonic" type="text" value="cdl_uc3" size=40 />
+            <select name="mnemonic">
+              {{#MCOLLS}}
+              <option value="{{mnemonic}}">{{mnemonic}}: {{name}}</option>
+              {{/MCOLLS}}
+            </select>
             <input name="path" type="hidden" value="files_by_name_coll"/>
             <input type="submit" value="Go!"/>
           </form>
@@ -542,11 +546,14 @@
 
       <h3>Inventory Comparison</h3>
       <ul>
-        <li class="coll"><a href="{{ADMINTOOL_HOME}}?path=list_collections">List Collections</a></li>
         <li class="graph">
           <form action="{{ADMINTOOL_HOME}}">
             Producer Files for a Mnemonic:
-            <input name="mnemonic" type="text" value="merritt_demo" size=20/>
+            <select name="mnemonic">
+              {{#MCOLLS}}
+              <option value="{{mnemonic}}">{{mnemonic}}: {{name}}</option>
+              {{/MCOLLS}}
+            </select>
             <input name="path" type="hidden" value="producer_files"/>
             <input type="submit" value="Go!"/>
           </form>

@@ -12,6 +12,7 @@ module LambdaFunctions
     def self.process(event:,context:)
       $REQID = context.aws_request_id
       $TASKNAME = 'assets'
+      $mcolls = []
       config = {}
       begin
         config_file = 'config/database.ssm.yml'
@@ -32,10 +33,16 @@ module LambdaFunctions
         path = collHandler.get_key_val(myparams, 'path', 'na')
         $TASKNAME = path unless path == 'na'
         return collHandler.web_assets("/web/favicon.ico", myparams) if respath =~ %r[^/favicon.ico.*]
-        return collHandler.web_assets(respath, myparams) if collHandler.web_asset?(respath)
+        return collHandler.web_assets(respath, myparams) if collHandler.web_asset?(respath) && respath != '/web/index.html'
 
         dbconf = config.fetch('dbconf', {})
         client = collHandler.get_mysql
+
+        # use database to populate page with a list of collections
+        if respath == '/web/index.html'
+          $mcolls = Handler.get_collection_map(client)
+          return collHandler.web_assets(respath, myparams) 
+        end
 
         LambdaBase.log_config(config, "PATH: #{respath}; PARAMS: #{myparams}")
 
@@ -84,8 +91,24 @@ module LambdaFunctions
       elsif path =~ %r[/web/merritt-reports]
         map['JSON_REPORT_DATA'] = get_report_url("merritt-reports/palmu/match.json")
         map['JSON_REPORT_DATE'] = get_report_date("merritt-reports/palmu/match.json")
+      elsif path == '/web/index.html' 
+        map['MCOLLS'] = $mcolls
       end
       map
+    end
+
+    def self.get_collection_map(client)
+      m = []
+      stmt = client.prepare(%{
+        select mnemonic,name from inv.inv_collections 
+        where mnemonic is not null and mnemonic not like '%sla' 
+        order by mnemonic
+      })
+      results = stmt.execute()
+      results.each do |r|
+        m.push({mnemonic: r.values[0], name: r.values[1]})
+      end
+      m
     end
 
     def get_report_url(key)
