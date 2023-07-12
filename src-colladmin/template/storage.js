@@ -52,9 +52,10 @@ function init() {
   });
   $("button.storage-clear-audit-batch").on("click", function(){
     params = {
-      path: 'storage-clear-audit-batch'
+      path: 'storage-clear-audit-batch',
+      hours: $(this).attr("hours")
     }
-    invoke(params, false, false);
+    invoke(params, true, true);
   });
   $("button.storage-scan-node").on("click", function(){
     $(this).attr("disabled", true);

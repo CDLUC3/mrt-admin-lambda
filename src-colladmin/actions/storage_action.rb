@@ -72,6 +72,8 @@ class StorageAction < AdminAction
       ).to_json
     end
     if @path == "storage-clear-audit-batch"
+      hours = @myparams.fetch("hours", "24").to_i
+      hours = 1 if hours < 1
       return MerrittQuery.new(@config).run_update(
         %{
           UPDATE 
@@ -82,7 +84,7 @@ class StorageAction < AdminAction
           WHERE 
             status='processing'
           AND 
-            ifnull(verified, '1970-01-01') < date_add(now(), INTERVAL -1 DAY)
+            ifnull(verified, '1970-01-01') < date_add(now(), INTERVAL -#{hours} HOUR)
         }, 
         [],
         "Audit Batches Cleared"
