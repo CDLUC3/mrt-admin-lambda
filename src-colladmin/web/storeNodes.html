@@ -64,6 +64,7 @@
         </thead>
         <tbody>
           {{#NODES}}
+          {{#has_data}}
           <tr>
             <th>{{number}}</th>
             <td>{{description}}</td>
@@ -143,6 +144,7 @@
               >Review: Delete</button>
             </td>
           </tr>
+          {{/has_data}}
           {{/NODES}}
         </tbody>
       </table>

@@ -52,7 +52,10 @@ nodes:
     This report lists all defined storage nodes in the inventory database. 
     The report displays the last daily count of objects and files for each storage node (captured in the billing database).
 
-    Click the **Filter Data** button to remove empty nodes from the report.
+    - SKIP: No set allocation for the storage node
+    - ERROR: Node size > 90% allocation
+    - WARN: Node size > 80% allocation
+    - PASS: Node size <= 80% allocation
 objects_by_ark:
   link-title: Objects by Ark Query
   breadcrumb: bp_obj

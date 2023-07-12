@@ -336,7 +336,8 @@ class Nodes < MerrittQuery
           percent: percent,
           inv_scan_id: r[12],
           not_skip: !skiplist.include?(nodenum.to_s),
-          skip: skiplist.include?(nodenum.to_s)
+          skip: skiplist.include?(nodenum.to_s),
+          has_data: expected_count > 0
         })
       end
   end
