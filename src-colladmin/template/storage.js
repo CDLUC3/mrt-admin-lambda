@@ -32,7 +32,7 @@ function init() {
       objid: $(this).attr("data-id"),
       nodeid: $(this).attr("data-node-id")
     }
-    invoke(params, false, false);
+    invoke(params, true, false);
   });
   $("button.storage-rerun-audit-for-object").on("click", function(){
     params = {
@@ -40,7 +40,7 @@ function init() {
       objid: $(this).attr("data-id"),
       nodeid: $(this).attr("data-node-id")
     }
-    invoke(params, false, false);
+    invoke(params, true, false);
   });
   $("button.storage-force-replic-for-object").on("click", function(){
     $(this).parents("tr").find("button").attr("disabled", true);
