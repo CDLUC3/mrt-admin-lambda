@@ -2,10 +2,10 @@ require_relative 'forward_to_ingest_action'
 
 class IngestQueueAction < ForwardToIngestAction
   def initialize(config, action, path, myparams)
-    super(config, action, path, myparams, 'admin/queues')
     @batch = myparams.fetch("batch", "")
     @profile = myparams.fetch("profile", "")
     @qstatus = myparams.fetch("qstatus", "")
+    super(config, action, path, myparams, 'admin/queues')
     @filter = {
       batch: @batch,
       profile: @profile,
@@ -37,7 +37,8 @@ class IngestQueueAction < ForwardToIngestAction
   end
 
   def init_status
-    :PASS
+    return :PASS if @batch.empty? && @profile.empty? && @qstatus.empty?
+    :SKIP
   end
 
   def get_alternative_queries
