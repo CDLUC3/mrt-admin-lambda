@@ -73,11 +73,11 @@ class SsmInfo
   def self.table_types
     [
       "name",
-      "",
-      "",
+      "narrow",
+      "narrow",
       "name",
-      "",
-      "",
+      "narrow",
+      "name",
       "",
       "datetime",
       "status"

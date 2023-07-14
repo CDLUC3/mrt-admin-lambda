@@ -64,8 +64,10 @@ table.results td.name {
 }
 
 table.results th.status,
-table.results td.status {
-  width: 50px !important;
+table.results td.status,
+table.results th.narrow,
+table.results td.narrow {
+    width: 50px !important;
 }
 
 table.results th.localid,

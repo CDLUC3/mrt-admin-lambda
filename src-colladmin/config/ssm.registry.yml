@@ -28,6 +28,8 @@ admintool:
     description: Root path to store consistency report data within an S3 bucket
   uc3inv_home:
     description: Path to UC3 Service Inventory
+  site-url:
+    description: Used by mrt-cron code to create links to admin tool reports
 atom: 
   atom-credential: 
     description: Authentication for atom feed retrieval
