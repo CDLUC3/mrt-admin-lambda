@@ -14,16 +14,8 @@ admintool:
     description: Comma separated list of the Cognito User Groups that can access the application
   context:
     description: Client context string passed when invoking a lambda from a server (vs http)
-  ecr-imagem:
-    description: "DEV Only: base name of the ecr image used to deploy the lambda"
-    skip: true
-    deprecated: No longer needed
   ecr-registry:
     description: "DEV Only: ecr registry name used to deploy the lambda"
-    skip: true
-    deprecated: No longer needed
-  lambda-arn-base:
-    description: "DEV Only: base arn name for the lambda to which code will be deployed"
     skip: true
     deprecated: No longer needed
   merritt-path:
@@ -34,11 +26,15 @@ admintool:
     description: Name of the S3 bucket to store consistency reports
   s3-consistency-reports:
     description: Root path to store consistency report data within an S3 bucket
-  site-url:
-    description: Path to access the Merritt Admin Tool (Query Tool)
-    deprecated: Obsolete. This was used when hosting the admin tool on Cloudfront.
   uc3inv_home:
     description: Path to UC3 Service Inventory
+atom: 
+  atom-credential: 
+    description: Authentication for atom feed retrieval
+box: 
+  config: 
+    privateAccess:
+      description: Box retrieval access token for ad-hoc ingest projects
 batch:
   email:
     description: Default email distribution for reports run on the Merritt batch server.
@@ -63,6 +59,8 @@ audit:
         description: "Audit Cleanup handling email subject"
       to:
         description: "Audit Cleanup handling email delivery target"
+    auditQualify:
+      description: "SQL filter for audit processing - used for special circumstances"
     intervalDays:
       description: "Minimum days sleep between processing blocks - zero none"
     log: &loglev
@@ -98,10 +96,6 @@ cloud:
     wasabi-secretKey:
       description: "Wasabi credential"
 cognito-users:
-  ecr-image:
-    description: "DEV Only: base name of the ecr image used to deploy the lambda"
-    skip: true
-    deprecated: No longer needed
   lambda-arn-base: 
     description: ARN to the Cognito User Management Lambda that runs outside the VPC, used by colladmin
 collad-ldap:
@@ -117,25 +111,14 @@ colladmin:
     description: Comma separated list of the Cognito User Groups that can access the application
   cognito-groups-to-manage:
     description: Comma separated list of the Cognito User Groups (non SAML) that can be managed from the Collection Admin Tool
-  ecr-image:
-    description: "DEV Only: base name of the ecr image used to deploy the lambda"
-    skip: true
-    deprecated: No longer needed
   ingest-service:
     description: URLs to the ingest load balancer
-  ingest-services:
-    description: URLs to the running ingest instances
-    deprecated: Favor the ALB reference above once access issues are resolved
   replic-service:
     description: URL to replic instance for storage admin actions - no ALB exists
   storage-service:
     description: URL to storage ALB for storage admin actions
   inventory-service:
     description: URL to inventory ALB for inventory admin actions
-  lambda-arn-base:
-    description: "DEV Only: base arn name for the lambda to which code will be deployed"
-    skip: true
-    deprecated: No longer needed
   user-pool:
     description: Cognito user pool name for user management
   disable-scan-nodenums:
@@ -179,6 +162,12 @@ ingest:
       description: URL endpoint for Storage service
     target:
       description: URL endpoint for Merritt UI
+    HighPriorityThreshold:
+      description: Priority threshold for processing in the high priority queue
+    PollingIntervalHighPriority:
+      description: Polling frequency for the high priority queue
+    numThreadsHighPriority:
+      description: Number of high priority threads to run
 inv:
   db-host: 
     description: Hostname for the Merritt inventory database server.
@@ -225,9 +214,6 @@ ldap:
   ark_minter_url:
     description: Url to ark minting service (using "noid")
     deprecated: What does "noid" mean?
-  collad-host:
-    description: LDAP server Hostname
-    deprecated: Likely unused
   group_base:
     description: LDAP identifier for Merritt Classes
   host:
@@ -238,9 +224,6 @@ ldap:
     description: Port number for the LDAP server
   user-base:
     description: LDAP identifier for Merritt Users
-oai:
-  port:
-    description: Microservice port
 replic:
   config:  
     baseURI:
@@ -293,23 +276,17 @@ store:
       description: Large content Access host
     AccessQSize:
       description: Byte size threshold for AccessLarge host
-sword:
-  port:
-    description: Microservice port
 ui:
-  atom-credential:
-    description: Credential for access Merritt atom feed
-  atom-dir:
-    description: Location for assembling Merritt atom feed
-    deprecated: Is this used?  May be needed when eliminating the ui private repo
-  dir:
-    description: Runtime dir for the deployed ui instance
-    deprecated: Check how this is used.  May be needed when eliminating the ui private repo
   master_key:
     description: Rails key for deployed ui
-  nuxeo-base:
-    description: Base url for accessing nuxeo feeds
-    deprecated: Is this used?  May be needed when eliminating the ui private repo
+  global-search:
+    # this could conceptually be extended to other campuses if LDAP groups existed
+    ucb:
+      description: Comma separated list of Merritt ids with global search access in Merrit.  These users will need corresponding LDAP access to view results.
+  upload-limit:
+    description: Byte count file size limit for direct upload through the Merritt UI
+  upload-limit-message:
+    description: Human readable byte count file size limit for direct upload through the Merritt UI
 integ-tests: 
   skip: true
   for-stage: &inttest

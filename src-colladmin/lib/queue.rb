@@ -57,7 +57,7 @@ class QueueEntry < QueueJson
     # extract the ingest worker node from the queue id string
     qid = getValue(:queueId, "")
     qnode = getValue(:queueNode, "")
-    setProperty(:queueNode, MerrittJsonProperty.new("Ingest Worker", qid[7])) if qnode =~ %r[^\/?ingest$] && qid =~ %r[^mrtQ\-]
+    setProperty(:queueNode, MerrittJsonProperty.new("Ingest Worker", qid[8])) if qnode =~ %r[^\/?ingest$] && qid =~ %r[^mrtQ\-]
 
     qs = getValue(:qstatus, "")
     st = 'INFO'

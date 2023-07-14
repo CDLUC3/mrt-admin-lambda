@@ -65,9 +65,6 @@ default:
       build-info: "{!SSM: replic/port}/mrtreplic/static/build.content.txt"
       start: "{!SSM: replic/port}/mrtreplic/service/start?t=json"
       stop: "{!SSM: replic/port}/mrtreplic/service/stop?t=json"
-    sword: 
-      state: "{!SSM: sword/port}/mrtsword/servicedocument"
-      build-info: "{!SSM: sword/port}/mrtsword/static/build.content.txt"
     ui: 
       state: "/state.json"
       audit_rep: "/state-audit-replic.json"

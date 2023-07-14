@@ -10,6 +10,9 @@ class SsmInfo
     @subservice = arr[4]
     @type = inst.nil? ? "" : inst.type
     @description = ""
+    @encrypted = @type == 'SecureString'
+    @encrypted = 'TBD' if @encrypted == false and name =~ %r[password|credential|privateAccess|accessKey|secretKey|master_key]
+    @value = inst.nil? ? "" : inst.value
     @deprecated = ""
     @modified = inst.nil? ? "" : inst.last_modified_date.to_s
     @skip = false
@@ -39,12 +42,28 @@ class SsmInfo
     @name
   end
 
+  def value
+    return "***" unless @encrypted == false
+    return "" if @value.nil?
+    @value
+  end
+
+  def deprecated
+    @deprecated
+  end
+
+  def skip
+    @skip
+  end
+
   def self.table_headers
     [
       "Name",
       "Type",
       "Subservice",
       "Description",
+      "Encrypted",
+      "Value",
       "Deprecated",
       "Modified",
       "Status"
@@ -58,6 +77,8 @@ class SsmInfo
       "",
       "name",
       "",
+      "",
+      "",
       "datetime",
       "status"
     ]
@@ -69,6 +90,8 @@ class SsmInfo
       @type,
       @subservice,
       @description,
+      @encrypted,
+      value,
       @deprecated,
       @modified,
       status
@@ -171,6 +194,7 @@ class SsmDescribeAction < AdminAction
   def get_table_rows
     rows = []
     @parameters.keys.sort.each do |k|
+      next if @parameters[k].skip && @parameters[k].value.empty?
       rows.append(@parameters[k].table_row)
     end
     rows
