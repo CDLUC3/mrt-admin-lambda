@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/CDLUC3/uc3-ssm.git
-  revision: 822c24da639830772e8a5c5c259d32dc1cbb8ceb
-  branch: merritt2
+  revision: 9765a8d08d9103501e61905e7fa91088ea9c0d09
+  branch: main
   specs:
     uc3-ssm (0.3.10)
       aws-sdk-ssm (~> 1.84)
@@ -12,7 +12,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     aws-eventstream (1.2.0)
-    aws-partitions (1.786.0)
+    aws-partitions (1.787.0)
     aws-sdk-core (3.178.0)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.651.0)

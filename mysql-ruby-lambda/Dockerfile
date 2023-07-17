@@ -18,7 +18,7 @@ RUN gem update bundler && \
     git clone https://github.com/cdluc3/uc3-ssm.git && \
     cd uc3-ssm && \
     # pull a particular branch in order to build it
-    git checkout merritt2 && \
+    git checkout main && \
     gem build uc3-ssm.gemspec && \
     gem install uc3-ssm*.gem && \
     cd ..
