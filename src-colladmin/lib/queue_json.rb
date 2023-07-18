@@ -6,6 +6,9 @@ class QueueJson < MerrittJson
     st = getValue(:qstatus, '')
     if (st == "Consumed")
       st = "consume"
+    #elsif (st == "Held")
+    #  return "" if requeue
+    #  st = "held"
     elsif (st == "Completed")
       return "" if requeue
       st = "complete"
@@ -14,7 +17,7 @@ class QueueJson < MerrittJson
     else
       return ""
     end
-    "#{getValue(:queueNode, '')}/#{getValue(:queueId, '')}/#{st}"
+    "/ingest/#{getValue(:queueId, '')}/#{st}"
   end
 
   def get_hold_path(release = false)
@@ -26,7 +29,7 @@ class QueueJson < MerrittJson
     else
       return ""
     end
-    "#{getValue(:queueNode, '')}/#{getValue(:queueId, '')}"
+    "/ingest/#{getValue(:queueId, '')}"
   end
 
 end
