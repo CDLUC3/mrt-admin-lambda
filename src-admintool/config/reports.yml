@@ -464,6 +464,13 @@ doi:
   description: |
     Identify potential localid conflicts by looking for duplicate DOI's within `inv_objects.erc_where`.  
     This issue has occasionally occurred for Dryad content.
+doi_dryad:
+  link-title: Dryad Counts by Campus DOI
+  breadcrumb: bp_obj
+  class: DoiDryadQuery
+  category: objects
+  description: |
+    Compute stats by campus DOI shoulders.
 localid_no_ark:
   link-title: Local Id No Ark
   breadcrumb: bp_obj
