@@ -10,6 +10,7 @@ class DoiDryadQuery < AdminQuery
   def get_sql
     %{
       select
+        ifnull(ucdoi.campus, 'Other') campus,
         case
           when regexp_like(local_id, '^doi.10.[0-9][0-9][0-9][0-9][0-9]') then substr(local_id,1,15)
           else substr(local_id,1,14)
@@ -19,6 +20,28 @@ class DoiDryadQuery < AdminQuery
         sum(os.billable_size) billable_size
       from
         inv.inv_localids loc
+        left join
+        (
+          select 'doi:10.6078/D1' shoulder, 'UCB' campus
+          union select 'doi:10.25338/B8' shoulder, 'UCD' campus
+          union select 'doi:10.7280/D1' shoulder, 'UCI' campus
+          union select 'doi:10.5068/D1' shoulder, 'UCLA' campus
+          union select 'doi:10.6071/M3' shoulder, 'UCM' campus
+          union select 'doi:10.6071/Z7' shoulder, 'UCM' campus
+          union select 'doi:10.18736/D6' shoulder, 'UCOP' campus
+          union select 'doi:10.18737/D7' shoulder, 'UCOP' campus
+          union select 'doi:10.5060/D8' shoulder, 'UCOP' campus
+          union select 'doi:10.17916/P6' shoulder, 'UCPress' campus
+          union select 'doi:10.6086/D1' shoulder, 'UCR' campus
+          union select 'doi:10.25349/D9' shoulder, 'UCSB' campus
+          union select 'doi:10.7291/D1' shoulder, 'UCSC' campus
+          union select 'doi:10.6076/D1' shoulder, 'UCSD' campus
+          union select 'doi:10.6075/J0' shoulder, 'UCSD' campus
+          union select 'doi:10.7272/Q6' shoulder, 'UCSF' campus
+          union select 'doi:10.15146' shoulder, 'DataOne' campus
+          union select 'doi:10.7941/D1' shoulder, 'LBNL' campus
+        ) as ucdoi
+           on loc.local_id like concat(ucdoi.shoulder, '%') 
       inner join inv.inv_objects o
         on o.ark = loc.inv_object_ark
       inner join billing.object_size os
@@ -30,6 +53,7 @@ class DoiDryadQuery < AdminQuery
         and
         local_id not like 'doi:doi:10.5061/%'
       group by
+        campus,
         shoulder
       order by
         object_count
@@ -37,44 +61,12 @@ class DoiDryadQuery < AdminQuery
     }
   end
 
-  def get_sql2
-    %{
-      select
-        ucdoi.campus,
-        ucdoi.shoulder,
-        count(o.id) object_count,
-        sum(os.file_count) file_count,
-        sum(os.billable_size) billable_size
-      from
-        inv.inv_localids loc
-      inner join
-        (
-          select 'doi:10.6071/M3' shoulder, 'UCM' campus
-          union select 'doi:10.15780/G2' shoulder, 'UCSB' campus
-          union select 'doi:10.21422/D2' shoulder, 'UCSD' campus
-          union select 'doi:10.6076/D1' shoulder, 'UCSD' campus
-          union select 'doi:10.25352/G2' shoulder, 'EarthCube' campus
-        ) as ucdoi
-        on loc.local_id like concat(ucdoi.shoulder, '%') 
-      inner join inv.inv_objects o
-        on o.ark = loc.inv_object_ark
-      inner join billing.object_size os
-        on o.id = os.inv_object_id
-      where
-        loc.inv_owner_ark = 'ark:/13030/j2br86wx' /*Dryad owner ark*/
-      group by
-        ucdoi.campus,
-        ucdoi.shoulder
-      ; 
-    }
-  end
-
   def get_headers(results)
-    ['Shoulder', 'Object Count', 'File Count', 'Bytes']
+    ['Campus', 'Shoulder', 'Object Count', 'File Count', 'Bytes']
   end
 
   def get_types(results)
-    ['', 'dataint', 'dataint', 'bytes']
+    ['', '', 'dataint', 'dataint', 'bytes']
   end
 
   def bytes_unit
