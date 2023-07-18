@@ -10,9 +10,10 @@ class SsmInfo
     @subservice = arr[4]
     @type = inst.nil? ? "" : inst.type
     @description = ""
+    @value = inst.nil? ? "" : inst.value
     @encrypted = @type == 'SecureString'
     @encrypted = 'TBD' if @encrypted == false and name =~ %r[password|credential|privateAccess|accessKey|secretKey|master_key]
-    @value = inst.nil? ? "" : inst.value
+    @encrypted = '' if @value.empty?
     @deprecated = ""
     @modified = inst.nil? ? "" : inst.last_modified_date.to_s
     @skip = false
@@ -43,8 +44,8 @@ class SsmInfo
   end
 
   def value
+    return "" if @value.nil? || @value.empty?
     return "***" unless @encrypted == false
-    return "" if @value.nil?
     @value
   end
 
