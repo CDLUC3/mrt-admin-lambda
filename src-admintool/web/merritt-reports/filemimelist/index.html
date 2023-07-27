@@ -12,7 +12,7 @@ h1, .home {
   margin: 0px;
 }
 </style>
-<script src="{{JSON_REPORT_DATA}}"></script>
+<script src="{{JSON_FILEMIME_REPORT_DATA}}"></script>
 <script type="text/javascript">
     $(document).ready(function(){
       $('#datatable').bootstrapTable({
@@ -22,19 +22,11 @@ h1, .home {
               data: DATA
       });
     });
-
-    //this filter will not populate on its own without running out of memory
-    var filterDefaults = {};
-    for(var i=1; i<=386;i++){
-      var s = i.toLocaleString('en-US', {minimumIntegerDigits: 4, useGrouping:false})
-      filterDefaults[s] = s;
-    }
-    filterDefaults['Other'] = 'Other';
 </script>
 </head>
 <body>
 <div>
-<h1>Pal Museum Match: {{JSON_REPORT_DATE}}</h1>
+<h1>File Mime List: {{JSON_FILEMIME_REPORT_DATE}}</h1>
 <div class="home"><a href="/web/index.html">Admin Tool Home</a></div>
 </div>
 <div>
@@ -51,10 +43,10 @@ h1, .home {
     >
       <thead>
         <tr>
-          <th data-field="prefixg" data-filter-control="select" data-sortable="true" data-filter-data="var:filterDefaults">Prefix</th>
-          <th data-sortable="true" data-field="key">File</th>
-          <th data-sortable="true" data-field="status" data-filter-control="select">Status</th>
-          <th data-field="ext" data-filter-control="select">Type</th>
+          <th data-field="mnemonic">Mnemonic</th>
+          <th data-field="mime" data-filter-control="select" data-filter-data="var:filterMimes">Mime</th>
+          <th data-field="ark">Ark</th>
+          <th data-field="path">Path</th>
         </tr>
       </thead>
       <tbody>

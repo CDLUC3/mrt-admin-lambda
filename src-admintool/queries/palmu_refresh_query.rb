@@ -1,3 +1,4 @@
+# Deprecated code
 class PalmuRefreshQuery < AdminQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)

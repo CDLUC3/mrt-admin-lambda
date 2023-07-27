@@ -538,10 +538,19 @@
     </div>
 
     <div class="nav_section nav_content_projects">
-      <h3>Pal Museum</h3>
+      <h3>File Lists</h3>
       <ul>
-        <li class="graph"><a href="{{ADMINTOOL_BASE}}/web/merritt-reports/palmu/index.html">Pal Museum Inventory Report</a></li>
-        <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=palmu">Refresh Pal Museum Inventory Report</a></li>
+        <li class="graph">
+          <form action="{{ADMINTOOL_BASE}}/web/merritt-reports/filemimelist/index.html">
+            <label>Mime Type Usage and File Listing:</label>
+            <select name="mnemonic">
+              {{#MCOLLS}}
+              <option value="{{mnemonic}}">{{mnemonic}}: {{name}}</option>
+              {{/MCOLLS}}
+            </select>
+            <input type="submit" value="Go!"/>
+          </form>
+        </li>
       </ul>
 
       <h3>Dryad</h3>
