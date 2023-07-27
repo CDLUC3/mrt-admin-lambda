@@ -806,13 +806,3 @@ update_billing:
 #     SQL: get palmu file list
 #     S3: get /merritt-reports/palmu/inventory.txt
 #     S3: put /merritt-reports/palmu/match.json
-filemimelist:
-  link-title: Update File Mime List
-  breadcrumb: bp_content_projects
-  class: FileMimeListRefreshQuery
-  category: reports
-  description: |
-    Build a File Mime List and publish it to S3
-  documentation: |
-    SQL: get file mime list
-    S3: put /merritt-reports/filemimelist/match.json
