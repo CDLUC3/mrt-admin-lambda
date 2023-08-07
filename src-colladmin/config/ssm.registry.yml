@@ -32,11 +32,11 @@ admintool:
     description: Used by mrt-cron code to create links to admin tool reports
 atom: 
   atom-credential: 
-    description: Authentication for atom feed retrieval
+    description: Authentication for atom feed retrieval.  Rotate when needed.  See https://github.com/CDLUC3/mrt-doc-private/blob/main/docs/system-recovery/misc-credential-rotate.md
 box: 
   config: 
     privateAccess:
-      description: Box retrieval access token for ad-hoc ingest projects
+      description: Box retrieval access token for ad-hoc ingest projects.  Rotate when needed.  See https://github.com/CDLUC3/mrt-doc-private/blob/main/docs/system-recovery/misc-credential-rotate.md
 batch:
   email:
     description: Default email distribution for reports run on the Merritt batch server.
@@ -47,7 +47,7 @@ billing:
     description: Database name for the Merritt billing database.
   readonly: &dbcred
     db-password:
-      description: Role specific database password
+      description: Role specific database password.  This value should be rotated periodically.  See https://github.com/CDLUC3/mrt-doc-private/blob/main/docs/system-recovery/db-credential-rotate.md
     db-user:
       description: Role specific database username
   readwrite:
@@ -90,13 +90,13 @@ audit:
 cloud:
   nodes: 
     sdsc-accessKey:
-      description: "SDSC credential"
+      description: "SDSC credential. This should be rotated periodically. See https://github.com/CDLUC3/mrt-doc-private/blob/main/docs/system-recovery/cloud-credential-rotate.md"
     sdsc-secretKey:
-      description: "SDSC credential"
+      description: "SDSC credential. This should be rotated periodically. See https://github.com/CDLUC3/mrt-doc-private/blob/main/docs/system-recovery/cloud-credential-rotate.md"
     wasabi-accessKey:
-      description: "Wasabi credential"
+      description: "Wasabi credential. This should be rotated periodically. See https://github.com/CDLUC3/mrt-doc-private/blob/main/docs/system-recovery/cloud-credential-rotate.md"
     wasabi-secretKey:
-      description: "Wasabi credential"
+      description: "Wasabi credential. This should be rotated periodically. See https://github.com/CDLUC3/mrt-doc-private/blob/main/docs/system-recovery/cloud-credential-rotate.md"
 cognito-users:
   lambda-arn-base: 
     description: ARN to the Cognito User Management Lambda that runs outside the VPC, used by colladmin
@@ -131,7 +131,7 @@ ingest:
   ezid-user:
     description: Merritt's EZID username
   ezid-password:
-    description: Merritt's EZID password
+    description: Merritt's EZID passwordThis value should be rotated periodically.  See https://github.com/CDLUC3/mrt-doc-private/blob/main/docs/system-recovery/ezid-credential-rotate.md
   zoo:
     lockName:
       description: Zookeeper lock name used by Ingest workers before submitting to Storage Service
@@ -205,12 +205,12 @@ ldap:
   accounts:
     admin:
       password:
-        description: LDAP admin password
+        description: LDAP admin password.  This value should be rotated periodically.  See https://github.com/CDLUC3/mrt-doc-private/blob/main/docs/system-recovery/ldap-credential-rotate.md
       user:
         description: LDAP admin username
     guest:
       password:
-        description: Merritt guest password
+        description: Merritt guest password, this value is intentionally not encrypted in SSM. This value should not be rotated.
       user:
         description: Merritt guest username 
   ark_minter_url:

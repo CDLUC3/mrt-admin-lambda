@@ -12,7 +12,13 @@ class SsmInfo
     @description = ""
     @value = inst.nil? ? "" : inst.value
     @encrypted = @type == 'SecureString'
-    @encrypted = 'TBD' if @encrypted == false and name =~ %r[password|credential|privateAccess|accessKey|secretKey|master_key]
+    if @encrypted == false
+      if name !~ %r[ldap\/accounts\/guest\/password]
+        if name =~ %r[password|credential|privateAccess|accessKey|secretKey|master_key]
+          @encrypted = 'TBD'
+        end
+      end
+    end
     @encrypted = '' if @value.empty?
     @deprecated = ""
     @modified = inst.nil? ? "" : inst.last_modified_date.to_s
