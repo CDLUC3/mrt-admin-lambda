@@ -5,16 +5,132 @@ This library is part of the [Merritt Preservation System](https://github.com/CDL
 ## Admin Tool Web Interface 
 Each Admin Lambda application functions as a simple web server displaying the pages for the application.
 
-[![Admin Tool Web App](https://github.com/CDLUC3/mrt-doc/raw/main/diagrams/admin-spa.mmd.svg)](https://cdluc3.github.io/mrt-doc/diagrams/admin-spa)
+```mermaid
+%%{init: {'theme': 'neutral', 'securityLevel': 'loose', 'themeVariables': {'fontFamily': 'arial'}}}%%
+graph TD
+  ADMIN([Admin Tool - Lambda])
+  click ADMIN href "https://github.com/CDLUC3/mrt-admin-lambda" "source code"
+  ADMINWEB[[Admin Tool - Browser]]
+  click ADMINWEB href "https://github.com/CDLUC3/mrt-admin-lambda" "source code"
+  WAF[Web application Firewall]
+  COG[AWS Cognito User Auth]
+  SAML[SAML Authentication]
+
+  subgraph flowchart
+    ALB --> ADMIN
+    ADMIN --> |json| ALB
+    ADMINWEB --> |2. ajax req for data| ALB
+    ALB --> |3. json data| ADMINWEB
+    ALB --> |1. retrieve web assets|ADMINWEB
+    ALB --> |authorize| WAF
+    ALB --> |authorize| COG
+    COG --> SAML
+  end
+  style ADMIN stroke:red,stroke-width:4px
+  style ADMINWEB stroke:red,stroke-width:4px
+  style ALB fill:cyan
+  style WAF fill:cyan
+  style COG fill:cyan
+  style SAML fill:cyan
+```
 
 ## Admin Tool Lambda
 This code contains a generalized query tool for the Merritt team.
 
-[![Admin Tool Flow Chart](https://github.com/CDLUC3/mrt-doc/raw/main/diagrams/admin-lambda.mmd.svg)](https://cdluc3.github.io/mrt-doc/diagrams/admin-lambda)
+```mermaid
+%%{init: {'theme': 'neutral', 'securityLevel': 'loose', 'themeVariables': {'fontFamily': 'arial'}}}%%
+graph TD
+  ADMIN([Admin Tool - Lambda])
+  click ADMIN href "https://github.com/CDLUC3/mrt-admin-lambda" "source code"
+  ADMINWEB[[Admin Tool - Browser]]
+  click ADMINWEB href "https://github.com/CDLUC3/mrt-admin-lambda" "source code"
+  WAF[Web application Firewall]
+  COG[AWS Cognito User Auth]
+  SAML[SAML Authentication]
+
+  subgraph flowchart
+    ALB --> ADMIN
+    ADMIN --> |json| ALB
+    ADMINWEB --> |2. ajax req for data| ALB
+    ALB --> |3. json data| ADMINWEB
+    ALB --> |1. retrieve web assets|ADMINWEB
+    ALB --> |authorize| WAF
+    ALB --> |authorize| COG
+    COG --> SAML
+  end
+  style ADMIN stroke:red,stroke-width:4px
+  style ADMINWEB stroke:red,stroke-width:4px
+  style ALB fill:cyan
+  style WAF fill:cyan
+  style COG fill:cyan
+  style SAML fill:cyan
+```
 
 ## Collection Admin Tool
 
-[![Colladmin Tool Flow Chart](https://github.com/CDLUC3/mrt-doc/raw/main/diagrams/colladmin.mmd.svg)](https://cdluc3.github.io/mrt-doc/diagrams/colladmin)
+```mermaid
+%%{init: {'theme': 'neutral', 'securityLevel': 'loose', 'themeVariables': {'fontFamily': 'arial'}}}%%
+graph TD
+  RDSINV[(Inventory Database)]
+  COLLADMIN([Collection Admin - Lambda])
+  click COLLADMIN href "https://github.com/CDLUC3/mrt-admin-lambda" "source code"
+  ADMINWEB[[Admin Tool - Browser]]
+  click ADMINWEB href "https://github.com/CDLUC3/mrt-admin-lambda" "source code"
+  COGLAMB([Cognito API Lambda])
+  click COGLAMB href "https://github.com/CDLUC3/mrt-admin-lambda/cognito-lambda-nonvpc" "source code"
+  WAF[Web application Firewall]
+  COG[AWS Cognito User Auth]
+  SAML[SAML Authentication]
+  ECR[ECR Hosted Lambda Image]
+  ING(Ingest)
+  INV(Inventory)
+  STORE(Storage)
+  REP(Replication)
+  click ING href "https://github.com/CDLUC3/mrt-ingest" "source code"
+  ZOOING>Zookeeper Ingest]
+  click ZOOING href "https://github.com/CDLUC3/mrt-zoo" "source code"
+  LDAP[/LDAP\]
+  ZOOINV>Zookeeper Inventory]
+  ZOOACC>Zookeeper Access]
+  S3RPT[[S3 Report Bucket - TBD]]
+
+  subgraph flowchart
+    COLLADMIN --> |"query / update"| RDSINV
+    COLLADMIN --> |html/json| ALB
+    ADMINWEB --> |page requests/ajax| ALB
+    ALB --> |html/json| ADMINWEB
+    ALB --> |authorize| WAF
+    ALB --> |authorize| COG
+    ECR --> COLLADMIN
+    COLLADMIN --> ING
+    COLLADMIN --> REP
+    COLLADMIN --> STORE
+    COLLADMIN --> INV
+    COLLADMIN --> LDAP
+    COLLADMIN --> S3RPT
+    COLLADMIN --> COGLAMB
+    COGLAMB --> |user management| COG
+    COG --> SAML
+    ING --> ZOOING
+    ING --> ZOOINV
+    ING --> ZOOACC
+  end
+  
+  style RDSINV fill:#F68D2F
+  style COLLADMIN stroke:red,stroke-width:4px
+  style ADMINWEB stroke:red,stroke-width:4px
+  style ALB fill:cyan
+  style WAF fill:cyan
+  style COG fill:cyan
+  style ECR fill:cyan
+  style ZOOING fill:cyan
+  style ZOOINV fill:cyan
+  style ZOOACC fill:cyan
+  style LDAP fill:cyan
+  style S3RPT fill:#77913C
+  style SAML fill:cyan
+  style COGLAMB fill:yellow
+```
 
 The Lambda deployment will pull database credentials from AWS SSM.  SSM Parameters will be explicitly granted to the Lambda.  The lambda will be packaged as a docker image built from [mysql-ruby-lambda](mysql-ruby-lambda).
 

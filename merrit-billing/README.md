@@ -1,6 +1,24 @@
 # Merritt Billing
 
-[![](https://github.com/CDLUC3/mrt-doc/raw/main/diagrams/billing.mmd.svg)](https://cdluc3.github.io/mrt-doc/diagrams/admin-billing)
+```mermaid
+%%{init: {'theme': 'neutral', 'securityLevel': 'loose', 'themeVariables': {'fontFamily': 'arial'}}}%%
+graph TD
+  RDSINV[(Inventory Database)]
+  click RDSINV href "https://github.com/CDLUC3/merritt-docker/blob/main/mrt-services/mysql/init.sql" "source code"
+  RDSBILL[(Billing Database)]
+  click RDSBILL href "https://github.com/CDLUC3/mrt-admin-lambda/blob/main/merrit-billing/schema.sql" "source code"
+  BILLCRON[[Cron: Billing]]
+  click BILLCRON href "https://github.com/CDLUC3/mrt-admin-lambda/blob/main/merrit-billing/migrate.sql" "source code"
+
+  subgraph flowchart
+    BILLCRON --> |aggregation query| RDSINV
+    BILLCRON --> |daily update| RDSBILL
+  end
+
+  style RDSINV fill:#F68D2F
+  style RDSBILL fill:#F68D2F
+  style BILLCRON stroke:red,stroke-width:4px
+```
 
 The Merritt Billing database has 2 purposes.
 - Support Merritt Invoice generation
