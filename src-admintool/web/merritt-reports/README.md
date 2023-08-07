@@ -1,3 +1,9 @@
+This directory can be used to hold "Large Data" reports that pull JSON from S3 and display the content with bootstrap tables for filtering.
+
+This code was previously used for the Palestinian Museum matching program.
+
+The file included below became obsolete with the introduction of Open Search for data reporting.
+
 ## Sample lambda_function.rb code for a Large Data Report
 
 ```ruby
