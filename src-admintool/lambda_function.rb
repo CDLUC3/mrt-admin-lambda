@@ -88,11 +88,6 @@ module LambdaFunctions
       map['LAMBDABASE_JS'] = Mustache.render(File.open("template/lambda.base.js").read, map)
       if path == '/web/describeReports.html'
         map['REPORTS'] = getReportsList
-      #elsif path =~ %r[/web/merritt-reports/filemimelist]
-      #  mnemonic = myparams.fetch("mnemonic","na")
-      #  map['MNEMONIC'] = mnemonic
-      #  map['JSON_FILEMIME_REPORT_DATA'] = get_report_url("merritt-reports/filemimelist/#{mnemonic}.out.json")
-      #  map['JSON_FILEMIME_REPORT_DATE'] = get_report_date("merritt-reports/filemimelist/#{mnemonic}.out.json")
       elsif path == '/web/index.html' 
         map['MCOLLS'] = $mcolls
       end

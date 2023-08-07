@@ -1,3 +1,17 @@
+## Sample lambda_function.rb code for a Large Data Report
+
+```ruby
+      # previous code for the palmu matching report
+      elsif path =~ %r[/web/merritt-reports/filemimelist]
+        mnemonic = myparams.fetch("mnemonic","na")
+        map['MNEMONIC'] = mnemonic
+        map['JSON_FILEMIME_REPORT_DATA'] = get_report_url("merritt-reports/filemimelist/#{mnemonic}.out.json")
+        map['JSON_FILEMIME_REPORT_DATE'] = get_report_date("merritt-reports/filemimelist/#{mnemonic}.out.json")
+```
+
+## Sample Large Data Report
+
+```html
 <html>
   <!-- Obsolete Code -->
 <head>
@@ -70,3 +84,4 @@ h1, .home {
   <script src="//unpkg.com/bootstrap-table@1.22.1/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
 </body>
 </html>
+```
