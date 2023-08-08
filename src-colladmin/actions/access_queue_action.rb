@@ -49,7 +49,7 @@ class AccessQueueAction < ForwardToIngestAction
       },
       {
         label: 'Cleanup Queue', 
-        url: "#{LambdaBase.colladmin_url}?path=cleanup-queue&queue=queues-inv&reload_path=inv-queues",
+        url: "#{LambdaBase.colladmin_url}?path=cleanup-queue&queue=queues-acc&reload_path=acc-queues",
         class: 'action'
       }
     ]

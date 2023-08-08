@@ -167,6 +167,10 @@ class QueueEntry < QueueJson
   def date
     getValue(:date)
   end
+
+  def get_queue_node
+    '/ingest'
+  end
 end
 
 class QueueBatch < MerrittJson

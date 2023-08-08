@@ -2,6 +2,10 @@ require_relative 'merritt_json'
 
 class QueueJson < MerrittJson
 
+  def get_queue_node
+    getValue(:queueNode, '')
+  end
+
   def get_queue_path(requeue = false)
     st = getValue(:qstatus, '')
     if (st == "Consumed")
@@ -17,7 +21,7 @@ class QueueJson < MerrittJson
     else
       return ""
     end
-    "/ingest/#{getValue(:queueId, '')}/#{st}"
+    "#{get_queue_node}/#{getValue(:queueId, '')}/#{st}"
   end
 
   def get_hold_path(release = false)
@@ -29,7 +33,7 @@ class QueueJson < MerrittJson
     else
       return ""
     end
-    "/ingest/#{getValue(:queueId, '')}"
+    "#{get_queue_node}/#{getValue(:queueId, '')}"
   end
 
 end
