@@ -30,7 +30,7 @@ class NodesQuery < AdminQuery
         on n.id = nc.inv_node_id
       left join ( 
         select 
-          9501 as node, 550 as tb 
+          9501 as node, 600 as tb 
       ) lim
         on n.number = lim.node
       where
