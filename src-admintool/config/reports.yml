@@ -780,6 +780,13 @@ ingest_bytes_by_month:
   category: files
   description: |
     Generate a graphable list of total bytes ingested by month.
+ingest_bytes_by_year:
+  link-title: Graph bytes ingested by year for the last 10 years
+  breadcrumb: bp_ingest
+  class: IngestBytesByYearQuery
+  category: files
+  description: |
+    Generate a graphable list of total bytes ingested by year.
 
 update_billing:
   link-title: Update the Merritt Billing database (via stored procedure)
