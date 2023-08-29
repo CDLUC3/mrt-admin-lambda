@@ -10,9 +10,9 @@ class QueueJson < MerrittJson
     st = getValue(:qstatus, '')
     if (st == "Consumed")
       st = "consume"
-    #elsif (st == "Held")
-    #  return "" if requeue
-    #  st = "held"
+    elsif (st == "Held")
+      return "" if requeue
+      st = "held"
     elsif (st == "Completed")
       return "" if requeue
       st = "complete"
