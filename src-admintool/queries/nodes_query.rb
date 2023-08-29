@@ -20,8 +20,8 @@ class NodesQuery < AdminQuery
         ifnull(lim.tb, 0) * 1000000000000 lim_tb,
         case
           when ifnull(lim.tb, 0) * 1000000000000 = 0 then 'SKIP'
-          when nc.billable_size > ifnull(lim.tb, 0) * 1000000000000 * .9 then 'ERROR'
-          when nc.billable_size > ifnull(lim.tb, 0) * 1000000000000 * .8 then 'WARN'
+          when nc.billable_size > ifnull(lim.tb, 0) * 1000000000000 * .95 then 'ERROR'
+          when nc.billable_size > ifnull(lim.tb, 0) * 1000000000000 * .9 then 'WARN'
           else 'PASS'
         end status  
       from
