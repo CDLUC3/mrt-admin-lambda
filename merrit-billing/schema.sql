@@ -137,3 +137,13 @@ CREATE TABLE daily_node_counts (
   index node_id(inv_node_id),
   INDEX as_of_date(as_of_date)
 );
+
+/*
+DROP TABLE IF EXISTS object_health_json;
+*/
+CREATE TABLE object_health_json (
+  inv_object_id int,
+  updated datetime default now(),
+  object_health json,
+  UNIQUE INDEX object_id(inv_object_id)
+);
