@@ -32,8 +32,10 @@ admintool:
     description: Used by mrt-cron code to create links to admin tool reports
 atom: 
   atom-credential: 
-    description: Authentication for atom feed retrieval.  Rotate when needed.  See https://github.com/CDLUC3/mrt-doc-private/blob/main/docs/system-recovery/misc-credential-rotate.md
-    retriction: RFC2396 compliance mandated by gem URI. (No forward slashes, ...)
+    description: |
+      Authentication for atom feed retrieval.  Rotate when needed.  
+      See https://github.com/CDLUC3/mrt-doc-private/blob/main/docs/system-recovery/misc-credential-rotate.md
+      Restriction: RFC2396 compliance mandated by gem URI. (No forward slashes, ...)
 box: 
   config: 
     privateAccess:
