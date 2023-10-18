@@ -28,7 +28,7 @@ function buildtag(tr) {
                         }
                 });
             }, 
-            250
+            50
         );
  
 }
@@ -61,7 +61,7 @@ function srvstartPing(tr) {
                         }
                 });
             }, 
-            250
+            50
         );
 }
 
@@ -109,6 +109,6 @@ function srvstart(tr) {
                         }
                 });
             }, 
-            250
+            50
         );
 }

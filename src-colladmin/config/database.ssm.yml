@@ -41,11 +41,13 @@ default:
       ALB: "{!SSM: colladmin/ingest-service}state?t=json"
     store: 
       state: "{!SSM: store/port}/state?t=json"
+      jsonstate: "{!SSM: store/port}/jsonstate"
       ping: "{!SSM: store/port}/ping?t=json"
       build-info: "{!SSM: store/port}/static/build.content.txt"
       ALB: "{!SSM: colladmin/storage-service}/state?t=json"
     access: 
       state: "{!SSM: store/port}/state?t=json"
+      jsonstate: "{!SSM: store/port}/jsonstate"
       ping: "{!SSM: store/port}/ping?t=json"
       build-info: "{!SSM: store/port}/static/build.content.txt"
       ALB: "{!SSM: colladmin/access-service}/state?t=json"
@@ -57,11 +59,13 @@ default:
       ALB: "{!SSM: colladmin/inventory-service}/state?t=json"
     audit: 
       state: "{!SSM: audit/port}/mrtaudit/state?t=json"
+      jsonstate: "{!SSM: audit/port}/mrtaudit/jsonstate"
       build-info: "{!SSM: audit/port}/mrtaudit/static/build.content.txt"
       start: "{!SSM: audit/port}/mrtaudit/service/start?t=json"
       stop: "{!SSM: audit/port}/mrtaudit/service/stop?t=json"
     replic: 
       state: "{!SSM: replic/port}/mrtreplic/state?t=json"
+      jsonstate: "{!SSM: replic/port}/mrtreplic/jsonstate"
       build-info: "{!SSM: replic/port}/mrtreplic/static/build.content.txt"
       start: "{!SSM: replic/port}/mrtreplic/service/start?t=json"
       stop: "{!SSM: replic/port}/mrtreplic/service/stop?t=json"
