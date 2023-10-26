@@ -83,7 +83,8 @@ class MerrittLdap
   end
 
   def load_users
-    @ldap.search(:base => user_base) do |entry|
+    attr = [:dn, :objectclass, :mail, :sn, :tzregion, :cn, :arkid, :givenname, :userpassword, :displayname, :uid, "ds-pwp-last-login-time".to_sym]
+    @ldap.search(:base => user_base, :attributes => attr) do |entry|
       user = LdapUser.new(entry)
       next if user.uid.empty?
       @users[user.uid] = user
@@ -213,12 +214,18 @@ class LdapUser < LdapLinkedRecord
       @email = ""
       @displayname = ""
       @arkid = ""
+      @lastaccess = ""
       super(false)
     else
       @uid = entry["uid"].first
       @email = entry["mail"]
       @displayname = entry["displayname"].first
       @arkid = entry["arkid"]
+      begin
+        @lastaccess = entry["ds-pwp-last-login-time"]
+      rescue
+        @lastaccess = "na"
+      end
       super(true)
     end
   end
@@ -246,6 +253,7 @@ class LdapUser < LdapLinkedRecord
       @email,
       displayname,
       @arkid,
+      @lastaccess,
       perm_count("read"),
       perm_count("write"),
       perm_count("download"),
@@ -260,6 +268,7 @@ class LdapUser < LdapLinkedRecord
       "Email",
       "Display Name",
       "Ark",
+      "Last Access",
       "Read",
       "Write",
       "Download",
@@ -270,6 +279,7 @@ class LdapUser < LdapLinkedRecord
   def self.get_types
     [
       "ldapuid",
+      "",
       "",
       "",
       "",
