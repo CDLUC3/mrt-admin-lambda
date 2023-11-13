@@ -10,6 +10,7 @@ class ListCollectionsQuery < AdminQuery
   def get_sql
     %{
       select
+        distinct
         ogroup,
         inv_collection_id,
         mnemonic,
