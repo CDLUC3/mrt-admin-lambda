@@ -565,6 +565,17 @@ function makeLiLink(parent, v, href) {
     .appendTo(parent);
 }
 
+function makeLiLinkTarget(parent, v, href, target) {
+  return $("<li/>")
+    .append(
+      $("<a/>")
+        .text(v)
+        .attr("href", href)
+        .attr("target", target)
+    )
+    .appendTo(parent);
+}
+
 function makeUl(parent) {
   return $("<ul/>")
     .appendTo(parent);
@@ -756,13 +767,13 @@ function format(cell, v, type, merritt_path) {
         li = makeLi(ul, atext.replace(/^\*/, ""));
         li.attr("title", "Use curl for this request" + title);
       } else if (atext.match(/^\+/)) {
-        li = makeLiLink(ul, atext, title);
+        li = makeLiLinkTarget(ul, atext, title, "_blank");
         li.attr("title", "this link will open directly in the browser, it is not accessible to our lambda");
       } else if (atext.match(/^-/)) {
         li = makeLi(ul, atext);
         li.attr("title", "this link requires authentication to access");
       } else {
-        li = makeLiLink(ul, atext, href);
+        li = makeLiLinkTarget(ul, atext, href, "_blank");
         li.attr("title", title);
       }
       li.append(" ");

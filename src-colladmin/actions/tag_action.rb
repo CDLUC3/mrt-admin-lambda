@@ -45,7 +45,7 @@ class Ec2Info
       "",
       "",
       "endpoint",
-      "",
+      "list",
       "buildtag",
       "srvstart",
       "srvstate"
@@ -99,18 +99,16 @@ class Ec2Info
   end
 
   def notes(action)
+    note = @config.fetch("notes", {}).fetch(@subservice, "").split("\n").join(",")
     if @subservice == "access"
       srvr = action.get_ssm('store/zoo/AccessLarge')
       threshold = action.get_ssm('store/zoo/AccessQSize')
-      return "" unless @name == srvr
-      return "" if threshold.nil?
-      threshold = threshold.to_i / 1000000
-      return "Large Assembly Server, Threshold: #{threshold}M"
+      if @name == srvr && !threshold.nil?
+        threshold = threshold.to_i / 1000000
+        note =  "#{note},Large Assembly Server - Threshold: #{threshold}M"
+      end
     end
-    if @subservice == "ui"
-      # return "ui05 is a preview server" if LambdaBase.is_prod
-    end
-    ""
+   note
   end
 
   def table_row(action)

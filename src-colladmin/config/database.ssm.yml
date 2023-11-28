@@ -33,6 +33,26 @@ default:
   # Value to be checked against Cognito token - passively provided by ALB
   cognito-groups-allowed: "{!SSM: colladmin/cognito-groups-allowed !DEFAULT: NA}"
   context: "{!SSM: admintool/context !DEFAULT: NA}"
+  notes:
+    # newlines will become comma separators to create bullets. Do not use commas in these blocks.
+    store: |
+      jsonstatus: lightweight check of node availability
+      jsonstate: tests read/write for each node
+      state: legacy test of read/write for each node with NO timeout
+      ping: confirm that tomcat is running
+    access: |
+      jsonstatus: lightweight check of node availability
+      jsonstate: tests read/write for each node
+      state: legacy test of read/write for each node with NO timeout
+      ping: confirm that tomcat is running
+    audit: |
+      jsonstatus: lightweight check of node availability
+      jsonstate: tests read/write for each node
+      state: legacy service status check without node evaluation
+    replic: |
+      jsonstatus: lightweight check of node availability
+      jsonstate: tests read/write for each node
+      state: legacy service status check without node evaluation
   # Provide state endpoints for specific subservices - not applicable for docker
   endpoints:
     ingest: 
@@ -40,14 +60,16 @@ default:
       build-info: "{!SSM: ingest/port}/static/build.content.txt"
       ALB: "{!SSM: colladmin/ingest-service}state?t=json"
     store: 
-      state: "{!SSM: store/port}/state?t=json"
+      jsonstatus: "{!SSM: store/port}/jsonstus"
       jsonstate: "{!SSM: store/port}/jsonstate"
+      state: "{!SSM: store/port}/state?t=json"
       ping: "{!SSM: store/port}/ping?t=json"
       build-info: "{!SSM: store/port}/static/build.content.txt"
       ALB: "{!SSM: colladmin/storage-service}/state?t=json"
     access: 
-      state: "{!SSM: store/port}/state?t=json"
+      jsonstatus: "{!SSM: store/port}/jsonstatus"
       jsonstate: "{!SSM: store/port}/jsonstate"
+      state: "{!SSM: store/port}/state?t=json"
       ping: "{!SSM: store/port}/ping?t=json"
       build-info: "{!SSM: store/port}/static/build.content.txt"
       ALB: "{!SSM: colladmin/access-service}/state?t=json"
@@ -58,14 +80,16 @@ default:
       stop: "{!SSM: inventory/port}/mrtinv/service/stop?t=json"
       ALB: "{!SSM: colladmin/inventory-service}/state?t=json"
     audit: 
-      state: "{!SSM: audit/port}/mrtaudit/state?t=json"
+      jsonstatus: "{!SSM: audit/port}/mrtaudit/jsonstatus"
       jsonstate: "{!SSM: audit/port}/mrtaudit/jsonstate"
+      state: "{!SSM: audit/port}/mrtaudit/state?t=json"
       build-info: "{!SSM: audit/port}/mrtaudit/static/build.content.txt"
       start: "{!SSM: audit/port}/mrtaudit/service/start?t=json"
       stop: "{!SSM: audit/port}/mrtaudit/service/stop?t=json"
     replic: 
-      state: "{!SSM: replic/port}/mrtreplic/state?t=json"
+      jsonstatus: "{!SSM: replic/port}/mrtreplic/jsonstatus"
       jsonstate: "{!SSM: replic/port}/mrtreplic/jsonstate"
+      state: "{!SSM: replic/port}/mrtreplic/state?t=json"
       build-info: "{!SSM: replic/port}/mrtreplic/static/build.content.txt"
       start: "{!SSM: replic/port}/mrtreplic/service/start?t=json"
       stop: "{!SSM: replic/port}/mrtreplic/service/stop?t=json"
