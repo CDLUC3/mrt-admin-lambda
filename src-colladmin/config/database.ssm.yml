@@ -53,6 +53,12 @@ default:
       jsonstatus: lightweight check of node availability
       jsonstate: tests read/write for each node
       state: legacy service status check without node evaluation
+    ui: |
+      state: view status and build build-info
+      audit_rep: view audit and replic activity stats
+      ALB links to a public URL.  Lambda cannot access the public URL.
+    ldap: |
+      ALB exists.  LDAP admin requires credentials to access. Navigate to "Merritt User Accounts" to query LDAP.
   # Provide state endpoints for specific subservices - not applicable for docker
   endpoints:
     ingest: 
