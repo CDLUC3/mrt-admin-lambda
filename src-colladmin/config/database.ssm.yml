@@ -36,23 +36,27 @@ default:
   notes:
     # newlines will become comma separators to create bullets. Do not use commas in these blocks.
     store: |
-      #jsonstatus: lightweight check of node availability
-      jsonstate: tests read/write for each node
-      state: legacy test of read/write for each node with NO timeout
-      ping: confirm that tomcat is running
+      jsonstatus: lightweight check of node availability WITH timeout if node is unavailable
+      jsonstate: tests read/write for each node with NO timeout
+      state: legacy test of read/write for each node with NO timeout - used in periodic Nagios checks; can recover access to a node that has gone offline
+      ping: confirm that tomcat is running; used by ALB checks; returns server start time
     access: |
-      jsonstatus: lightweight check of node availability
-      jsonstate: tests read/write for each node
+      jsonstatus: lightweight check of node availability WITH timeout if node is unavailable
+      jsonstate: tests read/write for each node with NO timeout
       state: legacy test of read/write for each node with NO timeout
-      ping: confirm that tomcat is running
+      ping: confirm that tomcat is running; used by ALB checks; returns server start time
     audit: |
-      jsonstatus: lightweight check of node availability
-      jsonstate: tests read/write for each node
-      state: legacy service status check without node evaluation
+      jsonstatus: lightweight check of node availability WITH timeout if node is unavailable
+      jsonstate: tests read/write for each node with NO timeout
+      state: service status check without node evaluation; returns server start time
     replic: |
       jsonstatus: lightweight check of node availability
       jsonstate: tests read/write for each node
-      state: legacy service status check without node evaluation
+      state: service status check without node evaluation; returns server start time
+    ingest: |
+      state: service status check; returns server start time
+    inventory: |
+      state: service status check; returns server start time
     ui: |
       state: view status and build build-info
       audit_rep: view audit and replic activity stats
