@@ -39,12 +39,14 @@ default:
       jsonstatus: lightweight check of node availability WITH timeout if node is unavailable
       jsonstate: tests read/write for each node with NO timeout
       state: legacy test of read/write for each node with NO timeout - used in periodic Nagios checks; can recover access to a node that has gone offline
-      ping: confirm that tomcat is running; used by ALB checks; returns server start time
+      ping: confirm that tomcat is running; returns server start time
+      hostname: used by ALB checks; allows ingest to communicate with a specific store instance
     access: |
       jsonstatus: lightweight check of node availability WITH timeout if node is unavailable
       jsonstate: tests read/write for each node with NO timeout
       state: legacy test of read/write for each node with NO timeout
-      ping: confirm that tomcat is running; used by ALB checks; returns server start time
+      ping: confirm that tomcat is running; returns server start time
+      hostname: used by ALB checks
     audit: |
       jsonstatus: lightweight check of node availability WITH timeout if node is unavailable
       jsonstate: tests read/write for each node with NO timeout
@@ -54,9 +56,9 @@ default:
       jsonstate: tests read/write for each node
       state: service status check without node evaluation; returns server start time
     ingest: |
-      state: service status check; returns server start time
+      state: service status check; returns server start time; used by ALB health check
     inventory: |
-      state: service status check; returns server start time
+      state: service status check; returns server start time; used by ALB health check
     ui: |
       state: view status and build build-info
       audit_rep: view audit and replic activity stats
@@ -74,6 +76,7 @@ default:
       jsonstate: "{!SSM: store/port}/jsonstate"
       state: "{!SSM: store/port}/state?t=json"
       ping: "{!SSM: store/port}/ping?t=json"
+      hostname: "{!SSM: store/port}/hostname"
       build-info: "{!SSM: store/port}/static/build.content.txt"
       ALB: "{!SSM: colladmin/storage-service}/state?t=json"
     access: 
@@ -81,6 +84,7 @@ default:
       jsonstate: "{!SSM: store/port}/jsonstate"
       state: "{!SSM: store/port}/state?t=json"
       ping: "{!SSM: store/port}/ping?t=json"
+      hostname: "{!SSM: store/port}/hostname"
       build-info: "{!SSM: store/port}/static/build.content.txt"
       ALB: "{!SSM: colladmin/access-service}/state?t=json"
     inventory: 
