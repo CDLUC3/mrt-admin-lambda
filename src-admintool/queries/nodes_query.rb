@@ -20,7 +20,7 @@ class NodesQuery < AdminQuery
         ifnull(lim.tb, 0) * 1000000000000 lim_tb,
         case
           when ifnull(lim.tb, 0) * 1000000000000 = 0 then 'SKIP'
-          when nc.billable_size > ifnull(lim.tb, 0) * 1000000000000 * .95 then 'ERROR'
+          when nc.billable_size > ifnull(lim.tb, 0) * 1000000000000 * .95 then 'FAIL'
           when nc.billable_size > ifnull(lim.tb, 0) * 1000000000000 * .9 then 'WARN'
           else 'PASS'
         end status  
@@ -30,7 +30,7 @@ class NodesQuery < AdminQuery
         on n.id = nc.inv_node_id
       left join ( 
         select 
-          9501 as node, 600 as tb 
+          9501 as node, 650 as tb 
       ) lim
         on n.number = lim.node
       where
