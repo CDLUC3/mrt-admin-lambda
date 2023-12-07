@@ -66,7 +66,7 @@ function srvstartPing(tr) {
 }
 
 function srvstart(tr) {
-        var url = tr.find("a:contains('state')").attr('href');
+        var url = tr.find("a:contains('state')").not("a:contains('jsonstate')").attr('href');
         if (!url) {
                 postLoad();
                 return;
