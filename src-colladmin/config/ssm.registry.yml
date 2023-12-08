@@ -64,10 +64,13 @@ audit:
     cleanup: &cleanup
       msg:
         description: "Audit Cleanup handling email message"
+        deprecated: No longer needed
       subject:
         description: "Audit Cleanup handling email subject"
+        deprecated: No longer needed
       to:
         description: "Audit Cleanup handling email delivery target"
+        deprecated: No longer needed
     auditQualify:
       description: "SQL filter for audit processing - used for special circumstances"
     intervalDays:
@@ -80,8 +83,10 @@ audit:
     mail:
       from:
         description: "audit report from"
+        deprecated: No longer needed
       smtp:
         description: "audit report smtp service"
+        deprecated: No longer needed
     nodePath:
       description: "NodeIO configuration name"
     queueCapacity:
@@ -172,6 +177,8 @@ ingest:
       description: URL endpoint for Local ID service
     mail-host:
       description: SMTP server hostname
+    mail-contact:
+      description: Reply-to address for Merritt Ingest messages.  Should be an address with an accessible mailbox.
     name:
       description: Name of Ingest servie
       deprecated: Duplicate of identifier?
@@ -331,7 +338,17 @@ integ-tests:
       description: storage service state command url (dev only)
   for-prod: 
     <<: *inttest      
-
+objhealth:
+  opensearch_host:
+    description: Object health opensearch instance host (Prod and Dev only)
+  opensearch_user:
+    description: Object health opensearch user (has write access only to the objhealth index)
+  opensearch_password:
+    description: Object health opensearch password
+  opensearch_ssl:
+    description: Object health opensearch ssl (true or false)
+  merritt_credential:
+    description: Readonly Merritt credential with download rights to support file identification
 # skip error checking for dev-only special nodes
 loy:
   skip: true
