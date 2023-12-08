@@ -177,8 +177,6 @@ ingest:
       description: URL endpoint for Local ID service
     mail-host:
       description: SMTP server hostname
-    mail-contact:
-      description: Reply-to address for Merritt Ingest messages.  Should be an address with an accessible mailbox.
     name:
       description: Name of Ingest servie
       deprecated: Duplicate of identifier?
