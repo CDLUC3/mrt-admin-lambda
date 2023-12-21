@@ -122,7 +122,7 @@ left join inv.inv_files f
           rec[:fpath] == 'system/mrt-delete.txt'
           status = 'WARN'
         else
-          status =  'FAIL'
+          status = 'FAIL'
         end
       elsif rec[:arks][1].nil?
         cmpstatus = 'Left Only'

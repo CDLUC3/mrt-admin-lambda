@@ -22,16 +22,18 @@ class ReportRetrieve < AdminQuery
     json = get_report(@report)
     json = super.run_sql if json.nil?
     unless @report_base =~ /\d\d\d\d-\d\d-\d\d/
+      prior_day = (Time.parse(@day) - (24 * 60 * 60)).strftime('%Y-%m-%d')
+      next_day = (Time.parse(@day) + (24 * 60 * 60)).strftime('%Y-%m-%d')
       json.fetch('alternative_queries', json.fetch(:alternative_queries, []))
         .append(
           {
             label: "Prior Day - #{@report_base}",
-            url: "path=report&report=#{@s3consistency}#{(Time.parse(@day) - (24 * 60 * 60)).strftime('%Y-%m-%d')}/#{@report_base}",
+            url: "path=report&report=#{@s3consistency}#{prior_day}/#{@report_base}",
             class: 'report'
           },
           {
             label: "Next Day - #{@report_base}",
-            url: "path=report&report=#{@s3consistency}#{(Time.parse(@day) + (24 * 60 * 60)).strftime('%Y-%m-%d')}/#{@report_base}",
+            url: "path=report&report=#{@s3consistency}#{next_day}/#{@report_base}",
             class: 'report'
           }
         )

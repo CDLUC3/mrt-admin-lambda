@@ -41,7 +41,10 @@ class IngestBytesByWeekQuery < AdminQuery
     (0..(@weeks - 1)).each do |w|
       sql += %( union ) unless w.zero?
       sql += %{
-          select date_add(date_add(date('#{@tstart}'), INTERVAL -dayofweek('#{@tstart}') DAY), interval #{w}*7 DAY) as ts
+          select date_add(
+            date_add(date('#{@tstart}'), INTERVAL -dayofweek('#{@tstart}') DAY),
+            interval #{w}*7 DAY
+          ) as ts
       }
     end
     sql + %{

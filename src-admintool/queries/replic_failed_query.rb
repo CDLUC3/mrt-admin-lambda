@@ -84,8 +84,4 @@ class ReplicationFailedQuery < AdminQuery
   def get_types(_results)
     ['name', 'objlist', 'ark', '', 'datetime', 'datetime', 'bytes', '', '', 'status']
   end
-
-  def bytes_unit
-    '1000000000'
-  end
 end

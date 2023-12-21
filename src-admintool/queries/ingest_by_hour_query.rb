@@ -48,7 +48,10 @@ class IngestBytesByHourQuery < AdminQuery
     (0..((@days * 24 / @tinc) - 1)).each do |h|
       sql += %( union ) unless h.zero?
       sql += %{
-          select date_add('#{@tstart}', interval (((hour(now()) div #{@tinc}) * #{@tinc}) + (#{h} * #{@tinc})) hour) as ts
+          select date_add(
+            '#{@tstart}',
+            interval (((hour(now()) div #{@tinc}) * #{@tinc}) + (#{h} * #{@tinc})) hour
+          ) as ts
       }
     end
     sql + %{

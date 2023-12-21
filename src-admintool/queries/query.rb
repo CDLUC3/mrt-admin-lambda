@@ -2,7 +2,7 @@
 
 require_relative '../admin_task'
 
-# Admin Tool Query base class 
+# Admin Tool Query base class
 class AdminQuery < AdminTask
   def initialize(query_factory, path, myparams)
     super(query_factory.config, path, myparams)

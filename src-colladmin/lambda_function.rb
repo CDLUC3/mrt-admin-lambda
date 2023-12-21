@@ -103,20 +103,20 @@ module LambdaFunctions
         )
         config['request_id'] = context.aws_request_id
 
-        collHandler = LambdaFunctions::Handler.new(config, event, context.client_context)
+        coll_handler = LambdaFunctions::Handler.new(config, event, context.client_context)
         # Read the notes in LambdaBase for a description of how authentication is performed
         # A unique exception will be called if the user/client cannot authenticate
         # The Collection Admin tool also has code in place that can manage particiation in Cognito user groups.
         # See cognito_action.rb for details.
-        collHandler.check_permission
+        coll_handler.check_permission
 
         respath = event.fetch('path', '')
-        myparams = collHandler.get_params_from_event(event)
-        path = CGI.unescape(collHandler.get_key_val(myparams, 'path', 'na'))
+        myparams = coll_handler.get_params_from_event(event)
+        path = CGI.unescape(coll_handler.get_key_val(myparams, 'path', 'na'))
         $TASKNAME = path unless path == 'na'
         LambdaBase.log_config(config, "PATH: #{respath}; PARAMS: #{myparams}")
-        return collHandler.web_assets('/web/favicon.ico', myparams) if respath =~ %r{^/(favicon.ico).*}
-        return collHandler.web_assets(respath, myparams) if collHandler.web_asset?(respath)
+        return coll_handler.web_assets('/web/favicon.ico', myparams) if respath =~ %r{^/(favicon.ico).*}
+        return coll_handler.web_assets(respath, myparams) if coll_handler.web_asset?(respath)
 
         event || {}
 

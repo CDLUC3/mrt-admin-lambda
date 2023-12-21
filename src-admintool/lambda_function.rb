@@ -23,33 +23,33 @@ module LambdaFunctions
           return_key: config_block)
         config['request_id'] = context.aws_request_id
 
-        collHandler = Handler.new(config, event, context.client_context)
+        coll_handler = Handler.new(config, event, context.client_context)
         # Read the notes in LambdaBase for a description of how authentication is performed
         # A unique exception will be called if the user/client cannot authenticate
-        collHandler.check_permission
+        coll_handler.check_permission
 
         respath = event.fetch('path', '')
         $TASKNAME = respath
         return LambdaBase.redirect('/web/index.html') if respath.empty?
         return LambdaBase.redirect("/web#{respath}") if respath =~ %r{^/index.html.*}
 
-        myparams = collHandler.get_params_from_event(event)
-        path = collHandler.get_key_val(myparams, 'path', 'na')
+        myparams = coll_handler.get_params_from_event(event)
+        path = coll_handler.get_key_val(myparams, 'path', 'na')
         $TASKNAME = path unless path == 'na'
-        return collHandler.web_assets('/web/favicon.ico', myparams) if respath =~ %r{^/favicon.ico.*}
+        return coll_handler.web_assets('/web/favicon.ico', myparams) if respath =~ %r{^/favicon.ico.*}
 
-        if collHandler.web_asset?(respath) && respath != '/web/index.html'
-          return collHandler.web_assets(respath,
+        if coll_handler.web_asset?(respath) && respath != '/web/index.html'
+          return coll_handler.web_assets(respath,
             myparams)
         end
 
         config.fetch('dbconf', {})
-        client = collHandler.get_mysql
+        client = coll_handler.get_mysql
 
         # use database to populate page with a list of collections
         if respath == '/web/index.html'
           $mcolls = Handler.get_collection_map(client)
-          return collHandler.web_assets(respath, myparams)
+          return coll_handler.web_assets(respath, myparams)
         end
 
         LambdaBase.log_config(config, "PATH: #{respath}; PARAMS: #{myparams}")
@@ -91,7 +91,7 @@ module LambdaFunctions
       map['ARKFORM_JS'] = Mustache.render(File.read('template/arkform.js'), map)
       map['LAMBDABASE_JS'] = Mustache.render(File.read('template/lambda.base.js'), map)
       if path == '/web/describeReports.html'
-        map['REPORTS'] = getReportsList
+        map['REPORTS'] = get_reports_list
       elsif path == '/web/index.html'
         map['MCOLLS'] = $mcolls
       end
@@ -150,7 +150,7 @@ module LambdaFunctions
       s
     end
 
-    def getReportsArr
+    def get_reports_arr
       reports = YAML.load_file('config/reports.yml')
       rptlist = []
       reports.each_key do |k|
@@ -170,17 +170,17 @@ module LambdaFunctions
       rptlist
     end
 
-    def getReportsList
-      rptlist = getReportsArr
+    def get_reports_list
+      rptlist = get_reports_arr
       rptlist.sort! do |a, b|
         a[:report] <=> b[:report]
       end
       rptlist
     end
 
-    def getReportsMap
+    def get_reports_map
       rptmap = {}
-      getReportsArr.each do |rpt|
+      get_reports_arr.each do |rpt|
         path = rpt.fetch(:path, '')
         rptmap[path] = [] unless rptmap.key?(path)
         rptmap[path].push(rpt)

@@ -11,7 +11,15 @@ class ConsistencyLocalIdFixQuery < AdminQuery
       select
         c.mnemonic,
         o.modified,
-        concat('insert into inv_localids(inv_object_ark, inv_owner_ark, local_id)\nselect ''', o.ark, ''',''', own.ark, ''',''', substr(erc_where, length(o.ark)+4), ''';') as fixsql
+        concat(
+          'insert into inv_localids(inv_object_ark, inv_owner_ark, local_id)\nselect ''',
+          o.ark,
+          ''',''',
+          own.ark,
+          ''',''',
+          substr(erc_where, length(o.ark)+4),
+          ''';'
+        ) as fixsql
       from inv.inv_objects o
       inner join inv.inv_collections_inv_objects icio
         on o.id = icio.inv_object_id

@@ -4,7 +4,8 @@
 class InvoicesQuery < AdminQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
-    # Fiscal year to report on.  Starting with FY2019, there are significant changes to the rate and adjustments for charge backs.
+    # Fiscal year to report on.  Starting with FY2019,
+    # there are significant changes to the rate and adjustments for charge backs.
     @fy = get_param('fy', DateTime.now.next_day(-182).year).to_i
     @fy = 2019 if @fy < 2019
 
@@ -305,12 +306,21 @@ class InvoicesQuery < AdminQuery
 
       'Diff -- Bytes added since the start of the FY',
       'Days -- Days within the FY for which billable bytes were found for a collection',
-      'Days Projected -- Number of days to the end of the FY.  The FY YTD amount will be presumed until the end of the FY',
+      %w[
+        Days Projected -- Number of days to the end of the FY.
+        The FY YTD amount will be presumed until the end of the FY
+      ].join(' '),
       'Avg -- Average bytes found for the days in which content was found',
 
-      'Daily Avg (Projected) (over whole year) -- Average bytes projected to the end of the year AND prorated for collections that were begun over the course of the FY',
+      %w[
+        Daily Avg (Projected) (over whole year) -- Average bytes projected to the end of the year
+        AND prorated for collections that were begun over the course of the FY
+      ].join(' '),
       'Cost -- $150/TB.',
-      'Adjusted Cost -- 10TB of complimentary storage are available to each campus library (remainder will apply to the campus)'
+      %w[
+        Adjusted Cost -- 10TB of complimentary storage are available to each campus library
+        (remainder will apply to the campus)
+      ].join(' ')
     ]
   end
 

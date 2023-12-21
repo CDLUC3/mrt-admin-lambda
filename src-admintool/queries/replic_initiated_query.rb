@@ -40,7 +40,11 @@ class ReplicationInitiatedQuery < AdminQuery
     %{
       select
         case
-          when o.ark in ('ark:/13030/m5v45qp2', 'ark:/13030/j2br86wx', 'ark:/13030/j21n79mc') then 'Issue 951 - Admin Object'
+          when o.ark in (
+            'ark:/13030/m5v45qp2',
+            'ark:/13030/j2br86wx',
+            'ark:/13030/j21n79mc'
+          ) then 'Issue 951 - Admin Object'
           else 'Default'
         end as category,
         inio.inv_object_id,
