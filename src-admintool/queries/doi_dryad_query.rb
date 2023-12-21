@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Query class - see config/reports.yml for description
 class DoiDryadQuery < AdminQuery
   def get_title
     'Dryad Counts by Campus DOI'

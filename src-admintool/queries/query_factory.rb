@@ -12,6 +12,7 @@ require 'yaml'
 # Include all Query classes
 Dir["#{File.dirname(__FILE__)}/*query.rb"].sort.each { |file| require file }
 
+# class to construct query objects from yaml definitions
 class QueryFactory
   def initialize(client, config)
     @client = client

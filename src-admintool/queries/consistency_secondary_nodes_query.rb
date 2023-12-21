@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Query class - see config/reports.yml for description
 class ConsistencySecondaryNodeQuery < AdminQuery
   def get_title
     'Collections with Non-standard Secondary Nodes (Not Glacier+Wasabi or SDSC+Wasabi or Dryad Glacier+SDSC)'

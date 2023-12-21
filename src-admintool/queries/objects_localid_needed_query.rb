@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Query class - see config/reports.yml for description
 class ObjectsLocalidNeededQuery < ObjectsQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams, 'modified')

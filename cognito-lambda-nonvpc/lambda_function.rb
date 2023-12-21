@@ -3,6 +3,9 @@ require 'cgi'
 require 'aws-sdk-cognitoidentityprovider'
 
 module LambdaFunctions
+  # Cognito lambda entrypoint
+  # The cognito api could not be invoked from within the VPC.
+  # That is why this function was built separately from the Collection Admin tool.
   class Handler
 
     def initialize(event)

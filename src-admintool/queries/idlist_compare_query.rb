@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Query class - see config/reports.yml for description
 class IdlistCompareQuery < AdminQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
@@ -116,36 +117,36 @@ left join inv.inv_files f
         status = 'WARN'
       elsif rec[:arks][0].nil?
         cmpstatus = 'Right Only'
-        status = if rec[:fpath] == 'producer/mrt-provenance.xml' ||
-                    rec[:fpath] == 'system/mrt-submission-manifest.txt' ||
-                    rec[:fpath] == 'system/mrt-delete.txt'
-                   'WARN'
-                 else
-                   'FAIL'
-                 end
+        if rec[:fpath] == 'producer/mrt-provenance.xml' ||
+          rec[:fpath] == 'system/mrt-submission-manifest.txt' ||
+          rec[:fpath] == 'system/mrt-delete.txt'
+          status = 'WARN'
+        else
+          status =  'FAIL'
+        end
       elsif rec[:arks][1].nil?
         cmpstatus = 'Left Only'
-        status = if rec[:fpath] == 'system/mrt-delete.txt'
-                   'WARN'
-                 else
-                   'FAIL'
-                 end
+        if rec[:fpath] == 'system/mrt-delete.txt'
+          status = 'WARN'
+        else
+          status = 'FAIL'
+        end
       elsif rec[:digs][0] == rec[:digs][1]
         cmpstatus = 'Match'
       else
         cmpstatus = 'Mismatch'
-        status = if rec[:fpath] == 'system/mrt-erc.txt' ||
-                    rec[:fpath] == 'system/mrt-ingest.txt' ||
-                    rec[:fpath] == 'system/mrt-membership.txt' ||
-                    rec[:fpath] == 'system/mrt-mom.txt' ||
-                    rec[:fpath] == 'system/mrt-object-map.ttl' ||
-                    rec[:fpath] == 'system/mrt-dc.xml' ||
-                    rec[:fpath] == 'system/mrt-owner.txt' ||
-                    rec[:fpath] == 'system/mrt-delete.txt'
-                   'WARN'
-                 else
-                   'FAIL'
-                 end
+        if rec[:fpath] == 'system/mrt-erc.txt' ||
+          rec[:fpath] == 'system/mrt-ingest.txt' ||
+          rec[:fpath] == 'system/mrt-membership.txt' ||
+          rec[:fpath] == 'system/mrt-mom.txt' ||
+          rec[:fpath] == 'system/mrt-object-map.ttl' ||
+          rec[:fpath] == 'system/mrt-dc.xml' ||
+          rec[:fpath] == 'system/mrt-owner.txt' ||
+          rec[:fpath] == 'system/mrt-delete.txt'
+          status = 'WARN'
+        else
+          status = 'FAIL'
+        end
       end
       outdata.append(
         [

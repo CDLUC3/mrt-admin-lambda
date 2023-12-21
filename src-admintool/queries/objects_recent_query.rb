@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Query class - see config/reports.yml for description
 class ObjectsRecentQuery < AdminQuery
   def get_title
     'Most Recent Update by Collection'

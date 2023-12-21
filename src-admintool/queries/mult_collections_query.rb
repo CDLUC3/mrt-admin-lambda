@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Query class - see config/reports.yml for description
 class MultipleCollectionsQuery < AdminQuery
   def report_name
     'mult_coll'

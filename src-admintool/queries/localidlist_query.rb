@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Query class - see config/reports.yml for description
 class LocalidListQuery < IdlistQuery
   def get_title
     "Localid List Query for #{get_params.length} localids"

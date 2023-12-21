@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Query class - see config/reports.yml for description
 class CollectionNodeCleanupQuery < AdminQuery
   def get_title
     'Collection Node - Cleanup Required'

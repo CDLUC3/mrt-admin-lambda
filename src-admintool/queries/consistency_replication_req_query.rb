@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Query class - see config/reports.yml for description
 class ConsistencyReplicationReqQuery < AdminQuery
   def report_name
     @path.to_s

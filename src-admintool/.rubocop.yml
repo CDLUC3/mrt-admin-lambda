@@ -28,6 +28,14 @@ Layout/ParameterAlignment:
   EnforcedStyle: with_fixed_indentation
 Layout/ArgumentAlignment:
   EnforcedStyle: with_fixed_indentation
+Naming/MethodParameterName:
+  Enabled: false
+Layout/MultilineOperationIndentation:
+  Enabled: false
+Style/GlobalVars:
+  Enabled: false
+Style/ConditionalAssignment:
+  Enabled: false
 
 # Rubocop errors out when the following are added: https://github.com/rubocop/rubocop/issues/12548
 #Layout/FirstArrayElementIndentation:

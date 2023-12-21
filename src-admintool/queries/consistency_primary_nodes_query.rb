@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Query class - see config/reports.yml for description
 class ConsistencyPrimaryNodeQuery < AdminQuery
   def get_title
     'Collections with Non-standard Primary Nodes (Not SDSC or Dryad S3)'

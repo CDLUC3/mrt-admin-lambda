@@ -5,6 +5,8 @@ require 'uc3-ssm'
 require 'mysql2'
 
 module LambdaFunctions
+  # Placeholder entrypoint for a lambda base image built with mysql.
+  # The build for this image is complicated because mysql requires a binary compile.
   class Handler
     def self.process(event:, context:)
       json = {

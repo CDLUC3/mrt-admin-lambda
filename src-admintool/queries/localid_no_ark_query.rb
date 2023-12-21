@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Query class - see config/reports.yml for description
 class LocalidNoIdQuery < AdminQuery
   def get_title
     'Local Ids with No Ark Query'

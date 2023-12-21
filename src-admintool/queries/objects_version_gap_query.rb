@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Query class - see config/reports.yml for description
 class ObjectsVersionGapQuery < ObjectsQuery
   def get_title
     'Objects with Version Gap'

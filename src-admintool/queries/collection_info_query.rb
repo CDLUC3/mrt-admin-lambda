@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Query class - see config/reports.yml for description
 class CollectionInfoQuery < AdminQuery
   def initialize(query_factory, path, myparams, _col)
     super(query_factory, path, myparams)

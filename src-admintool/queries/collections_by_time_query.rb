@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require 'date'
+
+# Query class - see config/reports.yml for description
 class CollectionsByTimeQuery < AdminQuery
   def initialize(query_factory, path, myparams, col, source)
     super(query_factory, path, myparams)

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Query class - see config/reports.yml for description
 class MimeQuery < AdminQuery
   def get_title
     'Mime Groups (Producer Files)'

@@ -9,6 +9,7 @@ require_relative 'queries/query'
 require_relative 'queries/query_factory'
 
 module LambdaFunctions
+  # Lambda entry point for the Admin Tool
   class Handler < LambdaBase
     def self.process(event:, context:)
       $REQID = context.aws_request_id

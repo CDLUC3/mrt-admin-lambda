@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Query class - see config/reports.yml for description
 class LocalidListCompareQuery < IdlistCompareQuery
   def get_title
     "Localid List Compare Query for #{get_params.length} localids"

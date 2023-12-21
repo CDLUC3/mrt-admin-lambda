@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-class ArklistQuery < IdlistQuery
+# Query class - see config/reports.yml for description
+ArklistQuery < IdlistQuery
   def get_title
     "Arklist Query for #{get_params.length} arks"
   end
