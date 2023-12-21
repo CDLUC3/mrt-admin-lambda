@@ -47,6 +47,7 @@ class IngestJobFilesAction < ForwardToIngestAction
   end
 end
 
+# representation of a file in an ingest folder
 class JobFile < MerrittJson
   def initialize(obj)
     super()
@@ -78,6 +79,7 @@ class JobFile < MerrittJson
   attr_reader :dtime, :path
 end
 
+# representation of the files in an ingest folder
 class JobFiles < MerrittJson
   def initialize(body)
     super()

@@ -2,6 +2,7 @@
 
 require 'httpclient'
 
+# post to merritt service
 class HttpPostJson
   def initialize(ingest_server, endpoint, data = {})
     url = "#{ingest_server}#{endpoint}"

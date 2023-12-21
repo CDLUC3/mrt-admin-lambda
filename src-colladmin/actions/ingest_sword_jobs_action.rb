@@ -64,6 +64,7 @@ class IngestSwordJobsAction < ForwardToIngestAction
   end
 end
 
+# merritt ingest job
 class Job < MerrittJson
   def initialize(jid, dtime)
     super()
@@ -118,6 +119,7 @@ class Job < MerrittJson
   end
 end
 
+# list of merritt ingest jobs
 class JobList < MerrittJson
   def initialize(body, days)
     super()
@@ -160,6 +162,7 @@ class JobList < MerrittJson
   end
 end
 
+# reperesents a recent sword ingest job - obsolete class
 class RecentSwordIngest < QueryObject
   def initialize(row)
     @bid = row[0].strip
@@ -176,6 +179,7 @@ class RecentSwordIngest < QueryObject
   end
 end
 
+# list of resent sword ingests - obsolete class
 class RecentSwordIngests < MerrittQuery
   def initialize(config, days = 14)
     super(config)

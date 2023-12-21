@@ -62,6 +62,7 @@ class IngestBatchFoldersAction < ForwardToIngestAction
   end
 end
 
+# folder on an ingest folder
 class BatchFolder < MerrittJson
   def initialize(bid, dtime)
     super()
@@ -135,6 +136,7 @@ class BatchFolder < MerrittJson
   end
 end
 
+# list of ingest batch folders
 class BatchFolderList < MerrittJson
   def initialize(body)
     super()
@@ -187,6 +189,7 @@ class BatchFolderList < MerrittJson
   end
 end
 
+# recent ingest job
 class RecentIngest < QueryObject
   def initialize(row)
     @bid = row[0]
@@ -207,6 +210,7 @@ class RecentIngest < QueryObject
   end
 end
 
+# recent ingest jobs
 class RecentIngests < MerrittQuery
   def initialize(config, days = 14)
     super(config)

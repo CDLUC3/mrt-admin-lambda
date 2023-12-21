@@ -2,6 +2,7 @@
 
 require 'httpclient'
 
+# get json from a merritt service
 class HttpGetJson
   def initialize(ingest_server, endpoint)
     url = "#{ingest_server}#{endpoint}"
@@ -20,6 +21,7 @@ class HttpGetJson
   end
 end
 
+# get xml from a merritt service
 class HttpGetXml
   def initialize(ingest_server, endpoint)
     url = "#{ingest_server}#{endpoint}"

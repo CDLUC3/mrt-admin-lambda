@@ -3,6 +3,7 @@
 require_relative 'merritt_json'
 require_relative 'merritt_query'
 
+# merritt admin profile
 class AdminProfile < MerrittJson
   def initialize(artifact)
     super()
@@ -180,6 +181,7 @@ class AdminProfile < MerrittJson
   end
 end
 
+# list of merritt admin profiles
 class AdminProfileList < MerrittJson
   def initialize(body, dbmap, artifact)
     super()
@@ -275,6 +277,7 @@ class AdminProfileList < MerrittJson
   end
 end
 
+# merritt admin object base class
 class AdminObjects < MerrittQuery
   def initialize(config, aggrole, selobj)
     super(config)
@@ -397,6 +400,7 @@ class AdminObjects < MerrittQuery
   attr_reader :objs_select
 end
 
+# merritt sla admin object
 class Slas < AdminObjects
   def initialize(config, selobj = '')
     super(config, 'MRT-service-level-agreement', selobj)
@@ -407,6 +411,7 @@ class Slas < AdminObjects
   end
 end
 
+# merritt collection admin objects
 class CollectionObjs < AdminObjects
   def initialize(config, selobj = '')
     super(config, 'MRT-collection', selobj)
@@ -417,6 +422,7 @@ class CollectionObjs < AdminObjects
   end
 end
 
+# merritt owner admin objects
 class Owners < AdminObjects
   def initialize(config, selobj = '')
     super(config, 'MRT-owner', selobj)

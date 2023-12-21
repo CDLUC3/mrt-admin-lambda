@@ -47,6 +47,7 @@ class IngestJobManifestAction < ForwardToIngestAction
   end
 end
 
+# ingest manifest entry
 class JobManifestEntry < MerrittJson
   @@placeholder = nil
   def self.placeholder
@@ -106,6 +107,7 @@ class JobManifestEntry < MerrittJson
   end
 end
 
+# ingest manifest
 class JobManifest < MerrittJson
   def initialize(body)
     super()

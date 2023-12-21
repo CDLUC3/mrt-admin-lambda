@@ -4,6 +4,7 @@ require_relative 'action'
 require 'aws-sdk-ssm'
 require 'yaml'
 
+# information about an ssm parameter
 class SsmInfo
   def initialize(name, inst = nil)
     # do not dump or display value attributes

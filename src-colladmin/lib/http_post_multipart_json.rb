@@ -2,6 +2,7 @@
 
 require 'rest-client'
 
+# post a multipart request to a merritt service
 class HttpPostMultipartJson
   def initialize(ingest_server, endpoint, parms)
     url = "#{ingest_server}#{endpoint}"

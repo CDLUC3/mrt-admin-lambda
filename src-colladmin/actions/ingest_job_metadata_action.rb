@@ -3,6 +3,7 @@
 require_relative 'action'
 require_relative 'forward_to_ingest_action'
 
+# Collection Admin Task class - see config/actions.yml for description
 class IngestJobMetadataAction < ForwardToIngestAction
   def initialize(config, action, path, myparams)
     @batch = myparams.fetch('batch', '')
@@ -47,6 +48,7 @@ class IngestJobMetadataAction < ForwardToIngestAction
   end
 end
 
+# job metadata record
 class JobMetadataRecord < MerrittJson
   def initialize(key, value)
     super()
@@ -76,6 +78,7 @@ class JobMetadataRecord < MerrittJson
   end
 end
 
+# ingest job metadata
 class JobMetadata < MerrittJson
   def initialize(body)
     super()

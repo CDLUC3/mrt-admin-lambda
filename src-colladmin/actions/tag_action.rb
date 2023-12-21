@@ -4,6 +4,7 @@ require_relative 'action'
 require 'aws-sdk-ec2'
 require 'aws-sdk-ssm'
 
+# represents information about an EC2 instance
 class Ec2Info
   # See https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/EC2/Client.html#describe_instances-instance_method
   def initialize(config, inst)

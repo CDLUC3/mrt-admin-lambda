@@ -39,6 +39,7 @@ class IngestBatchAction < ForwardToIngestAction
   end
 end
 
+# job within an ingest batch
 class BatchJob < MerrittJson
   def initialize(bid, jid)
     @bid = bid
@@ -121,6 +122,7 @@ class BatchJob < MerrittJson
   end
 end
 
+# contains the jobs associated with an ingest batch
 class Batch < MerrittJson
   def initialize(bid)
     super()
@@ -159,6 +161,7 @@ class Batch < MerrittJson
   end
 end
 
+# batch recently ingested
 class RecentBatchIngest < QueryObject
   def initialize(row)
     @bid = row[0]
@@ -173,6 +176,7 @@ class RecentBatchIngest < QueryObject
   attr_reader :bid, :jid, :profile, :date, :user, :fileType, :obj_cnt
 end
 
+# recent batches ingested
 class RecentBatchIngests < MerrittQuery
   def initialize(config, bid)
     super(config)

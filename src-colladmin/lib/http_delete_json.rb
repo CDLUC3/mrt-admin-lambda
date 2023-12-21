@@ -2,6 +2,7 @@
 
 require 'httpclient'
 
+# send a delete request to a merritt service
 class HttpDeleteJson
   def initialize(ingest_server, endpoint)
     url = "#{ingest_server}#{endpoint}"

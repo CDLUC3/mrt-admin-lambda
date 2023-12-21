@@ -55,6 +55,7 @@ def get_params_from_event(event)
 end
 
 module LambdaFunctions
+  # class to construct a merritt collection admin task from yaml
   class ActionFactory
     def initialize(config)
       @config = config
@@ -87,6 +88,7 @@ module LambdaFunctions
     end
   end
 
+  # lambda handler for the collection admin tool
   class Handler < LambdaBase
     def self.process(event:, context:)
       $REQID = context.aws_request_id
