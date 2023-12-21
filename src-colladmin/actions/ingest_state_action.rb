@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'action'
 require_relative 'forward_to_ingest_action'
 
@@ -7,13 +9,13 @@ class IngestStateAction < ForwardToIngestAction
   end
 
   def get_title
-    "Ingest State"
+    'Ingest State'
   end
 
   def table_headers
-    [
-      'Key',
-      'Value'
+    %w[
+      Key
+      Value
     ]
   end
 
@@ -28,14 +30,13 @@ class IngestStateAction < ForwardToIngestAction
     data = JSON.parse(body)
     data = data.fetch('ing:ingestServiceState', {})
     rows = []
-    data.keys.each do |k|
-      v = 
-      if k == 'ing:storageInstances' 
-        obj = data.fetch("ing:storageInstances", {})
-        obj = {} if obj == ""
-        rows.append([k, obj.fetch("ing:storageURL", {}).fetch("ing:uRL", "")])
+    data.each_key do |k|
+      if k == 'ing:storageInstances'
+        obj = data.fetch('ing:storageInstances', {})
+        obj = {} if obj == ''
+        rows.append([k, obj.fetch('ing:storageURL', {}).fetch('ing:uRL', '')])
       else
-        rows.append([k, data.fetch(k, "")])
+        rows.append([k, data.fetch(k, '')])
       end
     end
     rows
@@ -43,11 +44,10 @@ class IngestStateAction < ForwardToIngestAction
 
   def get_locked_collections
     data = JSON.parse(get_body)
-    data.fetch('ing:ingestServiceState', {}).fetch("ing:collectionSubmissionState", "").split(",")
+    data.fetch('ing:ingestServiceState', {}).fetch('ing:collectionSubmissionState', '').split(',')
   end
 
   def hasTable
     true
   end
-
 end

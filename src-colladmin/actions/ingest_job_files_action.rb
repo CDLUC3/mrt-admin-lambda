@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'action'
 require_relative 'forward_to_ingest_action'
 
@@ -31,27 +33,26 @@ class IngestJobFilesAction < ForwardToIngestAction
   def get_alternative_queries
     [
       {
-        label: 'Job Metadata', 
+        label: 'Job Metadata',
         url: "#{LambdaBase.colladmin_url}?path=job&batch=#{@batch}&job=#{@job}",
         class: 'jobmeta'
       },
       {
-        label: 'Job Manifest', 
+        label: 'Job Manifest',
         url: "#{LambdaBase.colladmin_url}?path=manifest&batch=#{@batch}&job=#{@job}",
         class: 'jobmeta'
-      },
+      }
     ]
   end
-
 end
 
 class JobFile < MerrittJson
   def initialize(obj)
     super()
-    @dtime = obj.fetch("fil:fileDate", "")
-    @path = obj.fetch("fil:file", "")
+    @dtime = obj.fetch('fil:fileDate', '')
+    @path = obj.fetch('fil:file', '')
   end
-  
+
   def table_row
     [
       @dtime,
@@ -60,9 +61,9 @@ class JobFile < MerrittJson
   end
 
   def self.table_headers
-    [
-      'Date',
-      'Path'
+    %w[
+      Date
+      Path
     ]
   end
 
@@ -72,17 +73,10 @@ class JobFile < MerrittJson
       ''
     ]
   end
-  
-  def dtime
-    @dtime
-  end
-  
-  def path
-    @path
-  end
-  
+
+  attr_reader :dtime, :path
 end
-  
+
 class JobFiles < MerrittJson
   def initialize(body)
     super()
@@ -95,11 +89,12 @@ class JobFiles < MerrittJson
       @entries.append(JobFile.new(obj))
     end
   end
-  
+
   def to_table
     table = []
     @entries.each_with_index do |jf, i|
-      break if (i >= 5000) 
+      break if i >= 5000
+
       table.append(jf.table_row)
     end
     table

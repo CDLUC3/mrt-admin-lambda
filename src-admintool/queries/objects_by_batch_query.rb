@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ObjectsByBatchQuery < ObjectsQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
@@ -14,13 +16,13 @@ class ObjectsByBatchQuery < ObjectsQuery
 
   def get_where
     'where exists (
-      select 
-        1 
-      from 
-        inv.inv_ingests i 
-      where 
-        i.inv_object_id = o.id 
-      and 
+      select
+        1
+      from
+        inv.inv_ingests i
+      where
+        i.inv_object_id = o.id
+      and
         i.batch_id=?
     )'
   end

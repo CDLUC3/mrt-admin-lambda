@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CollectionsByMimeQuery < AdminQuery
   def initialize(query_factory, path, myparams, col)
     super(query_factory, path, myparams)
@@ -35,12 +37,11 @@ class CollectionsByMimeQuery < AdminQuery
     }
   end
 
-  def get_headers(results)
+  def get_headers(_results)
     ['Group', 'Collection Id', 'Mnemonic', 'Collection Name', 'File Count', 'Billable Size']
   end
 
-  def get_types(results)
-    ['ogroup', 'coll', 'mnemonic', 'name', 'dataint', 'bytes']
+  def get_types(_results)
+    %w[ogroup coll mnemonic name dataint bytes]
   end
-
 end

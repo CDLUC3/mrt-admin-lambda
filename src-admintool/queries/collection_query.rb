@@ -1,10 +1,8 @@
-class CollectionQuery < AdminQuery
-  def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
-  end
+# frozen_string_literal: true
 
+class CollectionQuery < AdminQuery
   def get_title
-    "File Counts by Collection"
+    'File Counts by Collection'
   end
 
   def get_filter_col
@@ -31,12 +29,11 @@ class CollectionQuery < AdminQuery
     }
   end
 
-  def get_headers(results)
+  def get_headers(_results)
     ['Group', 'Collection Id', 'Mnemonic', 'Name', 'File Count', 'Billable Size']
   end
 
-  def get_types(results)
-    ['ogroup', 'coll', 'mnemonic', 'name', 'dataint', 'bytes']
+  def get_types(_results)
+    %w[ogroup coll mnemonic name dataint bytes]
   end
-
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ProducerFilesQuery < S3AdminQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
@@ -18,9 +20,9 @@ class ProducerFilesQuery < S3AdminQuery
         digest_value,
         f.created,
         loc.local_id
-      from 
-        inv.inv_objects o 
-      inner join inv.inv_files f 
+      from
+        inv.inv_objects o
+      inner join inv.inv_files f
         on f.inv_object_id = o.id and source = 'producer'
       inner join inv.inv_versions v
         on f.inv_version_id = v.id
@@ -28,8 +30,8 @@ class ProducerFilesQuery < S3AdminQuery
         on o.ark = loc.inv_object_ark
       where exists (
         select 1
-        from 
-          inv.inv_collections_inv_objects icio 
+        from
+          inv.inv_collections_inv_objects icio
         where
           icio.inv_object_id = o.id
         and
@@ -37,12 +39,12 @@ class ProducerFilesQuery < S3AdminQuery
             select
               id
             from
-              inv.inv_collections c 
-            where 
+              inv.inv_collections c
+            where
               c.mnemonic = ?
           )
         )
-      order by 
+      order by
         o.ark,
         fname
       ;
@@ -53,12 +55,11 @@ class ProducerFilesQuery < S3AdminQuery
     [@mnemonic]
   end
 
-  def get_headers(results)
+  def get_headers(_results)
     ['Ark', 'Version', 'Path', 'Bytes', 'Digest', 'Created', 'Local Id']
   end
 
-  def get_types(results)
+  def get_types(_results)
     ['ark', '', 'name', 'bytes', 'name', 'datetime', 'name']
   end
-
 end

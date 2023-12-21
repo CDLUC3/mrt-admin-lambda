@@ -1,10 +1,8 @@
-class AuditOldestQuery < AdminQuery
-  def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
-  end
+# frozen_string_literal: true
 
+class AuditOldestQuery < AdminQuery
   def get_title
-    "Audit Status"
+    'Audit Status'
   end
 
   def get_sql
@@ -29,16 +27,15 @@ class AuditOldestQuery < AdminQuery
     }
   end
 
-  def get_headers(results)
+  def get_headers(_results)
     ['Oldest Unverified Date', 'Status']
   end
 
-  def get_types(results)
-    ['','status']
+  def get_types(_results)
+    ['', 'status']
   end
 
   def init_status
     :PASS
   end
-
 end

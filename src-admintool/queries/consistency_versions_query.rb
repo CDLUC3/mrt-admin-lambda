@@ -1,15 +1,13 @@
-class ConsistencyVersionsQuery < AdminQuery
-  def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
-  end
+# frozen_string_literal: true
 
+class ConsistencyVersionsQuery < AdminQuery
   def get_title
-    "Objects with version clobber"
+    'Objects with version clobber'
   end
 
   def get_sql
     %{
-      select 
+      select
         'Version Clobber (Duplicate Version Num)',
         ifnull(count(distinct inv_object_id), 0),
         case
@@ -20,7 +18,7 @@ class ConsistencyVersionsQuery < AdminQuery
         #{sqlfrag_version_clobber}
       ) as clobber
       union
-      select 
+      select
         'Version Number Gap',
         ifnull(count(distinct inv_object_id), 0),
         case
@@ -30,18 +28,18 @@ class ConsistencyVersionsQuery < AdminQuery
       from (
         #{sqlfrag_version_gap}
       ) as gap
-      ; 
+      ;
     }
   end
 
-  def get_headers(results)
+  def get_headers(_results)
     ['Category', 'Object Count', 'Status']
   end
 
-  def get_types(results)
+  def get_types(_results)
     ['', 'dataint', 'status']
   end
-  
+
   def init_status
     :PASS
   end
@@ -49,16 +47,15 @@ class ConsistencyVersionsQuery < AdminQuery
   def get_alternative_queries
     [
       {
-        label: "Object List - Version Clobber", 
-        url: "path=obj_version_clobber",
+        label: 'Object List - Version Clobber',
+        url: 'path=obj_version_clobber',
         class: 'objects'
       },
       {
-        label: "Object List - Version Gap", 
-        url: "path=obj_version_gap",
+        label: 'Object List - Version Gap',
+        url: 'path=obj_version_gap',
         class: 'objects'
       }
     ]
   end
-
 end

@@ -1,10 +1,8 @@
-class CollectionNodeCleanupQuery < AdminQuery
-  def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
-  end
+# frozen_string_literal: true
 
+class CollectionNodeCleanupQuery < AdminQuery
   def get_title
-    "Collection Node - Cleanup Required"
+    'Collection Node - Cleanup Required'
   end
 
   def get_sql
@@ -16,41 +14,41 @@ class CollectionNodeCleanupQuery < AdminQuery
           n.number,
           count(*),
           'FAIL' as status
-        from 
+        from
           inv.inv_nodes_inv_objects inio
         inner join
           inv.inv_collections_inv_objects icio
-        on 
+        on
           inio.inv_object_id = icio.inv_object_id
-        inner join 
+        inner join
           inv.inv_nodes n
         on
           n.id = inio.inv_node_id
-        inner join 
+        inner join
           inv.inv_collections c
         on
           c.id = icio.inv_collection_id
         where
-          inio.role = 'secondary' 
-        and 
+          inio.role = 'secondary'
+        and
           not exists (
-            select 
+            select
               1
             from
-              inv.inv_collections_inv_nodes icin 
+              inv.inv_collections_inv_nodes icin
             where
               icin.inv_collection_id = icio.inv_collection_id
-            and 
+            and
               icin.inv_node_id = inio.inv_node_id
           )
         and exists (
-          select 
+          select
             1
-          from  
-            inv.inv_objects o 
-          where 
+          from
+            inv.inv_objects o
+          where
             o.id = inio.inv_object_id
-          and 
+          and
             aggregate_role = 'MRT-none'
         )
         group by
@@ -63,16 +61,15 @@ class CollectionNodeCleanupQuery < AdminQuery
     }
   end
 
-  def get_headers(results)
+  def get_headers(_results)
     ['Coll Id', 'Coll Name', 'Node Id', 'Node Num', 'Obj Count', 'Status']
   end
 
-  def get_types(results)
+  def get_types(_results)
     ['collnode', 'name', 'na', '', 'dataint', 'status']
   end
 
   def init_status
     :PASS
   end
-
 end

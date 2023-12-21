@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ObjectsByJobQuery < ObjectsQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
@@ -10,20 +12,20 @@ class ObjectsByJobQuery < ObjectsQuery
   end
 
   def get_params
-    [@batch,@job]
+    [@batch, @job]
   end
 
   def get_where
     'where exists (
-      select 
-        1 
-      from 
-        inv.inv_ingests i 
-      where 
-        i.inv_object_id = o.id 
-      and 
+      select
+        1
+      from
+        inv.inv_ingests i
+      where
+        i.inv_object_id = o.id
+      and
         i.batch_id=?
-      and 
+      and
         i.job_id=?
     )'
   end

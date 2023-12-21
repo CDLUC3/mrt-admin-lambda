@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'forward_to_ingest_action'
 require_relative '../lib/inv_queue'
 
@@ -7,7 +9,7 @@ class InventoryQueueAction < ForwardToIngestAction
   end
 
   def get_title
-    "List Inventory Queues"
+    'List Inventory Queues'
   end
 
   def table_headers
@@ -36,19 +38,19 @@ class InventoryQueueAction < ForwardToIngestAction
   end
 
   def get_alternative_queries
-    arr = [
+    [
       {
-        label: 'Requeue All', 
-        url: "",
+        label: 'Requeue All',
+        url: '',
         class: 'action requeue-all'
       },
       {
-        label: 'Delete All', 
-        url: "",
+        label: 'Delete All',
+        url: '',
         class: 'action deleteq-all'
       },
       {
-        label: 'Cleanup Queue', 
+        label: 'Cleanup Queue',
         url: "#{LambdaBase.colladmin_url}?path=cleanup-queue&queue=queues-inv&reload_path=inv-queues",
         class: 'action'
       }

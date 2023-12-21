@@ -1,10 +1,8 @@
-class MimeQuery < AdminQuery
-  def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
-  end
+# frozen_string_literal: true
 
+class MimeQuery < AdminQuery
   def get_title
-    "Mime Groups (Producer Files)"
+    'Mime Groups (Producer Files)'
   end
 
   def get_filter_col
@@ -45,12 +43,11 @@ class MimeQuery < AdminQuery
     }
   end
 
-  def get_headers(results)
+  def get_headers(_results)
     ['Mime Group', 'Mime Type', 'File Count', 'Billable Size']
   end
 
-  def get_types(results)
-    ['gmime', 'mime', 'dataint', 'bytes']
+  def get_types(_results)
+    %w[gmime mime dataint bytes]
   end
-
 end

@@ -1,10 +1,8 @@
-class AuditStatusQuery < AdminQuery
-  def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
-  end
+# frozen_string_literal: true
 
+class AuditStatusQuery < AdminQuery
   def get_title
-    "Audit Status (excluding verified)"
+    'Audit Status (excluding verified)'
   end
 
   def get_sql
@@ -14,35 +12,35 @@ class AuditStatusQuery < AdminQuery
       select
         'exception ark' as astatus,
         acount,
-        case 
+        case
           when acount > 0 then 'INFO'
           else 'PASS'
         end as status
       from
         (
           select
-            count(*) as acount            
+            count(*) as acount
           from
             inv.inv_objects o
           inner join inv.inv_audits a
             on o.id = a.inv_object_id
           where
             o.ark in (#{ex_ark_list})
-          and 
+          and
             a.status != 'verified'
         ) as qcount
       union
       select
         'unverified' as astatus,
         acount,
-        case 
+        case
           when acount > 0 then 'FAIL'
           else 'PASS'
         end as status
       from
         (
           select
-            count(*) as acount            
+            count(*) as acount
           from
             inv.inv_audits
           where
@@ -53,7 +51,7 @@ class AuditStatusQuery < AdminQuery
       select
         'size-mismatch' as astatus,
         acount,
-        case 
+        case
           when acount > 0 then 'FAIL'
           else 'PASS'
         end as status
@@ -71,7 +69,7 @@ class AuditStatusQuery < AdminQuery
       select
         'digest-mismatch' as astatus,
         acount,
-        case 
+        case
           when acount > 0 then 'FAIL'
           else 'PASS'
         end as status
@@ -89,7 +87,7 @@ class AuditStatusQuery < AdminQuery
       select
         'system-unavailable' as astatus,
         acount,
-        case 
+        case
           when acount > 0 then 'WARN'
           else 'PASS'
         end as status
@@ -111,7 +109,7 @@ class AuditStatusQuery < AdminQuery
       from
         (
           select
-            count(*) as acount            
+            count(*) as acount
           from
             inv.inv_audits
           where
@@ -122,7 +120,7 @@ class AuditStatusQuery < AdminQuery
       select
         'unknown' as astatus,
         acount,
-        case 
+        case
           when acount > 0 then 'PASS'
           else 'PASS'
         end as status
@@ -140,16 +138,15 @@ class AuditStatusQuery < AdminQuery
     }
   end
 
-  def get_headers(results)
+  def get_headers(_results)
     ['Audit Status', 'File Count', 'Status']
   end
 
-  def get_types(results)
-    ['astatus', 'dataint', 'status']
+  def get_types(_results)
+    %w[astatus dataint status]
   end
 
   def init_status
     :PASS
   end
-
 end

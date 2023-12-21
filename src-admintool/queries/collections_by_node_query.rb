@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CollectionsByNodeQuery < AdminQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
@@ -44,12 +46,11 @@ class CollectionsByNodeQuery < AdminQuery
     }
   end
 
-  def get_headers(results)
+  def get_headers(_results)
     ['Collection Id', 'Collection Name', 'Total Obj', 'Primary', 'Secondary']
   end
 
-  def get_types(results)
-    ['colllist', 'mnemonic', 'dataint', 'dataint', 'dataint']
+  def get_types(_results)
+    %w[colllist mnemonic dataint dataint dataint]
   end
-
 end

@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require 'date'
 require_relative 'forward_to_ingest_action'
 
 class IngestSwordJobsAction < ForwardToIngestAction
   def initialize(config, action, path, myparams)
-    @days = myparams.fetch("days", "3").to_i 
+    @days = myparams.fetch('days', '3').to_i
     @days = 21 if @days > 21
     super(config, action, path, myparams, "admin/bid/JOB_ONLY/#{@days}")
   end
@@ -34,22 +36,22 @@ class IngestSwordJobsAction < ForwardToIngestAction
   def get_alternative_queries
     [
       {
-        label: 'Sword Jobs Last 3 days', 
+        label: 'Sword Jobs Last 3 days',
         url: "#{LambdaBase.colladmin_url}?path=sword&days=3",
         class: 'jobs'
       },
       {
-        label: 'Sword Jobs Last 7 days', 
+        label: 'Sword Jobs Last 7 days',
         url: "#{LambdaBase.colladmin_url}?path=sword&days=7",
         class: 'jobs'
       },
       {
-        label: 'Sword Jobs Last 14 days', 
+        label: 'Sword Jobs Last 14 days',
         url: "#{LambdaBase.colladmin_url}?path=sword&days=14",
         class: 'jobs'
       },
       {
-        label: 'Sword Jobs Last 21 days', 
+        label: 'Sword Jobs Last 21 days',
         url: "#{LambdaBase.colladmin_url}?path=sword&days=21",
         class: 'jobs'
       }
@@ -59,7 +61,6 @@ class IngestSwordJobsAction < ForwardToIngestAction
   def page_size
     1000
   end
-
 end
 
 class Job < MerrittJson
@@ -67,8 +68,8 @@ class Job < MerrittJson
     super()
     @jid = jid.strip
     @dtime = dtime
-    @dbobj = ""
-    @dbprofile = ""
+    @dbobj = ''
+    @dbprofile = ''
   end
 
   def table_row
@@ -84,7 +85,7 @@ class Job < MerrittJson
 
   def self.table_headers
     [
-      'Job', 
+      'Job',
       'Date',
       'DB Obj Cnt',
       'DB Profile',
@@ -104,16 +105,10 @@ class Job < MerrittJson
     ]
   end
 
-  def dtime
-    @dtime
-  end
+  attr_reader :dtime, :jid
 
-  def to_date 
+  def to_date
     Date.parse(@dtime)
-  end
-
-  def jid
-    @jid
   end
 
   def setRecentItem(recentjob)
@@ -139,6 +134,7 @@ class JobList < MerrittJson
       # puts j.to_date
       # puts Date.today - days
       next if j.to_date < (Date.today - days)
+
       @jobs.append(j)
       @jobHash[j.jid] = j
     end
@@ -146,93 +142,68 @@ class JobList < MerrittJson
 
   def to_table
     table = []
-    @jobs.sort {
-      # reverse sort on date
-      |a,b| b.dtime <=> a.dtime
-    }.each do |job|
+    @jobs.sort do |a, b|
+      b.dtime <=> a.dtime
+    end.each do |job|
       table.append(job.table_row)
     end
     table
   end
 
-  def jobs
-    @jobs
-  end
+  attr_reader :jobs
 
   def apply_recent_ingests(recentitems)
     recentitems.jobs.each do |jid, recentjob|
-      if @jobHash.key?(jid)
-        @jobHash[jid].setRecentItem(recentjob)
-      end
+      @jobHash[jid].setRecentItem(recentjob) if @jobHash.key?(jid)
     end
   end
 end
 
 class RecentSwordIngest < QueryObject
   def initialize(row)
-      @bid = row[0].strip
-      @jid = row[1].strip
-      @profile = row[2].strip
-      @submitted = row[3]
-      @object_cnt = row[4]
+    @bid = row[0].strip
+    @jid = row[1].strip
+    @profile = row[2].strip
+    @submitted = row[3]
+    @object_cnt = row[4]
   end
 
-  def bid
-      @bid
-  end
-
-  def jid
-      @jid
-  end
-
-  def profile
-      @profile
-  end
-  
-  def submitted
-      @submitted
-  end
-
-  def object_cnt
-      @object_cnt
-  end
+  attr_reader :bid, :jid, :profile, :submitted, :object_cnt
 
   def dbobj
-      "#{@bid}/#{@jid}; #{@object_cnt}"
+    "#{@bid}/#{@jid}; #{@object_cnt}"
   end
 end
 
 class RecentSwordIngests < MerrittQuery
   def initialize(config, days = 14)
-      super(config)
-      @jobs = {}
-      run_query(
-          %{
-              select 
+    super(config)
+    @jobs = {}
+    run_query(
+      %{
+              select
                   batch_id,
-                  job_id, 
-                  max(profile), 
-                  max(submitted), 
-                  count(*) 
-              from 
-                  inv_ingests 
-              where 
+                  job_id,
+                  max(profile),
+                  max(submitted),
+                  count(*)
+              from
+                  inv_ingests
+              where
                   submitted >= date_add(date(now()), INTERVAL -? DAY)
               and
                   batch_id = 'JOB_ONLY'
-              group by 
+              group by
                   batch_id,
                   job_id
               ;
           },
-          [days]
-      ).each do |r|
-          ri = RecentSwordIngest.new(r)
-          @jobs[ri.jid] = ri
-      end
+      [days]
+    ).each do |r|
+      ri = RecentSwordIngest.new(r)
+      @jobs[ri.jid] = ri
+    end
   end
 
-  def jobs
-      @jobs
-  end
+  attr_reader :jobs
 end

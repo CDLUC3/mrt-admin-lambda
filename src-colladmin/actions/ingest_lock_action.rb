@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'forward_to_ingest_action'
 require_relative '../lib/lock'
 
@@ -7,7 +9,7 @@ class IngestLockAction < ForwardToIngestAction
   end
 
   def get_title
-    "List Ingest Locks"
+    'List Ingest Locks'
   end
 
   def table_headers
@@ -30,5 +32,4 @@ class IngestLockAction < ForwardToIngestAction
   def init_status
     :PASS
   end
-
 end

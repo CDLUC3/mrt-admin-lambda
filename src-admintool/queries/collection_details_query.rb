@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CollectionDetailsQuery < AdminQuery
   def initialize(query_factory, path, myparams, col)
     super(query_factory, path, myparams)
@@ -53,21 +55,20 @@ class CollectionDetailsQuery < AdminQuery
     }
   end
 
-  def get_headers(results)
+  def get_headers(_results)
     ['Mime Group', 'Mime Type', 'File Count', 'Billable Size']
   end
 
-  def get_types(results)
-    ['gmime', 'mime', 'dataint', 'bytes']
+  def get_types(_results)
+    %w[gmime mime dataint bytes]
   end
 
   def get_alternative_queries
     [
       {
-        label: "Collection Info for #{@coll}", 
+        label: "Collection Info for #{@coll}",
         url: "path=collection_info&coll=#{@coll}"
       }
     ]
   end
- 
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'queue_json'
 
 class QueueEntry < QueueJson
@@ -11,89 +13,91 @@ class QueueEntry < QueueJson
     super()
     # until July 2023, Merritt had 3 separate queues identified as a queue node
     addProperty(
-      :queueNode, 
-      MerrittJsonProperty.new("Ingest Worker").lookupValue(json, "que", "queueNode")
+      :queueNode,
+      MerrittJsonProperty.new('Ingest Worker').lookupValue(json, 'que', 'queueNode')
     )
     addProperty(
-      :bid, 
-      MerrittJsonProperty.new("Batch").lookupValue(json, "que", "batchID")
+      :bid,
+      MerrittJsonProperty.new('Batch').lookupValue(json, 'que', 'batchID')
     )
     addProperty(
-      :job, 
-      MerrittJsonProperty.new("Job").lookupValue(json, "que", "jobID")
+      :job,
+      MerrittJsonProperty.new('Job').lookupValue(json, 'que', 'jobID')
     )
     addProperty(
-      :profile, 
-      MerrittJsonProperty.new("Profile").lookupValue(json, "que", "profile")
+      :profile,
+      MerrittJsonProperty.new('Profile').lookupValue(json, 'que', 'profile')
     )
     addProperty(
-      :date, 
-      MerrittJsonProperty.new("Date").lookupTimeValue(json, "que", "date")
+      :date,
+      MerrittJsonProperty.new('Date').lookupTimeValue(json, 'que', 'date')
     )
     addProperty(
-      :user, 
-      MerrittJsonProperty.new("User").lookupValue(json, "que", "user")
+      :user,
+      MerrittJsonProperty.new('User').lookupValue(json, 'que', 'user')
     )
     addProperty(
-      :title, 
-      MerrittJsonProperty.new("Title").lookupValue(json, "que", "objectTitle")
+      :title,
+      MerrittJsonProperty.new('Title').lookupValue(json, 'que', 'objectTitle')
     )
     addProperty(
-      :fileType, 
-      MerrittJsonProperty.new("File Type").lookupValue(json, "que", "fileType")
+      :fileType,
+      MerrittJsonProperty.new('File Type').lookupValue(json, 'que', 'fileType')
     )
     addProperty(
-      :qstatus, 
-      MerrittJsonProperty.new("QStatus").lookupValue(json, "que", "status")
+      :qstatus,
+      MerrittJsonProperty.new('QStatus').lookupValue(json, 'que', 'status')
     )
     addProperty(
-      :queue, 
-      MerrittJsonProperty.new("Name").lookupValue(json, "que", "name")
+      :queue,
+      MerrittJsonProperty.new('Name').lookupValue(json, 'que', 'name')
     )
     addProperty(
-      :queueId, 
-      MerrittJsonProperty.new("Queue ID").lookupValue(json, "que", "iD")
+      :queueId,
+      MerrittJsonProperty.new('Queue ID').lookupValue(json, 'que', 'iD')
     )
     # extract the ingest worker node from the queue id string
-    qid = getValue(:queueId, "")
-    qnode = getValue(:queueNode, "")
-    setProperty(:queueNode, MerrittJsonProperty.new("Ingest Worker", qid[8])) if qnode =~ %r[^\/?ingest$] && qid =~ %r[^mrtQ\-]
+    qid = getValue(:queueId, '')
+    qnode = getValue(:queueNode, '')
+    if qnode =~ %r{^/?ingest$} && qid =~ /^mrtQ-/
+      setProperty(:queueNode,
+        MerrittJsonProperty.new('Ingest Worker', qid[8]))
+    end
 
-    qs = getValue(:qstatus, "")
+    qs = getValue(:qstatus, '')
     st = 'INFO'
-    st = 'FAIL' if (qs == "Failed")
-    st = 'PASS' if (qs == "Completed")
+    st = 'FAIL' if qs == 'Failed'
+    st = 'PASS' if qs == 'Completed'
     addProperty(
-      :status, 
-      MerrittJsonProperty.new("Status", st)
+      :status,
+      MerrittJsonProperty.new('Status', st)
     )
     addProperty(
-      :qdelete, 
-      MerrittJsonProperty.new("Queue Del", get_queue_path(false))
+      :qdelete,
+      MerrittJsonProperty.new('Queue Del', get_queue_path(false))
     )
     addProperty(
-      :requeue, 
-      MerrittJsonProperty.new("Requeue", get_queue_path(true))
+      :requeue,
+      MerrittJsonProperty.new('Requeue', get_queue_path(true))
     )
     addProperty(
-      :hold, 
-      MerrittJsonProperty.new("Hold", get_hold_path(false))
+      :hold,
+      MerrittJsonProperty.new('Hold', get_hold_path(false))
     )
     addProperty(
-      :release, 
-      MerrittJsonProperty.new("Release", get_hold_path(true))
+      :release,
+      MerrittJsonProperty.new('Release', get_hold_path(true))
     )
   end
 
   def checkFilter(filter)
     show = true
-    fbatch = filter.fetch(:batch, "")
-    show = show && (fbatch.empty? || bid == fbatch)
-    fprofile = filter.fetch(:profile, "")
-    show = show && (fprofile.empty? || profile == fprofile)
-    fstatus = filter.fetch(:qstatus, "")
-    show = show && (fstatus.empty? || qstatus == fstatus)
-    show
+    fbatch = filter.fetch(:batch, '')
+    show &&= fbatch.empty? || bid == fbatch
+    fprofile = filter.fetch(:profile, '')
+    show &&= fprofile.empty? || profile == fprofile
+    fstatus = filter.fetch(:qstatus, '')
+    show && (fstatus.empty? || qstatus == fstatus)
   end
 
   def self.table_headers
@@ -163,7 +167,7 @@ class QueueEntry < QueueJson
   def fileType
     getValue(:fileType)
   end
-  
+
   def date
     getValue(:date)
   end
@@ -184,13 +188,7 @@ class QueueBatch < MerrittJson
     @jobs.append(qj)
   end
 
-  def bid
-    @bid
-  end
-
-  def submitter
-    @submitter
-  end
+  attr_reader :bid, :submitter
 
   def num_jobs
     @jobs.length
@@ -206,12 +204,13 @@ class IngestQueue < MerrittJson
     list.each do |obj|
       q = QueueEntry.new(obj)
       next unless q.checkFilter(queueList.filter)
+
       qenrtylist = queueList.batches.fetch(q.bid, QueueBatch.new(q.bid, q.user))
       qenrtylist.addJob(q)
       queueList.batches[q.bid] = qenrtylist
       queueList.jobs.append(q)
 
-      #next if q.qstatus == "Completed" || q.qstatus == "Deleted"
+      # next if q.qstatus == "Completed" || q.qstatus == "Deleted"
       k = "#{q.profile},#{q.qstatus}"
       queueList.profiles[k] = queueList.profiles.fetch(k, [])
       queueList.profiles[k].append(q)
@@ -232,7 +231,7 @@ class QueueList < MerrittJson
   end
 
   def self.get_queue_list(ingest_server, filter = {})
-    qjson = HttpGetJson.new(ingest_server, "admin/queues")
+    qjson = HttpGetJson.new(ingest_server, 'admin/queues')
     QueueList.new(ingest_server, qjson.body, filter)
   end
 
@@ -241,48 +240,28 @@ class QueueList < MerrittJson
     data = fetchHashVal(data, 'ingq:ingestQueueNameState')
     data = fetchHashVal(data, 'ingq:ingestQueueName')
     fetchArrayVal(data, 'ingq:ingestQueue').each do |qjson|
-      node = fetchHashVal(qjson, 'ingq:node').gsub(%r[^\/], '')
+      node = fetchHashVal(qjson, 'ingq:node').gsub(%r{^/}, '')
       begin
         qjson = HttpGetJson.new(@ingest_server, "admin/queue/#{node}")
         next unless qjson.status == 200
+
         IngestQueue.new(self, qjson.body)
-      rescue => e
+      rescue StandardError => e
         LambdaBase.log(e.message)
         LambdaBase.log(e.backtrace)
       end
     end
   end
 
-  def filter
-    @filter
-  end
-
-  def body
-    @body
-  end
-
-  def batches
-    @batches
-  end
-
-  def profiles
-    @profiles
-  end
-
-  def jobs
-    @jobs
-  end
+  attr_reader :filter, :body, :batches, :profiles, :jobs
 
   def to_table
     table = []
-    @jobs.sort{
-      # reverse sort on status then date, "Completed" should fall to bottom
-      |a,b| a.status == b.status ? b.date <=> a.date : AdminTask.status_sort_val(a.status) <=> AdminTask.status_sort_val(b.status)
-    }.each_with_index do |q, i|
+    @jobs.sort do |a, b|
+      a.status == b.status ? b.date <=> a.date : AdminTask.status_sort_val(a.status) <=> AdminTask.status_sort_val(b.status)
+    end.each_with_index do |q, _i|
       table.append(q.to_table_row)
     end
     table
   end
-
 end
-

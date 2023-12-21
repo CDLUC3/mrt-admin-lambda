@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class LockEntry < MerrittJson
   @@placeholder = nil
   def self.placeholder
@@ -8,16 +10,16 @@ class LockEntry < MerrittJson
   def initialize(json)
     super()
     addProperty(
-      :date, 
-      MerrittJsonProperty.new("Lock Date").lookupTimeValue(json, "loc", "date")
+      :date,
+      MerrittJsonProperty.new('Lock Date').lookupTimeValue(json, 'loc', 'date')
     )
     addProperty(
-      :job, 
-      MerrittJsonProperty.new("Job").lookupValue(json, "loc", "jobID")
+      :job,
+      MerrittJsonProperty.new('Job').lookupValue(json, 'loc', 'jobID')
     )
     addProperty(
-      :ark, 
-      MerrittJsonProperty.new("Ark").lookupValue(json, "loc", "iD")
+      :ark,
+      MerrittJsonProperty.new('Ark').lookupValue(json, 'loc', 'iD')
     )
   end
 
@@ -75,17 +77,13 @@ class LockList < MerrittJson
     end
   end
 
-  def locks
-    @locks
-  end
+  attr_reader :locks
 
   def to_table
     table = []
-    @locks.each_with_index do |q, i|
+    @locks.each_with_index do |q, _i|
       table.append(q.to_table_row)
     end
     table
   end
-
 end
-

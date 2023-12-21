@@ -1,10 +1,8 @@
-class CountObjectsQuery < AdminQuery
-  def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
-  end
+# frozen_string_literal: true
 
+class CountObjectsQuery < AdminQuery
   def get_title
-    "Object Counts by Collection"
+    'Object Counts by Collection'
   end
 
   def get_filter_col
@@ -31,12 +29,12 @@ class CountObjectsQuery < AdminQuery
     }
   end
 
-  def get_headers(results)
+  def get_headers(_results)
     ['Group', 'CollId', 'Collection', 'Object Count']
   end
 
-  def get_types(results)
-    ['ogroup', 'colllist', 'name', 'dataint']
+  def get_types(_results)
+    %w[ogroup colllist name dataint]
   end
 
   def is_pie_chart
@@ -46,5 +44,4 @@ class CountObjectsQuery < AdminQuery
   def get_data_col
     3
   end
-
 end

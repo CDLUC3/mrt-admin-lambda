@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../admin_task'
 require 'cgi'
 require 'zip'
@@ -16,6 +18,7 @@ class AdminAction < AdminTask
 
   def convertJsonToTable(body)
     return body unless hasTable
+
     data = table_rows(body)
     data = paginate_data(data)
     evaluate_status(table_types, data)
@@ -58,20 +61,19 @@ class AdminAction < AdminTask
     []
   end
 
-  def table_rows(body)
+  def table_rows(_body)
     []
   end
 
   def get_title
-    "Collection Admin Query"
+    'Collection Admin Query'
   end
 
   def get_this_query
     {
-      label: "This Query",
+      label: 'This Query',
       url: "#{LambdaBase.colladmin_url}?#{params_to_str(@myparams.clone)}",
-      class: "rerun"
+      class: 'rerun'
     }
   end
-
 end

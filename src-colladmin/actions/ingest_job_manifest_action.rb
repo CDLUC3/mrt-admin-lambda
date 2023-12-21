@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'action'
 require_relative 'forward_to_ingest_action'
 
@@ -31,18 +33,17 @@ class IngestJobManifestAction < ForwardToIngestAction
   def get_alternative_queries
     [
       {
-        label: 'Job Metadata', 
+        label: 'Job Metadata',
         url: "#{LambdaBase.colladmin_url}?path=job&batch=#{@batch}&job=#{@job}",
         class: 'jobmeta'
       },
       {
-        label: 'Job Files', 
+        label: 'Job Files',
         url: "#{LambdaBase.colladmin_url}?path=files&batch=#{@batch}&job=#{@job}",
         class: 'jobmeta'
-      },
+      }
     ]
   end
-
 end
 
 class JobManifestEntry < MerrittJson
@@ -55,24 +56,24 @@ class JobManifestEntry < MerrittJson
   def initialize(json)
     super()
     addProperty(
-      :fileSize, 
-      MerrittJsonProperty.new("File Size").lookupValue(json, "ingmans", "fileSize")
+      :fileSize,
+      MerrittJsonProperty.new('File Size').lookupValue(json, 'ingmans', 'fileSize')
     )
     addProperty(
-      :mimeType, 
-      MerrittJsonProperty.new("Mime Type").lookupValue(json, "ingmans", "mimeType")
+      :mimeType,
+      MerrittJsonProperty.new('Mime Type').lookupValue(json, 'ingmans', 'mimeType')
     )
     addProperty(
-      :fileName, 
-      MerrittJsonProperty.new("File Name").lookupValue(json, "ingmans", "fileName")
+      :fileName,
+      MerrittJsonProperty.new('File Name').lookupValue(json, 'ingmans', 'fileName')
     )
     addProperty(
-      :hashValue, 
-      MerrittJsonProperty.new("Hash Value").lookupValue(json, "ingmans", "hashValue")
+      :hashValue,
+      MerrittJsonProperty.new('Hash Value').lookupValue(json, 'ingmans', 'hashValue')
     )
     addProperty(
-      :hashAlgorithm, 
-      MerrittJsonProperty.new("Hash Algorithm").lookupValue(json, "ingmans", "hashAlgorithm")
+      :hashAlgorithm,
+      MerrittJsonProperty.new('Hash Algorithm').lookupValue(json, 'ingmans', 'hashAlgorithm')
     )
   end
 
@@ -104,7 +105,6 @@ class JobManifestEntry < MerrittJson
   end
 end
 
-
 class JobManifest < MerrittJson
   def initialize(body)
     super()
@@ -121,10 +121,10 @@ class JobManifest < MerrittJson
   def to_table
     table = []
     @entries.each_with_index do |jme, i|
-      break if (i >= 5000) 
+      break if i >= 5000
+
       table.append(jme.to_table_row)
     end
     table
   end
 end
-

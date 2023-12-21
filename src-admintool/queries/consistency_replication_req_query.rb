@@ -1,14 +1,12 @@
-class ConsistencyReplicationReqQuery < AdminQuery
-  def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
-  end
+# frozen_string_literal: true
 
+class ConsistencyReplicationReqQuery < AdminQuery
   def report_name
-    "#{@path}"
+    @path.to_s
   end
 
   def get_title
-    "Replication Required"
+    'Replication Required'
   end
 
   def get_sql
@@ -17,9 +15,9 @@ class ConsistencyReplicationReqQuery < AdminQuery
         case
           when u.inv_object_id = (
             select id from inv.inv_objects where ark = 'ark:/99999/fk4t15qn1'
-          ) 
+          )
             then 'Stage Exception'
-          else 
+          else
             'Default'
         end as category,
         count(u.inv_object_id) as obj,
@@ -39,7 +37,7 @@ class ConsistencyReplicationReqQuery < AdminQuery
             case
               when u.modified < date_add(now(), INTERVAL -2 DAY)
                 then 0
-              when u.modified < date_add(now(), INTERVAL -1 DAY) 
+              when u.modified < date_add(now(), INTERVAL -1 DAY)
                 then 1
               else 0
             end
@@ -51,16 +49,16 @@ class ConsistencyReplicationReqQuery < AdminQuery
             case
               when u.modified < date_add(now(), INTERVAL -2 DAY)
                 then 0
-              when u.modified < date_add(now(), INTERVAL -1 DAY) 
+              when u.modified < date_add(now(), INTERVAL -1 DAY)
                 then 0
               else 1
             end
           ),
           0
-        ) as day0,   
+        ) as day0,
         case
           when count(distinct u.inv_object_id) = 0 then 'PASS'
-          when 
+          when
             sum(
               case
                 when u.modified < date_add(now(), INTERVAL -2 DAY)
@@ -68,12 +66,12 @@ class ConsistencyReplicationReqQuery < AdminQuery
                 else 0
               end
             ) > 0 then 'FAIL'
-          when 
+          when
             sum(
               case
                 when u.modified < date_add(now(), INTERVAL -2 DAY)
                   then 0
-                when u.modified < date_add(now(), INTERVAL -1 DAY) 
+                when u.modified < date_add(now(), INTERVAL -1 DAY)
                   then 1
                 else 0
               end
@@ -81,7 +79,7 @@ class ConsistencyReplicationReqQuery < AdminQuery
          else 'PASS'
         end as status
       from (
-        select 
+        select
           p.inv_object_id,
           o.created,
           o.modified
@@ -89,24 +87,24 @@ class ConsistencyReplicationReqQuery < AdminQuery
       ) as u
       inner join object_size os
         on os.inv_object_id = u.inv_object_id
-      group by 
+      group by
         category
       ;
     }
   end
 
-  def get_headers(results)
+  def get_headers(_results)
     ['Category', 'Object Count', 'Bytes* (All Versions)', '> 2 days', '1-2 days', '< 1 day', 'Status']
   end
 
-  def get_types(results)
+  def get_types(_results)
     ['', 'dataint', 'bytes', 'dataint', 'dataint', 'dataint', 'status']
   end
 
   def bytes_unit
-    "1000000000"
+    '1000000000'
   end
-  
+
   def init_status
     :PASS
   end
@@ -114,11 +112,10 @@ class ConsistencyReplicationReqQuery < AdminQuery
   def get_alternative_queries
     [
       {
-        label: "Object List - Replication Needed, Older than 2 days", 
-        url: "path=replication_needed&days=2&limit=500",
+        label: 'Object List - Replication Needed, Older than 2 days',
+        url: 'path=replication_needed&days=2&limit=500',
         class: 'objects'
       }
     ]
   end
-
 end

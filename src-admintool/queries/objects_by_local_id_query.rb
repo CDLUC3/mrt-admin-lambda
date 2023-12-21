@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ObjectsByLocalIdQuery < ObjectsQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
@@ -13,15 +15,15 @@ class ObjectsByLocalIdQuery < ObjectsQuery
   end
 
   def get_where
-  %{
+    %{
     where o.ark = (
-      select 
+      select
         inv_object_ark
-      from 
+      from
         inv.inv_localids li
-      where 
-        li.local_id = ? 
-    ) 
+      where
+        li.local_id = ?
+    )
   }
   end
 end

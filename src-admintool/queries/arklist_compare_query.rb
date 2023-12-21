@@ -1,8 +1,6 @@
-class ArklistCompareQuery < IdlistCompareQuery
-  def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
-  end
+# frozen_string_literal: true
 
+class ArklistCompareQuery < IdlistCompareQuery
   def get_title
     "Arklist Compare Query for #{get_params.length} arks"
   end
@@ -13,11 +11,11 @@ class ArklistCompareQuery < IdlistCompareQuery
 
   def get_where
     %{
-      where 
+      where
       o.ark in (
       } + get_placeholders +
       %{
-      )    
+      )
     }
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ObjectsFileCopiesNeededQuery < ObjectsQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
@@ -11,7 +13,7 @@ class ObjectsFileCopiesNeededQuery < ObjectsQuery
         age.init_created < date_add(now(), INTERVAL -#{@days.to_i} DAY)
       and not exists (
         select 1
-        from 
+        from
           inv.inv_collections_inv_objects icio
         inner join inv.inv_collections c
           on c.id = icio.inv_collection_id
@@ -23,7 +25,7 @@ class ObjectsFileCopiesNeededQuery < ObjectsQuery
       limit #{get_limit.to_i} offset #{get_offset.to_i};
     }
     stmt = @client.prepare(subsql)
-    results = stmt.execute()
+    results = stmt.execute
     @ids = [-1]
     @qs = ['?']
     results.each do |r|
@@ -52,20 +54,20 @@ class ObjectsFileCopiesNeededQuery < ObjectsQuery
   def get_alternative_queries
     [
       {
-        label: "Objects with #{@copies} Copies", 
+        label: "Objects with #{@copies} Copies",
         url: "path=file_copies_needed&copies=#{@copies}&days=0&limit=500",
         class: 'objects'
       },
       {
-        label: "Objects with #{@copies} Copies, older than 1 day", 
+        label: "Objects with #{@copies} Copies, older than 1 day",
         url: "path=file_copies_needed&copies=#{@copies}&days=1&limit=500",
         class: 'objects'
       },
       {
-        label: "Objects with #{@copies} Copies, older than 2 days", 
+        label: "Objects with #{@copies} Copies, older than 2 days",
         url: "path=file_copies_needed&copies=#{@copies}&days=2&limit=500",
         class: 'objects'
-      },
+      }
     ]
   end
 
@@ -74,6 +76,6 @@ class ObjectsFileCopiesNeededQuery < ObjectsQuery
   end
 
   def get_obj_limit_query
-    ""
+    ''
   end
 end

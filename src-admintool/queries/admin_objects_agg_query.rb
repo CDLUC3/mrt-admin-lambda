@@ -1,10 +1,8 @@
-class AdminObjectsAggQuery < AdminQuery
-  def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
-  end
+# frozen_string_literal: true
 
+class AdminObjectsAggQuery < AdminQuery
   def get_title
-    "Admin Objects Aggregate"
+    'Admin Objects Aggregate'
   end
 
   def get_sql
@@ -17,23 +15,22 @@ class AdminObjectsAggQuery < AdminQuery
           else 'PASS'
         end as status
       from
-        inv.inv_objects 
+        inv.inv_objects
       where
-        aggregate_role != 'MRT-none' 
+        aggregate_role != 'MRT-none'
       or
         aggregate_role is null
-      group by 
+      group by
         aggregate_role
       ;
     }
   end
 
-  def get_headers(results)
+  def get_headers(_results)
     ['Aggregate Role', 'Count', 'Status']
   end
 
-  def get_types(results)
-    ['aggrole', 'data', 'status']
+  def get_types(_results)
+    %w[aggrole data status]
   end
-
 end

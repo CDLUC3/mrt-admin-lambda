@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require_relative 'forward_to_ingest_action'
 
 class IngestBatchAction < ForwardToIngestAction
   def initialize(config, action, path, myparams)
     @batch = myparams.fetch('batch', 'no-batch-provided')
     @batch_obj = Batch.new(@batch)
-    super(config, action, path, myparams, "admin/queues")
+    super(config, action, path, myparams, 'admin/queues')
   end
 
   def get_title
@@ -20,12 +22,12 @@ class IngestBatchAction < ForwardToIngestAction
   end
 
   def table_rows(body)
-    queueList = QueueList.new(get_ingest_server, body, {batch: @batch})
+    queueList = QueueList.new(get_ingest_server, body, { batch: @batch })
     queueList.jobs.each do |qe|
       @batch_obj.add_queue_job(qe)
     end
     dbjob = RecentBatchIngests.new(@config, @batch)
-    dbjob.jobs.each do |jid, dj|
+    dbjob.jobs.each_value do |dj|
       @batch_obj.add_db_job(dj)
     end
     @batch_obj.to_table
@@ -34,21 +36,20 @@ class IngestBatchAction < ForwardToIngestAction
   def hasTable
     true
   end
-
 end
 
 class BatchJob < MerrittJson
   def initialize(bid, jid)
     @bid = bid
     @jid = jid
-    @status = ""
-    @qstatus = ""
-    @submitter = ""
-    @title = ""
-    @date = ""
-    @fileType = ""
-    @profile = ""
-    @obj_cnt = ""
+    @status = ''
+    @qstatus = ''
+    @submitter = ''
+    @title = ''
+    @date = ''
+    @fileType = ''
+    @profile = ''
+    @obj_cnt = ''
   end
 
   def read_queue_object(qe)
@@ -67,7 +68,6 @@ class BatchJob < MerrittJson
     @profile = dj.profile
     @submitter = dj.user
     @fileType = dj.fileType
-
   end
 
   def self.table_headers
@@ -100,8 +100,9 @@ class BatchJob < MerrittJson
 
   def status
     return @status unless @status.empty? || @status.nil?
-    return 'PASS' if @obj_cnt > 0
-    return 'INFO'
+    return 'PASS' if @obj_cnt.positive?
+
+    'INFO'
   end
 
   def to_table_row
@@ -117,14 +118,13 @@ class BatchJob < MerrittJson
       status
     ]
   end
-
 end
 
 class Batch < MerrittJson
   def initialize(bid)
     super()
     @bid = bid
-    @jobs = {}  
+    @jobs = {}
   end
 
   def add_queue_job(qe)
@@ -139,9 +139,7 @@ class Batch < MerrittJson
     @jobs[dj.jid] = job
   end
 
-  def bid
-    @bid
-  end
+  attr_reader :bid
 
   def table_headers
     BatchJob.table_headers
@@ -153,7 +151,7 @@ class Batch < MerrittJson
 
   def to_table
     table = []
-    @jobs.each do |jid, job|
+    @jobs.each_value do |job|
       table.append(job.to_table_row)
     end
     table
@@ -162,78 +160,48 @@ end
 
 class RecentBatchIngest < QueryObject
   def initialize(row)
-      @bid = row[0]
-      @jid = row[1]
-      @profile = row[2]
-      @date = row[3]
-      @user = row[4]
-      @fileType = row[5]
-      @obj_cnt = row[6]
+    @bid = row[0]
+    @jid = row[1]
+    @profile = row[2]
+    @date = row[3]
+    @user = row[4]
+    @fileType = row[5]
+    @obj_cnt = row[6]
   end
 
-  def bid
-      @bid
-  end
-
-  def jid
-      @jid
-  end
-
-  def profile
-      @profile
-  end
-  
-  def date
-      @date
-  end
-
-  def user
-      @user
-  end
-
-  def fileType
-    @fileType
-  end
-
-  def obj_cnt
-      @obj_cnt
-  end
+  attr_reader :bid, :jid, :profile, :date, :user, :fileType, :obj_cnt
 end
 
 class RecentBatchIngests < MerrittQuery
   def initialize(config, bid)
-      super(config)
-      bid = '' if bid == 'JOB_ONLY'
-      @jobs = {}
-      run_query(
-          %{
-              select 
+    super(config)
+    bid = '' if bid == 'JOB_ONLY'
+    @jobs = {}
+    run_query(
+      %{
+              select
                   batch_id,
-                  job_id, 
-                  max(profile), 
+                  job_id,
+                  max(profile),
                   max(submitted),
-                  max(user_agent), 
+                  max(user_agent),
                   max(ingest_type),
-                  count(*) 
-              from 
-                  inv_ingests 
-              where 
+                  count(*)
+              from
+                  inv_ingests
+              where
                   batch_id = ?
-              group by 
+              group by
                   batch_id,
                   job_id
               ;
           },
-          [bid]
-      ).each do |r|
-          ri = RecentBatchIngest.new(r)
-          @jobs[ri.jid] = ri
-      end
+      [bid]
+    ).each do |r|
+      ri = RecentBatchIngest.new(r)
+      @jobs[ri.jid] = ri
+    end
   end
 
-  def jobs
-      @jobs
-  end
+  attr_reader :jobs
 end
-
-

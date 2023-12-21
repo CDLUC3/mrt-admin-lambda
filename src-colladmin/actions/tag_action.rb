@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'action'
 require 'aws-sdk-ec2'
 require 'aws-sdk-ssm'
@@ -16,71 +18,65 @@ class Ec2Info
     end
   end
 
-  def name
-    @name
-  end
+  attr_reader :name
 
   def self.table_headers
     [
-      "Name",
-      "Subservice",
-      "Type",
-      "SERVER State",
-      "IP",
-      "AZ",
-      "Endpoint",
-      "Notes",
-      "Build Tag",
-      "Service Start",
-      "SERVICE State"
+      'Name',
+      'Subservice',
+      'Type',
+      'SERVER State',
+      'IP',
+      'AZ',
+      'Endpoint',
+      'Notes',
+      'Build Tag',
+      'Service Start',
+      'SERVICE State'
     ]
   end
 
   def self.table_types
     [
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "endpoint",
-      "list",
-      "buildtag",
-      "srvstart",
-      "srvstate"
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      'endpoint',
+      'list',
+      'buildtag',
+      'srvstart',
+      'srvstate'
     ]
   end
 
   def urls
     res = {}
-    return res unless @state == "running"
+    return res unless @state == 'running'
 
-    @config.fetch("endpoints", {}).fetch(@subservice, {}).each do |k,v|
-      if k == 'state'  && @subservice == "ui"
-        m = @name.match(%r[(ui0[0-9])x2-stg]) 
-        if m 
-          res["#{k}"] = "https://#{m[1]}-aws-stg.cdlib.org/state.json"
+    @config.fetch('endpoints', {}).fetch(@subservice, {}).each do |k, v|
+      if k == 'state' && @subservice == 'ui'
+        m = @name.match(/(ui0[0-9])x2-stg/)
+        if m
+          res[k.to_s] = "https://#{m[1]}-aws-stg.cdlib.org/state.json"
         else
-          m = @name.match(%r[(ui0[0-9])x2]) 
-          if m 
-            res["#{k}"] = "https://#{m[1]}-aws.cdlib.org/state.json"
-          end
+          m = @name.match(/(ui0[0-9])x2/)
+          res[k.to_s] = "https://#{m[1]}-aws.cdlib.org/state.json" if m
         end
-      elsif k == 'audit_rep' && @subservice == "ui"
-        m = @name.match(%r[(ui0[0-9])x2-stg]) 
-        if m 
-          res["#{k}"] = "https://#{m[1]}-aws-stg.cdlib.org/state-audit-replic.json"
+      elsif k == 'audit_rep' && @subservice == 'ui'
+        m = @name.match(/(ui0[0-9])x2-stg/)
+        if m
+          res[k.to_s] = "https://#{m[1]}-aws-stg.cdlib.org/state-audit-replic.json"
         else
-          m = @name.match(%r[(ui0[0-9])x2]) 
-          if m 
-            res["#{k}"] = "https://#{m[1]}-aws.cdlib.org/state-audit-replic.json"
-          end
+          m = @name.match(/(ui0[0-9])x2/)
+          res[k.to_s] = "https://#{m[1]}-aws.cdlib.org/state-audit-replic.json" if m
         end
-      elsif k == 'state' && @subservice == "sword"
+      elsif k == 'state' && @subservice == 'sword'
         # The following should be tested with curl
         res["*#{k}"] = "http://foo:bar@#{@name}.cdlib.org:39001/mrtsword/servicedocument"
-      elsif v =~ %r[^http]
+      elsif v =~ /^http/
         res[k] = v
       else
         res[k] = "http://#{@name}.cdlib.org:#{v}"
@@ -90,8 +86,8 @@ class Ec2Info
   end
 
   def format_urls
-    str = ""
-    urls.each do |k,v|
+    str = ''
+    urls.each do |k, v|
       str = "#{str};;" unless str.empty?
       str = "#{str}#{k};#{@name};#{v}"
     end
@@ -99,16 +95,16 @@ class Ec2Info
   end
 
   def notes(action)
-    note = @config.fetch("notes", {}).fetch(@subservice, "").split("\n").join(",")
-    if @subservice == "access"
+    note = @config.fetch('notes', {}).fetch(@subservice, '').split("\n").join(',')
+    if @subservice == 'access'
       srvr = action.get_ssm('store/zoo/AccessLarge')
       threshold = action.get_ssm('store/zoo/AccessQSize')
       if @name == srvr && !threshold.nil?
-        threshold = threshold.to_i / 1000000
-        note =  "#{note},Large Assembly Server - Threshold: #{threshold}M"
+        threshold = threshold.to_i / 1_000_000
+        note = "#{note},Large Assembly Server - Threshold: #{threshold}M"
       end
     end
-   note
+    note
   end
 
   def table_row(action)
@@ -129,34 +125,33 @@ class Ec2Info
 end
 
 class TagAction < AdminAction
-
   def initialize(config, action, path, myparams)
     super(config, action, path, myparams)
     region = ENV['AWS_REGION'] || 'us-west-2'
     @ec2 = Aws::EC2::Client.new(
-      region: region, 
+      region: region
     )
     @ssm = Aws::SSM::Client.new(
-      region: region, 
+      region: region
     )
-    @title = "Merritt EC2 Instances"
+    @title = 'Merritt EC2 Instances'
     @instances = {}
-    @name = myparams.fetch("name", "")
-    @label = myparams.fetch("label", "")
+    @name = myparams.fetch('name', '')
+    @label = myparams.fetch('label', '')
     @list_servers = @name.empty?
 
     data = @ec2.describe_instances({
       filters: [
         {
-          name: "tag:Program",
+          name: 'tag:Program',
           values: [LambdaBase.tag_program]
         },
         {
-          name: "tag:Service",
+          name: 'tag:Service',
           values: [LambdaBase.tag_service]
         },
         {
-          name: "tag:Environment",
+          name: 'tag:Environment',
           values: [LambdaBase.tag_environment]
         }
       ]
@@ -171,10 +166,9 @@ class TagAction < AdminAction
   end
 
   def get_ssm(key)
-    val = @ssm.get_parameter({name: "#{LambdaBase.ssm_root_path}#{key}"})[:parameter][:value]
-    return val
-  rescue StandardError => e
-    ""
+    @ssm.get_parameter({ name: "#{LambdaBase.ssm_root_path}#{key}" })[:parameter][:value]
+  rescue StandardError
+    ''
   end
 
   def get_title
@@ -191,29 +185,30 @@ class TagAction < AdminAction
 
   def endpoint_call
     return unless @instances[@name]
+
     ec2 = @instances[@name]
-    url = ec2.urls.fetch(@label, "")
-    return "No Url found" if url.empty?
+    url = ec2.urls.fetch(@label, '')
+    return 'No Url found' if url.empty?
+
     cli = HTTPClient.new
     cli.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    if @label == "stop" || @label == "start"
+    if @label == 'stop' || @label == 'start'
       puts "POST #{url}"
       resp = cli.post(url)
     else
       puts "GET #{url}"
-      resp = cli.get(url, :follow_redirect => true)
+      resp = cli.get(url, follow_redirect: true)
     end
     ret = resp.body
-    if resp.status == 200 && @label == 'build-info'
-    elsif resp.status == 200
+    if resp.status == 200
       begin
         JSON.parse(resp.body)
-      rescue => exception
-        ret = {body: resp.dump}.to_json
+      rescue StandardError
+        ret = { body: resp.dump }.to_json
       end
     else
-      ret = { 
-        message: "Status #{resp.status} for #{url}" 
+      ret = {
+        message: "Status #{resp.status} for #{url}"
       }.to_json
     end
     ret
@@ -221,6 +216,7 @@ class TagAction < AdminAction
 
   def perform_action
     return endpoint_call unless @list_servers
+
     evaluate_status(table_types, get_table_rows)
     {
       format: 'report',
@@ -257,5 +253,4 @@ class TagAction < AdminAction
   def get_alternative_queries
     []
   end
-
 end

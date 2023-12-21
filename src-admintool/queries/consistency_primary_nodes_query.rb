@@ -1,10 +1,8 @@
-class ConsistencyPrimaryNodeQuery < AdminQuery
-  def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
-  end
+# frozen_string_literal: true
 
+class ConsistencyPrimaryNodeQuery < AdminQuery
   def get_title
-    "Collections with Non-standard Primary Nodes (Not SDSC or Dryad S3)"
+    'Collections with Non-standard Primary Nodes (Not SDSC or Dryad S3)'
   end
 
   def get_sql
@@ -14,13 +12,13 @@ class ConsistencyPrimaryNodeQuery < AdminQuery
         n.description as nodename,
         c.name as collection,
         (
-          select 
+          select
             group_concat(nn.number order by nn.number)
           from
             inv.inv_collections_inv_nodes icin
           inner join
             inv.inv_nodes nn
-          on 
+          on
             icin.inv_node_id = nn.id
           where
             icin.inv_collection_id = c.id
@@ -36,23 +34,23 @@ class ConsistencyPrimaryNodeQuery < AdminQuery
         inv.inv_nodes n
       inner join
         inv.inv_nodes_inv_objects inio
-      on 
+      on
         n.id = inio.inv_node_id
       and
         inio.role = 'primary'
-      inner join 
+      inner join
         inv.inv_collections_inv_objects icio
-      on 
+      on
         icio.inv_object_id = inio.inv_object_id
       inner join
         inv.inv_collections c
-      on 
+      on
         c.id = icio.inv_collection_id
-      inner join 
+      inner join
         inv.inv_objects o
-      on 
-        c.inv_object_id = o.id 
-      and 
+      on
+        c.inv_object_id = o.id
+      and
         o.aggregate_role = 'MRT-collection'
       where
         n.number not in (3041, 9501, 9502)
@@ -60,22 +58,22 @@ class ConsistencyPrimaryNodeQuery < AdminQuery
         nodenum,
         nodename,
         collection
-      ; 
+      ;
     }
   end
 
-  def get_headers(results)
+  def get_headers(_results)
     ['Primary Node Num', 'Node Desc', 'Collection', 'Secondary Node List', 'Status']
   end
 
-  def get_types(results)
+  def get_types(_results)
     ['', 'name', 'name', '', 'status']
   end
 
   def get_group_col
     1
   end
-  
+
   def init_status
     :PASS
   end

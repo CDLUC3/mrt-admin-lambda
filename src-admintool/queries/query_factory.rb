@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Explicitly include all parent classes
 require_relative 'query'
 require_relative 's3_query'
@@ -8,25 +10,19 @@ require_relative 'idlist_compare_query'
 require 'yaml'
 
 # Include all Query classes
-Dir[File.dirname(__FILE__) + '/*query.rb'].each {|file| require file }
+Dir["#{File.dirname(__FILE__)}/*query.rb"].sort.each { |file| require file }
 
 class QueryFactory
   def initialize(client, config)
     @client = client
     @config = config
-    @reports = YAML.load_file("config/reports.yml")
+    @reports = YAML.load_file('config/reports.yml')
   end
 
-  def client
-    @client
-  end
-
-  def config
-    @config
-  end
+  attr_reader :client, :config
 
   def get_report_def(path)
-    @reports.fetch(path, {class: AdminQuery, description: "Report not found"})
+    @reports.fetch(path, { class: AdminQuery, description: 'Report not found' })
   end
 
   def get_query_for_path(path, myparams)

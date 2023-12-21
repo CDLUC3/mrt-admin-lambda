@@ -1,15 +1,13 @@
-class ConsistencyLocalIdQuery < AdminQuery
-  def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
-  end
+# frozen_string_literal: true
 
+class ConsistencyLocalIdQuery < AdminQuery
   def get_title
-    "Objects missing localid"
+    'Objects missing localid'
   end
 
   def get_sql
     %{
-      select 
+      select
         case
           when modified < date_add(now(), interval -1 YEAR)
             then concat(c.mnemonic, ' - Older Than 1 Year')
@@ -35,22 +33,22 @@ class ConsistencyLocalIdQuery < AdminQuery
           not exists (select 1 from inv.inv_localids loc where o.ark = loc.inv_object_ark)
           and
             o.erc_where != concat(o.ark, ' ; (:unas)')
-        group by 
+        group by
           category
-        order by 
+        order by
           category
-      ; 
+      ;
     }
   end
 
-  def get_headers(results)
+  def get_headers(_results)
     ['Category', 'Object Count', 'Status']
   end
 
-  def get_types(results)
+  def get_types(_results)
     ['', 'dataint', 'status']
   end
-  
+
   def init_status
     :PASS
   end
@@ -58,10 +56,9 @@ class ConsistencyLocalIdQuery < AdminQuery
   def get_alternative_queries
     [
       {
-        label: "Object List - Local Id Needed", 
-        url: "path=object_localid_needed&limit=500"
+        label: 'Object List - Local Id Needed',
+        url: 'path=object_localid_needed&limit=500'
       }
     ]
   end
-
 end

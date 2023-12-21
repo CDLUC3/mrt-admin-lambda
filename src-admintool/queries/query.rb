@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../admin_task'
 
 class AdminQuery < AdminTask
@@ -5,8 +7,8 @@ class AdminQuery < AdminTask
     super(query_factory.config, path, myparams)
     @report_def = query_factory.get_report_def(path)
     @client = query_factory.client
-    @limit = @myparams.fetch("limit", get_default_limit.to_s).to_i
-    @limit = @limit > get_max_limit ? get_max_limit : @limit
+    @limit = @myparams.fetch('limit', get_default_limit.to_s).to_i
+    @limit = [@limit, get_max_limit].min
     @iterate = myparams.key?('iterate')
     @itparam1 = get_param('itparam1', '')
     @itparam2 = get_param('itparam2', '')
@@ -23,7 +25,7 @@ class AdminQuery < AdminTask
   end
 
   def get_title
-    "Merritt Admin Query"
+    'Merritt Admin Query'
   end
 
   def show_iterative_total
@@ -36,15 +38,9 @@ class AdminQuery < AdminTask
 
   def resolve_params
     query_params = get_params
-    if @itparam1 != ''
-      query_params.append(@itparam1)
-    end
-    if @itparam2 != ''
-      query_params.append(@itparam2)
-    end
-    if @itparam3 != ''
-      query_params.append(@itparam3)
-    end
+    query_params.append(@itparam1) if @itparam1 != ''
+    query_params.append(@itparam2) if @itparam2 != ''
+    query_params.append(@itparam3) if @itparam3 != ''
     query_params
   end
 
@@ -59,7 +55,7 @@ class AdminQuery < AdminTask
   end
 
   def get_iterative_sql
-    ""
+    ''
   end
 
   def is_total
@@ -80,7 +76,7 @@ class AdminQuery < AdminTask
     query_params = []
     results = stmt.execute(*query_params)
     get_result_json(results)
-  rescue => e
+  rescue StandardError => e
     log(e)
     log(get_sql)
   end
@@ -91,7 +87,7 @@ class AdminQuery < AdminTask
     query_params = resolve_params
     results = stmt.execute(*query_params)
     get_result_json(results)
-  rescue => e
+  rescue StandardError => e
     log(e)
     log(get_sql)
   end
@@ -103,15 +99,15 @@ class AdminQuery < AdminTask
   def get_types(results)
     types = []
     results.fields.each do
-      types.push("")
+      types.push('')
     end
   end
 
-  def get_result_data(results, types)
+  def get_result_data(results, _types)
     data = []
     results.each do |r|
       rdata = []
-      r.values.each_with_index do |v, c|
+      r.values.each_with_index do |v, _c|
         # type = types[c];
         rdata.push(v)
       end
@@ -158,11 +154,11 @@ class AdminQuery < AdminTask
   end
 
   def get_alternative_queries
-    #[{label: '', url: ''}]
+    # [{label: '', url: ''}]
     []
   end
 
-  def verify_interval_unit(unit) 
+  def verify_interval_unit(unit)
     return unit if unit == 'DAY'
     return unit if unit == 'HOUR'
     return unit if unit == 'MINUTE'
@@ -170,11 +166,12 @@ class AdminQuery < AdminTask
     return unit if unit == 'WEEK'
     return unit if unit == 'MONTH'
     return unit if unit == 'YEAR'
+
     'DAY'
   end
 
   def verify_col_group(col)
-    (col == 'inv_collection_id' || col == 'ogroup') ? col : 'inv_collection_id'
+    %w[inv_collection_id ogroup].include?(col) ? col : 'inv_collection_id'
   end
 
   def verify_aggregate_role(role)
@@ -182,28 +179,30 @@ class AdminQuery < AdminTask
     return role if role == 'MRT-owner'
     return role if role == 'MRT-service-level-agreement'
     return role if role == 'MRT-collection'
-    return 'n/a' if role == 'MRT-none' 
-    'Null_Value'   
+    return 'n/a' if role == 'MRT-none'
+
+    'Null_Value'
   end
 
   def verify_day(day)
-    return day if day =~ %r[^\d\d\d\d-\d\d-\d\d$]
+    return day if day =~ /^\d\d\d\d-\d\d-\d\d$/
+
     Time.new.strftime('%Y-%m-%d')
   end
 
   def verify_mime_col(col)
-    (col == 'mime_type' || col == 'mime_group') ? col : 'mime_type'
+    %w[mime_type mime_group].include?(col) ? col : 'mime_type'
   end
 
   def verify_files_col(col)
-    (col == 'count_files' || col == 'billable_size') ? col : 'count_files'
+    %w[count_files billable_size].include?(col) ? col : 'count_files'
   end
 
   def get_limit
     @limit
   end
 
-   def get_offset
+  def get_offset
     @page * page_size
   end
 
@@ -225,7 +224,7 @@ class AdminQuery < AdminTask
       params = @myparams.clone
       params['limit'] = limit
       queries.append({
-        label: "Limit #{limit}", 
+        label: "Limit #{limit}",
         url: params_to_str(params)
       })
     end
@@ -240,7 +239,7 @@ class AdminQuery < AdminTask
       inv.inv_nodes_inv_objects p
     inner join
       inv.inv_objects o
-    on 
+    on
       o.id = p.inv_object_id
     where
       p.role='primary'
@@ -254,36 +253,36 @@ class AdminQuery < AdminTask
           s.role='secondary'
         and
           p.inv_object_id = s.inv_object_id
-        and 
+        and
           s.version_number = o.version_number
-      )  
+      )
     }
   end
 
   def sqlfrag_audit_files_copies(copies)
     %{
       from (
-        select 
+        select
           a.inv_object_id,
           a.inv_file_id,
           min(created) as init_created
         from
           inv.inv_audits a
         inner join (
-          select 
-            inv_file_id, 
-            count(*) 
-          from 
-            inv.inv_audits 
-          group by 
-            inv_file_id 
-          having 
+          select
+            inv_file_id,
+            count(*)
+          from
+            inv.inv_audits
+          group by
+            inv_file_id
+          having
             count(*) = #{copies.to_i}
         ) as copies
           on copies.inv_file_id = a.inv_file_id
-        group by 
+        group by
           inv_object_id,
-          inv_file_id 
+          inv_file_id
       ) as age
     }
   end
@@ -291,54 +290,54 @@ class AdminQuery < AdminTask
   def sqlfrag_object_copies(copies)
     %{
       from (
-        select 
+        select
           inio.inv_object_id,
           min(created) as init_created
         from
           inv.inv_nodes_inv_objects inio
         inner join (
-          select 
-            inv_object_id, 
-            count(*) 
-          from 
-            inv.inv_nodes_inv_objects 
-          group by 
-            inv_object_id 
-          having 
+          select
+            inv_object_id,
+            count(*)
+          from
+            inv.inv_nodes_inv_objects
+          group by
+            inv_object_id
+          having
             count(*) = #{copies.to_i}
         ) as copies
           on copies.inv_object_id = inio.inv_object_id
-        group by 
-          inv_object_id 
+        group by
+          inv_object_id
       ) as age
     }
   end
 
   def sqlfrag_version_clobber
     %{
-      select 
-        inv_object_id, 
-        number, 
-        count(*) 
-      from 
-        inv.inv_versions 
-      group by 
-        inv_object_id, 
-        number 
-      having 
+      select
+        inv_object_id,
+        number,
+        count(*)
+      from
+        inv.inv_versions
+      group by
+        inv_object_id,
+        number
+      having
         count(*) > 1
     }
   end
 
   def sqlfrag_version_gap
     %{
-      select 
+      select
         inv_object_id
-      from 
-        inv.inv_versions 
-      group by 
+      from
+        inv.inv_versions
+      group by
         inv_object_id
-      having 
+      having
         count(distinct number) != max(number)
     }
   end
@@ -348,5 +347,4 @@ class AdminQuery < AdminTask
     @known_total = fulldata.length
     fulldata
   end
-
 end

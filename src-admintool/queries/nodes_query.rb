@@ -1,10 +1,8 @@
-class NodesQuery < AdminQuery
-  def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
-  end
+# frozen_string_literal: true
 
+class NodesQuery < AdminQuery
   def get_title
-    "Storage Nodes"
+    'Storage Nodes'
   end
 
   def get_sql
@@ -23,14 +21,14 @@ class NodesQuery < AdminQuery
           when nc.billable_size > ifnull(lim.tb, 0) * 1000000000000 * .95 then 'FAIL'
           when nc.billable_size > ifnull(lim.tb, 0) * 1000000000000 * .9 then 'WARN'
           else 'PASS'
-        end status  
+        end status
       from
         inv.inv_nodes n
       left join node_counts nc
         on n.id = nc.inv_node_id
-      left join ( 
-        select 
-          9501 as node, 650 as tb 
+      left join (
+        select
+          9501 as node, 650 as tb
       ) lim
         on n.number = lim.node
       where
@@ -40,12 +38,13 @@ class NodesQuery < AdminQuery
     }
   end
 
-  def get_headers(results)
-    ['Node Number', 'Description', 'Total Obj', 'Primary Obj', 'Secondary Obj', 'File Count', 'Billable Size', 'Allocation', 'Status']
+  def get_headers(_results)
+    ['Node Number', 'Description', 'Total Obj', 'Primary Obj', 'Secondary Obj', 'File Count', 'Billable Size',
+     'Allocation', 'Status']
   end
 
-  def get_types(results)
-    ['node', 'name', 'dataint', 'dataint', 'dataint', 'dataint', 'bytes', 'bytes', 'status']
+  def get_types(_results)
+    %w[node name dataint dataint dataint dataint bytes bytes status]
   end
 
   def get_filter_col
@@ -57,11 +56,10 @@ class NodesQuery < AdminQuery
   end
 
   def bytes_unit
-    "1000000000000"
+    '1000000000000'
   end
 
   def init_status
     :PASS
   end
-
 end

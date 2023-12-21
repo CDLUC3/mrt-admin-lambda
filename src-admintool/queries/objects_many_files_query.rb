@@ -1,21 +1,23 @@
+# frozen_string_literal: true
+
 class ObjectsManyFilesQuery < ObjectsQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
-    subsql = %{
+    subsql = %(
       select
         inv_object_id
       from
         object_size os
-      inner join 
+      inner join
         inv.inv_objects o
-      on 
+      on
         os.inv_object_id = o.id
       order by
         file_count desc
       limit #{get_limit.to_i} offset #{get_offset.to_i};
-    }
+    )
     stmt = @client.prepare(subsql)
-    results = stmt.execute()
+    results = stmt.execute
     @ids = [-1]
     @qs = ['?']
     results.each do |r|
@@ -26,7 +28,7 @@ class ObjectsManyFilesQuery < ObjectsQuery
   end
 
   def get_title
-    "Objects with Most Files"
+    'Objects with Most Files'
   end
 
   def get_params
@@ -47,11 +49,10 @@ class ObjectsManyFilesQuery < ObjectsQuery
   end
 
   def get_obj_limit_query
-    ""
+    ''
   end
 
   def bytes_unit
-    "1000000000"
+    '1000000000'
   end
-
 end

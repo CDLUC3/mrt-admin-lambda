@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'action'
 require 'aws-sdk-ssm'
 require 'yaml'
@@ -6,31 +8,28 @@ class SsmInfo
   def initialize(name, inst = nil)
     # do not dump or display value attributes
     @name = name
-    arr = @name.split("/")
+    arr = @name.split('/')
     @subservice = arr[4]
-    @type = inst.nil? ? "" : inst.type
-    @description = ""
-    @value = inst.nil? ? "" : inst.value
+    @type = inst.nil? ? '' : inst.type
+    @description = ''
+    @value = inst.nil? ? '' : inst.value
     @encrypted = @type == 'SecureString'
-    if @encrypted == false
-      if name !~ %r[ldap\/accounts\/guest\/password]
-        if name =~ %r[password|credential|privateAccess|accessKey|secretKey|master_key]
-          @encrypted = 'TBD'
-        end
-      end
+    if @encrypted == false && (name !~ (%r{ldap/accounts/guest/password})) && (name =~ /password|credential|privateAccess|accessKey|secretKey|master_key/)
+      @encrypted = 'TBD'
     end
     @encrypted = '' if @value.empty?
-    @deprecated = ""
-    @modified = inst.nil? ? "" : inst.last_modified_date.to_s
+    @deprecated = ''
+    @modified = inst.nil? ? '' : inst.last_modified_date.to_s
     @skip = false
   end
 
   def status
-    return "SKIP" if @skip
-    return "FAIL" if @modified.empty?
-    return "WARN" if @description.empty?
-    return "INFO" unless @deprecated.empty?
-    "PASS"
+    return 'SKIP' if @skip
+    return 'FAIL' if @modified.empty?
+    return 'WARN' if @description.empty?
+    return 'INFO' unless @deprecated.empty?
+
+    'PASS'
   end
 
   def set_skip(skip)
@@ -45,49 +44,40 @@ class SsmInfo
     @deprecated = deprecated
   end
 
-  def name
-    @name
-  end
+  attr_reader :name, :deprecated, :skip
 
   def value
-    return "" if @value.nil? || @value.empty?
-    return "***" unless @encrypted == false
+    return '' if @value.nil? || @value.empty?
+    return '***' unless @encrypted == false
+
     @value
   end
 
-  def deprecated
-    @deprecated
-  end
-
-  def skip
-    @skip
-  end
-
   def self.table_headers
-    [
-      "Name",
-      "Type",
-      "Subservice",
-      "Description",
-      "Encrypted",
-      "Value",
-      "Deprecated",
-      "Modified",
-      "Status"
+    %w[
+      Name
+      Type
+      Subservice
+      Description
+      Encrypted
+      Value
+      Deprecated
+      Modified
+      Status
     ]
   end
 
   def self.table_types
     [
-      "name",
-      "narrow",
-      "narrow",
-      "name",
-      "narrow",
-      "name",
-      "",
-      "datetime",
-      "status"
+      'name',
+      'narrow',
+      'narrow',
+      'name',
+      'narrow',
+      'name',
+      '',
+      'datetime',
+      'status'
     ]
   end
 
@@ -107,20 +97,19 @@ class SsmInfo
 end
 
 class SsmDescribeAction < AdminAction
-
   def initialize(config, action, path, myparams)
     super(config, action, path, myparams)
     region = ENV['AWS_REGION'] || 'us-west-2'
     @ssm = Aws::SSM::Client.new(
-      region: region, 
+      region: region
     )
-    @title = "Merritt Parameters"
+    @title = 'Merritt Parameters'
     @parameters = {}
     first = true
     nexttoken = nil
-    while(first || nexttoken)
+    while first || nexttoken
       first = false
-      params = {max_results: 10, path: LambdaBase.ssm_root_path, recursive: true}
+      params = { max_results: 10, path: LambdaBase.ssm_root_path, recursive: true }
       params[:next_token] = nexttoken unless nexttoken.nil?
       # do not dump or display value attributes
       data = @ssm.get_parameters_by_path(params)
@@ -128,6 +117,7 @@ class SsmDescribeAction < AdminAction
         # do not dump or display value attributes
         n = p.name
         next if n.empty?
+
         @parameters[n] = SsmInfo.new(n, p)
       end
       nexttoken = data.next_token
@@ -136,31 +126,33 @@ class SsmDescribeAction < AdminAction
   end
 
   def load_registry
-    reg = YAML.safe_load(File.read("config/ssm.registry.yml"), aliases: true)
+    reg = YAML.safe_load(File.read('config/ssm.registry.yml'), aliases: true)
     process_registry_node(LambdaBase.ssm_root_path.chop, reg)
   end
 
   def process_registry_node(path, reg)
-    if reg.key?("description")
+    if reg.key?('description')
       p = @parameters.fetch(path, SsmInfo.new(path))
-      p.set_description(reg["description"])
-      p.set_deprecated(reg.fetch("deprecated", ""))
-      p.set_skip(reg.fetch("skip", false))
+      p.set_description(reg['description'])
+      p.set_deprecated(reg.fetch('deprecated', ''))
+      p.set_skip(reg.fetch('skip', false))
       @parameters[path] = p
       return
     end
 
-    reg.keys.each do |k|
+    reg.each_key do |k|
       r = reg[k]
-      next unless r.class.to_s == "Hash"
+      next unless r.instance_of?(::Hash)
+
       process_registry_node("#{path}/#{k}", r)
     end
 
-    if reg.fetch("skip", false)
-      @parameters.keys.each do |pp|
-        next unless pp =~ %r[^#{path}.*]
-        @parameters[pp].set_skip(true)
-      end
+    return unless reg.fetch('skip', false)
+
+    @parameters.each_key do |pp|
+      next unless pp =~ /^#{path}.*/
+
+      @parameters[pp].set_skip(true)
     end
   end
 
@@ -180,10 +172,11 @@ class SsmDescribeAction < AdminAction
     convertJsonToTable({}.to_json)
   end
 
-  def table_rows(body)
+  def table_rows(_body)
     rows = []
     @parameters.keys.sort.each do |k|
       next if @parameters[k].skip && @parameters[k].value.empty?
+
       rows.append(@parameters[k].table_row)
     end
     rows
@@ -200,5 +193,4 @@ class SsmDescribeAction < AdminAction
   def init_status
     :PASS
   end
-
 end

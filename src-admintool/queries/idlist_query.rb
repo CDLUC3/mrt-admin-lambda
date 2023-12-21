@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class IdlistQuery < AdminQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
@@ -10,7 +12,7 @@ class IdlistQuery < AdminQuery
 
   def get_placeholders
     buf = []
-    get_params.each do |ark|
+    get_params.each do |_ark|
       buf.append('?')
     end
     buf.join(',')
@@ -24,105 +26,103 @@ class IdlistQuery < AdminQuery
     %{
       where ... in (
     } + get_placeholders +
-    %{
-      )    
-    }
+      %{
+        )
+      }
   end
 
   def get_sql
     sql = %{
-select 
+select
   trim(substring_index(o.erc_where, ';', -1)) doi,
   o.ark,
   date(created),
-} 
+}
 
-  if @fields == 'summary'
-    sql = sql + %{
+    if @fields == 'summary'
+      sql += %{
   (
-    select count(*) 
-    from inv.inv_versions v 
+    select count(*)
+    from inv.inv_versions v
     where v.inv_object_id=o.id
   ) as vercount,
   (
-    select count(*) 
-    from inv.inv_files f 
+    select count(*)
+    from inv.inv_files f
     where f.inv_object_id=o.id
       and billable_size = full_size
   ) as filecount,
   (
-    select count(*) 
-    from inv.inv_files f 
+    select count(*)
+    from inv.inv_files f
     where f.inv_object_id=o.id and source='producer'
       and billable_size = full_size
   ) as pfilecount,
   (
-    select group_concat(substr(f.pathname,10)) 
-    from inv.inv_files f 
+    select group_concat(substr(f.pathname,10))
+    from inv.inv_files f
     where f.inv_object_id=o.id and source='producer'
       and billable_size = full_size
   ),
   (
-    select sum(billable_size) 
-    from inv.inv_files f 
+    select sum(billable_size)
+    from inv.inv_files f
     where f.inv_object_id=o.id
   ) as size,
   (
-    select sum(billable_size) 
-    from inv.inv_files f 
+    select sum(billable_size)
+    from inv.inv_files f
     where f.inv_object_id=o.id and source='producer'
   ) as psize,
   }
-  end
+    end
 
-  if @fields == 'metadata'
-    sql = sql + %{
+    if @fields == 'metadata'
+      sql += %(
   erc_what,
   erc_who,
   erc_when
-  }
-  end
+  )
+    end
 
-  sql = sql + %{
+    sql + %(
   ''
 from
   inv.inv_objects o
-} + get_where +
-%{
-order by doi, created
-;
-  }
-  sql
-end
-
-def get_headers(results)
-  arr = ['Parsed erc_where', 'Ark', 'Created']
-  if @fields == 'summary'
-    ['Num Ver', 'Num File', 'Producer Files', 'Files', 'File Size', 'Producer Size'].each do |r|
-      arr.append(r)
-    end
-  elsif @fields == 'metadata'
-    ['Title', 'Author', 'Date'].each do |r|
-      arr.append(r)
-    end
+) + get_where +
+      %(
+    order by doi, created
+    ;
+      )
   end
-  arr.append('')
-  arr
-end
 
-def get_types(results)
-  arr = ['localid', 'ark', 'date']
-  if @fields == 'summary'
-    ['data', 'data', 'data', 'list', 'data', 'data'].each do |r|
-      arr.append(r)
+  def get_headers(_results)
+    arr = ['Parsed erc_where', 'Ark', 'Created']
+    if @fields == 'summary'
+      ['Num Ver', 'Num File', 'Producer Files', 'Files', 'File Size', 'Producer Size'].each do |r|
+        arr.append(r)
+      end
+    elsif @fields == 'metadata'
+      %w[Title Author Date].each do |r|
+        arr.append(r)
+      end
     end
-  elsif @fields == 'metadata'
-    ['name', 'name', ''].each do |r|
-      arr.append(r)
-    end
+    arr.append('')
+    arr
   end
-  arr.append('na')
-  arr
-end
 
+  def get_types(_results)
+    arr = %w[localid ark date]
+    if @fields == 'summary'
+      %w[data data data list data data].each do |r|
+        arr.append(r)
+      end
+    elsif @fields == 'metadata'
+      ['name', 'name', ''].each do |r|
+        arr.append(r)
+      end
+    end
+    arr.append('na')
+    arr
+  end
 end

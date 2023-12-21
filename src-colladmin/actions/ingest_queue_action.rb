@@ -1,21 +1,23 @@
+# frozen_string_literal: true
+
 require_relative 'forward_to_ingest_action'
 
 class IngestQueueAction < ForwardToIngestAction
   def initialize(config, action, path, myparams)
-    @batch = myparams.fetch("batch", "")
-    @profile = myparams.fetch("profile", "")
-    @qstatus = myparams.fetch("qstatus", "")
+    @batch = myparams.fetch('batch', '')
+    @profile = myparams.fetch('profile', '')
+    @qstatus = myparams.fetch('qstatus', '')
     super(config, action, path, myparams, 'admin/queues')
     @filter = {
       batch: @batch,
       profile: @profile,
-      qstatus: @qstatus,
+      qstatus: @qstatus
     }
     @batches = {}
   end
 
   def get_title
-    "List Ingest Queues"
+    'List Ingest Queues'
   end
 
   def table_headers
@@ -38,34 +40,35 @@ class IngestQueueAction < ForwardToIngestAction
 
   def init_status
     return :PASS if @batch.empty? && @profile.empty? && @qstatus.empty?
+
     :SKIP
   end
 
   def get_alternative_queries
     arr = [
       {
-        label: 'Ingest Queue Counts by Profile', 
+        label: 'Ingest Queue Counts by Profile',
         url: "#{LambdaBase.colladmin_url}?path=ingest-queue-by-profile",
         class: 'graph'
       },
       {
-        label: 'Requeue All', 
-        url: "",
+        label: 'Requeue All',
+        url: '',
         class: 'action requeue-all'
       },
       {
-        label: 'Delete All', 
-        url: "",
+        label: 'Delete All',
+        url: '',
         class: 'action deleteq-all'
       },
       {
-        label: 'Cleanup Queue', 
+        label: 'Cleanup Queue',
         url: "#{LambdaBase.colladmin_url}?path=cleanup-queue&queue=queues&reload_path=queues",
         class: 'action'
       }
     ]
     if @batch.empty?
-      @batches.each do |k,qb|
+      @batches.each do |k, qb|
         arr.append({
           label: "Batch #{k}: #{qb.num_jobs} Jobs",
           url: "#{LambdaBase.colladmin_url}?path=queues&profile=#{@profile}&qstatus=#{@qstatus}&batch=#{k}"
@@ -74,7 +77,7 @@ class IngestQueueAction < ForwardToIngestAction
     end
     arr.append(
       {
-        label: 'Completed Ingests', 
+        label: 'Completed Ingests',
         url: "#{LambdaBase.admintool_url}?path=recent_ingests"
       }
     )
@@ -84,5 +87,4 @@ class IngestQueueAction < ForwardToIngestAction
   def page_size
     100
   end
-
 end

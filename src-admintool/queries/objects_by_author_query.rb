@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ObjectsByAuthorQuery < ObjectsQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)

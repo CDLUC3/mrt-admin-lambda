@@ -1,41 +1,43 @@
+# frozen_string_literal: true
+
 require 'date'
 class CollectionsByTimeQuery < AdminQuery
   def initialize(query_factory, path, myparams, col, source)
     super(query_factory, path, myparams)
     @col = verify_files_col(col)
-    @colclass = (@col == 'billable_size') ? 'bytes' : 'dataint'
+    @colclass = @col == 'billable_size' ? 'bytes' : 'dataint'
     @source = source
     @interval = get_param('interval', '')
-    @interval = (@interval == 'years' || @interval == 'days' || @interval == 'weeks') ? @interval : 'years'
+    @interval = @interval == 'years' || @interval == 'days' || @interval == 'weeks' ? @interval : 'years'
     @ranges = []
 
-    if (@interval == 'days')
+    if @interval == 'days'
       @end = Date.today + 1
-      @start=@end - 7
+      @start = @end - 7
       rstart = @start
-      while rstart < @end do
-        @ranges.push([rstart, rstart+1])
-        rstart = rstart + 1
+      while rstart < @end
+        @ranges.push([rstart, rstart + 1])
+        rstart += 1
       end
-    elsif (@interval == 'weeks')
+    elsif @interval == 'weeks'
       @end = Date.today - Date.today.cwday + 7
-      @start=@end - 28
+      @start = @end - 28
       rstart = @start
-      while rstart < @end do
-        @ranges.push([rstart, rstart+7])
-        rstart = rstart + 7
+      while rstart < @end
+        @ranges.push([rstart, rstart + 7])
+        rstart += 7
       end
     else
       @end = Date.today.next_year.prev_month(Date.today.month - 1) - Date.today.mday + 1
-      @start=Date.new(2013,01,01)
+      @start = Date.new(2013, 0o1, 0o1)
       rstart = @start
-      while rstart < @end do
+      while rstart < @end
         @ranges.push([rstart, rstart.next_year])
         rstart = rstart.next_year
       end
     end
     @headers = ['Group', 'Collection Id', 'Collection Name']
-    @types = ['ogroup', 'colllist', 'name']
+    @types = %w[ogroup colllist name]
     @ranges.each do |range|
       @headers.push(range[0])
       @types.push(@colclass)
@@ -44,11 +46,11 @@ class CollectionsByTimeQuery < AdminQuery
     @types.push(@colclass)
   end
 
-  def get_headers(results)
+  def get_headers(_results)
     @headers
   end
 
-  def get_types(results)
+  def get_types(_results)
     @types
   end
 
@@ -84,9 +86,11 @@ class CollectionsByTimeQuery < AdminQuery
           and
             date_added < ?
             #{
-              (@source == 'producer') ? 
-                " and source='producer'" : 
-                ""
+              if @source == 'producer'
+                " and source='producer'"
+              else
+                ''
+              end
             }
            ) as sumval
       from
@@ -126,6 +130,4 @@ class CollectionsByTimeQuery < AdminQuery
     end
     format_result_json(types, combined_data, get_headers(results))
   end
-
-
 end

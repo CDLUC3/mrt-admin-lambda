@@ -1,16 +1,14 @@
-class ObjectsVersionGapQuery < ObjectsQuery
-  def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
-  end
+# frozen_string_literal: true
 
+class ObjectsVersionGapQuery < ObjectsQuery
   def get_title
-    "Objects with Version Gap"
+    'Objects with Version Gap'
   end
 
   def get_where
     %{
       where o.id in (
-        select 
+        select
           distinct inv_object_id
         from (
           #{sqlfrag_version_gap}
@@ -18,5 +16,4 @@ class ObjectsVersionGapQuery < ObjectsQuery
       )
     }
   end
-
 end

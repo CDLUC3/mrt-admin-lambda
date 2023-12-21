@@ -1,14 +1,12 @@
-class ListCollectionsQuery < AdminQuery
-  def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
-  end
+# frozen_string_literal: true
 
+class ListCollectionsQuery < AdminQuery
   def get_title
-    "List Collections"
+    'List Collections'
   end
 
   def get_sql
-    %{
+    %(
       select
         distinct
         ogroup,
@@ -20,15 +18,14 @@ class ListCollectionsQuery < AdminQuery
       order by
         ogroup,
         mnemonic
-    }
+    )
   end
 
-  def get_headers(results)
-    ['Group', 'CollId', 'mnemonic', 'Collection']
+  def get_headers(_results)
+    %w[Group CollId mnemonic Collection]
   end
 
-  def get_types(results)
-    ['ogroup', 'colllist', 'mnemonic', 'name']
+  def get_types(_results)
+    %w[ogroup colllist mnemonic name]
   end
-
 end

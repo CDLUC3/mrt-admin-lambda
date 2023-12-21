@@ -1,26 +1,24 @@
+# frozen_string_literal: true
+
 require 'date'
 require 'csv'
 
 class MerrittJsonProperty
   # Define property
   # Optionally set the value
-  def initialize(label, val = "")
+  def initialize(label, val = '')
     @label = label
     @value = val
   end
 
   def lookupValue(source, namespace, jsonkey, defval = nil)
     defval = @value if defval.nil?
-    jsonkey = namespace.empty? ? jsonkey : "#{namespace}:#{jsonkey}"
+    jsonkey = "#{namespace}:#{jsonkey}" unless namespace.empty?
     @value = source.fetch(jsonkey, defval)
-    if defval.instance_of?(Array) 
-      if !@value.instance_of?(Array)
-        @value = [@value]
-      end
+    if defval.instance_of?(Array)
+      @value = [@value] unless @value.instance_of?(Array)
     elsif defval.instance_of?(Hash)
-      if @value == ""
-        @value = {}
-      end
+      @value = {} if @value == ''
     end
     self
   end
@@ -29,25 +27,19 @@ class MerrittJsonProperty
     lookupValue(source, namespace, jsonkey, defval)
     begin
       @value = DateTime.parse(@value).to_time
-    rescue StandardError => e
-      puts "Time format error"
+    rescue StandardError
+      puts 'Time format error'
       @value = Time.new
     end
     self
   end
 
-  def value
-    @value
-  end
-
-  def label
-    @label
-  end
+  attr_reader :value, :label
 end
 
 class MerrittJson
   def self.TEMPLATE_KEY
-    "TEMPLATE-PROFILE"
+    'TEMPLATE-PROFILE'
   end
 
   def initialize
@@ -64,18 +56,21 @@ class MerrittJson
     @propertyHash[symbol] = p
   end
 
-  def getValue(symbol, defval = "")
+  def getValue(symbol, defval = '')
     return defval unless @propertyHash.key?(symbol)
+
     @propertyHash[symbol].value
   end
 
-  def getTimeValue(symbol, defval = "")
+  def getTimeValue(symbol, defval = '')
     return defval unless @propertyHash.key?(symbol)
+
     @propertyHash[symbol].value
   end
 
   def getLabel(symbol)
-    return "N/A" unless @propertyHash.key?(symbol)
+    return 'N/A' unless @propertyHash.key?(symbol)
+
     @propertyHash[symbol].label
   end
 
@@ -100,12 +95,11 @@ class MerrittJson
   def self.jsonFetchHashVal(obj, key)
     val = obj.fetch(key, {})
     # Ingest currently returns "" when empty
-    val = {} if val == ""
+    val = {} if val == ''
     val
   end
 
   def fetchHashVal(obj, key)
     MerrittJson.jsonFetchHashVal(obj, key)
   end
-
 end

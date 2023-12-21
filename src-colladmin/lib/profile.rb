@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'merritt_json'
 require_relative 'merritt_query'
 
@@ -18,7 +20,7 @@ class ProfileList < MerrittJson
       else
         @profiles.append(p)
       end
-    end   
+    end
     @profiles.each do |p|
       p.scoreDiff(template)
     end
@@ -27,7 +29,7 @@ class ProfileList < MerrittJson
   def table_rows
     rows = []
     @profiles.each do |p|
-      #next if p.is_template?
+      # next if p.is_template?
       rows.append(p.summary_values)
     end
     rows
@@ -36,7 +38,7 @@ class ProfileList < MerrittJson
   def notification_map
     map = {}
     @profiles.each do |p|
-      map[p.getValue(:context)] = p.getValue(:contactsEmail).join(",")
+      map[p.getValue(:context)] = p.getValue(:contactsEmail).join(',')
     end
     omap = []
     map.keys.sort.each do |k|
@@ -67,25 +69,21 @@ class ProfileList < MerrittJson
     omap
   end
 
-  def profiles
-    @profiles
-  end
+  attr_reader :profiles
 end
 
 class SingleIngestProfileWrapper < MerrittJson
   def initialize(json)
     super()
     data = JSON.parse(json)
-    @profile = IngestProfile.new(fetchHashVal(data, "pro:profileState"))
+    @profile = IngestProfile.new(fetchHashVal(data, 'pro:profileState'))
   end
 
-  def profile
-    @profile
-  end
+  attr_reader :profile
 end
 
 class IngestProfile < MerrittJson
-  @@placeholder = nil 
+  @@placeholder = nil
 
   def self.placeholder
     @@placeholder = IngestProfile.new({}) if @@placeholder.nil?
@@ -97,84 +95,84 @@ class IngestProfile < MerrittJson
     @score = 0
     @collection = nil
     addProperty(
-      :profileID, 
+      :profileID,
       MerrittJsonProperty.new(
-        "Profile ID", 
-        json.fetch("#{namespace}:profileID", "").gsub("${NAME}", MerrittJson.TEMPLATE_KEY)
+        'Profile ID',
+        json.fetch("#{namespace}:profileID", '').gsub('${NAME}', MerrittJson.TEMPLATE_KEY)
       )
     )
     addProperty(
-      :creationDate, 
-      MerrittJsonProperty.new("Creation Date").lookupValue(json, namespace, "creationDate")
+      :creationDate,
+      MerrittJsonProperty.new('Creation Date').lookupValue(json, namespace, 'creationDate')
     )
     addProperty(
-      :modificationDate, 
-      MerrittJsonProperty.new("Modification Date").lookupValue(json, namespace, "modificationDate")
+      :modificationDate,
+      MerrittJsonProperty.new('Modification Date').lookupValue(json, namespace, 'modificationDate')
     )
     addProperty(
-      :profileDescription, 
-      MerrittJsonProperty.new("Profile Description").lookupValue(json, namespace, "profileDescription")
+      :profileDescription,
+      MerrittJsonProperty.new('Profile Description').lookupValue(json, namespace, 'profileDescription')
     )
     addProperty(
-      :objectMinterURL, 
-      MerrittJsonProperty.new("Minter URL").lookupValue(json, namespace, "objectMinterURL")
+      :objectMinterURL,
+      MerrittJsonProperty.new('Minter URL').lookupValue(json, namespace, 'objectMinterURL')
     )
     addProperty(
-      :collection, 
-      MerrittJsonProperty.new("Collection").lookupValue(json, namespace, "collectionName")
+      :collection,
+      MerrittJsonProperty.new('Collection').lookupValue(json, namespace, 'collectionName')
     )
     addProperty(
-      :identifierScheme, 
-      MerrittJsonProperty.new("Identifier Scheme").lookupValue(json, namespace, "identifierScheme")
+      :identifierScheme,
+      MerrittJsonProperty.new('Identifier Scheme').lookupValue(json, namespace, 'identifierScheme')
     )
     addProperty(
-      :identifierNamespace, 
-      MerrittJsonProperty.new("Identifier Namespace").lookupValue(json, namespace, "identifierNamespace")
+      :identifierNamespace,
+      MerrittJsonProperty.new('Identifier Namespace').lookupValue(json, namespace, 'identifierNamespace')
     )
     addProperty(
-      :notificationType, 
-      MerrittJsonProperty.new("Notification Type").lookupValue(json, namespace, "notificationType")
+      :notificationType,
+      MerrittJsonProperty.new('Notification Type').lookupValue(json, namespace, 'notificationType')
     )
     addProperty(
-      :aggregateType, 
-      MerrittJsonProperty.new("Aggregate Type").lookupValue(json, namespace, "aggregateType")
+      :aggregateType,
+      MerrittJsonProperty.new('Aggregate Type').lookupValue(json, namespace, 'aggregateType')
     )
     addProperty(
-      :nodeID, 
+      :nodeID,
       MerrittJsonProperty.new(
-        "Node ID", 
-        json.fetch("#{namespace}:targetStorage", {}).fetch("#{namespace}:nodeID", "")
+        'Node ID',
+        json.fetch("#{namespace}:targetStorage", {}).fetch("#{namespace}:nodeID", '')
       )
     )
     addProperty(
-      :objectType, 
-      MerrittJsonProperty.new("Object Type").lookupValue(json, namespace, "objectType")
+      :objectType,
+      MerrittJsonProperty.new('Object Type').lookupValue(json, namespace, 'objectType')
     )
     addProperty(
-      :context, 
-      MerrittJsonProperty.new("Context").lookupValue(json, namespace, "context")
+      :context,
+      MerrittJsonProperty.new('Context').lookupValue(json, namespace, 'context')
     )
     addProperty(
-      :owner, 
-      MerrittJsonProperty.new("Owner").lookupValue(json, namespace, "owner")
+      :owner,
+      MerrittJsonProperty.new('Owner').lookupValue(json, namespace, 'owner')
     )
 
     addProperty(
-      :contactsEmail, 
-      MerrittJsonProperty.new("Contact Email", contactEmails(json, namespace))
+      :contactsEmail,
+      MerrittJsonProperty.new('Contact Email', contactEmails(json, namespace))
     )
     addProperty(
-      :ingestHandlers, 
+      :ingestHandlers,
       MerrittJsonProperty.new(
-        "Ingest Handlers", 
-        handler_list(json, namespace, "ingestHandlers")
+        'Ingest Handlers',
+        handler_list(json, namespace, 'ingestHandlers')
       )
     )
     addProperty(
-      :queueHandlers, 
+      :queueHandlers,
       MerrittJsonProperty.new(
-        "Queue Handlers", 
-        handler_list(json, namespace, "queueHandlers")
+        'Queue Handlers',
+        handler_list(json, namespace, 'queueHandlers')
       )
     )
   end
@@ -182,12 +180,12 @@ class IngestProfile < MerrittJson
   def set_collection(collections)
     ark = getValue(:collection)
     @collection = collections.get_by_ark(ark)
-  end  
+  end
 
   def contactEmails(json, namespace)
     arr = []
     fetchArrayVal(fetchHashVal(json, "#{namespace}:contactsEmail"), "#{namespace}:notification").each do |obj|
-      v = obj.fetch("#{namespace}:contactEmail", "")
+      v = obj.fetch("#{namespace}:contactEmail", '')
       arr.append(v) unless v.empty?
     end
     arr
@@ -196,35 +194,34 @@ class IngestProfile < MerrittJson
   def scoreDiff(template)
     @score = 0
     return if is_template? || template.nil?
-    [
-      :objectMinterURL, 
-      :notificationType, 
-      :notificationType, 
-      :objectType
+
+    %i[
+      objectMinterURL
+      notificationType
+      notificationType
+      objectType
     ].each do |sym|
-      @score = @score + 5 if getValue(sym) == template.getValue(sym)
+      @score += 5 if getValue(sym) == template.getValue(sym)
     end
-    [
-      :ingestHandlers, 
-      :queueHandlers
+    %i[
+      ingestHandlers
+      queueHandlers
     ].each do |sym|
-      val = getValue(sym) 
+      val = getValue(sym)
       templateval = template.getValue(sym)
-      for i in 0..[val.length, templateval.length].max - 1
-        @score = @score + 1 if val[i] != templateval[i]
+      (0..[val.length, templateval.length].max - 1).each do |i|
+        @score += 1 if val[i] != templateval[i]
       end
     end
   end
 
-  def score
-    @score
-  end
+  attr_reader :score, :collection
 
   def self.table_headers
-    [
-      'Key',
-      'Value',
-      'Diff'
+    %w[
+      Key
+      Value
+      Diff
     ]
   end
 
@@ -240,17 +237,18 @@ class IngestProfile < MerrittJson
     getValue(:profileID) == MerrittJson.TEMPLATE_KEY
   end
 
-  def handler_list(json, namespace, key) 
+  def handler_list(json, namespace, key)
     arr = []
     fetchArrayVal(
       fetchHashVal(
-        json, 
+        json,
         "#{namespace}:#{key}"
       ),
       "#{namespace}:handlerState"
     ).each do |row|
       v = row.fetch("#{namespace}:handlerName", '')
       next if v.empty?
+
       arr.append(v.gsub('org.cdlib.mrt.ingest.handlers.', ''))
     end
     arr
@@ -260,9 +258,9 @@ class IngestProfile < MerrittJson
     if val.instance_of?(Array)
       diff = []
       hasDiff = false
-      for i in 0..[val.length, templateval.length].max - 1
+      (0..[val.length, templateval.length].max - 1).each do |i|
         if val[i] == templateval[i]
-          diff.append("")
+          diff.append('')
         elsif val[i].nil?
           diff.append("- #{templateval[i]}")
           hasDiff = true
@@ -276,15 +274,15 @@ class IngestProfile < MerrittJson
       end
       diff = [] unless hasDiff
       rows.append([
-        label, 
-        val.empty? ? "" : "list:#{val.join(",")}", 
-        diff.empty? ? "" : "list:#{diff.join(",")}"
-      ])
-    else 
-      rows.append([label, val, val == templateval ? "" : templateval])
+                    label,
+                    val.empty? ? '' : "list:#{val.join(',')}",
+                    diff.empty? ? '' : "list:#{diff.join(',')}"
+                  ])
+    else
+      rows.append([label, val, val == templateval ? '' : templateval])
     end
   end
-  
+
   def table_rows(template)
     rows = []
     getPropertyList.each do |prop|
@@ -294,37 +292,37 @@ class IngestProfile < MerrittJson
   end
 
   def summary_symbols
-    [
-      :profileID,
-      :profileDescription,
-      :owner,
-      :collection,
-      :context,
-      :objectMinterURL,
-      :identifierNamespace,
-      :nodeID,
-      :contactsEmail
+    %i[
+      profileID
+      profileDescription
+      owner
+      collection
+      context
+      objectMinterURL
+      identifierNamespace
+      nodeID
+      contactsEmail
     ]
   end
 
   def summary_types
     arr = []
     summary_symbols.each do |sym|
-      type = ""
-      type = "profile" if sym == :profileID
-      type = "list" if sym == :contactsEmail
-      type = "ldapark" if sym == :collection
+      type = ''
+      type = 'profile' if sym == :profileID
+      type = 'list' if sym == :contactsEmail
+      type = 'ldapark' if sym == :collection
       arr.append(type)
     end
-    arr.append("")
-    arr.append("colllist")
-    arr.append("")
-    arr.append("")
-    arr.append("")
-    arr.append("")
-    arr.append("")
-    arr.append("")
-    arr.append("status")
+    arr.append('')
+    arr.append('colllist')
+    arr.append('')
+    arr.append('')
+    arr.append('')
+    arr.append('')
+    arr.append('')
+    arr.append('')
+    arr.append('status')
     arr
   end
 
@@ -333,15 +331,15 @@ class IngestProfile < MerrittJson
     summary_symbols.each do |sym|
       arr.append(getLabel(sym))
     end
-    arr.append("Score")
-    arr.append("Collection")
-    arr.append("Read")
-    arr.append("Write")
-    arr.append("Download")
-    arr.append("Tier")
-    arr.append("Harvest")
-    arr.append("DB Desc (if diff)")
-    arr.append("Status")
+    arr.append('Score')
+    arr.append('Collection')
+    arr.append('Read')
+    arr.append('Write')
+    arr.append('Download')
+    arr.append('Tier')
+    arr.append('Harvest')
+    arr.append('DB Desc (if diff)')
+    arr.append('Status')
     arr
   end
 
@@ -349,7 +347,7 @@ class IngestProfile < MerrittJson
     arr = []
     summary_symbols.each do |sym|
       v = getValue(sym)
-      v = v.join(",") if sym == :contactsEmail
+      v = v.join(',') if sym == :contactsEmail
       arr.append(v)
     end
     arr.append(score)
@@ -360,78 +358,33 @@ class IngestProfile < MerrittJson
     arr.append(@collection.nil? ? '' : @collection.tier)
     arr.append(@collection.nil? ? '' : @collection.harvest)
     dbdescription = @collection.nil? ? '' : @collection.dbdescription
-    dbdescription = dbdescription == getValue(:profileDescription) ? "-" : dbdescription
+    dbdescription = '-' if dbdescription == getValue(:profileDescription)
     arr.append(dbdescription)
     arr.append(getValue(:profileID) == "#{getValue(:context)}_content" ? 'PASS' : 'FAIL')
     arr
-  end
-
-  def collection
-    @collection
   end
 end
 
 class Collection < QueryObject
   def initialize(row)
-      @id = row[0]
-      @ark = row[1]
-      @mnemonic = row[2]
-      @pread = row[3].nil? ? "-" : row[3]
-      @pwrite = row[4].nil? ? "-" : row[4]
-      @pdownload = row[5].nil? ? "-" : row[5]
-      @tier = row[6].nil? ? "-" : row[6]
-      @harvest = row[7].nil? ? "-" : row[7]
-      @dbdescription = row[8]
-      @aggregate_role = row[9].nil? ? "" : row[9]
-      @primary_node = ""
+    @id = row[0]
+    @ark = row[1]
+    @mnemonic = row[2]
+    @pread = row[3].nil? ? '-' : row[3]
+    @pwrite = row[4].nil? ? '-' : row[4]
+    @pdownload = row[5].nil? ? '-' : row[5]
+    @tier = row[6].nil? ? '-' : row[6]
+    @harvest = row[7].nil? ? '-' : row[7]
+    @dbdescription = row[8]
+    @aggregate_role = row[9].nil? ? '' : row[9]
+    @primary_node = ''
   end
 
-  def id
-      @id
-  end
-
-  def ark
-      @ark
-  end
-
-  def pread
-      @pread
-  end
-
-  def pwrite
-    @pwrite
-  end
-
-  def pdownload
-    @pdownload
-  end
-
-  def tier
-    @tier
-  end
-
-  def harvest
-    @harvest
-  end
-
-  def dbdescription
-    @dbdescription
-  end
-
-  def mnemonic
-    @mnemonic
-  end
-
-  def aggregate_role
-    @aggregate_role
-  end
+  attr_reader :id, :ark, :pread, :pwrite, :pdownload, :tier, :harvest, :dbdescription, :mnemonic, :aggregate_role,
+    :primary_node
 
   def set_primary_node(n)
-    @primary_node = n 
-  end
-
-  def primary_node
-    @primary_node 
+    @primary_node = n
   end
 
   def name_select
@@ -441,51 +394,51 @@ end
 
 class Collections < MerrittQuery
   def initialize(config)
-      super(config)
-      @collections = {}
-      @mnemonics = {}
-      @ids = {}
-      run_query(
-          %{
-              select 
-                c.id, 
+    super(config)
+    @collections = {}
+    @mnemonics = {}
+    @ids = {}
+    run_query(
+        %{
+              select
+                c.id,
                 c.ark,
                 c.mnemonic,
                 c.read_privilege,
                 c.write_privilege,
                 c.download_privilege,
                 c.storage_tier,
-                c.harvest_privilege, 
+                c.harvest_privilege,
                 ifnull(c.name, concat('** ', o.erc_what)) as name,
                 o.aggregate_role
-              from 
+              from
                 inv_collections c
               left join inv_objects o
                 on c.inv_object_id = o.id
                 and aggregate_role = 'MRT-collection'
               where not exists (
                 select 1
-                from 
+                from
                   inv_objects o
                 where
                   c.inv_object_id = o.id
-                and 
+                and
                   aggregate_role = 'MRT-service-level-agreement'
               )
               order by
                 o.created desc
           }
       ).each do |r|
-          c = Collection.new(r)
-          @collections[c.ark] = c
-          m = c.mnemonic.nil? ? "" : c.mnemonic
-          @mnemonics[m] = c unless m.empty?
-          @ids[c.id] = c
-      end
+      c = Collection.new(r)
+      @collections[c.ark] = c
+      m = c.mnemonic.nil? ? '' : c.mnemonic
+      @mnemonics[m] = c unless m.empty?
+      @ids[c.id] = c
+    end
   end
 
   def get_by_ark(ark)
-      @collections[ark]
+    @collections[ark]
   end
 
   def get_by_mnemonic(mnemonic)
@@ -498,7 +451,7 @@ class Collections < MerrittQuery
 
   def collections_select
     arr = []
-    @collections.values.each do |c|
+    @collections.each_value do |c|
       arr.push({
         id: c.id,
         ark: c.ark,
@@ -514,19 +467,21 @@ class Collections < MerrittQuery
   end
 
   def merge_profiles
-    #remove special system collections
+    # remove special system collections
     @collections.delete(LambdaFunctions::Handler.merritt_admin_coll_owners)
     @collections.delete(LambdaFunctions::Handler.merritt_curatorial)
     @collections.delete(LambdaFunctions::Handler.merritt_system)
     @collections.delete(LambdaFunctions::Handler.merritt_admin_coll_sla)
 
-    profiles = IngestProfileAction.new(@config, {}, "", {}).get_profile_list
+    profiles = IngestProfileAction.new(@config, {}, '', {}).get_profile_list
     profiles.profiles.each do |p|
       context = p.getValue(:profileID)
       next if context.nil?
       next if context.empty?
-      context.sub!(%r[_content$], '')
+
+      context.sub!(/_content$/, '')
       next unless @mnemonics.key?(context)
+
       @mnemonics[context].set_primary_node(p.getValue(:nodeID))
     end
   end

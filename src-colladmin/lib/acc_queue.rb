@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'queue_json'
 class AccQueueEntry < QueueJson
   @@placeholder = nil
@@ -6,71 +8,72 @@ class AccQueueEntry < QueueJson
     @@placeholder
   end
 
- def initialize(json)
+  def initialize(json)
     super()
     addProperty(
-      :queueNode, 
-      MerrittJsonProperty.new("Queue Node").lookupValue(json, "que", "queueNode")
+      :queueNode,
+      MerrittJsonProperty.new('Queue Node').lookupValue(json, 'que', 'queueNode')
     )
     addProperty(
-      :token, 
-      MerrittJsonProperty.new("Token").lookupValue(json, "que", "token")
+      :token,
+      MerrittJsonProperty.new('Token').lookupValue(json, 'que', 'token')
     )
     addProperty(
-      :bytes, 
-      MerrittJsonProperty.new("Bytes").lookupValue(json, "que", "cloudContentByte")
+      :bytes,
+      MerrittJsonProperty.new('Bytes').lookupValue(json, 'que', 'cloudContentByte')
     )
     addProperty(
-      :node, 
-      MerrittJsonProperty.new("Node").lookupValue(json, "que", "deliveryNode")
+      :node,
+      MerrittJsonProperty.new('Node').lookupValue(json, 'que', 'deliveryNode')
     )
     addProperty(
-      :status_code, 
-      MerrittJsonProperty.new("Status Code").lookupValue(json, "que", "queueStatus")
+      :status_code,
+      MerrittJsonProperty.new('Status Code').lookupValue(json, 'que', 'queueStatus')
     )
     addProperty(
-      :date, 
-      MerrittJsonProperty.new("Date").lookupTimeValue(json, "que", "date")
+      :date,
+      MerrittJsonProperty.new('Date').lookupTimeValue(json, 'que', 'date')
     )
     addProperty(
-      :qstatus, 
-      MerrittJsonProperty.new("QStatus").lookupValue(json, "que", "status")
+      :qstatus,
+      MerrittJsonProperty.new('QStatus').lookupValue(json, 'que', 'status')
     )
     addProperty(
-      :queueId, 
-      MerrittJsonProperty.new("Queue ID").lookupValue(json, "que", "iD")
+      :queueId,
+      MerrittJsonProperty.new('Queue ID').lookupValue(json, 'que', 'iD')
     )
-    qs = getValue(:qstatus, "")
-    qt = getValue(:date, "")
+    qs = getValue(:qstatus, '')
+    qt = getValue(:date, '')
     st = 'INFO'
-    if (qs == "Completed")
+    case qs
+    when 'Completed'
       st = 'PASS'
-    elsif (qs == "Consumed")
-      if (qt < (DateTime.now - 3).to_time)
-        st = 'SKIP'
-      elsif (qt < (DateTime.now - 1).to_time)
-        st = 'WARN'
-      else
-        st = 'INFO'        
-      end
-    elsif (qs == "Failed")
-      if (qt < (DateTime.now - 3).to_time)
-        st = 'SKIP'
-      else
-        st = 'FAIL'
-      end
+    when 'Consumed'
+      st = if qt < (DateTime.now - 3).to_time
+             'SKIP'
+           elsif qt < (DateTime.now - 1).to_time
+             'WARN'
+           else
+             'INFO'
+           end
+    when 'Failed'
+      st = if qt < (DateTime.now - 3).to_time
+             'SKIP'
+           else
+             'FAIL'
+           end
     end
     addProperty(
-      :status, 
-      MerrittJsonProperty.new("Status", st)
+      :status,
+      MerrittJsonProperty.new('Status', st)
     )
     addProperty(
-      :qdelete, 
-      MerrittJsonProperty.new("Queue Del", get_queue_path(false))
+      :qdelete,
+      MerrittJsonProperty.new('Queue Del', get_queue_path(false))
     )
     addProperty(
-      :requeue, 
-      MerrittJsonProperty.new("Requeue", get_queue_path(true))
+      :requeue,
+      MerrittJsonProperty.new('Requeue', get_queue_path(true))
     )
   end
 
@@ -129,7 +132,7 @@ class AccQueue < MerrittJson
 end
 
 class AccQueueList < MerrittJson
-  def initialize(ingest_server, body, filter = {})
+  def initialize(ingest_server, body, _filter = {})
     super()
     @ingest_server = ingest_server
     @body = body
@@ -138,7 +141,7 @@ class AccQueueList < MerrittJson
   end
 
   def self.get_queue_list(ingest_server, filter = {})
-    qjson = HttpGetJson.new(ingest_server, "admin/queues-acc")
+    qjson = HttpGetJson.new(ingest_server, 'admin/queues-acc')
     AccQueueList.new(ingest_server, qjson.body, filter)
   end
 
@@ -151,32 +154,24 @@ class AccQueueList < MerrittJson
       begin
         qjson = HttpGetJson.new(@ingest_server, "admin/queue-acc#{node}")
         next unless qjson.status == 200
+
         AccQueue.new(self, qjson.body)
-      rescue => e
+      rescue StandardError => e
         LambdaBase.log(e.message)
         LambdaBase.log(e.backtrace)
       end
     end
   end
 
-  def tokens
-    @tokens
-  end
-
-  def body
-    @body
-  end
+  attr_reader :tokens, :body
 
   def to_table
     table = []
-    @tokens.sort{
-      # reverse sort on status then date, "Completed" should fall to bottom
-      |a,b| a.status == b.status ? b.date <=> a.date : AdminTask.status_sort_val(a.status) <=> AdminTask.status_sort_val(b.status)
-    }.each_with_index do |q, i|
+    @tokens.sort  do |a, b|
+      a.status == b.status ? b.date <=> a.date : AdminTask.status_sort_val(a.status) <=> AdminTask.status_sort_val(b.status)
+    end.each_with_index do |q, _i|
       table.append(q.to_table_row)
     end
     table
   end
-
 end
-

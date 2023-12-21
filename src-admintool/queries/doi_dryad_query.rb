@@ -1,10 +1,8 @@
-class DoiDryadQuery < AdminQuery
-  def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
-  end
+# frozen_string_literal: true
 
+class DoiDryadQuery < AdminQuery
   def get_title
-    "Dryad Counts by Campus DOI"
+    'Dryad Counts by Campus DOI'
   end
 
   def get_sql
@@ -41,7 +39,7 @@ class DoiDryadQuery < AdminQuery
           union select 'doi:10.15146' shoulder, 'DataOne' campus
           union select 'doi:10.7941/D1' shoulder, 'LBNL' campus
         ) as ucdoi
-           on loc.local_id like concat(ucdoi.shoulder, '%') 
+           on loc.local_id like concat(ucdoi.shoulder, '%')
       inner join inv.inv_objects o
         on o.ark = loc.inv_object_ark
       inner join billing.object_size os
@@ -57,20 +55,19 @@ class DoiDryadQuery < AdminQuery
         shoulder
       order by
         object_count
-      ; 
+      ;
     }
   end
 
-  def get_headers(results)
+  def get_headers(_results)
     ['Campus', 'Shoulder', 'Object Count', 'File Count', 'Bytes']
   end
 
-  def get_types(results)
+  def get_types(_results)
     ['', '', 'dataint', 'dataint', 'bytes']
   end
 
   def bytes_unit
-    "1000000000"
+    '1000000000'
   end
-
 end

@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 class ObjectIdFilesQuery < AdminQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
-    @id = myparams.fetch("id", 0).to_i
+    @id = myparams.fetch('id', 0).to_i
   end
 
   def get_title
@@ -10,8 +12,8 @@ class ObjectIdFilesQuery < AdminQuery
 
   def get_sql
     %{
-      select 
-        o.ark, 
+      select
+        o.ark,
         v.number,
         f.source,
         binary f.pathname,
@@ -20,39 +22,39 @@ class ObjectIdFilesQuery < AdminQuery
         ifnull(group_concat(n.number), '') as nodelist,
         ifnull(
           group_concat(
-            case 
+            case
               when a.status = 'verified' then null
               else n.number
             end
           ),
           ''
         ) as unverified
-      from 
-        inv.inv_objects o 
+      from
+        inv.inv_objects o
       inner join inv.inv_versions v
-        on o.id = v.inv_object_id 
+        on o.id = v.inv_object_id
       inner join inv.inv_files f
         on o.id = f.inv_object_id
         and v.id = f.inv_version_id
       left join inv.inv_audits a
-        on 
+        on
           o.id = a.inv_object_id
         and
-          f.id = a.inv_file_id        
+          f.id = a.inv_file_id
       left join inv.inv_nodes n
         on a.inv_node_id = n.id
-      where 
+      where
         o.id = ?
       and
         f.billable_size = f.full_size
-      group by  
+      group by
         o.ark,
         v.number,
         f.source,
         binary f.pathname,
         f.full_size,
         f.created
-      order by 
+      order by
         f.created desc,
         source,
         pathname
@@ -65,22 +67,21 @@ class ObjectIdFilesQuery < AdminQuery
     [@id]
   end
 
-  def get_headers(results)
+  def get_headers(_results)
     ['Ark', 'Version', 'Source', 'Path', 'File Size', 'Created', 'Nodes', 'Unverified']
   end
 
-  def get_types(results)
+  def get_types(_results)
     ['ark', '', '', 'name', 'bytes', 'datetime', '', '']
   end
 
   def get_alternative_queries
     [
       {
-        label: "Storage Management for Object", 
+        label: 'Storage Management for Object',
         url: "#{LambdaBase.colladmin_root_url}/web/storeObjectNodes.html?id=#{@id}",
         class: 'config'
-      },
+      }
     ]
   end
-
 end

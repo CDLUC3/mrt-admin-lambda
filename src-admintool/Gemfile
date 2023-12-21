@@ -1,10 +1,11 @@
-source "https://rubygems.org"
+# frozen_string_literal: true
+
+source 'https://rubygems.org'
 
 gem 'json'
 gem 'mysql2'
 # carefully check that the right version of this gem is installed in the mysql-ruby-lambda image
 # pay attention the the branch checked out during the gem build step.
 # https://github.com/CDLUC3/mrt-admin-lambda/blob/main/mysql-ruby-lambda/Dockerfile#L19-L21
-gem 'uc3-ssm', '0.3.10', git: 'https://github.com/CDLUC3/uc3-ssm.git', branch: 'main'
 gem 'aws-sdk-s3'
-
+gem 'uc3-ssm', '0.3.10', git: 'https://github.com/CDLUC3/uc3-ssm.git', branch: 'main'

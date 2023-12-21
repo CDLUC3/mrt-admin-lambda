@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class ObjectsByTitleQuery < ObjectsQuery
   def initialize(query_factory, path, myparams)
-    super(query_factory , path, myparams)
+    super(query_factory, path, myparams)
     @title = CGI.unescape(get_param('title', ''))
   end
 
