@@ -4,6 +4,7 @@ require_relative 'action'
 require_relative 'forward_to_ingest_action'
 require_relative '../lib/http_post_json'
 
+# Collection Admin Task class - see config/actions.yml for description
 class PostToIngestAction < ForwardToIngestAction
   def initialize(config, action, path, myparams, endpoint)
     @reload_path = myparams.fetch('reload_path', '')

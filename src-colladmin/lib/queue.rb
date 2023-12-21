@@ -2,6 +2,7 @@
 
 require_relative 'queue_json'
 
+# representation of an ingest queue entry
 class QueueEntry < QueueJson
   @@placeholder = nil
   def self.placeholder
@@ -177,6 +178,7 @@ class QueueEntry < QueueJson
   end
 end
 
+# representation of a merritt ingest batch (a batch contains multiple jobs)
 class QueueBatch < MerrittJson
   def initialize(bid, submitter)
     @bid = bid
@@ -195,6 +197,7 @@ class QueueBatch < MerrittJson
   end
 end
 
+# representation of the ingest queue
 class IngestQueue < MerrittJson
   def initialize(queueList, body)
     data = JSON.parse(body)
@@ -218,6 +221,7 @@ class IngestQueue < MerrittJson
   end
 end
 
+# List of queues of a particular type - ingest once had separate queues for each worker
 class QueueList < MerrittJson
   def initialize(ingest_server, body, filter = {})
     super()

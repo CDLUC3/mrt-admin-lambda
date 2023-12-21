@@ -3,6 +3,7 @@
 require 'date'
 require 'csv'
 
+# individual property of a merritt json record
 class MerrittJsonProperty
   # Define property
   # Optionally set the value
@@ -37,6 +38,7 @@ class MerrittJsonProperty
   attr_reader :value, :label
 end
 
+# wrapper around a merritt json object
 class MerrittJson
   def self.TEMPLATE_KEY
     'TEMPLATE-PROFILE'

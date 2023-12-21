@@ -124,6 +124,7 @@ class Ec2Info
   end
 end
 
+# Collection Admin Task class - see config/actions.yml for description
 class TagAction < AdminAction
   def initialize(config, action, path, myparams)
     super(config, action, path, myparams)

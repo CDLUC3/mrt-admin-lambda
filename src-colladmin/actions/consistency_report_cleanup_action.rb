@@ -3,6 +3,7 @@
 require_relative 'action'
 require 'aws-sdk-lambda'
 
+# Collection Admin Task class - see config/actions.yml for description
 class ConsistencyReportCleanupAction < AdminAction
   def initialize(config, action, path, myparams)
     super(config, action, path, myparams)

@@ -2,6 +2,7 @@
 
 require_relative 'merritt_json'
 
+# representation of data in a Merritt zookeeper queue node
 class QueueJson < MerrittJson
   def get_queue_node
     getValue(:queueNode, '')

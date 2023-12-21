@@ -24,13 +24,13 @@ class IngestBytesByHourQuery < AdminQuery
       @days = defdays unless @days.positive? && @days <= 100
       @tstart = (Time.parse(@tend) - (@days * spd)).strftime('%Y-%m-%d')
     end
-    @tinc = if @days <= 3
-              1
-            elsif @days <= 14
-              4
-            else
-              24
-            end
+    if @days <= 3
+      @tinc = 1
+    elsif @days <= 14
+      @tinc = 4
+    else
+      @tinc = 24
+    end
   end
 
   def get_title

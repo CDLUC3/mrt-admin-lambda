@@ -8,6 +8,7 @@ require 'mustache'
 require 'base64'
 require 'jwt'
 
+# Cognito denied permission for the lambda
 class PermissionDeniedError < StandardError
 end
 

@@ -3,6 +3,7 @@
 require_relative 'merritt_json'
 require_relative 'merritt_query'
 
+# representation of the list of merritt ingest profiles
 class ProfileList < MerrittJson
   def initialize(body, collections)
     super()
@@ -72,6 +73,7 @@ class ProfileList < MerrittJson
   attr_reader :profiles
 end
 
+# representation of a json object wrapping an ingest profile
 class SingleIngestProfileWrapper < MerrittJson
   def initialize(json)
     super()
@@ -82,6 +84,7 @@ class SingleIngestProfileWrapper < MerrittJson
   attr_reader :profile
 end
 
+# representation of a merritt ingest profile
 class IngestProfile < MerrittJson
   @@placeholder = nil
 
@@ -365,6 +368,7 @@ class IngestProfile < MerrittJson
   end
 end
 
+# representation of a merritt collection
 class Collection < QueryObject
   def initialize(row)
     @id = row[0]
@@ -392,6 +396,7 @@ class Collection < QueryObject
   end
 end
 
+# represetation of the set of merritt collections
 class Collections < MerrittQuery
   def initialize(config)
     super(config)

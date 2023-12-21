@@ -279,7 +279,8 @@ module LambdaFunctions
         map['REVIEW'] = rev.review_items
         map['scan_count'] = map['REVIEW'].length
         map['scan_next'] = map['scan_count'] == map['scan_limit'] ? map['scan_offset'] + map['scan_limit'] : false
-        map['scan_prev'] = (map['scan_offset']).positive? ? (map['scan_offset'] > map['scan_limit'] ? map['scan_offset'] - map['scan_limit'] : 0) : false
+        map['scan_prev'] =
+          (map['scan_offset']).positive? ? (map['scan_offset'] > map['scan_limit'] ? map['scan_offset'] - map['scan_limit'] : 0) : false
       when '/web/storeObjects.html'
         objlist = CGI.unescape(myparams.fetch('objlist', ''))
         mode = myparams.fetch('mode', '')

@@ -2,6 +2,7 @@
 
 require 'net/ldap'
 
+# class for managing the retrieval of merritt ldap information
 class MerrittLdap
   def initialize(config)
     @ldapconf = config.fetch('ldap', {})
@@ -165,6 +166,7 @@ class MerrittLdap
   end
 end
 
+# base class for ldap records
 class LdapRecord
   def find_part(entry, part, defval)
     part = "#{part}="
@@ -176,6 +178,7 @@ class LdapRecord
   end
 end
 
+# ldap record linked to roles
 class LdapLinkedRecord < LdapRecord
   def initialize(islinked)
     @islinked = islinked
@@ -206,6 +209,7 @@ class LdapLinkedRecord < LdapRecord
   end
 end
 
+# ldap user record
 class LdapUser < LdapLinkedRecord
   def initialize(entry, uid = '')
     if entry.nil?
@@ -291,6 +295,7 @@ class LdapUser < LdapLinkedRecord
   end
 end
 
+# ldap collection
 class LdapCollection < LdapLinkedRecord
   def initialize(entry, mnemonic = '')
     if entry.nil?
@@ -367,6 +372,7 @@ class LdapCollection < LdapLinkedRecord
   end
 end
 
+# ldap role
 class LdapRole < LdapRecord
   def initialize(entry)
     @dn = entry.dn
@@ -432,6 +438,7 @@ class LdapRole < LdapRecord
   end
 end
 
+# detailed ldap information for a user including permissions
 class LdapUserDetailed < LdapRecord
   def self.load(_user, roles)
     colls = {}
@@ -491,6 +498,7 @@ class LdapUserDetailed < LdapRecord
   end
 end
 
+# detailed ldap information for a collection including permissions
 class LdapCollectionDetailed < LdapRecord
   def self.load(_collection, roles)
     users = {}
@@ -552,6 +560,7 @@ class LdapCollectionDetailed < LdapRecord
   end
 end
 
+# map of collections for a user/group
 class LdapCollectionMap < LdapLinkedRecord
   def initialize(ark, mnemonic)
     @ark = ark

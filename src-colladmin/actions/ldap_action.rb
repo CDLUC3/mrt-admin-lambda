@@ -3,6 +3,7 @@
 require_relative 'action'
 require_relative '../lib/merritt_ldap'
 
+# Collection Admin Task class - see config/actions.yml for description
 class LDAPAction < AdminAction
   def initialize(config, action, path, myparams)
     super(config, action, path, myparams)
@@ -64,6 +65,7 @@ class LDAPAction < AdminAction
   end
 end
 
+# Collection Admin Task class - see config/actions.yml for description
 class LDAPActionUsers < LDAPAction
   def initialize(config, action, path, myparams)
     super(config, action, path, myparams)
@@ -80,6 +82,7 @@ class LDAPActionUsers < LDAPAction
   end
 end
 
+# Collection Admin Task class - see config/actions.yml for description
 class LDAPActionUserDetailed < LDAPAction
   def initialize(config, action, path, myparams)
     super(config, action, path, myparams)
@@ -97,6 +100,7 @@ class LDAPActionUserDetailed < LDAPAction
   end
 end
 
+# Collection Admin Task class - see config/actions.yml for description
 class LDAPActionRoles < LDAPAction
   def initialize(config, action, path, myparams)
     super(config, action, path, myparams)
@@ -113,6 +117,7 @@ class LDAPActionRoles < LDAPAction
   end
 end
 
+# Collection Admin Task class - see config/actions.yml for description
 class LDAPActionColls < LDAPAction
   def initialize(config, action, path, myparams)
     super(config, action, path, myparams)
@@ -129,6 +134,7 @@ class LDAPActionColls < LDAPAction
   end
 end
 
+# Collection Admin Task class - see config/actions.yml for description
 class LDAPActionCollDetailed < LDAPAction
   def initialize(config, action, path, myparams)
     super(config, action, path, myparams)
@@ -146,6 +152,7 @@ class LDAPActionCollDetailed < LDAPAction
   end
 end
 
+# Collection Admin Task class - see config/actions.yml for description
 class LDAPActionCollArk < LDAPAction
   def initialize(config, action, path, myparams)
     super(config, action, path, myparams)
@@ -163,6 +170,7 @@ class LDAPActionCollArk < LDAPAction
   end
 end
 
+# Collection Admin Task class - see config/actions.yml for description
 class LDAPActionCollmap < LDAPAction
   def initialize(config, action, path, myparams)
     super(config, action, path, myparams)

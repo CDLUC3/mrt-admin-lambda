@@ -2,6 +2,7 @@
 
 require_relative 'queue_json'
 
+# inventory queue entry
 class InvQueueEntry < QueueJson
   @@placeholder = nil
   def self.placeholder
@@ -38,19 +39,19 @@ class InvQueueEntry < QueueJson
     when 'Completed'
       st = 'PASS'
     when 'Consumed'
-      st = if qt < (DateTime.now - 2).to_time
-             'FAIL'
-           elsif qt < (DateTime.now - 1).to_time
-             'WARN'
-           else
-             'INFO'
-           end
+      if qt < (DateTime.now - 2).to_time
+        st = 'FAIL'
+      elsif qt < (DateTime.now - 1).to_time
+        st = 'WARN'
+      else
+        st = 'INFO'
+      end
     when 'Failed'
-      st = if qt < (DateTime.now - 14).to_time
-             'SKIP'
-           else
-             'FAIL'
-           end
+      if qt < (DateTime.now - 14).to_time
+        st = 'SKIP'
+      else
+        st = 'FAIL'
+      end
     end
     addProperty(
       :status,
@@ -106,6 +107,7 @@ class InvQueueEntry < QueueJson
   end
 end
 
+# inventory queue
 class InventoryQueue < MerrittJson
   def initialize(queueList, body)
     data = JSON.parse(body)
@@ -119,6 +121,7 @@ class InventoryQueue < MerrittJson
   end
 end
 
+# list of all inventory queues - only one exists
 class InvQueueList < MerrittJson
   def initialize(ingest_server, body, _filter = {})
     super()

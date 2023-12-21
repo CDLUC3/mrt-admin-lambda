@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# information about a merritt lock
 class LockEntry < MerrittJson
   @@placeholder = nil
   def self.placeholder
@@ -63,6 +64,7 @@ class LockEntry < MerrittJson
   end
 end
 
+# list of merritt locks
 class LockList < MerrittJson
   def initialize(ingest_server, body)
     super()

@@ -7,7 +7,7 @@ RSpec.configure do |config|
   config.formatter = :documentation
 end
 
-
+# Glogal Test Configuration
 class GlobalConfig
   @@config = {}
   @@admin_reports = {}

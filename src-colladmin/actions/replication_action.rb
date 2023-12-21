@@ -10,6 +10,7 @@ require_relative '../lib/storage_nodes'
 require_relative '../lib/merritt_query'
 require_relative '../lib/http_delete_json'
 
+# Collection Admin Task class - see config/actions.yml for description
 class ReplicationAction < AdminAction
   def get_replic_server
     @config.fetch('replic-service', '')
@@ -244,13 +245,13 @@ class ReplicationAction < AdminAction
 
     begin
       qjson = nil
-      qjson = if method == :post
-                HttpPostJson.new(get_replic_server, endpoint)
-              elsif method == :delete
-                HttpDeleteJson.new(get_replic_server, endpoint)
-              else
-                HttpGetJson.new(get_replic_server, endpoint)
-              end
+      if method == :post
+        qjson = HttpPostJson.new(get_replic_server, endpoint)
+      elsif method == :delete
+        qjson = HttpDeleteJson.new(get_replic_server, endpoint)
+      else
+        qjson = HttpGetJson.new(get_replic_server, endpoint)
+      end
       return { message: "Status #{qjson.status} for #{endpoint}" }.to_json unless qjson.status == 200
       return parseReplicResponse(qjson.body).to_json unless qjson.body.empty?
 

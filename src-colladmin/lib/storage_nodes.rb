@@ -3,6 +3,7 @@
 require_relative 'merritt_json'
 require_relative 'merritt_query'
 
+# Information about a collection on a specific storage node
 class CollectionNodeInfo < MerrittQuery
   def initialize(config, collid)
     super(config)
@@ -45,6 +46,7 @@ class CollectionNodeInfo < MerrittQuery
   attr_reader :name, :primary_node
 end
 
+# Information about obsolete collection records on a specific storage node
 class CollectionNodeCleanup < MerrittQuery
   def initialize(config, collid)
     super(config)
@@ -113,6 +115,7 @@ class CollectionNodeCleanup < MerrittQuery
   attr_reader :nodes
 end
 
+# Storage node configurations for Merritt collections
 class CollectionNodes < MerrittQuery
   def initialize(config, collid, primary_id)
     super(config)
@@ -280,6 +283,7 @@ class CollectionNodes < MerrittQuery
   attr_reader :collnodes
 end
 
+# Information about storage nodes to support storage admin actions
 class Nodes < MerrittQuery
   def initialize(config)
     super(config)
@@ -407,6 +411,7 @@ class Nodes < MerrittQuery
   end
 end
 
+# List of Scan Jobs
 class Scans < MerrittQuery
   def initialize(config, nodenum)
     super(config)
@@ -486,6 +491,7 @@ class Scans < MerrittQuery
   attr_reader :scans
 end
 
+# Count of scan results by status
 class ScanReviewCounts < MerrittQuery
   def initialize(config, nodenum, maint_status)
     super(config)
@@ -540,6 +546,7 @@ class ScanReviewCounts < MerrittQuery
   end
 end
 
+# Query for Scan results requiring review
 class ScanReview < MerrittQuery
   def initialize(config, maint_status)
     super(config)
@@ -722,6 +729,7 @@ class ScanReview < MerrittQuery
   end
 end
 
+# Collection Admin Tool object query
 class ObjectQuery < MerrittQuery
   def self.query_factory(config, mode, search_string, owner)
     case mode
@@ -875,6 +883,7 @@ class ObjectQuery < MerrittQuery
   end
 end
 
+# Object query by a list of arks
 class ArkObjectQuery < ObjectQuery
   def get_where
     %{
@@ -883,6 +892,7 @@ class ArkObjectQuery < ObjectQuery
   end
 end
 
+# Object query by a list of localids
 class LocalidObjectQuery < ObjectQuery
   def get_where
     %{
@@ -899,6 +909,7 @@ class LocalidObjectQuery < ObjectQuery
   end
 end
 
+# Object query by a list of ids
 class ObjectIdObjectQuery < ObjectQuery
   def get_where
     %{
@@ -911,6 +922,7 @@ class ObjectIdObjectQuery < ObjectQuery
   end
 end
 
+# Object Query by ark
 class ObjectArk < MerrittQuery
   def initialize(config, ark)
     super(config)
@@ -928,6 +940,7 @@ class ObjectArk < MerrittQuery
   attr_reader :id
 end
 
+# Information about storage nodes where a Merritt object exists
 class ObjectNodes < MerrittQuery
   def initialize(config, id)
     super(config)

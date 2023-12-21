@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Helper class to run a sql query from the collection admin tool
 class MerrittQuery
   def initialize(config)
     @config = config
@@ -36,5 +37,6 @@ class MerrittQuery
   end
 end
 
+# Base class for objects returned from a collection admin query
 class QueryObject
 end

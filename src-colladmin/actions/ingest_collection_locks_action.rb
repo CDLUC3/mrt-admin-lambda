@@ -8,6 +8,7 @@ require_relative '../lib/profile'
 require_relative '../lib/admin_objects'
 require_relative '../lib/merritt_query'
 
+# Collection Admin Task class - see config/actions.yml for description
 class IngestCollectionLocksAction < ForwardToIngestAction
   def initialize(config, action, path, myparams)
     endpoint = 'admin/profiles-full'

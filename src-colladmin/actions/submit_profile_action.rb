@@ -2,6 +2,7 @@
 
 require_relative 'post_to_ingest_multipart_action'
 
+# Collection Admin Task class - see config/actions.yml for description
 class SubmitProfileAction < PostToIngestMultipartAction
   def initialize(config, action, path, myparams, endpoint)
     params = {

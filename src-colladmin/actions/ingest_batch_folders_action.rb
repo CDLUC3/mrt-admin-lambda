@@ -2,6 +2,7 @@
 
 require_relative 'forward_to_ingest_action'
 
+# Collection Admin Task class - see config/actions.yml for description
 class IngestBatchFoldersAction < ForwardToIngestAction
   def initialize(config, action, path, myparams)
     @days = myparams.fetch('days', '7').to_i

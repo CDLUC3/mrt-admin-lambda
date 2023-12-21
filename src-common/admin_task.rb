@@ -4,6 +4,7 @@ require 'cgi'
 require 'aws-sdk-s3'
 require 'time'
 
+# Base class for Admin Tool Queries and Collection Admin Tasks
 class AdminTask
   def initialize(config, path, myparams)
     @config = config

@@ -4,6 +4,7 @@ require_relative 'action'
 require_relative 'forward_to_ingest_action'
 require_relative '../lib/http_post_multipart_json'
 
+# Collection Admin Task class - see config/actions.yml for description
 class PostToIngestMultipartAction < ForwardToIngestAction
   def perform_action
     qjson = HttpPostMultipartJson.new(get_ingest_server, @endpoint, @myparams)

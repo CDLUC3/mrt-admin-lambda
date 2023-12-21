@@ -10,6 +10,7 @@ require_relative '../lib/storage_nodes'
 require_relative '../lib/merritt_query'
 require_relative '../lib/audit_info'
 
+# Collection Admin Task class - see config/actions.yml for description
 class StorageAction < AdminAction
   def get_title
     "Storage Action: #{@path}"

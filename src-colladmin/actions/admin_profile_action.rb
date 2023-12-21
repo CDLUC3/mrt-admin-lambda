@@ -9,6 +9,7 @@ require_relative '../lib/admin_objects'
 require_relative '../lib/storage_nodes'
 require_relative '../lib/merritt_query'
 
+# Collection Admin Task class - see config/actions.yml for description
 class AdminProfileAction < ForwardToIngestAction
   def initialize(config, action, path, myparams)
     @type = CGI.unescape(myparams.fetch('type', get_type_for_path(path)))

@@ -4,6 +4,7 @@ require_relative 'action'
 require_relative '../lib/queue'
 require_relative '../lib/http_get_json'
 
+# Collection Admin Task class - see config/actions.yml for description
 class ForwardToIngestAction < AdminAction
   def initialize(config, action, path, myparams, endpoint)
     super(config, action, path, myparams)

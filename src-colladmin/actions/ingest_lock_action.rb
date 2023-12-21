@@ -3,6 +3,7 @@
 require_relative 'forward_to_ingest_action'
 require_relative '../lib/lock'
 
+# Collection Admin Task class - see config/actions.yml for description
 class IngestLockAction < ForwardToIngestAction
   def initialize(config, action, path, myparams)
     super(config, action, path, myparams, 'admin/lock/mrt.lock')

@@ -5,6 +5,7 @@ require 'cgi'
 require 'zip'
 require 'mysql2'
 
+# Collection Admin Task class - see config/actions.yml for description
 class AdminAction < AdminTask
   def initialize(config, action_def, path, myparams)
     super(config, path, myparams)

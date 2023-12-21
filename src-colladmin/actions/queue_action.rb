@@ -4,6 +4,7 @@ require_relative 'action'
 require_relative 'forward_to_ingest_action'
 require_relative '../lib/http_post_json'
 
+# Collection Admin Task class - see config/actions.yml for description
 class QueueAction < PostToIngestAction
   def initialize(config, action, path, myparams, endpoint)
     qp = CGI.unescape(myparams.fetch('queue-path', 'na'))
@@ -11,6 +12,7 @@ class QueueAction < PostToIngestAction
   end
 end
 
+# Collection Admin Task class - see config/actions.yml for description
 class CollQueueAction < PostToIngestAction
   def initialize(config, action, path, myparams, endpoint)
     coll = myparams.fetch('coll', '')
@@ -19,6 +21,7 @@ class CollQueueAction < PostToIngestAction
   end
 end
 
+# Collection Admin Task class - see config/actions.yml for description
 class CollIterateQueueAction < PostToIngestAction
   def initialize(config, action, path, myparams, endpoint)
     coll = myparams.fetch('coll', '')
@@ -46,6 +49,7 @@ class CollIterateQueueAction < PostToIngestAction
   end
 end
 
+# Collection Admin Task class - see config/actions.yml for description
 class IterateQueueAction < PostToIngestAction
   def initialize(config, action, path, myparams, endpoint)
     @queue = myparams.fetch('queue', 'na')
