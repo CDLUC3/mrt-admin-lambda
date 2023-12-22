@@ -79,7 +79,7 @@ class AdminTask
       next if status == :INFO && @report_status == :WARN
 
       @report_status = status
-      return if @report_status == :FAIL
+      break if @report_status == :FAIL
     end
   end
 

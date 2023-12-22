@@ -12,18 +12,25 @@ require 'jwt'
 class PermissionDeniedError < StandardError
 end
 
-# Web clients of the Lambdas derived from this class must authenticate with Cognito. (This is enforced through an ALB configuration).
-# Derived classes should call check_permission to trigger the authentication check.  An exception is thrown if authentication is unsuccessful.
+# Web clients of the Lambdas derived from this class must authenticate with Cognito.
+# (This is enforced through an ALB configuration).
+# Derived classes should call check_permission to trigger the authentication check.
+# An exception is thrown if authentication is unsuccessful.
+#
 #
 # WEB CLIENTS
-# - The configuration value "cognito-groups-allowed" provides a list of Cognito groups that may access the application (populated from SSM).
+# - The configuration value "cognito-groups-allowed" provides a list of Cognito groups
+#   that may access the application (populated from SSM).
 #   - If this value is set to NA, then no authentication check is performed.
 #   - If this value is set, the user must belong to at least one group in this list.
 #
 # SERVER CLIENTS (calling aws lambda invoke)
-# Server clients of this Lambda must send a client_context with the Lambda invoke. They do not authenticate through Cognito.
-# - The configuration value "context" contains the string that must be provided within the client context (populated from SSM).
-# - The Lambda client_context is parsed for a "custom" value named "context_code".  This value is compared with the context in the configuration.
+# Server clients of this Lambda must send a client_context with the Lambda invoke.
+#   They do not authenticate through Cognito.
+# - The configuration value "context" contains the string that must be provided within
+#   the client context (populated from SSM).
+# - The Lambda client_context is parsed for a "custom" value named "context_code".
+#   This value is compared with the context in the configuration.
 #
 # See https://github.com/CDLUC3/mrt-cron for a sample client app.
 class LambdaBase
@@ -167,6 +174,7 @@ class LambdaBase
       recent = 'min3' if secs < 240
       recent = 'min1' if secs < 120
     rescue StandardError
+      # no action taken here
     end
     {
       UC3INV_HOME: @config.fetch('uc3inv_home', ''),
@@ -260,7 +268,7 @@ class LambdaBase
     }.to_json
   end
 
-  def self.error(status, message, return_page = false)
+  def self.error(status, message, return_page)
     if status != 200 && return_page
       {
         statusCode: 200,

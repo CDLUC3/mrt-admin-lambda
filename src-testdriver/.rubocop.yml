@@ -36,6 +36,8 @@ Style/GlobalVars:
   Enabled: false
 Style/ConditionalAssignment:
   Enabled: false
+Style/ClassVars:
+  Enabled: false
 
 # Rubocop errors out when the following are added: https://github.com/rubocop/rubocop/issues/12548
 #Layout/FirstArrayElementIndentation:
