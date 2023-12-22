@@ -231,8 +231,8 @@ module LambdaFunctions
         map['CNODES'] = CollectionNodes.new(@config, coll.to_i, primary_node).collnodes
         map['NODES'] = []
         skips = {}
-        map['CNODES'].each do |coll|
-          n = coll[:number].to_s
+        map['CNODES'].each do |xcoll|
+          n = xcoll[:number].to_s
           skips[n] = true
         end
         Nodes.new(@config).nodes.each do |node|
@@ -320,7 +320,7 @@ module LambdaFunctions
         ).objects
         map['OBJS'] = objects
       when '/web/describeActions.html'
-        map['ACTIONS'] = getActionsList
+        map['ACTIONS'] = get_actions_list
       when '/web/storeQueues.html'
         map['AUDIT_INFO'] = AuditInfo.new(@config).data
       end
@@ -341,7 +341,7 @@ module LambdaFunctions
       s
     end
 
-    def getActionsArr
+    def get_actions_arr
       actions = YAML.load_file('config/actions.yml')
       actlist = []
       actions.each_key do |k|
@@ -365,17 +365,17 @@ module LambdaFunctions
       actlist
     end
 
-    def getActionsList
-      actlist = getActionsArr
+    def get_actions_list
+      actlist = get_actions_arr
       actlist.sort! do |a, b|
         a[:report] <=> b[:report]
       end
       actlist
     end
 
-    def getActionsMap
+    def get_actions_map
       actmap = {}
-      getActionsArr.each do |act|
+      get_actions_arr.each do |act|
         path = act.fetch(:path, '')
         actmap[path] = [] unless actmap.key?(path)
         actmap[path].push(act)

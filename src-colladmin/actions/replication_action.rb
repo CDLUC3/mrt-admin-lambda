@@ -253,7 +253,7 @@ class ReplicationAction < AdminAction
         qjson = HttpGetJson.new(get_replic_server, endpoint)
       end
       return { message: "Status #{qjson.status} for #{endpoint}" }.to_json unless qjson.status == 200
-      return parseReplicResponse(qjson.body).to_json unless qjson.body.empty?
+      return parse_replic_response(qjson.body).to_json unless qjson.body.empty?
 
       { message: "No response for #{endpoint}" }.to_json
     rescue StandardError => e
@@ -263,14 +263,11 @@ class ReplicationAction < AdminAction
     end
   end
 
-  def parseReplicResponse(json)
+  def parse_replic_response(json)
     resp = JSON.parse(json)
     case @path
-    when 'storage-cancel-scan-node', 'storage-resume-scan-node', 'storage-scan-node'
-      {
-        message: resp.fetch('repscan:invStorageScan', {}).fetch('repscan:scanStatus', 'na')
-      }
-    when 'storage-perform-delete-node-batch'
+    when 'storage-cancel-scan-node', 'storage-resume-scan-node', 'storage-scan-node',
+      'storage-perform-delete-node-batch'
       {
         message: resp.fetch('repscan:invStorageScan', {}).fetch('repscan:scanStatus', 'na')
       }

@@ -52,6 +52,7 @@ class BatchJob < MerrittJson
     @file_type = ''
     @profile = ''
     @obj_cnt = ''
+    super
   end
 
   def read_queue_object(qe)

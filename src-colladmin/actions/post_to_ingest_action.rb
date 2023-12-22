@@ -20,7 +20,7 @@ class PostToIngestAction < ForwardToIngestAction
         redirect_location: "/web/collIndex.html?path=#{@reload_path}"
       }.to_json
     end
-    return convertJsonToTable(qjson.body) unless qjson.body.empty?
+    return convert_json_to_table(qjson.body) unless qjson.body.empty?
 
     { message: "No response for #{@endpoint}" }.to_json
   rescue StandardError => e

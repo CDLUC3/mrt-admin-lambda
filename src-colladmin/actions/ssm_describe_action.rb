@@ -15,7 +15,9 @@ class SsmInfo
     @description = ''
     @value = inst.nil? ? '' : inst.value
     @encrypted = @type == 'SecureString'
-    if @encrypted == false && (name !~ (%r{ldap/accounts/guest/password})) && (name =~ /password|credential|privateAccess|accessKey|secretKey|master_key/)
+    if @encrypted == false &&
+      (name !~ (%r{ldap/accounts/guest/password})) &&
+      (name =~ /password|credential|privateAccess|accessKey|secretKey|master_key/)
       @encrypted = 'TBD'
     end
     @encrypted = '' if @value.empty?
@@ -171,7 +173,7 @@ class SsmDescribeAction < AdminAction
   end
 
   def perform_action
-    convertJsonToTable({}.to_json)
+    convert_json_to_table({}.to_json)
   end
 
   def table_rows(_body)

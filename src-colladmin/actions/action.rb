@@ -17,7 +17,7 @@ class AdminAction < AdminTask
     false
   end
 
-  def convertJsonToTable(body)
+  def convert_json_to_table(body)
     return body unless has_table
 
     data = table_rows(body)

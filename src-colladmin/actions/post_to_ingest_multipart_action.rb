@@ -10,7 +10,7 @@ class PostToIngestMultipartAction < ForwardToIngestAction
     qjson = HttpPostMultipartJson.new(get_ingest_server, @endpoint, @myparams)
 
     raise qjson.body if (qjson.status != 200) || qjson.body.include?('INVALID_CONFIGURATION')
-    return convertJsonToTable(qjson.body) unless qjson.body.empty?
+    return convert_json_to_table(qjson.body) unless qjson.body.empty?
 
     { message: "No response for #{@endpoint}" }.to_json
   rescue StandardError => e

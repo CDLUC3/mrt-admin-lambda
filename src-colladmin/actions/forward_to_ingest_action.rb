@@ -20,7 +20,7 @@ class ForwardToIngestAction < AdminAction
 
   def perform_action
     body = get_body
-    return convertJsonToTable(body) unless body.empty?
+    return convert_json_to_table(body) unless body.empty?
 
     { message: "No response for #{@endpoint}" }.to_json
   rescue StandardError => e

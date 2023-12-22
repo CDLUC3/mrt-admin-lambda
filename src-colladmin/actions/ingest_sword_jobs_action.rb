@@ -113,7 +113,7 @@ class Job < MerrittJson
     Date.parse(@dtime)
   end
 
-  def setRecentItem(recentjob)
+  def set_recent_item(recentjob)
     @dbobj = recentjob.dbobj
     @dbprofile = recentjob.profile
   end
@@ -124,7 +124,7 @@ class JobList < MerrittJson
   def initialize(body, days)
     super()
     @jobs = []
-    @jobHash = {}
+    @job_hash = {}
     data = JSON.parse(body)
     data = fetch_hash_val(data, 'fil:batchFileState')
     data = fetch_hash_val(data, 'fil:jobFile')
@@ -139,15 +139,16 @@ class JobList < MerrittJson
       next if j.to_date < (Date.today - days)
 
       @jobs.append(j)
-      @jobHash[j.jid] = j
+      @job_hash[j.jid] = j
     end
   end
 
   def to_table
     table = []
-    @jobs.sort do |a, b|
+    js = @jobs.sort do |a, b|
       b.dtime <=> a.dtime
-    end.each do |job|
+    end
+    js.each do |job|
       table.append(job.table_row)
     end
     table
@@ -157,7 +158,7 @@ class JobList < MerrittJson
 
   def apply_recent_ingests(recentitems)
     recentitems.jobs.each do |jid, recentjob|
-      @jobHash[jid].setRecentItem(recentjob) if @jobHash.key?(jid)
+      @job_hash[jid].set_recent_item(recentjob) if @job_hash.key?(jid)
     end
   end
 end

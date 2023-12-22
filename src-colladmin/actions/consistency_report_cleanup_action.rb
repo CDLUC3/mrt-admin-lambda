@@ -62,7 +62,7 @@ class ConsistencyReportCleanupAction < AdminAction
       done = token.nil?
     end
 
-    convertJsonToTable({}.to_json)
+    convert_json_to_table({}.to_json)
   end
 
   def has_table

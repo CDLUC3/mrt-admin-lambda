@@ -124,12 +124,12 @@ class BatchFolder < MerrittJson
 
   attr_reader :dtime, :bid
 
-  def setQueueItem(batch)
+  def set_queue_item(batch)
     @qbid = "#{batch.bid}; #{batch.num_jobs}"
     @qsubmitter = batch.submitter
   end
 
-  def setRecentItem(recentbatch)
+  def set_recent_item(recentbatch)
     @dbobj = recentbatch.dbobj
     @dbprofile = recentbatch.dbprofile
     @dbuser = recentbatch.dbuser
@@ -140,8 +140,8 @@ end
 class BatchFolderList < MerrittJson
   def initialize(body)
     super()
-    @batchFolders = []
-    @batchFolderHash = {}
+    @batch_folders = []
+    @batch_folder_hash = {}
     data = JSON.parse(body)
     data = fetch_hash_val(data, 'fil:batchFileState')
     data = fetch_hash_val(data, 'fil:jobFile')
@@ -151,40 +151,45 @@ class BatchFolderList < MerrittJson
         obj.fetch('fil:file', ''),
         obj.fetch('fil:fileDate', '')
       )
-      @batchFolders.append(
+      @batch_folders.append(
         bf
       )
-      @batchFolderHash[bf.bid] = bf
+      @batch_folder_hash[bf.bid] = bf
     end
   end
 
   def empty?
-    @batchFolders.empty?
+    @batch_folders.empty?
   end
 
   def to_table
     table = []
-    @batchFolders.sort do |a, b|
-      a.status == b.status ? b.dtime <=> a.dtime : AdminTask.status_sort_val(a.status) <=> AdminTask.status_sort_val(b.status)
-    end.each do |bf|
+    bfs = @batch_folders.sort do |a, b|
+      if a.status == b.status
+        b.dtime <=> a.dtime
+      else
+        AdminTask.status_sort_val(a.status) <=> AdminTask.status_sort_val(b.status)
+      end
+    end
+    bfs.each do |bf|
       table.append(bf.table_row)
     end
     table
   end
 
   def apply_queue_list(queue_list)
-    return if @batchFolderHash.empty?
+    return if @batch_folder_hash.empty?
 
     queue_list.batches.each do |bid, qbatch|
-      @batchFolderHash[bid].setQueueItem(qbatch) if @batchFolderHash.key?(bid)
+      @batch_folder_hash[bid].set_queue_item(qbatch) if @batch_folder_hash.key?(bid)
     end
   end
 
   def apply_recent_ingests(recentitems)
-    return if @batchFolderHash.empty?
+    return if @batch_folder_hash.empty?
 
     recentitems.batches.each do |bid, recentbatch|
-      @batchFolderHash[bid].setRecentItem(recentbatch) if @batchFolderHash.key?(bid)
+      @batch_folder_hash[bid].set_recent_item(recentbatch) if @batch_folder_hash.key?(bid)
     end
   end
 end
