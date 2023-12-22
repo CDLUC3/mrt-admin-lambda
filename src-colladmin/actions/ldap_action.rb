@@ -25,7 +25,7 @@ class LDAPAction < AdminAction
   end
 
   def perform_action
-    return body unless hasTable
+    return body unless has_table
 
     evaluate_status(table_types, get_table_rows)
     {
@@ -56,7 +56,7 @@ class LDAPAction < AdminAction
     rows
   end
 
-  def hasTable
+  def has_table
     true
   end
 

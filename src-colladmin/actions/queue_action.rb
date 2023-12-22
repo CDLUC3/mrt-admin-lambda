@@ -63,7 +63,7 @@ class IterateQueueAction < PostToIngestAction
     data = JSON.parse(get_body)
     data = data.fetch('ingq:ingestQueueNameState', {})
     data = data.fetch('ingq:ingestQueueName', {})
-    MerrittJson.jsonFetchArrayVal(data, 'ingq:ingestQueue').each do |qjson|
+    MerrittJson.json_fetch_array_val(data, 'ingq:ingestQueue').each do |qjson|
       node = qjson.fetch('ingq:node', '')
       next if node.empty?
 

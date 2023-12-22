@@ -33,7 +33,7 @@ class IngestBatchFoldersAction < ForwardToIngestAction
     bflist.to_table
   end
 
-  def hasTable
+  def has_table
     true
   end
 
@@ -143,9 +143,9 @@ class BatchFolderList < MerrittJson
     @batchFolders = []
     @batchFolderHash = {}
     data = JSON.parse(body)
-    data = fetchHashVal(data, 'fil:batchFileState')
-    data = fetchHashVal(data, 'fil:jobFile')
-    list = fetchArrayVal(data, 'fil:batchFile')
+    data = fetch_hash_val(data, 'fil:batchFileState')
+    data = fetch_hash_val(data, 'fil:jobFile')
+    list = fetch_array_val(data, 'fil:batchFile')
     list.each do |obj|
       bf = BatchFolder.new(
         obj.fetch('fil:file', ''),
@@ -190,7 +190,7 @@ class BatchFolderList < MerrittJson
 end
 
 # recent ingest job
-class RecentIngest < QueryObject
+class RecentIngest
   def initialize(row)
     @bid = row[0]
     @profile = row[1]

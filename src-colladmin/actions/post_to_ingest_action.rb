@@ -63,7 +63,7 @@ class PostToIngestAction < ForwardToIngestAction
     rows
   end
 
-  def hasTable
+  def has_table
     true
   end
 end

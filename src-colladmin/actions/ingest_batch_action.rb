@@ -34,7 +34,7 @@ class IngestBatchAction < ForwardToIngestAction
     @batch_obj.to_table
   end
 
-  def hasTable
+  def has_table
     true
   end
 end
@@ -162,7 +162,7 @@ class Batch < MerrittJson
 end
 
 # batch recently ingested
-class RecentBatchIngest < QueryObject
+class RecentBatchIngest
   def initialize(row)
     @bid = row[0]
     @jid = row[1]

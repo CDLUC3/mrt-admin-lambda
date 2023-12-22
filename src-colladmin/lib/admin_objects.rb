@@ -191,8 +191,8 @@ class AdminProfileList < MerrittJson
     @profile_names = {}
     @profile_arks = {}
     data = JSON.parse(body)
-    data = fetchHashVal(data, 'pros:profilesState')
-    data = fetchHashVal(data, 'pros:profiles')
+    data = fetch_hash_val(data, 'pros:profilesState')
+    data = fetch_hash_val(data, 'pros:profiles')
 
     parse_profiles(data)
     match_profiles(dbmap)
@@ -203,7 +203,7 @@ class AdminProfileList < MerrittJson
   end
 
   def parse_profiles(data)
-    fetchArrayVal(data, 'pros:profileFile').each do |json|
+    fetch_array_val(data, 'pros:profileFile').each do |json|
       p = AdminProfile.new(@artifact).load_from_json(json)
       next if p.skip
 

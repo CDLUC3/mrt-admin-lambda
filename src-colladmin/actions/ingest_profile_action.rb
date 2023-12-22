@@ -46,7 +46,7 @@ class IngestProfileAction < ForwardToIngestAction
     return profile if profile.is_template?
 
     begin
-      qjson = HttpGetJson.new(get_ingest_server, "admin/profile/#{MerrittJson.TEMPLATE_KEY}")
+      qjson = HttpGetJson.new(get_ingest_server, "admin/profile/#{MerrittJson.template_key}")
       return nil unless qjson.status == 200
 
       SingleIngestProfileWrapper.new(qjson.body).profile
@@ -81,7 +81,7 @@ class IngestProfileAction < ForwardToIngestAction
     profile_list.notification_map
   end
 
-  def hasTable
+  def has_table
     true
   end
 end

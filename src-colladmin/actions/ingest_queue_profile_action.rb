@@ -49,7 +49,7 @@ class IngestQueueProfileCountAction < ForwardToIngestAction
     arr
   end
 
-  def hasTable
+  def has_table
     true
   end
 

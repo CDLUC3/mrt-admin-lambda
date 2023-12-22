@@ -65,7 +65,7 @@ class ConsistencyReportCleanupAction < AdminAction
     convertJsonToTable({}.to_json)
   end
 
-  def hasTable
+  def has_table
     true
   end
 

@@ -13,12 +13,12 @@ class AdminAction < AdminTask
     @format = 'report'
   end
 
-  def hasTable
+  def has_table
     false
   end
 
   def convertJsonToTable(body)
-    return body unless hasTable
+    return body unless has_table
 
     data = table_rows(body)
     data = paginate_data(data)

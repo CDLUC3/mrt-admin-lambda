@@ -52,7 +52,7 @@ class PostToIngestMultipartAction < ForwardToIngestAction
     rows
   end
 
-  def hasTable
+  def has_table
     false
   end
 end

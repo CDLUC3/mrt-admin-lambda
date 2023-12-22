@@ -27,7 +27,7 @@ class IngestJobManifestAction < ForwardToIngestAction
     JobManifest.new(body).to_table
   end
 
-  def hasTable
+  def has_table
     true
   end
 
@@ -57,39 +57,39 @@ class JobManifestEntry < MerrittJson
 
   def initialize(json)
     super()
-    addProperty(
+    add_property(
       :fileSize,
-      MerrittJsonProperty.new('File Size').lookupValue(json, 'ingmans', 'fileSize')
+      MerrittJsonProperty.new('File Size').lookup_value(json, 'ingmans', 'fileSize')
     )
-    addProperty(
+    add_property(
       :mimeType,
-      MerrittJsonProperty.new('Mime Type').lookupValue(json, 'ingmans', 'mimeType')
+      MerrittJsonProperty.new('Mime Type').lookup_value(json, 'ingmans', 'mimeType')
     )
-    addProperty(
+    add_property(
       :fileName,
-      MerrittJsonProperty.new('File Name').lookupValue(json, 'ingmans', 'fileName')
+      MerrittJsonProperty.new('File Name').lookup_value(json, 'ingmans', 'fileName')
     )
-    addProperty(
+    add_property(
       :hashValue,
-      MerrittJsonProperty.new('Hash Value').lookupValue(json, 'ingmans', 'hashValue')
+      MerrittJsonProperty.new('Hash Value').lookup_value(json, 'ingmans', 'hashValue')
     )
-    addProperty(
+    add_property(
       :hashAlgorithm,
-      MerrittJsonProperty.new('Hash Algorithm').lookupValue(json, 'ingmans', 'hashAlgorithm')
+      MerrittJsonProperty.new('Hash Algorithm').lookup_value(json, 'ingmans', 'hashAlgorithm')
     )
   end
 
   def self.table_headers
     arr = []
-    JobManifestEntry.placeholder.getPropertyList.each do |sym|
-      arr.append(JobManifestEntry.placeholder.getLabel(sym))
+    JobManifestEntry.placeholder.get_property_list.each do |sym|
+      arr.append(JobManifestEntry.placeholder.get_label(sym))
     end
     arr
   end
 
   def self.table_types
     arr = []
-    JobManifestEntry.placeholder.getPropertyList.each do |sym|
+    JobManifestEntry.placeholder.get_property_list.each do |sym|
       type = ''
       type = 'bytes' if sym == :fileSize
       arr.append(type)
@@ -99,8 +99,8 @@ class JobManifestEntry < MerrittJson
 
   def to_table_row
     arr = []
-    JobManifestEntry.placeholder.getPropertyList.each do |sym|
-      v = getValue(sym)
+    JobManifestEntry.placeholder.get_property_list.each do |sym|
+      v = get_value(sym)
       arr.append(v)
     end
     arr
@@ -113,9 +113,9 @@ class JobManifest < MerrittJson
     super()
     @entries = []
     data = JSON.parse(body)
-    data = fetchHashVal(data, 'ingmans:manifestsState')
-    data = fetchHashVal(data, 'ingmans:manifests')
-    list = fetchArrayVal(data, 'ingmans:manifestEntryState')
+    data = fetch_hash_val(data, 'ingmans:manifestsState')
+    data = fetch_hash_val(data, 'ingmans:manifests')
+    list = fetch_array_val(data, 'ingmans:manifestEntryState')
     list.each do |obj|
       @entries.append(JobManifestEntry.new(obj))
     end

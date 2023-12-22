@@ -41,7 +41,7 @@ class AdminProfileAction < ForwardToIngestAction
     profiles.table_rows
   end
 
-  def hasTable
+  def has_table
     true
   end
 

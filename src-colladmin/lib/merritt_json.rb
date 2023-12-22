@@ -12,7 +12,7 @@ class MerrittJsonProperty
     @value = val
   end
 
-  def lookupValue(source, namespace, jsonkey, defval = nil)
+  def lookup_value(source, namespace, jsonkey, defval = nil)
     defval = @value if defval.nil?
     jsonkey = "#{namespace}:#{jsonkey}" unless namespace.empty?
     @value = source.fetch(jsonkey, defval)
@@ -24,8 +24,8 @@ class MerrittJsonProperty
     self
   end
 
-  def lookupTimeValue(source, namespace, jsonkey, defval = nil)
-    lookupValue(source, namespace, jsonkey, defval)
+  def lookup_time_value(source, namespace, jsonkey, defval = nil)
+    lookup_value(source, namespace, jsonkey, defval)
     begin
       @value = DateTime.parse(@value).to_time
     rescue StandardError
@@ -40,68 +40,68 @@ end
 
 # wrapper around a merritt json object
 class MerrittJson
-  def self.TEMPLATE_KEY
+  def self.template_key
     'TEMPLATE-PROFILE'
   end
 
   def initialize
-    @propertyList = []
-    @propertyHash = {}
+    @property_list = []
+    @property_hash = {}
   end
 
-  def addProperty(symbol, p)
-    @propertyList.append(symbol)
-    @propertyHash[symbol] = p
+  def add_property(symbol, p)
+    @property_list.append(symbol)
+    @property_hash[symbol] = p
   end
 
-  def setProperty(symbol, p)
-    @propertyHash[symbol] = p
+  def set_property(symbol, p)
+    @property_hash[symbol] = p
   end
 
-  def getValue(symbol, defval = '')
-    return defval unless @propertyHash.key?(symbol)
+  def get_value(symbol, defval = '')
+    return defval unless @property_hash.key?(symbol)
 
-    @propertyHash[symbol].value
+    @property_hash[symbol].value
   end
 
-  def getTimeValue(symbol, defval = '')
-    return defval unless @propertyHash.key?(symbol)
+  def get_time_value(symbol, defval = '')
+    return defval unless @property_hash.key?(symbol)
 
-    @propertyHash[symbol].value
+    @property_hash[symbol].value
   end
 
-  def getLabel(symbol)
-    return 'N/A' unless @propertyHash.key?(symbol)
+  def get_label(symbol)
+    return 'N/A' unless @property_hash.key?(symbol)
 
-    @propertyHash[symbol].label
+    @property_hash[symbol].label
   end
 
-  def getPropertyList
-    @propertyList
+  def get_property_list
+    @property_list
   end
 
   # Handle issues with Merritt Core2 JSON calls
   # Address issue in which single values are not returned as a single value array
-  def self.jsonFetchArrayVal(obj, key)
+  def self.json_fetch_array_val(obj, key)
     val = obj.fetch(key, [])
     val = [val] unless val.instance_of?(Array)
     val
   end
 
-  def fetchArrayVal(obj, key)
-    MerrittJson.jsonFetchArrayVal(obj, key)
+  def fetch_array_val(obj, key)
+    MerrittJson.json_fetch_array_val(obj, key)
   end
 
   # Handle issues with Merritt Core2 JSON calls
   # Address issue in which an empty object is returned as an empty string
-  def self.jsonFetchHashVal(obj, key)
+  def self.json_fetch_hash_val(obj, key)
     val = obj.fetch(key, {})
     # Ingest currently returns "" when empty
     val = {} if val == ''
     val
   end
 
-  def fetchHashVal(obj, key)
-    MerrittJson.jsonFetchHashVal(obj, key)
+  def fetch_hash_val(obj, key)
+    MerrittJson.json_fetch_hash_val(obj, key)
   end
 end

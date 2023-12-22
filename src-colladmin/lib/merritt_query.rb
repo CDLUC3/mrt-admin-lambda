@@ -22,7 +22,7 @@ class MerrittQuery
     data
   end
 
-  def run_update(sql, arr = [], success_msg)
+  def run_update(sql, arr, success_msg)
     client = LambdaBase.new(@config).get_mysql
     stmt = client.prepare(sql)
     stmt.execute(*arr)
@@ -35,8 +35,4 @@ class MerrittQuery
 
     n.to_s.chars.to_a.reverse.each_slice(3).map(&:join).join(',').reverse
   end
-end
-
-# Base class for objects returned from a collection admin query
-class QueryObject
 end

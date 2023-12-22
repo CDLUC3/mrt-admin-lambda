@@ -26,7 +26,7 @@ class IngestLockAction < ForwardToIngestAction
     lockList.to_table
   end
 
-  def hasTable
+  def has_table
     true
   end
 

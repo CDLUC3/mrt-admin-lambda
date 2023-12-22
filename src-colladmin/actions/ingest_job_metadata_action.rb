@@ -28,7 +28,7 @@ class IngestJobMetadataAction < ForwardToIngestAction
     JobMetadataRecord.table_types
   end
 
-  def hasTable
+  def has_table
     true
   end
 

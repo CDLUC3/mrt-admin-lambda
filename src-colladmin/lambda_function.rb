@@ -55,7 +55,7 @@ def get_params_from_event(event)
 end
 
 module LambdaFunctions
-  # class to construct a merritt collection admin task from yaml
+  # class to construct a merritt collection admin object
   class ActionFactory
     def initialize(config)
       @config = config
@@ -281,8 +281,11 @@ module LambdaFunctions
         map['REVIEW'] = rev.review_items
         map['scan_count'] = map['REVIEW'].length
         map['scan_next'] = map['scan_count'] == map['scan_limit'] ? map['scan_offset'] + map['scan_limit'] : false
-        map['scan_prev'] =
-          (map['scan_offset']).positive? ? (map['scan_offset'] > map['scan_limit'] ? map['scan_offset'] - map['scan_limit'] : 0) : false
+        if map['scan_offset'].positive?
+          map['scan_prev'] = map['scan_offset'] > map['scan_limit'] ? map['scan_offset'] - map['scan_limit'] : 0
+        else
+          map['scan_prev'] = false
+        end
       when '/web/storeObjects.html'
         objlist = CGI.unescape(myparams.fetch('objlist', ''))
         mode = myparams.fetch('mode', '')

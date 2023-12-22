@@ -26,7 +26,7 @@ class AccessQueueAction < ForwardToIngestAction
     queue_list.to_table
   end
 
-  def hasTable
+  def has_table
     true
   end
 

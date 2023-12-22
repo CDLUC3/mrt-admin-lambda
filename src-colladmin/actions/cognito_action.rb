@@ -124,7 +124,7 @@ class CognitoAction < AdminAction
     rows
   end
 
-  def hasTable
+  def has_table
     true
   end
 

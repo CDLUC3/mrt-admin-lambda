@@ -30,7 +30,7 @@ class IngestSwordJobsAction < ForwardToIngestAction
     jlist.to_table
   end
 
-  def hasTable
+  def has_table
     true
   end
 
@@ -126,9 +126,9 @@ class JobList < MerrittJson
     @jobs = []
     @jobHash = {}
     data = JSON.parse(body)
-    data = fetchHashVal(data, 'fil:batchFileState')
-    data = fetchHashVal(data, 'fil:jobFile')
-    list = fetchArrayVal(data, 'fil:batchFile')
+    data = fetch_hash_val(data, 'fil:batchFileState')
+    data = fetch_hash_val(data, 'fil:jobFile')
+    list = fetch_array_val(data, 'fil:batchFile')
     list.each do |obj|
       j = Job.new(
         obj.fetch('fil:file', ''),
@@ -163,7 +163,7 @@ class JobList < MerrittJson
 end
 
 # reperesents a recent sword ingest job - obsolete class
-class RecentSwordIngest < QueryObject
+class RecentSwordIngest
   def initialize(row)
     @bid = row[0].strip
     @jid = row[1].strip

@@ -92,7 +92,7 @@ class MerrittLdap
   end
 
   def load_collections
-    @ldap.search(base: group_base, filter: Net::LDAP::Filter.eq('arkId', '*')) do |entry|
+    @ldap.search(base: group_base, filter: Net::LDAP::Filter.eq('ark_id', '*')) do |entry|
       coll = LdapCollection.new(entry)
       @collections[coll.mnemonic] = coll
       @collection_arks[coll.ark] = coll
@@ -184,6 +184,7 @@ class LdapLinkedRecord < LdapRecord
     @islinked = islinked
     @roles = []
     @perms = {}
+    super
   end
 
   def unlinked
@@ -299,13 +300,13 @@ end
 class LdapCollection < LdapLinkedRecord
   def initialize(entry, mnemonic = '')
     if entry.nil?
-      @arkId = ''
+      @ark_id = ''
       @description = ''
       @mnemonic = mnemonic
       @profile = ''
       super(false)
     else
-      @arkId = entry['arkId'].first
+      @ark_id = entry['ark_id'].first
       @description = entry['description'].first
       @mnemonic = entry['ou'].first
       @profile = entry['submissionprofile'].first
@@ -314,7 +315,7 @@ class LdapCollection < LdapLinkedRecord
   end
 
   def ark
-    @arkId.nil? ? '' : @arkId
+    @ark_id.nil? ? '' : @ark_id
   end
 
   def mnemonic
@@ -333,7 +334,7 @@ class LdapCollection < LdapLinkedRecord
     [
       @mnemonic,
       unlinked,
-      @arkId,
+      @ark_id,
       @description,
       @profile,
       perm_count('read'),
@@ -385,6 +386,7 @@ class LdapRole < LdapRecord
     end
     @user_rec = []
     @collection_rec = nil
+    super
   end
 
   def set_collection(coll)
@@ -465,6 +467,7 @@ class LdapUserDetailed < LdapRecord
     @write = write
     @download = download
     @admin = admin
+    super
   end
 
   def table_row
@@ -527,6 +530,7 @@ class LdapCollectionDetailed < LdapRecord
     @write = write
     @download = download
     @admin = admin
+    super
   end
 
   def table_row
@@ -567,6 +571,7 @@ class LdapCollectionMap < LdapLinkedRecord
     @mnemonic = mnemonic
     @ldap_coll = nil
     @db_coll = nil
+    super
   end
 
   def set_ldap_coll(ldap_coll)

@@ -27,7 +27,7 @@ class IngestJobFilesAction < ForwardToIngestAction
     JobFiles.new(body).to_table
   end
 
-  def hasTable
+  def has_table
     true
   end
 
@@ -85,9 +85,9 @@ class JobFiles < MerrittJson
     super()
     @entries = []
     data = JSON.parse(body)
-    data = fetchHashVal(data, 'fil:batchFileState')
-    data = fetchHashVal(data, 'fil:jobFile')
-    list = fetchArrayVal(data, 'fil:batchFile')
+    data = fetch_hash_val(data, 'fil:batchFileState')
+    data = fetch_hash_val(data, 'fil:jobFile')
+    list = fetch_array_val(data, 'fil:batchFile')
     list.each do |obj|
       @entries.append(JobFile.new(obj))
     end

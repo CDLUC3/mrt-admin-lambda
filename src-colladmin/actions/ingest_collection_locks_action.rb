@@ -66,12 +66,12 @@ class IngestCollectionLocksAction < ForwardToIngestAction
     names = {}
     begin
       ProfileList.new(get_body, @collections).profiles.each do |p|
-        profile = p.getValue(:profileID)
+        profile = p.get_value(:profileID)
         pstat = {
           profile: profile,
           collid: p.collection.nil? ? '' : p.collection.id,
           locked: false,
-          name: p.getValue(:profileDescription)
+          name: p.get_value(:profileDescription)
         }
         names[profile] = pstat
       end
@@ -85,7 +85,7 @@ class IngestCollectionLocksAction < ForwardToIngestAction
     names
   end
 
-  def hasTable
+  def has_table
     true
   end
 end

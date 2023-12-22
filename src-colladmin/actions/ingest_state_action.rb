@@ -48,7 +48,7 @@ class IngestStateAction < ForwardToIngestAction
     data.fetch('ing:ingestServiceState', {}).fetch('ing:collectionSubmissionState', '').split(',')
   end
 
-  def hasTable
+  def has_table
     true
   end
 end

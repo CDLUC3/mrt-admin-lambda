@@ -248,7 +248,7 @@ class TagAction < AdminAction
     rows
   end
 
-  def hasTable
+  def has_table
     @list_servers
   end
 

@@ -5,11 +5,11 @@ require_relative 'merritt_json'
 # representation of data in a Merritt zookeeper queue node
 class QueueJson < MerrittJson
   def get_queue_node
-    getValue(:queueNode, '')
+    get_value(:queueNode, '')
   end
 
-  def get_queue_path(requeue = false)
-    st = getValue(:qstatus, '')
+  def get_queue_path(requeue: false)
+    st = get_value(:qstatus, '')
     case st
     when 'Consumed'
       st = 'consume'
@@ -26,11 +26,11 @@ class QueueJson < MerrittJson
     else
       return ''
     end
-    "#{get_queue_node}/#{getValue(:queueId, '')}/#{st}"
+    "#{get_queue_node}/#{get_value(:queueId, '')}/#{st}"
   end
 
-  def get_hold_path(release = false)
-    st = getValue(:qstatus, '')
+  def get_hold_path(release: false)
+    st = get_value(:qstatus, '')
     if st == 'Held' && release
       'release'
     elsif st == 'Pending' && !release
@@ -38,6 +38,6 @@ class QueueJson < MerrittJson
     else
       return ''
     end
-    "#{get_queue_node}/#{getValue(:queueId, '')}"
+    "#{get_queue_node}/#{get_value(:queueId, '')}"
   end
 end
