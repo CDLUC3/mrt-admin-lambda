@@ -92,7 +92,7 @@ class MerrittLdap
   end
 
   def load_collections
-    @ldap.search(base: group_base, filter: Net::LDAP::Filter.eq('ark_id', '*')) do |entry|
+    @ldap.search(base: group_base, filter: Net::LDAP::Filter.eq('arkId', '*')) do |entry|
       coll = LdapCollection.new(entry)
       @collections[coll.mnemonic] = coll
       @collection_arks[coll.ark] = coll
@@ -306,7 +306,7 @@ class LdapCollection < LdapLinkedRecord
       @profile = ''
       super(false)
     else
-      @ark_id = entry['ark_id'].first
+      @ark_id = entry['arkId'].first
       @description = entry['description'].first
       @mnemonic = entry['ou'].first
       @profile = entry['submissionprofile'].first
