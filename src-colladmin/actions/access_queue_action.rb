@@ -22,8 +22,8 @@ class AccessQueueAction < ForwardToIngestAction
   end
 
   def table_rows(body)
-    queueList = AccQueueList.new(get_ingest_server, body)
-    queueList.to_table
+    queue_list = AccQueueList.new(get_ingest_server, body)
+    queue_list.to_table
   end
 
   def hasTable

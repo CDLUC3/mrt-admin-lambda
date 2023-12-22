@@ -122,14 +122,14 @@ end
 
 # access queue
 class AccQueue < MerrittJson
-  def initialize(queueList, body)
+  def initialize(queue_list, body)
     data = JSON.parse(body)
     data = fetchHashVal(data, 'que:queueState')
     data = fetchHashVal(data, 'que:queueEntries')
     list = fetchArrayVal(data, 'que:queueEntryState')
     list.each do |obj|
       q = AccQueueEntry.new(obj)
-      queueList.tokens.append(q)
+      queue_list.tokens.append(q)
     end
   end
 end
@@ -141,7 +141,7 @@ class AccQueueList < MerrittJson
     @ingest_server = ingest_server
     @body = body
     @tokens = []
-    retrieveQueues
+    retrieve_queues
   end
 
   def self.get_queue_list(ingest_server, filter = {})
@@ -149,7 +149,7 @@ class AccQueueList < MerrittJson
     AccQueueList.new(ingest_server, qjson.body, filter)
   end
 
-  def retrieveQueues
+  def retrieve_queues
     data = JSON.parse(@body)
     data = fetchHashVal(data, 'ingq:ingestQueueNameState')
     data = fetchHashVal(data, 'ingq:ingestQueueName')

@@ -33,13 +33,13 @@ class IngestQueueProfileCountAction < ForwardToIngestAction
   end
 
   def table_rows(body)
-    queueList = QueueList.new(get_ingest_server, body)
+    queue_list = QueueList.new(get_ingest_server, body)
     arr = []
-    queueList.profiles.keys.sort.each do |k|
+    queue_list.profiles.keys.sort.each do |k|
       ka = k.split(',')
       qs = ka[1]
       profile = ka[0]
-      list = queueList.profiles[k]
+      list = queue_list.profiles[k]
       count = list.length
       status = 'PASS'
       status = 'FAIL' if qs == 'Failed'

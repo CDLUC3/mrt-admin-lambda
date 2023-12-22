@@ -955,8 +955,14 @@ class ObjectNodes < MerrittQuery
           nn.access_mode,
           nn.created,
           nn.replicated,
-          (select count(*) from inv_audits a where a.inv_object_id = nn.objid and a.inv_node_id=nn.id and status != 'verified') as unverified,
-          (select max(verified) from inv_audits a where a.inv_object_id = nn.objid and a.inv_node_id=nn.id) as last_verified,
+          (
+            select count(*) from inv_audits a
+            where a.inv_object_id = nn.objid and a.inv_node_id=nn.id and status != 'verified'
+          ) as unverified,
+          (
+            select max(verified) from inv_audits a
+            where a.inv_object_id = nn.objid and a.inv_node_id=nn.id
+          ) as last_verified,
           nn.objid,
           nn.ark,
           nn.version_number

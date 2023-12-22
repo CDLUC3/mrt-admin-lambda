@@ -30,9 +30,9 @@ class IngestQueueAction < ForwardToIngestAction
   end
 
   def table_rows(body)
-    queueList = QueueList.new(get_ingest_server, body, @filter)
-    @batches = queueList.batches
-    queueList.to_table
+    queue_list = QueueList.new(get_ingest_server, body, @filter)
+    @batches = queue_list.batches
+    queue_list.to_table
   end
 
   def hasTable

@@ -109,14 +109,14 @@ end
 
 # inventory queue
 class InventoryQueue < MerrittJson
-  def initialize(queueList, body)
+  def initialize(queue_list, body)
     data = JSON.parse(body)
     data = fetchHashVal(data, 'que:queueState')
     data = fetchHashVal(data, 'que:queueEntries')
     list = fetchArrayVal(data, 'que:queueEntryState')
     list.each do |obj|
       q = InvQueueEntry.new(obj)
-      queueList.manifests.append(q)
+      queue_list.manifests.append(q)
     end
   end
 end
@@ -128,7 +128,7 @@ class InvQueueList < MerrittJson
     @ingest_server = ingest_server
     @body = body
     @manifests = []
-    retrieveQueues
+    retrieve_queues
   end
 
   def self.get_queue_list(ingest_server, filter = {})
@@ -136,7 +136,7 @@ class InvQueueList < MerrittJson
     InvQueueList.new(ingest_server, qjson.body, filter)
   end
 
-  def retrieveQueues
+  def retrieve_queues
     data = JSON.parse(@body)
     data = fetchHashVal(data, 'ingq:ingestQueueNameState')
     data = fetchHashVal(data, 'ingq:ingestQueueName')

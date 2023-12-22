@@ -182,7 +182,7 @@ class LDAPActionCollmap < LDAPAction
       next if ark.empty?
 
       cm = LdapCollectionMap.new(ark, m)
-      cm.setLdapColl(@merritt_ldap.collections[m])
+      cm.set_ldap_coll(@merritt_ldap.collections[m])
       @data[ark] = cm
     end
     Collections.new(config).collections_select.each do |c|
@@ -195,7 +195,7 @@ class LDAPActionCollmap < LDAPAction
 
       cm = @data.key?(ark) ? @data[ark] : LdapCollectionMap.new(ark, c[:mnemonic])
       @data[ark] = cm
-      cm.setDbColl(c)
+      cm.set_db_coll(c)
     end
   end
 

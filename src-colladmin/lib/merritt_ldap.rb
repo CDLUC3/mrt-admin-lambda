@@ -565,23 +565,23 @@ class LdapCollectionMap < LdapLinkedRecord
   def initialize(ark, mnemonic)
     @ark = ark
     @mnemonic = mnemonic
-    @ldapColl = nil
-    @dbColl = nil
+    @ldap_coll = nil
+    @db_coll = nil
   end
 
-  def setLdapColl(ldapColl)
-    @ldapColl = ldapColl
+  def set_ldap_coll(ldap_coll)
+    @ldap_coll = ldap_coll
   end
 
-  def setDbColl(dbColl)
-    @dbColl = dbColl
+  def set_db_coll(db_coll)
+    @db_coll = db_coll
   end
 
   def status
-    return 'INFO' if @dbColl.nil?
+    return 'INFO' if @db_coll.nil?
 
-    return 'INFO' if @dbColl[:aggregate_role].empty?
-    return 'FAIL' if @ldapColl.nil?
+    return 'INFO' if @db_coll[:aggregate_role].empty?
+    return 'FAIL' if @ldap_coll.nil?
 
     'PASS'
   end
@@ -589,10 +589,10 @@ class LdapCollectionMap < LdapLinkedRecord
   def table_row
     [
       @ark,
-      @ldapColl.nil? ? '' : @mnemonic,
-      @dbColl.nil? ? '' : @dbColl[:id],
-      @dbColl.nil? ? '' : @dbColl[:mnemonic],
-      @dbColl.nil? ? '' : @dbColl[:aggregate_role],
+      @ldap_coll.nil? ? '' : @mnemonic,
+      @db_coll.nil? ? '' : @db_coll[:id],
+      @db_coll.nil? ? '' : @db_coll[:mnemonic],
+      @db_coll.nil? ? '' : @db_coll[:aggregate_role],
       status
     ]
   end

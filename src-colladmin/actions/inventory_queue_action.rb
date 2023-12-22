@@ -22,8 +22,8 @@ class InventoryQueueAction < ForwardToIngestAction
   end
 
   def table_rows(body)
-    queueList = InvQueueList.new(get_ingest_server, body)
-    queueList.to_table
+    queue_list = InvQueueList.new(get_ingest_server, body)
+    queue_list.to_table
   end
 
   def hasTable

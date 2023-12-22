@@ -23,7 +23,7 @@ class ProfileList < MerrittJson
       end
     end
     @profiles.each do |p|
-      p.scoreDiff(template)
+      p.score_diff(template)
     end
   end
 
@@ -194,7 +194,7 @@ class IngestProfile < MerrittJson
     arr
   end
 
-  def scoreDiff(template)
+  def score_diff(template)
     @score = 0
     return if is_template? || template.nil?
 
@@ -257,25 +257,25 @@ class IngestProfile < MerrittJson
     arr
   end
 
-  def addRow(rows, label, val, templateval)
+  def add_row(rows, label, val, templateval)
     if val.instance_of?(Array)
       diff = []
-      hasDiff = false
+      has_diff = false
       (0..[val.length, templateval.length].max - 1).each do |i|
         if val[i] == templateval[i]
           diff.append('')
         elsif val[i].nil?
           diff.append("- #{templateval[i]}")
-          hasDiff = true
+          has_diff = true
         elsif templateval[i].nil?
           diff.append("+ #{val[i]}")
-          hasDiff = true
+          has_diff = true
         else
           diff.append("~ #{templateval[i]}")
-          hasDiff = true
+          has_diff = true
         end
       end
-      diff = [] unless hasDiff
+      diff = [] unless has_diff
       rows.append([
                     label,
                     val.empty? ? '' : "list:#{val.join(',')}",
@@ -289,7 +289,7 @@ class IngestProfile < MerrittJson
   def table_rows(template)
     rows = []
     getPropertyList.each do |prop|
-      addRow(rows, getLabel(prop), getValue(prop), template ? template.getValue(prop) : '')
+      add_row(rows, getLabel(prop), getValue(prop), template ? template.getValue(prop) : '')
     end
     rows
   end
@@ -382,6 +382,7 @@ class Collection < QueryObject
     @dbdescription = row[8]
     @aggregate_role = row[9].nil? ? '' : row[9]
     @primary_node = ''
+    super
   end
 
   attr_reader :id, :ark, :pread, :pwrite, :pdownload, :tier, :harvest, :dbdescription, :mnemonic, :aggregate_role,

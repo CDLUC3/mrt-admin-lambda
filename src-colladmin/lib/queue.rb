@@ -42,8 +42,8 @@ class QueueEntry < QueueJson
       MerrittJsonProperty.new('Title').lookupValue(json, 'que', 'objectTitle')
     )
     addProperty(
-      :fileType,
-      MerrittJsonProperty.new('File Type').lookupValue(json, 'que', 'fileType')
+      :file_type,
+      MerrittJsonProperty.new('File Type').lookupValue(json, 'que', 'file_type')
     )
     addProperty(
       :qstatus,
@@ -91,7 +91,7 @@ class QueueEntry < QueueJson
     )
   end
 
-  def checkFilter(filter)
+  def check_filter(filter)
     show = true
     fbatch = filter.fetch(:batch, '')
     show &&= fbatch.empty? || bid == fbatch
@@ -165,8 +165,8 @@ class QueueEntry < QueueJson
     getValue(:title)
   end
 
-  def fileType
-    getValue(:fileType)
+  def file_type
+    getValue(:file_type)
   end
 
   def date
@@ -199,24 +199,24 @@ end
 
 # representation of the ingest queue
 class IngestQueue < MerrittJson
-  def initialize(queueList, body)
+  def initialize(queue_list, body)
     data = JSON.parse(body)
     data = fetchHashVal(data, 'que:queueState')
     data = fetchHashVal(data, 'que:queueEntries')
     list = fetchArrayVal(data, 'que:queueEntryState')
     list.each do |obj|
       q = QueueEntry.new(obj)
-      next unless q.checkFilter(queueList.filter)
+      next unless q.check_filter(queue_list.filter)
 
-      qenrtylist = queueList.batches.fetch(q.bid, QueueBatch.new(q.bid, q.user))
+      qenrtylist = queue_list.batches.fetch(q.bid, QueueBatch.new(q.bid, q.user))
       qenrtylist.addJob(q)
-      queueList.batches[q.bid] = qenrtylist
-      queueList.jobs.append(q)
+      queue_list.batches[q.bid] = qenrtylist
+      queue_list.jobs.append(q)
 
       # next if q.qstatus == "Completed" || q.qstatus == "Deleted"
       k = "#{q.profile},#{q.qstatus}"
-      queueList.profiles[k] = queueList.profiles.fetch(k, [])
-      queueList.profiles[k].append(q)
+      queue_list.profiles[k] = queue_list.profiles.fetch(k, [])
+      queue_list.profiles[k].append(q)
     end
   end
 end
@@ -231,7 +231,7 @@ class QueueList < MerrittJson
     @jobs = []
     @profiles = {}
     @filter = filter
-    retrieveQueues
+    retrieve_queues
   end
 
   def self.get_queue_list(ingest_server, filter = {})
@@ -239,7 +239,7 @@ class QueueList < MerrittJson
     QueueList.new(ingest_server, qjson.body, filter)
   end
 
-  def retrieveQueues
+  def retrieve_queues
     data = JSON.parse(@body)
     data = fetchHashVal(data, 'ingq:ingestQueueNameState')
     data = fetchHashVal(data, 'ingq:ingestQueueName')

@@ -23,8 +23,8 @@ class IngestBatchAction < ForwardToIngestAction
   end
 
   def table_rows(body)
-    queueList = QueueList.new(get_ingest_server, body, { batch: @batch })
-    queueList.jobs.each do |qe|
+    queue_list = QueueList.new(get_ingest_server, body, { batch: @batch })
+    queue_list.jobs.each do |qe|
       @batch_obj.add_queue_job(qe)
     end
     dbjob = RecentBatchIngests.new(@config, @batch)
@@ -49,7 +49,7 @@ class BatchJob < MerrittJson
     @submitter = ''
     @title = ''
     @date = ''
-    @fileType = ''
+    @file_type = ''
     @profile = ''
     @obj_cnt = ''
   end
@@ -60,7 +60,7 @@ class BatchJob < MerrittJson
     @submitter = qe.user
     @title = qe.title
     @date = qe.date
-    @fileType = qe.fileType
+    @file_type = qe.file_type
     @profile = qe.profile
   end
 
@@ -69,7 +69,7 @@ class BatchJob < MerrittJson
     @date = dj.date
     @profile = dj.profile
     @submitter = dj.user
-    @fileType = dj.fileType
+    @file_type = dj.file_type
   end
 
   def self.table_headers
@@ -114,7 +114,7 @@ class BatchJob < MerrittJson
       @submitter,
       @title,
       @date,
-      @fileType,
+      @file_type,
       @profile,
       "#{@bid}/#{@jid}; #{@obj_cnt}",
       status
@@ -169,11 +169,11 @@ class RecentBatchIngest < QueryObject
     @profile = row[2]
     @date = row[3]
     @user = row[4]
-    @fileType = row[5]
+    @file_type = row[5]
     @obj_cnt = row[6]
   end
 
-  attr_reader :bid, :jid, :profile, :date, :user, :fileType, :obj_cnt
+  attr_reader :bid, :jid, :profile, :date, :user, :file_type, :obj_cnt
 end
 
 # recent batches ingested
