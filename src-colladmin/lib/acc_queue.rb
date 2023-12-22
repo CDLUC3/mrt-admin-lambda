@@ -131,7 +131,7 @@ class AccQueue < MerrittJson
       q = AccQueueEntry.new(obj)
       queue_list.tokens.append(q)
     end
-    super
+    super()
   end
 end
 

@@ -382,7 +382,7 @@ class Collection
     @dbdescription = row[8]
     @aggregate_role = row[9].nil? ? '' : row[9]
     @primary_node = ''
-    super
+    super()
   end
 
   attr_reader :id, :ark, :pread, :pwrite, :pdownload, :tier, :harvest, :dbdescription, :mnemonic, :aggregate_role,

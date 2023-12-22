@@ -48,7 +48,12 @@ RSpec.describe 'merritt admin tests' do
 
       if act.fetch('format', 'json') == 'json'
         # Body of the response is serialized
-        rj = JSON.parse(payload.fetch('body', {}.to_json))
+        body = payload.fetch('body', {}.to_json)
+        begin
+          rj = JSON.parse(body)
+        rescue 
+          rj = {message: body}
+        end
         rpt = rj.fetch('report_path', 'n/a')
         expect(rpt).not_to eq('n/a')
       end

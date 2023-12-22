@@ -184,7 +184,7 @@ class QueueBatch < MerrittJson
     @bid = bid
     @submitter = submitter
     @jobs = []
-    super
+    super()
   end
 
   def add_job(qj)
@@ -218,7 +218,7 @@ class IngestQueue < MerrittJson
       k = "#{q.profile},#{q.qstatus}"
       queue_list.profiles[k] = queue_list.profiles.fetch(k, [])
       queue_list.profiles[k].append(q)
-      super
+      super()
     end
   end
 end

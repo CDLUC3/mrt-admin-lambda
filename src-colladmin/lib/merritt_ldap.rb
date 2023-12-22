@@ -168,6 +168,10 @@ end
 
 # base class for ldap records
 class LdapRecord
+  def initialize
+    # reserve
+  end
+
   def find_part(entry, part, defval)
     part = "#{part}="
     entry.to_s.split(',').each do |s|
@@ -184,7 +188,7 @@ class LdapLinkedRecord < LdapRecord
     @islinked = islinked
     @roles = []
     @perms = {}
-    super
+    super()
   end
 
   def unlinked
@@ -386,7 +390,7 @@ class LdapRole < LdapRecord
     end
     @user_rec = []
     @collection_rec = nil
-    super
+    super()
   end
 
   def set_collection(coll)
@@ -467,7 +471,7 @@ class LdapUserDetailed < LdapRecord
     @write = write
     @download = download
     @admin = admin
-    super
+    super()
   end
 
   def table_row
@@ -530,7 +534,7 @@ class LdapCollectionDetailed < LdapRecord
     @write = write
     @download = download
     @admin = admin
-    super
+    super()
   end
 
   def table_row
@@ -571,7 +575,7 @@ class LdapCollectionMap < LdapLinkedRecord
     @mnemonic = mnemonic
     @ldap_coll = nil
     @db_coll = nil
-    super
+    super(true)
   end
 
   def set_ldap_coll(ldap_coll)

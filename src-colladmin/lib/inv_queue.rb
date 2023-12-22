@@ -118,7 +118,7 @@ class InventoryQueue < MerrittJson
       q = InvQueueEntry.new(obj)
       queue_list.manifests.append(q)
     end
-    super
+    super()
   end
 end
 
