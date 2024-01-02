@@ -1,0 +1,83 @@
+name: Rubocop
+
+on: [push, pull_request]
+
+jobs:
+  rubocop:
+    runs-on: ubuntu-20.04
+
+    steps:
+    # Checkout the repo
+    - uses: actions/checkout@v3
+
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.0'
+        bundler-cache: true
+        working-directory: mysql-ruby-lambda
+
+    - name: 'Run Rubocop'
+      run: bundle exec rubocop
+      working-directory: mysql-ruby-lambda
+
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.0'
+        bundler-cache: true
+        working-directory: src-common
+
+    - name: 'Run Rubocop'
+      run: bundle exec rubocop
+      working-directory: src-common
+
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.0'
+        bundler-cache: true
+        working-directory: src-admintool
+
+    - name: 'Run Rubocop'
+      run: bundle exec rubocop
+      working-directory: src-admintool
+
+
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.0'
+        bundler-cache: true
+        working-directory: src-colladmin
+
+    - name: 'Run Rubocop'
+      run: bundle exec rubocop
+      working-directory: src-colladmin
+
+
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.0'
+        bundler-cache: true
+        working-directory: src-testdriver
+
+    - name: 'Run Rubocop'
+      run: bundle exec rubocop
+      working-directory: src-testdriver
+
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.0'
+        bundler-cache: true
+        working-directory: cognito-lambda-nonvpc
+
+    - name: 'Run Rubocop'
+      run: bundle exec rubocop
+      working-directory: cognito-lambda-nonvpc
+
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.0'
+        bundler-cache: true
+        working-directory: simulate-lambda-alb
+
+    - name: 'Run Rubocop'
+      run: bundle exec rubocop
+      working-directory: simulate-lambda-alb
