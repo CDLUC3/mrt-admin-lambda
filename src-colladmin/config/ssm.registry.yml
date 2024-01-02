@@ -344,13 +344,13 @@ objhealth:
   opensearch_host:
     description: Object health opensearch instance host (Prod and Dev only)
   opensearch_user:
-    description: Object health opensearch user (has write access only to the objhealth index)
+    description: Object health opensearch user - has write access only to the objhealth index. (Prod and Dev only)
   opensearch_password:
-    description: Object health opensearch password
+    description: Object health opensearch password (Prod and Dev only)
   opensearch_ssl:
-    description: Object health opensearch ssl (true or false)
+    description: Object health opensearch ssl (true or false). Exists in Prod and Dev only.
   merritt_credential:
-    description: Readonly Merritt credential with download rights to support file identification
+    description: Readonly Merritt credential with download rights to support file identification.  Currently only implemented in Prod and Dev.
 # skip error checking for dev-only special nodes
 loy:
   skip: true
