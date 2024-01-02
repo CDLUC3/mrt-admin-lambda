@@ -50,8 +50,10 @@ class LDAPAction < AdminAction
 
   def get_table_rows
     rows = []
-    @data.sort.each_value do |obj|
-      rows.append(obj.table_row)
+    if @data.is_a?(Hash)
+      @data.keys.sort.each do |obj|
+        rows.append(@data[obj].table_row)
+      end
     end
     rows
   end
