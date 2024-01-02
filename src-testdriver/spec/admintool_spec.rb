@@ -51,8 +51,8 @@ RSpec.describe 'merritt admin tests' do
         body = payload.fetch('body', {}.to_json)
         begin
           rj = JSON.parse(body)
-        rescue 
-          rj = {message: body}
+        rescue StandardError
+          rj = { message: body }
         end
         rpt = rj.fetch('report_path', 'n/a')
         expect(rpt).not_to eq('n/a')

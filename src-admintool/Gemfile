@@ -8,4 +8,5 @@ gem 'mysql2'
 # pay attention the the branch checked out during the gem build step.
 # https://github.com/CDLUC3/mrt-admin-lambda/blob/main/mysql-ruby-lambda/Dockerfile#L19-L21
 gem 'aws-sdk-s3'
+gem 'rubocop'
 gem 'uc3-ssm', '0.3.10', git: 'https://github.com/CDLUC3/uc3-ssm.git', branch: 'main'
