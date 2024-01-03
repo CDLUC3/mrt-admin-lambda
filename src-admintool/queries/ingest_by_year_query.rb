@@ -10,7 +10,7 @@ class IngestBytesByYearQuery < AdminQuery
   end
 
   def get_title
-    'Ingest by Month Query'
+    'Ingest by Year Query'
   end
 
   def get_sql
