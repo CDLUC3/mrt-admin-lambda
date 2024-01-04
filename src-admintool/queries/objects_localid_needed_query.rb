@@ -1,10 +1,13 @@
+# frozen_string_literal: true
+
+# Query class - see config/reports.yml for description
 class ObjectsLocalidNeededQuery < ObjectsQuery
   def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams, sort='modified')
+    super(query_factory, path, myparams, 'modified')
   end
 
   def get_title
-    "Objects Missing a Local Id"
+    'Objects Missing a Local Id'
   end
 
   def get_params
@@ -14,15 +17,15 @@ class ObjectsLocalidNeededQuery < ObjectsQuery
   def get_where
     %{
       where not exists (
-        select 
+        select
           1
-        from 
+        from
           inv.inv_localids loc
         where
           o.ark = loc.inv_object_ark
-      ) 
-      and 
-        erc_where != concat(o.ark, ' ; (:unas)')   
+      )
+      and
+        erc_where != concat(o.ark, ' ; (:unas)')
     }
   end
 
@@ -37,14 +40,13 @@ class ObjectsLocalidNeededQuery < ObjectsQuery
   def get_alternative_queries
     [
       {
-        label: "Count Objects missing localid", 
-        url: "path=con_localid"
+        label: 'Count Objects missing localid',
+        url: 'path=con_localid'
       },
       {
-        label: "Object Localid Fix", 
-        url: "path=con_localid_fix"
+        label: 'Object Localid Fix',
+        url: 'path=con_localid_fix'
       }
     ]
   end
-
 end

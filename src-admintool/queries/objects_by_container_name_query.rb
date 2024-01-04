@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Query class - see config/reports.yml for description
 class ObjectsByContainerNameQuery < ObjectsQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
@@ -13,17 +16,17 @@ class ObjectsByContainerNameQuery < ObjectsQuery
   end
 
   def get_where
-  %{
+    %{
     where exists  (
-      select 
+      select
         1
-      from 
+      from
         inv.inv_ingests ing
-      where 
-        ing.filename = ? 
+      where
+        ing.filename = ?
       and
         ing.inv_object_id = o.id
-    ) 
+    )
   }
   end
 end

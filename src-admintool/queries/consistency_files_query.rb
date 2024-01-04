@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Query class - see config/reports.yml for description
 class ConsistencyFilesQuery < AdminQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
@@ -14,7 +17,7 @@ class ConsistencyFilesQuery < AdminQuery
 
   def get_sql
     %{
-      select 
+      select
         case
           when c.mnemonic like 'cdl_dryad%'
             then 'Dryad'
@@ -26,7 +29,7 @@ class ConsistencyFilesQuery < AdminQuery
             then 'No Mnemonic'
           when age.inv_object_id = (
             select -1 /*id from inv.inv_objects where ark = '...'*/
-          ) 
+          )
             then '...'
           when c.name = 'Merritt curatorial classes'
             then 'Stage Exception'
@@ -49,7 +52,7 @@ class ConsistencyFilesQuery < AdminQuery
             case
               when age.init_created < date_add(now(), INTERVAL -2 DAY)
                 then 0
-              when age.init_created < date_add(now(), INTERVAL -1 DAY) 
+              when age.init_created < date_add(now(), INTERVAL -1 DAY)
                 then 1
               else 0
             end
@@ -61,13 +64,13 @@ class ConsistencyFilesQuery < AdminQuery
             case
               when age.init_created < date_add(now(), INTERVAL -2 DAY)
                 then 0
-              when age.init_created < date_add(now(), INTERVAL -1 DAY) 
+              when age.init_created < date_add(now(), INTERVAL -1 DAY)
                 then 0
               else 1
             end
           ),
           0
-        ),   
+        ),
         case
           when count(*) = 0 then 'PASS'
           when #{@copies.to_i} = 3 then 'PASS'
@@ -81,7 +84,7 @@ class ConsistencyFilesQuery < AdminQuery
               end
             ),
             0
-          ) > 0 then 
+          ) > 0 then
             case
               when c.mnemonic = 'oneshare_dataup' then 'INFO'
               when c.mnemonic = 'dataone_dash' then 'INFO'
@@ -94,7 +97,7 @@ class ConsistencyFilesQuery < AdminQuery
               case
                 when age.init_created < date_add(now(), INTERVAL -2 DAY)
                   then 0
-                when age.init_created < date_add(now(), INTERVAL -1 DAY) 
+                when age.init_created < date_add(now(), INTERVAL -1 DAY)
                   then 1
                 else 0
               end
@@ -110,17 +113,17 @@ class ConsistencyFilesQuery < AdminQuery
         on icio.inv_collection_id = c.id
       inner join inv.inv_objects o
         on c.inv_object_id = o.id and o.aggregate_role = 'MRT-collection'
-      group by 
+      group by
         category
-      ; 
+      ;
     }
   end
 
-  def get_headers(results)
+  def get_headers(_results)
     ['Category', 'File Count', '> 2 days', '1-2 days', '< 1 day', 'Status']
   end
 
-  def get_types(results)
+  def get_types(_results)
     ['', 'dataint', 'dataint', 'dataint', 'dataint', 'status']
   end
 
@@ -131,11 +134,10 @@ class ConsistencyFilesQuery < AdminQuery
   def get_alternative_queries
     [
       {
-        label: "Object List - File Copies Needed, Older than 2 days", 
+        label: 'Object List - File Copies Needed, Older than 2 days',
         url: "path=file_copies_needed&copies=#{@copies}&days=2&limit=500",
         class: 'objects'
       }
     ]
   end
-
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'httpclient'
 require 'cgi'
 require_relative 'action'
@@ -8,51 +10,48 @@ require_relative '../lib/storage_nodes'
 require_relative '../lib/merritt_query'
 require_relative '../lib/http_delete_json'
 
+# Collection Admin Task class - see config/actions.yml for description
 class ReplicationAction < AdminAction
-  def initialize(config, action, path, myparams)
-    super(config, action, path, myparams)
-  end
-
   def get_replic_server
     @config.fetch('replic-service', '')
   end
 
   def update_maint
-    %{
-      UPDATE 
+    %(
+      UPDATE
         inv_storage_maints
-      SET 
+      SET
         maint_status= ?
-      WHERE 
+      WHERE
         maint_status != 'removed'
       and
         id = ?
-    }
+    )
   end
 
   def maintidlist_params(status)
-    maintidlist = [status];
-    @myparams.fetch("maintidlist", "").split(",").each do |id| 
+    maintidlist = [status]
+    @myparams.fetch('maintidlist', '').split(',').each do |id|
       maintidlist.append(id.to_i)
     end
     maintidlist
   end
 
   def maintidlist_placeholders
-    placeholders = [];
-    @myparams.fetch("maintidlist", "").split(",").each do |id| 
-      placeholders.append("?")
+    placeholders = []
+    @myparams.fetch('maintidlist', '').split(',').each do |_id|
+      placeholders.append('?')
     end
-    placeholders.join(",")
+    placeholders.join(',')
   end
 
   def maintidlist_update
     %{
-      UPDATE 
+      UPDATE
         inv_storage_maints
-      SET 
+      SET
         maint_status = ?
-      WHERE 
+      WHERE
         maint_status != 'removed'
       and
         id in (#{maintidlist_placeholders})
@@ -62,77 +61,78 @@ class ReplicationAction < AdminAction
   def perform_action
     endpoint = ''
     method = :post
-    if @path == "storage-scan-node"
-      nodeid = @myparams.fetch("nodenum", "0").to_i
+    case @path
+    when 'storage-scan-node'
+      nodeid = @myparams.fetch('nodenum', '0').to_i
       endpoint = "scan/start/#{nodeid}?t=json"
       # determine if the node must be traversed via a keylist file (sdsc)
       keylist = ''
-      @config.fetch("scan-use-keylist", []).each do |c|
+      @config.fetch('scan-use-keylist', []).each do |c|
         keylist = c['keylist'] if c['node'].to_i == nodeid
-      end 
+      end
       endpoint = "#{endpoint}&keylist=#{keylist}" unless keylist.empty?
-    elsif @path == "storage-cancel-all-scans" 
+    when 'storage-cancel-all-scans'
       endpoint = 'scan/allow/false?t=json'
-    elsif @path == "storage-allow-all-scans" 
+    when 'storage-allow-all-scans'
       endpoint = 'scan/allow/true?t=json'
-    elsif @path == "storage-cancel-scan-node" 
-      scanid = @myparams.fetch("scanid", "0").to_i
+    when 'storage-cancel-scan-node'
+      scanid = @myparams.fetch('scanid', '0').to_i
       endpoint = "scan/cancel/#{scanid}?t=json"
-    elsif @path == "storage-resume-scan-node" 
-      scanid = @myparams.fetch("scanid", "0").to_i
+    when 'storage-resume-scan-node'
+      scanid = @myparams.fetch('scanid', '0').to_i
       endpoint = "scan/restart/#{scanid}?t=json"
-    elsif @path == "storage-delete-node-key" 
-      maintid = @myparams.fetch("maintid", "0").to_i
+    when 'storage-delete-node-key'
+      maintid = @myparams.fetch('maintid', '0').to_i
       return MerrittQuery.new(@config).run_update(
-        update_maint, 
+        update_maint,
         ['delete', maintid],
-        "Maint Status set to delete"
+        'Maint Status set to delete'
       ).to_json
-    elsif @path == "storage-delete-node-page" 
+    when 'storage-delete-node-page'
       return MerrittQuery.new(@config).run_update(
-        maintidlist_update, 
+        maintidlist_update,
         maintidlist_params('delete'),
-        "Maint Status set to delete for block of items"
+        'Maint Status set to delete for block of items'
       ).to_json
-    elsif @path == "storage-perform-delete-node-key" 
-      maintid = @myparams.fetch("maintid", "0").to_i
+    when 'storage-perform-delete-node-key'
+      maintid = @myparams.fetch('maintid', '0').to_i
       method = :delete
       endpoint = "scandelete/#{maintid}?t=json"
-    elsif @path == "storage-perform-delete-node-batch" 
-      nodenum = @myparams.fetch("nodenum", "0").to_i
+    when 'storage-perform-delete-node-batch'
+      nodenum = @myparams.fetch('nodenum', '0').to_i
       method = :delete
       endpoint = "scandelete-list/#{nodenum}?t=json"
-    elsif @path == "storage-hold-node-key" 
-      maintid = @myparams.fetch("maintid", "0").to_i
+    when 'storage-hold-node-key'
+      maintid = @myparams.fetch('maintid', '0').to_i
       return MerrittQuery.new(@config).run_update(
-        update_maint, 
+        update_maint,
         ['hold', maintid],
-        "Maint Status set to hold"
+        'Maint Status set to hold'
       ).to_json
-    elsif @path == "storage-hold-node-page" 
+    when 'storage-hold-node-page'
       return MerrittQuery.new(@config).run_update(
-        maintidlist_update, 
+        maintidlist_update,
         maintidlist_params('hold'),
-        "Maint Status set to hold for block of items"
+        'Maint Status set to hold for block of items'
       ).to_json
-    elsif @path == "storage-review-node-key" 
-      maintid = @myparams.fetch("maintid", "0").to_i
+    when 'storage-review-node-key'
+      maintid = @myparams.fetch('maintid', '0').to_i
       return MerrittQuery.new(@config).run_update(
-        update_maint, 
+        update_maint,
         ['review', maintid],
-        "Maint Status set to review"
+        'Maint Status set to review'
       ).to_json
-    elsif @path == "storage-review-node-page" 
+    when 'storage-review-node-page'
       return MerrittQuery.new(@config).run_update(
-        maintidlist_update, 
+        maintidlist_update,
         maintidlist_params('review'),
-        "Maint Status set to review for block of items"
+        'Maint Status set to review for block of items'
       ).to_json
-    elsif @path == "storage-review-csv" 
-      nodenum = @myparams.fetch("nodenum", "0").to_i
-      rev = ScanReview.new(@config, "review")
+    when 'storage-review-csv'
+      nodenum = @myparams.fetch('nodenum', '0').to_i
+      rev = ScanReview.new(@config, 'review')
       rev.process_resuts(
-        rev.nodenum_query(nodenum, 1000000, 0)
+        rev.nodenum_query(nodenum, 1_000_000, 0)
       )
       key = "scan-review/#{nodenum}.csv"
       @s3_client.put_object({
@@ -142,67 +142,67 @@ class ReplicationAction < AdminAction
         content_type: 'text/csv'
       })
       signer = Aws::S3::Presigner.new
-      url, headers = signer.presigned_request(
-        :get_object, 
-        bucket: @s3bucket, 
+      url, = signer.presigned_request(
+        :get_object,
+        bucket: @s3bucket,
         key: key
       )
       return {
         download_url: url,
         label: "Review List for #{nodenum}"
       }.to_json
-    elsif @path == "replication-state" 
+    when 'replication-state'
       endpoint = 'state?t=json'
       method = :get
-    elsif @path == "apply-review-changes"
-      nodenum = @myparams.fetch("nodenum", "0").to_i
+    when 'apply-review-changes'
+      nodenum = @myparams.fetch('nodenum', '0').to_i
       count = 0
-      JSON.parse(@myparams.fetch("changes", "[]")).each do |change|
-        if change.length == 3
-          maintid = change[0].to_i
-          status = change[1]
-          note = change[2]
-          MerrittQuery.new(@config).run_update(
-            %{
-              update
-                inv_storage_maints
-              set
-                maint_status = ?,
-                note = ?
-              where
-                id = ?
-              and
-                maint_status != 'removed'
-              and
-                inv_node_id = (
-                  select 
-                    id
-                  from
-                    inv_nodes
-                  where
-                    number = ?
-                )
-            }, 
-            [status, note, maintid, nodenum],
-            "Maint Status updated"
-          ) 
-          count = count + 1            
-        end
+      JSON.parse(@myparams.fetch('changes', '[]')).each do |change|
+        next unless change.length == 3
+
+        maintid = change[0].to_i
+        status = change[1]
+        note = change[2]
+        MerrittQuery.new(@config).run_update(
+          %{
+            update
+              inv_storage_maints
+            set
+              maint_status = ?,
+              note = ?
+            where
+              id = ?
+            and
+              maint_status != 'removed'
+            and
+              inv_node_id = (
+                select
+                  id
+                from
+                  inv_nodes
+                where
+                  number = ?
+              )
+          },
+          [status, note, maintid, nodenum],
+          'Maint Status updated'
+        )
+        count += 1
       end
-      return {log: "#{count} review records updated"}.to_json
-    elsif @path == "replic-delete-coll-batch-from-node"
-      nodenum = @myparams.fetch("nodenum", "0").to_i
-      coll = @myparams.fetch("coll", "0").to_i
+      return { log: "#{count} review records updated" }.to_json
+    when 'replic-delete-coll-batch-from-node'
+      nodenum = @myparams.fetch('nodenum', '0').to_i
+      coll = @myparams.fetch('coll', '0').to_i
       ids = []
       MerrittQuery.new(@config).run_query(
         %{
           SELECT
             o.ark
-          from 
+          from
             inv_objects o
           inner join
             inv_collections_inv_objects icio
-          on 
+          on
             o.id = icio.inv_object_id
           WHERE
             icio.inv_collection_id = ?
@@ -210,18 +210,18 @@ class ReplicationAction < AdminAction
             select
               1
             from
-              inv_nodes_inv_objects inio 
+              inv_nodes_inv_objects inio
             WHERE
               inio.inv_node_id = (
                 select id from inv_nodes where number = ?
-              ) 
+              )
             and
               inio.inv_object_id = icio.inv_object_id
-            and 
+            and
               inio.role = 'secondary'
           )
           limit 50
-        }, 
+        },
         [coll, nodenum]
       ).each do |r|
         endpoint = "delete/#{nodenum}/#{CGI.escape(r[0])}"
@@ -229,10 +229,8 @@ class ReplicationAction < AdminAction
         begin
           qjson = HttpDeleteJson.new(get_replic_server, endpoint)
           puts qjson.status
-          if qjson.status == 200
-            ids.push(r[0])
-          end
-        rescue => e
+          ids.push(r[0]) if qjson.status == 200
+        rescue StandardError => e
           log(e.message)
           log(e.backtrace)
           return { error: "#{e.message} for #{endpoint}" }.to_json
@@ -242,7 +240,7 @@ class ReplicationAction < AdminAction
         message: "#{ids.length} objects removed from node #{nodenum}."
       }.to_json
     else
-      return {message: "No action"}.to_json
+      return { message: 'No action' }.to_json
     end
 
     begin
@@ -251,41 +249,38 @@ class ReplicationAction < AdminAction
         qjson = HttpPostJson.new(get_replic_server, endpoint)
       elsif method == :delete
         qjson = HttpDeleteJson.new(get_replic_server, endpoint)
-      else 
+      else
         qjson = HttpGetJson.new(get_replic_server, endpoint)
       end
       return { message: "Status #{qjson.status} for #{endpoint}" }.to_json unless qjson.status == 200
-      return parseReplicResponse(qjson.body).to_json unless qjson.body.empty?
+      return parse_replic_response(qjson.body).to_json unless qjson.body.empty?
+
       { message: "No response for #{endpoint}" }.to_json
-    rescue => e
+    rescue StandardError => e
       log(e.message)
       log(e.backtrace)
       { error: "#{e.message} for #{endpoint}" }.to_json
     end
-
   end
 
-  def parseReplicResponse(json) 
+  def parse_replic_response(json)
     resp = JSON.parse(json)
-    if @path == "storage-cancel-scan-node" || @path == "storage-resume-scan-node" || @path == "storage-scan-node" 
-    {
-      message: resp.fetch("repscan:invStorageScan", {}).fetch("repscan:scanStatus", "na")
-    }
-    elsif @path == "storage-perform-delete-node-batch" 
-    {
-      message: resp.fetch("repscan:invStorageScan", {}).fetch("repscan:scanStatus", "na")
-    }
-    elsif @path == "storage-cancel-all-scans" || @path == "storage-allow-all-scans" || @path == "replication-state"
-    {
-      message: "Scan Allowed: #{resp.fetch("repsvc:replicationServiceState", {}).fetch("repsvc:allowScan", "na")}"
-    }
-    elsif @path == "storage-perform-delete-node-key" 
-    {
-      message: "Node/Key State: #{resp.fetch("repmnt:invStorageMaint", {}).fetch("repmnt:maintStatus", "na")}"
-    }
+    case @path
+    when 'storage-cancel-scan-node', 'storage-resume-scan-node', 'storage-scan-node',
+      'storage-perform-delete-node-batch'
+      {
+        message: resp.fetch('repscan:invStorageScan', {}).fetch('repscan:scanStatus', 'na')
+      }
+    when 'storage-cancel-all-scans', 'storage-allow-all-scans', 'replication-state'
+      {
+        message: "Scan Allowed: #{resp.fetch('repsvc:replicationServiceState', {}).fetch('repsvc:allowScan', 'na')}"
+      }
+    when 'storage-perform-delete-node-key'
+      {
+        message: "Node/Key State: #{resp.fetch('repmnt:invStorageMaint', {}).fetch('repmnt:maintStatus', 'na')}"
+      }
     else
       resp
     end
   end
-
 end

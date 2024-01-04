@@ -1,12 +1,15 @@
+# frozen_string_literal: true
+
 require_relative 'action'
 require_relative '../lib/merritt_ldap'
 
+# Collection Admin Task class - see config/actions.yml for description
 class LDAPAction < AdminAction
   def initialize(config, action, path, myparams)
     super(config, action, path, myparams)
     @merritt_ldap = MerrittLdap.new(@config)
     @data = {}
-    @title = "LDAP Queries"
+    @title = 'LDAP Queries'
   end
 
   def get_title
@@ -22,7 +25,8 @@ class LDAPAction < AdminAction
   end
 
   def perform_action
-    return body unless hasTable
+    return body unless has_table
+
     evaluate_status(table_types, get_table_rows)
     {
       format: 'report',
@@ -46,28 +50,29 @@ class LDAPAction < AdminAction
 
   def get_table_rows
     rows = []
-    @data.sort.each do |k, obj|
-      rows.append(obj.table_row)
+    if @data.is_a?(Hash)
+      @data.keys.sort.each do |obj|
+        rows.append(@data[obj].table_row)
+      end
     end
     rows
   end
 
-  def hasTable
+  def has_table
     true
   end
 
   def get_alternative_queries
     []
   end
-
 end
 
+# Collection Admin Task class - see config/actions.yml for description
 class LDAPActionUsers < LDAPAction
-
   def initialize(config, action, path, myparams)
     super(config, action, path, myparams)
     @data = @merritt_ldap.users
-    @title = "LDAP Users"
+    @title = 'LDAP Users'
   end
 
   def table_headers
@@ -77,14 +82,13 @@ class LDAPActionUsers < LDAPAction
   def table_types
     LdapUser.get_types
   end
-
 end
 
+# Collection Admin Task class - see config/actions.yml for description
 class LDAPActionUserDetailed < LDAPAction
-
   def initialize(config, action, path, myparams)
     super(config, action, path, myparams)
-    uid = myparams.fetch("uid", "")
+    uid = myparams.fetch('uid', '')
     @data = @merritt_ldap.user_detail_records(uid)
     @title = "Role Details for LDAP User #{@merritt_ldap.user_displayname(uid)}"
   end
@@ -96,15 +100,14 @@ class LDAPActionUserDetailed < LDAPAction
   def table_types
     LdapUserDetailed.get_types
   end
-
 end
 
+# Collection Admin Task class - see config/actions.yml for description
 class LDAPActionRoles < LDAPAction
-
   def initialize(config, action, path, myparams)
     super(config, action, path, myparams)
     @data = @merritt_ldap.roles
-    @title = "LDAP Roles"
+    @title = 'LDAP Roles'
   end
 
   def table_headers
@@ -114,15 +117,14 @@ class LDAPActionRoles < LDAPAction
   def table_types
     LdapRole.get_types
   end
-
 end
 
+# Collection Admin Task class - see config/actions.yml for description
 class LDAPActionColls < LDAPAction
-
   def initialize(config, action, path, myparams)
     super(config, action, path, myparams)
     @data = @merritt_ldap.collections
-    @title = "LDAP Collections"
+    @title = 'LDAP Collections'
   end
 
   def table_headers
@@ -132,14 +134,13 @@ class LDAPActionColls < LDAPAction
   def table_types
     LdapCollection.get_types
   end
-
 end
 
+# Collection Admin Task class - see config/actions.yml for description
 class LDAPActionCollDetailed < LDAPAction
-
   def initialize(config, action, path, myparams)
     super(config, action, path, myparams)
-    coll = myparams.fetch("coll", "")
+    coll = myparams.fetch('coll', '')
     @data = @merritt_ldap.collection_detail_records(coll)
     @title = "Role Details for Collection #{@merritt_ldap.coll_displayname(coll)} (#{coll})"
   end
@@ -151,14 +152,13 @@ class LDAPActionCollDetailed < LDAPAction
   def table_types
     LdapCollectionDetailed.get_types
   end
-
 end
 
+# Collection Admin Task class - see config/actions.yml for description
 class LDAPActionCollArk < LDAPAction
-
   def initialize(config, action, path, myparams)
     super(config, action, path, myparams)
-    ark = CGI.unescape(myparams.fetch("ark", ""))
+    ark = CGI.unescape(myparams.fetch('ark', ''))
     @data = @merritt_ldap.collection_detail_records_for_ark(ark)
     @title = "Role Details for Collection #{ark}"
   end
@@ -170,33 +170,34 @@ class LDAPActionCollArk < LDAPAction
   def table_types
     LdapCollectionDetailed.get_types
   end
-
 end
 
+# Collection Admin Task class - see config/actions.yml for description
 class LDAPActionCollmap < LDAPAction
-
   def initialize(config, action, path, myparams)
     super(config, action, path, myparams)
     @data = {}
-    @title = "LDAP Collection Map"
-    @merritt_ldap.collections.keys.each do |m|
+    @title = 'LDAP Collection Map'
+    @merritt_ldap.collections.each_key do |m|
       ark = @merritt_ldap.collections[m].ark
-      next if ark.nil? 
+      next if ark.nil?
       next if ark.empty?
+
       cm = LdapCollectionMap.new(ark, m)
-      cm.setLdapColl(@merritt_ldap.collections[m])
+      cm.set_ldap_coll(@merritt_ldap.collections[m])
       @data[ark] = cm
     end
     Collections.new(config).collections_select.each do |c|
-      ark = c.fetch(:ark, "")
+      ark = c.fetch(:ark, '')
       next if ark.empty?
       next if ark == LambdaFunctions::Handler.merritt_curatorial
-      next if ark == LambdaFunctions::Handler.merritt_system 
+      next if ark == LambdaFunctions::Handler.merritt_system
       next if ark == LambdaFunctions::Handler.merritt_admin_coll_sla
-      next if ark == LambdaFunctions::Handler.merritt_admin_coll_owners 
+      next if ark == LambdaFunctions::Handler.merritt_admin_coll_owners
+
       cm = @data.key?(ark) ? @data[ark] : LdapCollectionMap.new(ark, c[:mnemonic])
       @data[ark] = cm
-      cm.setDbColl(c)
+      cm.set_db_coll(c)
     end
   end
 
@@ -211,5 +212,4 @@ class LDAPActionCollmap < LDAPAction
   def init_status
     :PASS
   end
-
 end

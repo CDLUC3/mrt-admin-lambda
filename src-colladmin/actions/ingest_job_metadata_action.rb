@@ -1,6 +1,9 @@
+# frozen_string_literal: true
+
 require_relative 'action'
 require_relative 'forward_to_ingest_action'
 
+# Collection Admin Task class - see config/actions.yml for description
 class IngestJobMetadataAction < ForwardToIngestAction
   def initialize(config, action, path, myparams)
     @batch = myparams.fetch('batch', '')
@@ -25,28 +28,27 @@ class IngestJobMetadataAction < ForwardToIngestAction
     JobMetadataRecord.table_types
   end
 
-
-  def hasTable
+  def has_table
     true
   end
 
   def get_alternative_queries
     [
       {
-        label: 'Job Manifest', 
+        label: 'Job Manifest',
         url: "#{LambdaBase.colladmin_url}?path=manifest&batch=#{@batch}&job=#{@job}",
         class: 'jobmeta'
       },
       {
-        label: 'Job Files', 
+        label: 'Job Files',
         url: "#{LambdaBase.colladmin_url}?path=files&batch=#{@batch}&job=#{@job}",
         class: 'jobmeta'
-      },
+      }
     ]
   end
-
 end
 
+# job metadata record
 class JobMetadataRecord < MerrittJson
   def initialize(key, value)
     super()
@@ -62,9 +64,9 @@ class JobMetadataRecord < MerrittJson
   end
 
   def self.table_headers
-    [
-      'Key',
-      'Value'
+    %w[
+      Key
+      Value
     ]
   end
 
@@ -74,10 +76,9 @@ class JobMetadataRecord < MerrittJson
       ''
     ]
   end
-
 end
 
-
+# ingest job metadata
 class JobMetadata < MerrittJson
   def initialize(body)
     super()
@@ -85,8 +86,8 @@ class JobMetadata < MerrittJson
     data = JSON.parse(body)
     data = data.fetch('fil:jobFileState', {})
     data = data.fetch('fil:jobFile', {})
-    data.keys.each do |k|
-      @metadata.append(JobMetadataRecord.new(k, data.fetch(k, "")))
+    data.each_key do |k|
+      @metadata.append(JobMetadataRecord.new(k, data.fetch(k, '')))
     end
   end
 

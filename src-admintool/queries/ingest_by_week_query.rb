@@ -1,9 +1,12 @@
+# frozen_string_literal: true
+
+# Query class - see config/reports.yml for description
 class IngestBytesByWeekQuery < AdminQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
     defweeks = 52
     defend = (Time.new + spw).strftime('%Y-%m-%d')
-    defstart = (Time.new - defweeks * spw).strftime('%Y-%m-%d')
+    defstart = (Time.new - (defweeks * spw)).strftime('%Y-%m-%d')
 
     @tend = get_param('end', defend)
     @tend = defend unless Time.parse(@tend)
@@ -11,15 +14,15 @@ class IngestBytesByWeekQuery < AdminQuery
     if myparams.key?('start')
       @tstart = get_param('start', defstart)
       @tstart = defstart unless Time.parse(@tstart)
-      @weeks = ((Time.parse(@tend) - Time.parse(@tstart)) / spw ).to_i
-      unless @weeks > 0 && @weeks <= 100
+      @weeks = ((Time.parse(@tend) - Time.parse(@tstart)) / spw).to_i
+      unless @weeks.positive? && @weeks <= 100
         @weeks = defweeks
         @tstart = defstart
       end
     else
       @weeks = get_param('weeks', defweeks).to_i
-      @weeks = defweeks unless @weeks > 0 && @weeks <= 100
-      @tstart = (Time.parse(@tend) - @weeks * spw).strftime('%Y-%m-%d')
+      @weeks = defweeks unless @weeks.positive? && @weeks <= 100
+      @tstart = (Time.parse(@tend) - (@weeks * spw)).strftime('%Y-%m-%d')
     end
   end
 
@@ -30,43 +33,45 @@ class IngestBytesByWeekQuery < AdminQuery
   def get_sql
     sql = %{
       select
-        date_format(times.ts, '%Y-%m-%d %H:00') as timeblock, 
-        ifnull(sum(billable_size), 0) as bytes 
-      from 
+        date_format(times.ts, '%Y-%m-%d %H:00') as timeblock,
+        ifnull(sum(billable_size), 0) as bytes
+      from
         (
-    } 
-    for w in 0..(@weeks - 1)
-      sql = sql + %{ union } unless w == 0
-      sql = sql + %{
-          select date_add(date_add(date('#{@tstart}'), INTERVAL -dayofweek('#{@tstart}') DAY), interval #{w}*7 DAY) as ts
+    }
+    (0..(@weeks - 1)).each do |w|
+      sql += %( union ) unless w.zero?
+      sql += %{
+          select date_add(
+            date_add(date('#{@tstart}'), INTERVAL -dayofweek('#{@tstart}') DAY),
+            interval #{w}*7 DAY
+          ) as ts
       }
     end
-    sql = sql + %{
+    sql + %{
         ) times
       left join owner_coll_mime_use_details f
-        on times.ts = date_add(date(f.date_added), interval - dayofweek(f.date_added) DAY) 
+        on times.ts = date_add(date(f.date_added), interval - dayofweek(f.date_added) DAY)
         and f.date_added >= '#{@tstart}'
         and f.date_added < '#{@tend}'
       group by timeblock
       order by timeblock
-      ; 
+      ;
     }
-    sql
   end
 
-  def get_headers(results)
-    ['Week', 'Bytes']
+  def get_headers(_results)
+    %w[Week Bytes]
   end
 
   # do not use the "bytes" type for import into excel
-  def get_types(results)
+  def get_types(_results)
     ['', 'bytes']
   end
-  
+
   def bytes_unit
-    "1000000000000"
+    '1000000000000'
   end
-  
+
   def is_line_chart
     true
   end
@@ -80,16 +85,16 @@ class IngestBytesByWeekQuery < AdminQuery
   end
 
   def last_year_end
-    (Time.now - Time.now.yday * spd).strftime('%Y-%m-%d')
+    (Time.now - (Time.now.yday * spd)).strftime('%Y-%m-%d')
   end
 
   def this_year_start
-    ((Time.now - Time.now.yday * spd) + spd).strftime('%Y-%m-%d')
+    ((Time.now - (Time.now.yday * spd)) + spd).strftime('%Y-%m-%d')
   end
 
   def last_year_start
     t = Time.parse(last_year_end)
-    ((t - t.yday * spd) + spd).strftime('%Y-%m-%d')
+    ((t - (t.yday * spd)) + spd).strftime('%Y-%m-%d')
   end
 
   def show_grand_total
@@ -99,20 +104,20 @@ class IngestBytesByWeekQuery < AdminQuery
   def get_alternative_queries
     [
       {
-        label: "Last 52 weeks", 
-        url: "path=ingest_bytes_by_week&weeks=52",
+        label: 'Last 52 weeks',
+        url: 'path=ingest_bytes_by_week&weeks=52',
         class: 'graph'
       },
       {
-        label: "Year to date", 
+        label: 'Year to date',
         url: "path=ingest_bytes_by_week&start=#{this_year_start}",
         class: 'graph'
       },
       {
-        label: "Last Year", 
+        label: 'Last Year',
         url: "path=ingest_bytes_by_week&start=#{last_year_start}&end=#{this_year_start}",
         class: 'graph'
-      },
+      }
     ]
   end
 end

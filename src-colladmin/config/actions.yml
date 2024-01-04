@@ -262,6 +262,8 @@ ldap/user:
   - ldapuidlist
   documentation: |
     Ldap: Query
+  test_params:
+    uid: merritt_test
 ldap/roles:
   link-title: List Merritt LDAP Roles
   breadcrumb: bp_users
@@ -337,6 +339,8 @@ ldap/collark:
   - ldapcollark
   documentation: |
     Ldap: Query
+  test_params:
+    ark: ark:/13030/m5rn35s8
 instances:
   link-title: List and Describe Merritt EC2 Servers
   breadcrumb: bp_internals

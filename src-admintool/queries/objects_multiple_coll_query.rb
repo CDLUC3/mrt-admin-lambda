@@ -1,10 +1,13 @@
+# frozen_string_literal: true
+
+# Query class - see config/reports.yml for description
 class ObjectsMultipleCollQuery < ObjectsQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams, 'modified')
   end
 
   def get_title
-    "Objects linked to multiple collections"
+    'Objects linked to multiple collections'
   end
 
   def get_where
@@ -12,11 +15,11 @@ class ObjectsMultipleCollQuery < ObjectsQuery
       where o.id in (
         select
           inv_object_id
-        from 
+        from
           inv.inv_collections_inv_objects
         group by
           inv_object_id
-        having 
+        having
           count(*) > 1
       )
       and
@@ -24,14 +27,13 @@ class ObjectsMultipleCollQuery < ObjectsQuery
     }
   end
 
-  def evaluate_status(types, data)
-    if data.length > 0
-      @report_status = :WARN
-    end
+  def evaluate_status(_types, data)
+    return unless data.length.positive?
+
+    @report_status = :WARN
   end
 
   def page_size
     get_limit
   end
-
 end

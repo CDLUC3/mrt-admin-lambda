@@ -1,10 +1,9 @@
-class DoiConflictQuery < AdminQuery
-  def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
-  end
+# frozen_string_literal: true
 
+# Query class - see config/reports.yml for description
+class DoiConflictQuery < AdminQuery
   def get_title
-    "DOI Ark Conflict Query"
+    'DOI Ark Conflict Query'
   end
 
   def get_sql
@@ -25,24 +24,23 @@ class DoiConflictQuery < AdminQuery
         doi
       having
         c > 1
-      and 
+      and
         min(inv_owner_id) = max(inv_owner_id)
       order by
         min(created)
-      ; 
+      ;
     }
   end
 
-  def get_headers(results)
+  def get_headers(_results)
     ['DOI', 'Num Arks', 'Min Ark', 'First Update', 'Max Ark', 'Last Update', 'Status']
   end
 
-  def get_types(results)
+  def get_types(_results)
     ['', '', 'ark', 'datetime', 'ark', 'datetime', 'status']
   end
-  
+
   def init_status
     :PASS
   end
-
 end

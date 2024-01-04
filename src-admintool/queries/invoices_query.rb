@@ -1,7 +1,11 @@
+# frozen_string_literal: true
+
+# Query class - see config/reports.yml for description
 class InvoicesQuery < AdminQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
-    # Fiscal year to report on.  Starting with FY2019, there are significant changes to the rate and adjustments for charge backs.
+    # Fiscal year to report on.  Starting with FY2019,
+    # there are significant changes to the rate and adjustments for charge backs.
     @fy = get_param('fy', DateTime.now.next_day(-182).year).to_i
     @fy = 2019 if @fy < 2019
 
@@ -9,7 +13,7 @@ class InvoicesQuery < AdminQuery
     @dstart = "#{@fy}-07-01"
 
     # FY end date
-    @dend = "#{@fy+1}-07-01"
+    @dend = "#{@fy + 1}-07-01"
 
     # As of allows you to test the pro-rating logic by using only a portion of data for a FY
     @as_of = get_param('as_of', @dend)
@@ -69,7 +73,7 @@ class InvoicesQuery < AdminQuery
   end
 
   def get_sql
-    libown = %{
+    libown = %(
       'UCSF Library',
       'UCI Library',
       'UCSC Library',
@@ -80,7 +84,7 @@ class InvoicesQuery < AdminQuery
       'UCM Library',
       'UCSD Library',
       'UCD Library'
-    }
+    )
 
     sqlfrag = %{
       /*
@@ -178,7 +182,7 @@ class InvoicesQuery < AdminQuery
         ) as daily_average_projected      /* Projected average for the FY */
       from
         owner_collections c
-      where 
+      where
         ogroup like ?
       and
         collection_name not like '% Dash'
@@ -232,8 +236,8 @@ class InvoicesQuery < AdminQuery
         (
           select
             case
-              when ogroup = 'CDL' then 0 
-              when ogroup = 'Other' then sum(daily_average_projected) * rate * 365 
+              when ogroup = 'CDL' then 0
+              when ogroup = 'Other' then sum(daily_average_projected) * rate * 365
               when sum(daily_average_projected) < 10000000000000 then 0
               else (sum(daily_average_projected) - 10000000000000) * rate * 365
             end
@@ -268,7 +272,7 @@ class InvoicesQuery < AdminQuery
         (
           select
             case
-              when ogroup = 'CDL' then 0 
+              when ogroup = 'CDL' then 0
               when ogroup = 'Other' then sum(daily_average_projected) * rate * 365
               when own_name in (#{libown}) and sum(daily_average_projected) < 10000000000000 then 0
               when own_name in (#{libown}) then (sum(daily_average_projected) - 10000000000000) * rate * 365
@@ -289,64 +293,73 @@ class InvoicesQuery < AdminQuery
     }
   end
 
-  def get_headers(results)
+  def get_headers(_results)
     [
       '',
       'Group -- Campus.  This is an grouping applied to Merritt Owner objects within the billing script',
       'Owner -- Merritt Owner Object.  37 currently exist.',
       'Collection -- Merritt Collection Name',
 
-      "FY Start -- Billable bytes on the first day of the FY",
-      "FY YTD -- Billable bytes on the most recent reported day from the FY - applies when report is run mid year",
-      "FY End -- Billable bytes on the last day of the FY",
+      'FY Start -- Billable bytes on the first day of the FY',
+      'FY YTD -- Billable bytes on the most recent reported day from the FY - applies when report is run mid year',
+      'FY End -- Billable bytes on the last day of the FY',
 
       'Diff -- Bytes added since the start of the FY',
       'Days -- Days within the FY for which billable bytes were found for a collection',
-      'Days Projected -- Number of days to the end of the FY.  The FY YTD amount will be presumed until the end of the FY',
+      %w[
+        Days Projected -- Number of days to the end of the FY.
+        The FY YTD amount will be presumed until the end of the FY
+      ].join(' '),
       'Avg -- Average bytes found for the days in which content was found',
 
-      'Daily Avg (Projected) (over whole year) -- Average bytes projected to the end of the year AND prorated for collections that were begun over the course of the FY',
-      "Cost -- $150/TB.",
-      "Adjusted Cost -- 10TB of complimentary storage are available to each campus library (remainder will apply to the campus)"
+      %w[
+        Daily Avg (Projected) (over whole year) -- Average bytes projected to the end of the year
+        AND prorated for collections that were begun over the course of the FY
+      ].join(' '),
+      'Cost -- $150/TB.',
+      %w[
+        Adjusted Cost -- 10TB of complimentary storage are available to each campus library
+        (remainder will apply to the campus)
+      ].join(' ')
     ]
   end
 
-  def get_types(results)
+  def get_types(_results)
     [
       'na',
       '', 'name', 'name',
 
-      'bytes', #fy start
-      @fypast ? 'na' : 'bytes', #ytd
-      @fypast ? 'bytes' : 'na', #fy end
+      'bytes', # fy start
+      @fypast ? 'na' : 'bytes', # ytd
+      @fypast ? 'bytes' : 'na', # fy end
 
-      'bytes', #difference
-      'dataint', #days
-      @fypast ? 'na' : 'dataint', #days projected
-      'bytes', #average - particularly useful for partial year collections
+      'bytes', # difference
+      'dataint', # days
+      @fypast ? 'na' : 'dataint', # days projected
+      'bytes', # average - particularly useful for partial year collections
 
-      'bytes', #projected average
-      'money', #adj cost
-      'money' #adj cost
+      'bytes', # projected average
+      'money', # adj cost
+      'money' # adj cost
     ]
   end
 
   def bytes_unit
-    "1000000000000"
+    '1000000000000'
   end
 
   def campus_params(campus)
     params = @myparams.clone
-    params["campus"] = campus
+    params['campus'] = campus
     params
   end
 
   def get_alternative_queries
     queries = []
-    campuses = @campus.empty? ? ['UCB', 'UCD', 'UCI', 'UCLA', 'UCM', 'UCR', 'UCSB', 'UCSC', 'UCSD', 'UCSF'] : ['']
+    campuses = @campus.empty? ? %w[UCB UCD UCI UCLA UCM UCR UCSB UCSC UCSD UCSF] : ['']
     campuses.each do |campus|
       queries.append({
-        label: campus.empty? ? "All Campuses" : campus, 
+        label: campus.empty? ? 'All Campuses' : campus,
         url: params_to_str(campus_params(campus)),
         class: 'campus'
       })

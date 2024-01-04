@@ -1,10 +1,13 @@
+# frozen_string_literal: true
+
+# Query class - see config/reports.yml for description
 class BigIngestQuery < AdminQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
     @days = get_param('days', '14').to_i
-    @days = 365 if (@days > 365)
+    @days = 365 if @days > 365
     @items = get_param('items', '200').to_i
-    @items = 50 if (@items < 50)
+    @items = 50 if @items < 50
   end
 
   def get_title
@@ -13,24 +16,24 @@ class BigIngestQuery < AdminQuery
 
   def get_sql
     %{
-      select 
-        profile, 
-        batch_id, 
-        date(submitted), 
-        count(*) 
-      from 
-        inv.inv_ingests 
-      where 
+      select
+        profile,
+        batch_id,
+        date(submitted),
+        count(*)
+      from
+        inv.inv_ingests
+      where
         batch_id != 'JOB_ONLY'
-      and 
+      and
         submitted >= date_add(now(), Interval - ? day)
-      group by 
-        profile, 
-        batch_id, 
-        date(submitted) 
-      having 
+      group by
+        profile,
+        batch_id,
+        date(submitted)
+      having
         count(*) > ?
-      order by 
+      order by
         date(submitted) desc;
     }
   end
@@ -39,12 +42,11 @@ class BigIngestQuery < AdminQuery
     [@days, @items]
   end
 
-  def get_headers(results)
+  def get_headers(_results)
     ['Ingest Profile', 'Batch Id', 'Submitted', 'Object Count']
   end
 
-  def get_types(results)
+  def get_types(_results)
     ['', 'batch', '', 'dataint']
   end
-
 end

@@ -1,7 +1,10 @@
+# frozen_string_literal: true
+
 require 'cgi'
 require 'aws-sdk-s3'
 require 'time'
 
+# Base class for Admin Tool Queries and Collection Admin Tasks
 class AdminTask
   def initialize(config, path, myparams)
     @config = config
@@ -22,25 +25,30 @@ class AdminTask
   end
 
   def get_title
-    "Merritt Admin Task"
+    'Merritt Admin Task'
   end
 
-  def is_number? string
-    true if Float(string) rescue false
+  def is_number?(string)
+    true if Float(string)
+  rescue StandardError
+    false
   end
-  
-  def is_int? string
-    true if Integer(string) rescue false
+
+  def is_int?(string)
+    true if Integer(string)
+  rescue StandardError
+    false
   end
 
   def bytes_unit
-    "1"
+    '1'
   end
 
   def is_saveable?
     return false if @s3bucket.nil?
     return false if @s3bucket.empty?
-    report_status != "SKIP" 
+
+    report_status != 'SKIP'
   end
 
   def report_name
@@ -55,46 +63,54 @@ class AdminTask
     stat_col = -1
     types.each_with_index do |s, i|
       next unless s == 'status'
+
       stat_col = i
       break
     end
     return if @report_status == :SKIP
     return if @report_status == :FAIL
     return if data.nil?
+
     data.each do |row|
       next if row.nil?
+
       status = evaluate_row_status(row, stat_col)
       next if status == :PASS
       next if status == :INFO && @report_status == :WARN
+
       @report_status = status
-      return if @report_status == :FAIL
+      break if @report_status == :FAIL
     end
   end
 
   def evaluate_row_status(row, stat_col)
     return :PASS if stat_col == -1
+
     v = row[stat_col]
-    return :FAIL if v == "FAIL"
-    return :WARN if v == "WARN"
-    return :INFO if v == "INFO"
+    return :FAIL if v == 'FAIL'
+    return :WARN if v == 'WARN'
+    return :INFO if v == 'INFO'
+
     :PASS
   end
 
   def report_status
-    return "FAIL" if @report_status == :FAIL
-    return "WARN" if @report_status == :WARN
-    return "PASS" if @report_status == :PASS
-    return "SKIP" if @report_status == :SKIP
-    return "INFO" if @report_status == :INFO
-    "SKIP"
+    return 'FAIL' if @report_status == :FAIL
+    return 'WARN' if @report_status == :WARN
+    return 'PASS' if @report_status == :PASS
+    return 'SKIP' if @report_status == :SKIP
+    return 'INFO' if @report_status == :INFO
+
+    'SKIP'
   end
 
   def self.status_sort_val(val)
-    return 0 if val == "FAIL"
-    return 1 if val == "WARN"
-    return 2 if val == "INFO"
-    return 3 if val == "PASS"
-    return 4 if val == "SKIP"
+    return 0 if val == 'FAIL'
+    return 1 if val == 'WARN'
+    return 2 if val == 'INFO'
+    return 3 if val == 'PASS'
+
+    4 if val == 'SKIP'
   end
 
   def report_date
@@ -109,8 +125,9 @@ class AdminTask
     "#{@s3consistency}#{report_date}/#{report_name}."
   end
 
-  def save_report(path, report)
+  def save_report(_path, report)
     return unless is_saveable?
+
     # Look for any prior reports for the day
     resp = @s3_client.list_objects_v2({
       bucket: @s3bucket,
@@ -120,8 +137,9 @@ class AdminTask
     # consistency-reports is intentionally hard coded into the delete
     resp.contents.each do |s3obj|
       k = s3obj.key
-      next unless k =~ %r[consistency-reports.*(SKIP|PASS|INFO|WARN|FAIL)$]
-      r = @s3_client.delete_object({
+      next unless k =~ /consistency-reports.*(SKIP|PASS|INFO|WARN|FAIL)$/
+
+      @s3_client.delete_object({
         bucket: @s3bucket,
         key: k
       })
@@ -144,22 +162,24 @@ class AdminTask
 
   def paginate_data(fulldata)
     @known_total = fulldata.length
-    return fulldata if page_size == 0 || fulldata.length <= page_size
+    return fulldata if page_size.zero? || fulldata.length <= page_size
+
     ss = @page * page_size
-    send = page_size 
+    send = page_size
     res = fulldata.slice(ss, send)
     res = [] if res.nil?
     res
   end
 
   def pagination
-    return nil unless page_size > 0
+    return nil unless page_size.positive?
+
     res = {
       current_page: @page,
       page_size: page_size
     }
-    res[:prior_page] = @page - 1 if @page > 0
-    if !@known_total.nil?
+    res[:prior_page] = @page - 1 if @page.positive?
+    unless @known_total.nil?
       res[:known_total] = @known_total
       res[:next_page] = @page + 1 if @known_total >= page_size
     end
@@ -191,18 +211,18 @@ class AdminTask
     }
   end
 
-  def no_data 
+  def no_data
     return_data(
       [[
-        "No data",
-        "WARN"
+        'No data',
+        'WARN'
       ]],
-      ['','status'],
-      ['Message','Status']
+      ['', 'status'],
+      %w[Message Status]
     )
   end
 
-  def message_as_table(msg) 
+  def message_as_table(msg)
     return_data(
       [[
         msg
@@ -212,31 +232,32 @@ class AdminTask
     )
   end
 
-  def report_list(path, contents) 
+  def report_list(_path, contents)
     data = []
     contents.each do |c|
       m = c.key.match(/\.(SKIP|PASS|INFO|WARN|FAIL)$/)
-      stat = m.nil? ? "SKIP" : m[1]
+      stat = m.nil? ? 'SKIP' : m[1]
       data.append([c.key, stat])
     end
 
     return_data(
-      data, 
-      ['report', 'status'],
-      ['Report', 'Status']
+      data,
+      %w[report status],
+      %w[Report Status]
     )
   end
 
   def get_report(path)
     return no_data unless path =~ /^#{@s3consistency}/
+
     resp = @s3_client.list_objects_v2({
       bucket: @s3bucket,
       prefix: path
     })
 
-    return no_data if resp.contents.length == 0
+    return no_data if resp.contents.empty?
     return report_list(path, resp.contents) if resp.contents.length > 1
-    return report_list(path, resp.contents) if (resp.contents[0].key != path) 
+    return report_list(path, resp.contents) if resp.contents[0].key != path
 
     resp = @s3_client.get_object({
       bucket: @s3bucket,
@@ -247,29 +268,27 @@ class AdminTask
   end
 
   def get_data_report(path)
-    begin
-      resp = @s3_client.get_object({
-        bucket: @s3bucket,
-        key: path
-      })
-      result = resp.body
-    rescue
-      ""
-    end
+    resp = @s3_client.get_object({
+      bucket: @s3bucket,
+      key: path
+    })
+    resp.body
+  rescue StandardError
+    ''
   end
 
-  def data_table_to_json(types, data, headers) 
+  def data_table_to_json(types, data, headers)
     results = []
     data.each do |r|
       row = {}
       headers.each_with_index do |c, i|
-        if types[i] != 'na'
-          row[c]=r[i]
-          if is_int?(row[c])
-            row[c] = Integer(row[c])
-          elsif is_number?(row[c])
-            row[c] = Float(row[c])
-          end
+        next unless types[i] != 'na'
+
+        row[c] = r[i]
+        if is_int?(row[c])
+          row[c] = Integer(row[c])
+        elsif is_number?(row[c])
+          row[c] = Float(row[c])
         end
       end
       results.push(row)
@@ -295,7 +314,7 @@ class AdminTask
   end
 
   def show_grand_total
-    get_filter_col != nil || get_group_col != nil
+    !get_filter_col.nil? || !get_group_col.nil?
   end
 
   def is_line_chart
@@ -312,6 +331,7 @@ class AdminTask
 
   def get_label_col
     return get_group_col if get_group_col
+
     0
   end
 
@@ -327,7 +347,7 @@ class AdminTask
     m
   end
 
-  def get_line_chart(data, types, headers)
+  def get_line_chart(data, _types, _headers)
     m = get_chart_map(data)
 
     {
@@ -336,15 +356,14 @@ class AdminTask
         labels: m.keys,
         datasets: [{
           label: get_title,
-          data: m.values,
+          data: m.values
         }]
       },
       options: {}
-    };
-
+    }
   end
 
-  def get_pie_chart(data, types, headers)
+  def get_pie_chart(data, _types, _headers)
     m = get_chart_map(data)
 
     {
@@ -358,26 +377,25 @@ class AdminTask
         }]
       },
       options: {}
-    };
-
+    }
   end
 
   def chart_colors
-    ['red','yellow','blue','orange','green','purple','brown','pink','gray','gold', 'cyan', 'magenta', 'silver', 'lavender','teal']
+    %w[red yellow blue orange green purple brown pink gray gold cyan magenta silver
+       lavender teal]
   end
 
   def get_chart(data, types, headers)
     return get_line_chart(data, types, headers) if is_line_chart
     return get_pie_chart(data, types, headers) if is_pie_chart
+
     nil
   end
 
   def get_title_with_pagination
     title = get_title
     pag = pagination
-    unless pag.nil?
-      title = "#{title} (Page #{@page})"
-    end
+    title = "#{title} (Page #{@page})" unless pag.nil?
     title
   end
 
@@ -389,7 +407,7 @@ class AdminTask
         params = @myparams.clone
         params['page'] = pag[:prior_page]
         qarr.append({
-          label: "Prev: Page #{@page-1}",
+          label: "Prev: Page #{@page - 1}",
           url: params_to_str(params)
         })
       end
@@ -397,7 +415,7 @@ class AdminTask
         params = @myparams.clone
         params['page'] = pag[:next_page]
         qarr.append({
-          label: "Next: Page #{@page+1}",
+          label: "Next: Page #{@page + 1}",
           url: params_to_str(params)
         })
       end
@@ -408,18 +426,18 @@ class AdminTask
 
   def get_this_query
     {
-      label: "This Query",
+      label: 'This Query',
       url: params_to_str(@myparams.clone),
-      class: "rerun"
+      class: 'rerun'
     }
   end
 
   def get_alternative_queries
-    #[{label: '', url: ''}]
+    # [{label: '', url: ''}]
     []
   end
 
-  def verify_interval_unit(unit) 
+  def verify_interval_unit(unit)
     return unit if unit == 'DAY'
     return unit if unit == 'HOUR'
     return unit if unit == 'MINUTE'
@@ -427,16 +445,17 @@ class AdminTask
     return unit if unit == 'WEEK'
     return unit if unit == 'MONTH'
     return unit if unit == 'YEAR'
+
     'DAY'
   end
 
   def params_to_str(params)
-    pstr = ""
-    params.each do |k,v|
-      pstr = "#{pstr}&" unless pstr.empty? 
+    pstr = ''
+    params.each do |k, v|
+      pstr = "#{pstr}&" unless pstr.empty?
       v = CGI.unescape(v) if v.instance_of?(String)
       pstr = "#{pstr}#{k}=#{v}"
-    end 
+    end
     pstr
   end
 
@@ -445,19 +464,20 @@ class AdminTask
   end
 
   def get_report_url(key)
-    s3_client = Aws::S3::Client.new(region: 'us-west-2')
+    Aws::S3::Client.new(region: 'us-west-2')
     s3bucket = @config['s3-bucket']
     signer = Aws::S3::Presigner.new
-    url, headers = signer.presigned_request(
-      :get_object, 
-      bucket: s3bucket, 
+    url, = signer.presigned_request(
+      :get_object,
+      bucket: s3bucket,
       key: key
     )
     url
   end
 
   def num_format(n)
-    return "" if n.nil?
+    return '' if n.nil?
+
     n.to_s.chars.to_a.reverse.each_slice(3).map(&:join).join(',').reverse
   end
 

@@ -1,8 +1,11 @@
+# frozen_string_literal: true
+
 require_relative 'forward_to_ingest_action'
 
+# Collection Admin Task class - see config/actions.yml for description
 class IngestBatchFoldersAction < ForwardToIngestAction
   def initialize(config, action, path, myparams)
-    @days = myparams.fetch("days", "7").to_i 
+    @days = myparams.fetch('days', '7').to_i
     @days = 60 if @days > 60
     super(config, action, path, myparams, "admin/bids/#{@days}")
   end
@@ -30,24 +33,24 @@ class IngestBatchFoldersAction < ForwardToIngestAction
     bflist.to_table
   end
 
-  def hasTable
+  def has_table
     true
   end
 
   def get_alternative_queries
     [
       {
-        label: 'Batch Folders Last 7 days', 
+        label: 'Batch Folders Last 7 days',
         url: "#{LambdaBase.colladmin_url}?path=batchFolders&days=7",
         class: 'batches'
       },
       {
-        label: 'Batch Folders Last 14 days', 
+        label: 'Batch Folders Last 14 days',
         url: "#{LambdaBase.colladmin_url}?path=batchFolders&days=14",
         class: 'batches'
       },
       {
-        label: 'Batch Folders Last 21 days', 
+        label: 'Batch Folders Last 21 days',
         url: "#{LambdaBase.colladmin_url}?path=batchFolders&days=21",
         class: 'batches'
       }
@@ -57,19 +60,19 @@ class IngestBatchFoldersAction < ForwardToIngestAction
   def page_size
     500
   end
-
 end
 
+# folder on an ingest folder
 class BatchFolder < MerrittJson
   def initialize(bid, dtime)
     super()
-    @bid = bid;
+    @bid = bid
     @dtime = dtime
-    @qbid = ""
+    @qbid = ''
     @qsubmitter = ''
-    @dbobj = ""
-    @dbprofile = ""
-    @dbuser = ""
+    @dbobj = ''
+    @dbprofile = ''
+    @dbuser = ''
   end
 
   def table_row
@@ -87,7 +90,7 @@ class BatchFolder < MerrittJson
 
   def self.table_headers
     [
-      'Batch', 
+      'Batch',
       'Date',
       'Queue Jobs',
       'Queue Submitter',
@@ -100,7 +103,7 @@ class BatchFolder < MerrittJson
 
   def self.table_types
     [
-      'qbatch', 
+      'qbatch',
       '',
       'qbatchnote',
       '',
@@ -110,157 +113,135 @@ class BatchFolder < MerrittJson
       'status'
     ]
   end
-  
+
   def status
     return 'PASS' unless @dbobj.empty?
-    return 'FAIL' if DateTime.parse(@dtime) < DateTime.now.next_day(-1) 
-    return 'WARN' if DateTime.parse(@dtime).to_time < (Time.now - 3600) 
-    return 'PASS'
+    return 'FAIL' if DateTime.parse(@dtime) < DateTime.now.next_day(-1)
+    return 'WARN' if DateTime.parse(@dtime).to_time < (Time.now - 3600)
+
+    'PASS'
   end
 
-  def dtime
-    @dtime
-  end
+  attr_reader :dtime, :bid
 
-  def bid
-    @bid
-  end
-
-  def setQueueItem(batch)
+  def set_queue_item(batch)
     @qbid = "#{batch.bid}; #{batch.num_jobs}"
     @qsubmitter = batch.submitter
   end
 
-  def setRecentItem(recentbatch)
+  def set_recent_item(recentbatch)
     @dbobj = recentbatch.dbobj
     @dbprofile = recentbatch.dbprofile
     @dbuser = recentbatch.dbuser
   end
 end
 
+# list of ingest batch folders
 class BatchFolderList < MerrittJson
   def initialize(body)
     super()
-    @batchFolders = []
-    @batchFolderHash = {}
+    @batch_folders = []
+    @batch_folder_hash = {}
     data = JSON.parse(body)
-    data = fetchHashVal(data, 'fil:batchFileState')
-    data = fetchHashVal(data, 'fil:jobFile')
-    list = fetchArrayVal(data, 'fil:batchFile')
+    data = fetch_hash_val(data, 'fil:batchFileState')
+    data = fetch_hash_val(data, 'fil:jobFile')
+    list = fetch_array_val(data, 'fil:batchFile')
     list.each do |obj|
       bf = BatchFolder.new(
         obj.fetch('fil:file', ''),
         obj.fetch('fil:fileDate', '')
       )
-      @batchFolders.append(
+      @batch_folders.append(
         bf
       )
-      @batchFolderHash[bf.bid] = bf
+      @batch_folder_hash[bf.bid] = bf
     end
   end
 
   def empty?
-    @batchFolders.length == 0
+    @batch_folders.empty?
   end
 
   def to_table
     table = []
-    @batchFolders.sort {
-      # sort on status, then reverse sort on date
-      |a,b| a.status == b.status ? b.dtime <=> a.dtime : AdminTask.status_sort_val(a.status) <=> AdminTask.status_sort_val(b.status)
-    }.each do |bf|
+    bfs = @batch_folders.sort do |a, b|
+      if a.status == b.status
+        b.dtime <=> a.dtime
+      else
+        AdminTask.status_sort_val(a.status) <=> AdminTask.status_sort_val(b.status)
+      end
+    end
+    bfs.each do |bf|
       table.append(bf.table_row)
     end
     table
   end
 
   def apply_queue_list(queue_list)
-    return if @batchFolderHash.empty?
+    return if @batch_folder_hash.empty?
+
     queue_list.batches.each do |bid, qbatch|
-      if @batchFolderHash.key?(bid)
-        @batchFolderHash[bid].setQueueItem(qbatch)
-      end
+      @batch_folder_hash[bid].set_queue_item(qbatch) if @batch_folder_hash.key?(bid)
     end
   end
 
   def apply_recent_ingests(recentitems)
-    return if @batchFolderHash.empty?
+    return if @batch_folder_hash.empty?
+
     recentitems.batches.each do |bid, recentbatch|
-      if @batchFolderHash.key?(bid)
-        @batchFolderHash[bid].setRecentItem(recentbatch)
-      end
+      @batch_folder_hash[bid].set_recent_item(recentbatch) if @batch_folder_hash.key?(bid)
     end
   end
 end
 
-class RecentIngest < QueryObject
+# recent ingest job
+class RecentIngest
   def initialize(row)
-      @bid = row[0]
-      @profile = row[1]
-      @submitted = row[2]
-      @dbuser = row[3]
-      @object_cnt = row[4]
+    @bid = row[0]
+    @profile = row[1]
+    @submitted = row[2]
+    @dbuser = row[3]
+    @object_cnt = row[4]
   end
 
-  def bid
-      @bid
-  end
-
-  def profile
-      @profile
-  end
-  
-  def submitted
-      @submitted
-  end
-
-  def object_cnt
-      @object_cnt
-  end
+  attr_reader :bid, :profile, :submitted, :object_cnt, :dbuser
 
   def dbobj
-      "#{@bid}; #{@object_cnt}"
+    "#{@bid}; #{@object_cnt}"
   end
 
   def dbprofile
     @profile
   end
-
-  def dbuser
-    @dbuser
-  end
 end
 
-
+# recent ingest jobs
 class RecentIngests < MerrittQuery
   def initialize(config, days = 14)
-      super(config)
-      @batches = {}
-      run_query(
-          %{
-              select 
-                  batch_id, 
-                  max(profile), 
-                  max(submitted), 
+    super(config)
+    @batches = {}
+    run_query(
+      %{
+              select
+                  batch_id,
+                  max(profile),
+                  max(submitted),
                   max(user_agent),
-                  count(*) 
-              from 
-                  inv_ingests 
-              where 
+                  count(*)
+              from
+                  inv_ingests
+              where
                   submitted > date_add(date(now()), INTERVAL -? DAY)
-              group by 
+              group by
                   batch_id
               ;
           },
-          [days + 7]
-      ).each do |r|
-          ri = RecentIngest.new(r)
-          @batches[ri.bid] = ri
-      end
+      [days + 7]
+    ).each do |r|
+      ri = RecentIngest.new(r)
+      @batches[ri.bid] = ri
+    end
   end
 
-  def batches
-      @batches
-  end
+  attr_reader :batches
 end
-

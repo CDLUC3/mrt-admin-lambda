@@ -1,8 +1,11 @@
+# frozen_string_literal: true
+
+# Query class - see config/reports.yml for description
 class FilesByNameCollQuery < FilesQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
     @file = CGI.unescape(get_param('file', ''))
-    @file = (@file == '') ? '' : "producer/#{@file}"
+    @file = @file == '' ? '' : "producer/#{@file}"
     @mnemonic = get_param('mnemonic', '')
   end
 

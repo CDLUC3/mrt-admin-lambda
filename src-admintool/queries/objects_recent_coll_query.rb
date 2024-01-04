@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Query class - see config/reports.yml for description
 class ObjectsRecentCollQuery < ObjectsQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams, 'modified')
@@ -16,14 +19,13 @@ class ObjectsRecentCollQuery < ObjectsQuery
     %{
       where exists (
         select 1
-        from 
+        from
           inv.inv_collections_inv_objects icio
         where
           o.id = icio.inv_object_id
-        and 
+        and
           icio.inv_collection_id = ?
       )
     }
   end
-
 end

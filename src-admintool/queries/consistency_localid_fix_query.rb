@@ -1,18 +1,25 @@
-class ConsistencyLocalIdFixQuery < AdminQuery
-  def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
-  end
+# frozen_string_literal: true
 
+# Query class - see config/reports.yml for description
+class ConsistencyLocalIdFixQuery < AdminQuery
   def get_title
-    "Fix Objects missing localid"
+    'Fix Objects missing localid'
   end
 
   def get_sql
     %{
-      select 
+      select
         c.mnemonic,
         o.modified,
-        concat('insert into inv_localids(inv_object_ark, inv_owner_ark, local_id)\nselect ''', o.ark, ''',''', own.ark, ''',''', substr(erc_where, length(o.ark)+4), ''';') as fixsql
+        concat(
+          'insert into inv_localids(inv_object_ark, inv_owner_ark, local_id)\nselect ''',
+          o.ark,
+          ''',''',
+          own.ark,
+          ''',''',
+          substr(erc_where, length(o.ark)+4),
+          ''';'
+        ) as fixsql
       from inv.inv_objects o
       inner join inv.inv_collections_inv_objects icio
         on o.id = icio.inv_object_id
@@ -24,28 +31,27 @@ class ConsistencyLocalIdFixQuery < AdminQuery
         not exists (select 1 from inv.inv_localids loc where o.ark = loc.inv_object_ark)
         and
           o.erc_where != concat(o.ark, ' ; (:unas)')
-      order by 
+      order by
         c.mnemonic,
         o.modified desc
       ;
     }
   end
 
-  def get_headers(results)
+  def get_headers(_results)
     ['Mnemonic', 'Modified', 'SQL to Fix']
   end
 
-  def get_types(results)
+  def get_types(_results)
     ['', 'datetime', 'sql']
   end
-  
+
   def get_alternative_queries
     [
       {
-        label: "Object List - Local Id Needed", 
-        url: "path=object_localid_needed&limit=500"
+        label: 'Object List - Local Id Needed',
+        url: 'path=object_localid_needed&limit=500'
       }
     ]
   end
-
 end

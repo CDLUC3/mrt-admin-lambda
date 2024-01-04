@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'httpclient'
 require 'cgi'
 require_relative 'action'
@@ -6,10 +8,11 @@ require_relative '../lib/profile'
 require_relative '../lib/admin_objects'
 require_relative '../lib/merritt_query'
 
+# Collection Admin Task class - see config/actions.yml for description
 class IngestProfileAction < ForwardToIngestAction
   def initialize(config, action, path, myparams)
     @profile = CGI.unescape(myparams.fetch('profile', ''))
-    endpoint = 'admin/profiles-full' 
+    endpoint = 'admin/profiles-full'
     endpoint = "admin/profile/#{CGI.escape(@profile)}" if specific_profile?
     @collections = Collections.new(config)
     super(config, action, path, myparams, endpoint)
@@ -20,7 +23,7 @@ class IngestProfileAction < ForwardToIngestAction
   end
 
   def get_title
-    specific_profile? ? "Show Profile #{@profile}" : "List Ingest Profiles"
+    specific_profile? ? "Show Profile #{@profile}" : 'List Ingest Profiles'
   end
 
   def table_headers
@@ -41,11 +44,13 @@ class IngestProfileAction < ForwardToIngestAction
 
   def get_template(profile)
     return profile if profile.is_template?
+
     begin
-      qjson = HttpGetJson.new(get_ingest_server, "admin/profile/#{MerrittJson.TEMPLATE_KEY}")
+      qjson = HttpGetJson.new(get_ingest_server, "admin/profile/#{MerrittJson.template_key}")
       return nil unless qjson.status == 200
+
       SingleIngestProfileWrapper.new(qjson.body).profile
-    rescue => e
+    rescue StandardError => e
       log(e.message)
       log(e.backtrace)
     end
@@ -62,22 +67,21 @@ class IngestProfileAction < ForwardToIngestAction
   end
 
   def get_profile_list
-    begin
-      ProfileList.new(get_body, @collections)
-    rescue => e
-      log(e.message)
-      log(e.backtrace)
-      nil
-    end
+    ProfileList.new(get_body, @collections)
+  rescue StandardError => e
+    log(e.message)
+    log(e.backtrace)
+    nil
   end
 
   def notification_map
     profile_list = get_profile_list
     return [] if profile_list.nil?
+
     profile_list.notification_map
   end
 
-  def hasTable
+  def has_table
     true
   end
 end

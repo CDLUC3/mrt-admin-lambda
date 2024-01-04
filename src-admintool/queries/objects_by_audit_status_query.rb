@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Query class - see config/reports.yml for description
 class ObjectsAuditStatusQuery < ObjectsQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams, 'modified')
@@ -16,14 +19,13 @@ class ObjectsAuditStatusQuery < ObjectsQuery
   def get_where
     %{
       where o.id in (
-        select 
+        select
           a.inv_object_id
-        from 
-          inv.inv_audits a 
-        where 
+        from
+          inv.inv_audits a
+        where
           a.status = ?
       )
     }
   end
-
 end

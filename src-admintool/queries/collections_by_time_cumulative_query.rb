@@ -1,35 +1,39 @@
+# frozen_string_literal: true
+
 require 'date'
+
+# Query class - see config/reports.yml for description
 class CollectionsByTimeCumulativeQuery < AdminQuery
   def initialize(query_factory, path, myparams, col, source)
     super(query_factory, path, myparams)
     @col = verify_files_col(col)
-    @colclass = (@col == 'billable_size') ? 'bytes' : 'dataint'
+    @colclass = @col == 'billable_size' ? 'bytes' : 'dataint'
     @source = source
     @ranges = []
 
     @end = Date.today.next_year.next_year.prev_month(Date.today.month - 1) - Date.today.mday + 1
-    @start=Date.new(2012,07,01)
-    rstart = Date.new(2012,07,01)
-    while rstart < @end do
+    @start = Date.new(2012, 0o7, 0o1)
+    rstart = Date.new(2012, 0o7, 0o1)
+    while rstart < @end
       @ranges.push([@start, rstart.next_year])
       rstart = rstart.next_year
     end
 
     @headers = ['Group', 'Collection Id', 'Collection Name']
-    @types = ['ogroup', 'colllist', 'name']
+    @types = %w[ogroup colllist name]
     @ranges.each do |range|
       @headers.push(range[1])
       @types.push(@colclass)
     end
     @headers.push('Actual Total')
     @types.push(@colclass)
-end
+  end
 
-  def get_headers(results)
+  def get_headers(_results)
     @headers
   end
 
-  def get_types(results)
+  def get_types(_results)
     @types
   end
 
@@ -47,7 +51,7 @@ end
 
   def get_sql
     %{
-      select 
+      select
         oc.ogroup as ogroup,
         oc.inv_collection_id as ocid,
         oc.collection_name as ocname,
@@ -65,9 +69,11 @@ end
           and
             date_added < ?
           #{
-            (@source == 'producer') ? 
-              " and source='producer'" : 
-              ""
+            if @source == 'producer'
+              " and source='producer'"
+            else
+              ''
+            end
           }
         ) + (
           select
@@ -81,9 +87,11 @@ end
           and
             date_added >= date_add(now(), interval - 730 day)
             #{
-              (@source == 'producer') ? 
-                " and source='producer'" : 
-                ""
+              if @source == 'producer'
+                " and source='producer'"
+              else
+                ''
+              end
             }
            )
         as sumval
@@ -102,7 +110,7 @@ end
 
   def get_query_params(pstart, pend)
     x = (pend - Date.today).to_i
-    x = 0 if (x < 0)
+    x = 0 if x.negative?
     [
       pstart, pend, x
     ]
@@ -128,7 +136,6 @@ end
   end
 
   def bytes_unit
-    "1000000000000"
+    '1000000000000'
   end
-
 end

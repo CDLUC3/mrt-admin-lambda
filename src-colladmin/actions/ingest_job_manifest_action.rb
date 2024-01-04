@@ -1,6 +1,9 @@
+# frozen_string_literal: true
+
 require_relative 'action'
 require_relative 'forward_to_ingest_action'
 
+# Collection Admin Task class - see config/actions.yml for description
 class IngestJobManifestAction < ForwardToIngestAction
   def initialize(config, action, path, myparams)
     @batch = myparams.fetch('batch', '')
@@ -24,27 +27,27 @@ class IngestJobManifestAction < ForwardToIngestAction
     JobManifest.new(body).to_table
   end
 
-  def hasTable
+  def has_table
     true
   end
 
   def get_alternative_queries
     [
       {
-        label: 'Job Metadata', 
+        label: 'Job Metadata',
         url: "#{LambdaBase.colladmin_url}?path=job&batch=#{@batch}&job=#{@job}",
         class: 'jobmeta'
       },
       {
-        label: 'Job Files', 
+        label: 'Job Files',
         url: "#{LambdaBase.colladmin_url}?path=files&batch=#{@batch}&job=#{@job}",
         class: 'jobmeta'
-      },
+      }
     ]
   end
-
 end
 
+# ingest manifest entry
 class JobManifestEntry < MerrittJson
   @@placeholder = nil
   def self.placeholder
@@ -54,39 +57,39 @@ class JobManifestEntry < MerrittJson
 
   def initialize(json)
     super()
-    addProperty(
-      :fileSize, 
-      MerrittJsonProperty.new("File Size").lookupValue(json, "ingmans", "fileSize")
+    add_property(
+      :fileSize,
+      MerrittJsonProperty.new('File Size').lookup_value(json, 'ingmans', 'fileSize')
     )
-    addProperty(
-      :mimeType, 
-      MerrittJsonProperty.new("Mime Type").lookupValue(json, "ingmans", "mimeType")
+    add_property(
+      :mimeType,
+      MerrittJsonProperty.new('Mime Type').lookup_value(json, 'ingmans', 'mimeType')
     )
-    addProperty(
-      :fileName, 
-      MerrittJsonProperty.new("File Name").lookupValue(json, "ingmans", "fileName")
+    add_property(
+      :fileName,
+      MerrittJsonProperty.new('File Name').lookup_value(json, 'ingmans', 'fileName')
     )
-    addProperty(
-      :hashValue, 
-      MerrittJsonProperty.new("Hash Value").lookupValue(json, "ingmans", "hashValue")
+    add_property(
+      :hashValue,
+      MerrittJsonProperty.new('Hash Value').lookup_value(json, 'ingmans', 'hashValue')
     )
-    addProperty(
-      :hashAlgorithm, 
-      MerrittJsonProperty.new("Hash Algorithm").lookupValue(json, "ingmans", "hashAlgorithm")
+    add_property(
+      :hashAlgorithm,
+      MerrittJsonProperty.new('Hash Algorithm').lookup_value(json, 'ingmans', 'hashAlgorithm')
     )
   end
 
   def self.table_headers
     arr = []
-    JobManifestEntry.placeholder.getPropertyList.each do |sym|
-      arr.append(JobManifestEntry.placeholder.getLabel(sym))
+    JobManifestEntry.placeholder.get_property_list.each do |sym|
+      arr.append(JobManifestEntry.placeholder.get_label(sym))
     end
     arr
   end
 
   def self.table_types
     arr = []
-    JobManifestEntry.placeholder.getPropertyList.each do |sym|
+    JobManifestEntry.placeholder.get_property_list.each do |sym|
       type = ''
       type = 'bytes' if sym == :fileSize
       arr.append(type)
@@ -96,23 +99,23 @@ class JobManifestEntry < MerrittJson
 
   def to_table_row
     arr = []
-    JobManifestEntry.placeholder.getPropertyList.each do |sym|
-      v = getValue(sym)
+    JobManifestEntry.placeholder.get_property_list.each do |sym|
+      v = get_value(sym)
       arr.append(v)
     end
     arr
   end
 end
 
-
+# ingest manifest
 class JobManifest < MerrittJson
   def initialize(body)
     super()
     @entries = []
     data = JSON.parse(body)
-    data = fetchHashVal(data, 'ingmans:manifestsState')
-    data = fetchHashVal(data, 'ingmans:manifests')
-    list = fetchArrayVal(data, 'ingmans:manifestEntryState')
+    data = fetch_hash_val(data, 'ingmans:manifestsState')
+    data = fetch_hash_val(data, 'ingmans:manifests')
+    list = fetch_array_val(data, 'ingmans:manifestEntryState')
     list.each do |obj|
       @entries.append(JobManifestEntry.new(obj))
     end
@@ -121,10 +124,10 @@ class JobManifest < MerrittJson
   def to_table
     table = []
     @entries.each_with_index do |jme, i|
-      break if (i >= 5000) 
+      break if i >= 5000
+
       table.append(jme.to_table_row)
     end
     table
   end
 end
-

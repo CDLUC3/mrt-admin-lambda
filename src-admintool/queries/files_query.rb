@@ -1,14 +1,13 @@
-class FilesQuery < AdminQuery
-  def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
-  end
+# frozen_string_literal: true
 
+# Query class - see config/reports.yml for description
+class FilesQuery < AdminQuery
   def get_title
-    "File Query"
+    'File Query'
   end
 
   def get_where
-    ""
+    ''
   end
 
   def get_sql
@@ -45,17 +44,17 @@ class FilesQuery < AdminQuery
       inner join inv.inv_files f
         on f.inv_object_id = o.id
     } + get_where +
-    %{
-      order by o.id asc
-      limit #{get_limit.to_i} offset #{get_offset.to_i};
-    }
+      %(
+        order by o.id asc
+        limit #{get_limit.to_i} offset #{get_offset.to_i};
+      )
   end
 
-  def get_headers(results)
-    ['Object Id','Ark', 'Title', 'Version', 'Coll Id', 'Collection', 'File Count', 'Billable Size']
+  def get_headers(_results)
+    ['Object Id', 'Ark', 'Title', 'Version', 'Coll Id', 'Collection', 'File Count', 'Billable Size']
   end
 
-  def get_types(results)
+  def get_types(_results)
     ['objlist', 'ark', '', '', 'colllist', 'list', 'dataint', 'bytes']
   end
 

@@ -1,16 +1,15 @@
-class ObjectsVersionClobberQuery < ObjectsQuery
-  def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
-  end
+# frozen_string_literal: true
 
+# Query class - see config/reports.yml for description
+class ObjectsVersionClobberQuery < ObjectsQuery
   def get_title
-    "Objects with Version Clobber"
+    'Objects with Version Clobber'
   end
 
   def get_where
     %{
       where o.id in (
-        select 
+        select
           distinct inv_object_id
         from (
           #{sqlfrag_version_clobber}
@@ -18,5 +17,4 @@ class ObjectsVersionClobberQuery < ObjectsQuery
       )
     }
   end
-
 end

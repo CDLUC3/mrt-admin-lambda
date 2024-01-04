@@ -1,12 +1,15 @@
-source "https://rubygems.org"
+# frozen_string_literal: true
+
+source 'https://rubygems.org'
 
 gem 'json'
 gem 'mysql2'
 # carefully check that the right version of this gem is installed in the mysql-ruby-lambda image
 gem 'uc3-ssm', '0.3.10', git: 'https://github.com/CDLUC3/uc3-ssm.git', branch: 'main'
-# gem 'aws-sdk-s3'  
-gem 'rubyzip'
+# gem 'aws-sdk-s3'
 gem 'httpclient'
-gem 'net-ldap'
-gem 'mustache'
 gem 'jwt'
+gem 'mustache'
+gem 'net-ldap'
+gem 'rubocop'
+gem 'rubyzip'

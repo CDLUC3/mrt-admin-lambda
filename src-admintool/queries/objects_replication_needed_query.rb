@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Query class - see config/reports.yml for description
 class ReplicationNeededQuery < ObjectsQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
@@ -11,7 +14,7 @@ class ReplicationNeededQuery < ObjectsQuery
       limit #{get_limit.to_i} offset #{get_offset.to_i};
     }
     stmt = @client.prepare(subsql)
-    results = stmt.execute()
+    results = stmt.execute
     @ids = [-1]
     @qs = ['?']
     results.each do |r|
@@ -40,20 +43,20 @@ class ReplicationNeededQuery < ObjectsQuery
   def get_alternative_queries
     [
       {
-        label: "Objects - Replication Required", 
-        url: "path=replication_needed&days=0&limit=500",
+        label: 'Objects - Replication Required',
+        url: 'path=replication_needed&days=0&limit=500',
         class: 'objects'
       },
       {
-        label: "Objects - Replication Required, older than 1 day", 
-        url: "path=replication_needed&days=1&limit=500",
+        label: 'Objects - Replication Required, older than 1 day',
+        url: 'path=replication_needed&days=1&limit=500',
         class: 'objects'
       },
       {
-        label: "Objects - Replication Required, older than 2 days", 
-        url: "path=replication_needed&days=2&limit=500",
+        label: 'Objects - Replication Required, older than 2 days',
+        url: 'path=replication_needed&days=2&limit=500',
         class: 'objects'
-      },
+      }
     ]
   end
 
@@ -62,6 +65,6 @@ class ReplicationNeededQuery < ObjectsQuery
   end
 
   def get_obj_limit_query
-    ""
+    ''
   end
 end

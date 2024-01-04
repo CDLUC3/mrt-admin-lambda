@@ -1,10 +1,9 @@
-class ReplicProcessedQuery < AdminQuery
-  def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
-  end
+# frozen_string_literal: true
 
+# Query class - see config/reports.yml for description
+class ReplicProcessedQuery < AdminQuery
   def get_title
-    "Replic Object Processed"
+    'Replic Object Processed'
   end
 
   def get_iterative_sql
@@ -106,16 +105,15 @@ class ReplicProcessedQuery < AdminQuery
     }
   end
 
-  def get_headers(results)
+  def get_headers(_results)
     ['Time Frame', 'Objects Processed', 'Bytes Replicated', 'Bytes/day']
   end
 
-  def get_types(results)
+  def get_types(_results)
     ['', 'dataint', 'bytes', 'bytes']
   end
 
   def bytes_unit
-    "1000000000"
+    '1000000000'
   end
-
 end

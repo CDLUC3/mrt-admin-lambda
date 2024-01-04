@@ -1,15 +1,14 @@
-class ReplicationFailedQuery < AdminQuery
-  def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
-  end
+# frozen_string_literal: true
 
+# Query class - see config/reports.yml for description
+class ReplicationFailedQuery < AdminQuery
   def get_title
-    "Replication Failed"
+    'Replication Failed'
   end
 
   def get_sql
     %{
-      select 
+      select
         case
           when o.ark = '...' then '...'
           else 'Default'
@@ -22,11 +21,11 @@ class ReplicationFailedQuery < AdminQuery
         ifnull(inio.replic_size,0) as bytes,
         inio.completion_status,
         (
-          select 
+          select
             group_concat(n.number)
           from
             inv.inv_nodes n
-          inner join 
+          inner join
             inv.inv_nodes_inv_objects i2
           on
             i2.inv_node_id = n.id
@@ -39,17 +38,17 @@ class ReplicationFailedQuery < AdminQuery
         ) as nodes,
         case
           when o.ark = '...' then 'INFO'
-          else 'FAIL' 
-        end as status      
-      from 
-        inv.inv_nodes_inv_objects inio 
-      inner join 
+          else 'FAIL'
+        end as status
+      from
+        inv.inv_nodes_inv_objects inio
+      inner join
         inv.inv_objects o
       on
         o.id = inio.inv_object_id
-      where 
-        inio.replicated is not null 
-      and 
+      where
+        inio.replicated is not null
+      and
         inio.replicated < '1971-01-01'
       and
         inio.role = 'primary'
@@ -70,23 +69,19 @@ class ReplicationFailedQuery < AdminQuery
   end
 
   def bytes_unit
-    "1000000000"
+    '1000000000'
   end
 
   def init_status
     :PASS
   end
 
-  def get_headers(results)
-    ['Category', 'Object Id', 'Ark', 'Version', 'Obj Created', 'Replic Start', 'Bytes', 'Rep Status', 'Fail Nodes', 'Status']
+  def get_headers(_results)
+    ['Category', 'Object Id', 'Ark', 'Version', 'Obj Created', 'Replic Start', 'Bytes', 'Rep Status', 'Fail Nodes',
+     'Status']
   end
 
-  def get_types(results)
+  def get_types(_results)
     ['name', 'objlist', 'ark', '', 'datetime', 'datetime', 'bytes', '', '', 'status']
   end
-
-  def bytes_unit
-    "1000000000"
-  end
-
 end

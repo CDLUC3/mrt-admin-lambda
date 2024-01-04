@@ -1,10 +1,9 @@
-class ObjectsRecentQuery < AdminQuery
-  def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
-  end
+# frozen_string_literal: true
 
+# Query class - see config/reports.yml for description
+class ObjectsRecentQuery < AdminQuery
   def get_title
-    "Most Recent Update by Collection"
+    'Most Recent Update by Collection'
   end
 
   def get_sql
@@ -30,12 +29,11 @@ class ObjectsRecentQuery < AdminQuery
     }
   end
 
-  def get_headers(results)
+  def get_headers(_results)
     ['Collection Id', 'Name', 'Last Ingest']
   end
 
-  def get_types(results)
-    ['coll-date', 'name', 'datetime']
+  def get_types(_results)
+    %w[coll-date name datetime]
   end
-
 end

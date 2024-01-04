@@ -1,9 +1,12 @@
+# frozen_string_literal: true
+
 require 'date'
 require_relative 'forward_to_ingest_action'
 
+# Collection Admin Task class - see config/actions.yml for description
 class IngestSwordJobsAction < ForwardToIngestAction
   def initialize(config, action, path, myparams)
-    @days = myparams.fetch("days", "3").to_i 
+    @days = myparams.fetch('days', '3').to_i
     @days = 21 if @days > 21
     super(config, action, path, myparams, "admin/bid/JOB_ONLY/#{@days}")
   end
@@ -27,29 +30,29 @@ class IngestSwordJobsAction < ForwardToIngestAction
     jlist.to_table
   end
 
-  def hasTable
+  def has_table
     true
   end
 
   def get_alternative_queries
     [
       {
-        label: 'Sword Jobs Last 3 days', 
+        label: 'Sword Jobs Last 3 days',
         url: "#{LambdaBase.colladmin_url}?path=sword&days=3",
         class: 'jobs'
       },
       {
-        label: 'Sword Jobs Last 7 days', 
+        label: 'Sword Jobs Last 7 days',
         url: "#{LambdaBase.colladmin_url}?path=sword&days=7",
         class: 'jobs'
       },
       {
-        label: 'Sword Jobs Last 14 days', 
+        label: 'Sword Jobs Last 14 days',
         url: "#{LambdaBase.colladmin_url}?path=sword&days=14",
         class: 'jobs'
       },
       {
-        label: 'Sword Jobs Last 21 days', 
+        label: 'Sword Jobs Last 21 days',
         url: "#{LambdaBase.colladmin_url}?path=sword&days=21",
         class: 'jobs'
       }
@@ -59,16 +62,16 @@ class IngestSwordJobsAction < ForwardToIngestAction
   def page_size
     1000
   end
-
 end
 
+# merritt ingest job
 class Job < MerrittJson
   def initialize(jid, dtime)
     super()
     @jid = jid.strip
     @dtime = dtime
-    @dbobj = ""
-    @dbprofile = ""
+    @dbobj = ''
+    @dbprofile = ''
   end
 
   def table_row
@@ -84,7 +87,7 @@ class Job < MerrittJson
 
   def self.table_headers
     [
-      'Job', 
+      'Job',
       'Date',
       'DB Obj Cnt',
       'DB Profile',
@@ -104,33 +107,28 @@ class Job < MerrittJson
     ]
   end
 
-  def dtime
-    @dtime
-  end
+  attr_reader :dtime, :jid
 
-  def to_date 
+  def to_date
     Date.parse(@dtime)
   end
 
-  def jid
-    @jid
-  end
-
-  def setRecentItem(recentjob)
+  def set_recent_item(recentjob)
     @dbobj = recentjob.dbobj
     @dbprofile = recentjob.profile
   end
 end
 
+# list of merritt ingest jobs
 class JobList < MerrittJson
   def initialize(body, days)
     super()
     @jobs = []
-    @jobHash = {}
+    @job_hash = {}
     data = JSON.parse(body)
-    data = fetchHashVal(data, 'fil:batchFileState')
-    data = fetchHashVal(data, 'fil:jobFile')
-    list = fetchArrayVal(data, 'fil:batchFile')
+    data = fetch_hash_val(data, 'fil:batchFileState')
+    data = fetch_hash_val(data, 'fil:jobFile')
+    list = fetch_array_val(data, 'fil:batchFile')
     list.each do |obj|
       j = Job.new(
         obj.fetch('fil:file', ''),
@@ -139,100 +137,79 @@ class JobList < MerrittJson
       # puts j.to_date
       # puts Date.today - days
       next if j.to_date < (Date.today - days)
+
       @jobs.append(j)
-      @jobHash[j.jid] = j
+      @job_hash[j.jid] = j
     end
   end
 
   def to_table
     table = []
-    @jobs.sort {
-      # reverse sort on date
-      |a,b| b.dtime <=> a.dtime
-    }.each do |job|
+    js = @jobs.sort do |a, b|
+      b.dtime <=> a.dtime
+    end
+    js.each do |job|
       table.append(job.table_row)
     end
     table
   end
 
-  def jobs
-    @jobs
-  end
+  attr_reader :jobs
 
   def apply_recent_ingests(recentitems)
     recentitems.jobs.each do |jid, recentjob|
-      if @jobHash.key?(jid)
-        @jobHash[jid].setRecentItem(recentjob)
-      end
+      @job_hash[jid].set_recent_item(recentjob) if @job_hash.key?(jid)
     end
   end
 end
 
-class RecentSwordIngest < QueryObject
+# reperesents a recent sword ingest job - obsolete class
+class RecentSwordIngest
   def initialize(row)
-      @bid = row[0].strip
-      @jid = row[1].strip
-      @profile = row[2].strip
-      @submitted = row[3]
-      @object_cnt = row[4]
+    @bid = row[0].strip
+    @jid = row[1].strip
+    @profile = row[2].strip
+    @submitted = row[3]
+    @object_cnt = row[4]
   end
 
-  def bid
-      @bid
-  end
-
-  def jid
-      @jid
-  end
-
-  def profile
-      @profile
-  end
-  
-  def submitted
-      @submitted
-  end
-
-  def object_cnt
-      @object_cnt
-  end
+  attr_reader :bid, :jid, :profile, :submitted, :object_cnt
 
   def dbobj
-      "#{@bid}/#{@jid}; #{@object_cnt}"
+    "#{@bid}/#{@jid}; #{@object_cnt}"
   end
 end
 
+# list of resent sword ingests - obsolete class
 class RecentSwordIngests < MerrittQuery
   def initialize(config, days = 14)
-      super(config)
-      @jobs = {}
-      run_query(
-          %{
-              select 
+    super(config)
+    @jobs = {}
+    run_query(
+      %{
+              select
                   batch_id,
-                  job_id, 
-                  max(profile), 
-                  max(submitted), 
-                  count(*) 
-              from 
-                  inv_ingests 
-              where 
+                  job_id,
+                  max(profile),
+                  max(submitted),
+                  count(*)
+              from
+                  inv_ingests
+              where
                   submitted >= date_add(date(now()), INTERVAL -? DAY)
               and
                   batch_id = 'JOB_ONLY'
-              group by 
+              group by
                   batch_id,
                   job_id
               ;
           },
-          [days]
-      ).each do |r|
-          ri = RecentSwordIngest.new(r)
-          @jobs[ri.jid] = ri
-      end
+      [days]
+    ).each do |r|
+      ri = RecentSwordIngest.new(r)
+      @jobs[ri.jid] = ri
+    end
   end
 
-  def jobs
-      @jobs
-  end
+  attr_reader :jobs
 end

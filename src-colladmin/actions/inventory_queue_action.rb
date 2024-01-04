@@ -1,13 +1,16 @@
+# frozen_string_literal: true
+
 require_relative 'forward_to_ingest_action'
 require_relative '../lib/inv_queue'
 
+# Collection Admin Task class - see config/actions.yml for description
 class InventoryQueueAction < ForwardToIngestAction
   def initialize(config, action, path, myparams)
     super(config, action, path, myparams, 'admin/queues-inv')
   end
 
   def get_title
-    "List Inventory Queues"
+    'List Inventory Queues'
   end
 
   def table_headers
@@ -19,11 +22,11 @@ class InventoryQueueAction < ForwardToIngestAction
   end
 
   def table_rows(body)
-    queueList = InvQueueList.new(get_ingest_server, body)
-    queueList.to_table
+    queue_list = InvQueueList.new(get_ingest_server, body)
+    queue_list.to_table
   end
 
-  def hasTable
+  def has_table
     true
   end
 
@@ -36,19 +39,19 @@ class InventoryQueueAction < ForwardToIngestAction
   end
 
   def get_alternative_queries
-    arr = [
+    [
       {
-        label: 'Requeue All', 
-        url: "",
+        label: 'Requeue All',
+        url: '',
         class: 'action requeue-all'
       },
       {
-        label: 'Delete All', 
-        url: "",
+        label: 'Delete All',
+        url: '',
         class: 'action deleteq-all'
       },
       {
-        label: 'Cleanup Queue', 
+        label: 'Cleanup Queue',
         url: "#{LambdaBase.colladmin_url}?path=cleanup-queue&queue=queues-inv&reload_path=inv-queues",
         class: 'action'
       }

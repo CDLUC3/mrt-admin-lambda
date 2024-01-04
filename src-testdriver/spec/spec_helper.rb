@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'colorize'
 require 'uc3-ssm'
 
@@ -7,7 +9,7 @@ RSpec.configure do |config|
   config.formatter = :documentation
 end
 
-
+# Glogal Test Configuration
 class GlobalConfig
   @@config = {}
   @@admin_reports = {}
@@ -31,16 +33,16 @@ class GlobalConfig
     Base64.strict_encode64({
       # Only custom, client, and env are passed: https://github.com/aws/aws-sdk-js/issues/1388
       custom: {
-          context_code: @@config.fetch("context", "")
+        context_code: @@config.fetch('context', '')
       }
     }.to_json)
   end
- 
+
   def self.report_keys
     keys = []
-    @@admin_reports.keys.each do |k|
+    @@admin_reports.each_key do |k|
       rpt = @@admin_reports[k]
-      iterative = rpt.fetch("iterative", false)
+      iterative = rpt.fetch('iterative', false)
       keys.append(k) unless iterative
     end
     keys
@@ -52,11 +54,12 @@ class GlobalConfig
 
   def self.action_keys
     keys = []
-    @@colladmin_actions.keys.each do |k|
+    @@colladmin_actions.each_key do |k|
       act = @@colladmin_actions[k]
       next unless act.fetch('implemented', true)
+
       testing = act.fetch('testing', '')
-      keys.append(k) if testing == 'automated' 
+      keys.append(k) if testing == 'automated'
     end
     keys
   end
@@ -64,7 +67,6 @@ class GlobalConfig
   def self.action_def(k)
     @@colladmin_actions[k]
   end
-
 end
 
 GlobalConfig.load_config

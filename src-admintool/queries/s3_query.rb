@@ -1,10 +1,13 @@
+# frozen_string_literal: true
+
 require 'tempfile'
 
+# Query class - see config/reports.yml for description
 class S3AdminQuery < AdminQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
     @csvlen = 0
-    @message = ""
+    @message = ''
     @report = 'merritt-reports/temp.csv'
   end
 
@@ -26,18 +29,18 @@ class S3AdminQuery < AdminQuery
   end
 
   def create_result_csv(results, tf)
-    types = get_types([[]])
+    get_types([[]])
     headers = get_headers([[]])
     headers.each_with_index do |h, i|
-      tf.write(',') unless i == 0
+      tf.write(',') unless i.zero?
       tf.write("\"#{h}\"")
     end
     tf.write("\n")
     results.each do |r|
       @csvlen += 1
       # puts @csvlen if @csvlen % 100000 == 0
-      r.values.each_with_index do |c,i|
-        tf.write(",") unless i == 0
+      r.values.each_with_index do |c, i|
+        tf.write(',') unless i.zero?
         tf.write("\"#{c}\"")
       end
       tf.write("\n")
@@ -47,7 +50,7 @@ class S3AdminQuery < AdminQuery
   def get_alternative_queries
     [
       {
-        label: "Download Report", 
+        label: 'Download Report',
         url: get_report_url(@report),
         class: 'download'
       }

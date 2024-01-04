@@ -1,30 +1,32 @@
+# frozen_string_literal: true
+
 require_relative 'action'
 require 'aws-sdk-lambda'
 
+# Collection Admin Task class - see config/actions.yml for description
 class CognitoAction < AdminAction
-
   def initialize(config, action, path, myparams)
     super(config, action, path, myparams)
     region = ENV['AWS_REGION'] || 'us-west-2'
     @lambda = Aws::Lambda::Client.new(
-      region: region, 
+      region: region,
       http_read_timeout: 10
     )
-    @arn = @config.fetch("cognito-users-arn", "NA")
-    @groups = @config.fetch("cognito-groups-to-manage", "")
-    @headers = [
-      "Username",
-      "email"
+    @arn = @config.fetch('cognito-users-arn', 'NA')
+    @groups = @config.fetch('cognito-groups-to-manage', '')
+    @headers = %w[
+      Username
+      email
     ]
     @types = [
-      "",
-      ""
+      '',
+      ''
     ]
-    @groups.split(",").each do |g|
+    @groups.split(',').each do |g|
       @headers.push(g)
-      @types.push("cognito")
+      @types.push('cognito')
     end
-    @title = "Cognito Users"
+    @title = 'Cognito Users'
   end
 
   def get_title
@@ -62,28 +64,28 @@ class CognitoAction < AdminAction
   end
 
   def get_table_rows
-    return [] if @arn == "NA"
+    return [] if @arn == 'NA'
 
-    if @path == "cognito-add-user-to-group"
+    if @path == 'cognito-add-user-to-group'
       resp = @lambda.invoke({
-        function_name: @arn, 
+        function_name: @arn,
         payload: {
-          userpool: @config.fetch("user-pool", "NA"),
-          path: "add-user-to-group",
-          group: CGI.unescape(@myparams.fetch("group", "")),
-          user: CGI.unescape(@myparams.fetch("user", ""))
-        }.to_json 
+          userpool: @config.fetch('user-pool', 'NA'),
+          path: 'add-user-to-group',
+          group: CGI.unescape(@myparams.fetch('group', '')),
+          user: CGI.unescape(@myparams.fetch('user', ''))
+        }.to_json
       })
       throw resp.function_error if resp.status_code != 200
-    elsif @path == "cognito-remove-user-from-group"
+    elsif @path == 'cognito-remove-user-from-group'
       resp = @lambda.invoke({
-        function_name: @arn, 
+        function_name: @arn,
         payload: {
-          userpool: @config.fetch("user-pool", "NA"),
-          path: "remove-user-from-group",
-          group: CGI.unescape(@myparams.fetch("group", "")),
-          user: CGI.unescape(@myparams.fetch("user", ""))
-        }.to_json 
+          userpool: @config.fetch('user-pool', 'NA'),
+          path: 'remove-user-from-group',
+          group: CGI.unescape(@myparams.fetch('group', '')),
+          user: CGI.unescape(@myparams.fetch('user', ''))
+        }.to_json
       })
       throw resp.function_error if resp.status_code != 200
     end
@@ -93,28 +95,28 @@ class CognitoAction < AdminAction
 
   def return_users
     params = {
-      userpool: @config.fetch("user-pool", "NA"),
-      path: "list-users",
+      userpool: @config.fetch('user-pool', 'NA'),
+      path: 'list-users',
       groups: @groups
     }
     resp = @lambda.invoke({
-      function_name: @arn, 
-      payload: params.to_json 
+      function_name: @arn,
+      payload: params.to_json
     })
 
     throw resp.function_error if resp.status_code != 200
 
     # payload is serialized json
-    payload = JSON.parse(resp.payload.read) 
+    payload = JSON.parse(resp.payload.read)
     rows = []
-    body = payload.fetch("body", {})
-    body.each do |k, user|
-      u = user.fetch("username", "")
+    body = payload.fetch('body', {})
+    body.each_value do |user|
+      u = user.fetch('username', '')
       row = [
         u,
-        user.fetch("email", "")
+        user.fetch('email', '')
       ]
-      @groups.split(",").each do |g|
+      @groups.split(',').each do |g|
         row.push(user.fetch(g, false) ? "Y;#{u};#{g}" : "N;#{u};#{g}")
       end
       rows.append(row)
@@ -122,12 +124,11 @@ class CognitoAction < AdminAction
     rows
   end
 
-  def hasTable
+  def has_table
     true
   end
 
   def get_alternative_queries
     []
   end
-
 end

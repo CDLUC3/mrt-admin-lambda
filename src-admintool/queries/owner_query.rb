@@ -1,10 +1,9 @@
-class OwnerQuery < AdminQuery
-  def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
-  end
+# frozen_string_literal: true
 
+# Query class - see config/reports.yml for description
+class OwnerQuery < AdminQuery
   def get_title
-    "File Counts by Owner"
+    'File Counts by Owner'
   end
 
   def get_filter_col
@@ -35,12 +34,11 @@ class OwnerQuery < AdminQuery
     }
   end
 
-  def get_headers(results)
-    ['Group', 'Owner Id','Owner', 'File Count', 'Billable Size']
+  def get_headers(_results)
+    ['Group', 'Owner Id', 'Owner', 'File Count', 'Billable Size']
   end
 
-  def get_types(results)
-    ['ogroup', 'own', 'name', 'dataint', 'bytes']
+  def get_types(_results)
+    %w[ogroup own name dataint bytes]
   end
-
 end

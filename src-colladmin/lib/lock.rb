@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# information about a merritt lock
 class LockEntry < MerrittJson
   @@placeholder = nil
   def self.placeholder
@@ -7,31 +10,31 @@ class LockEntry < MerrittJson
 
   def initialize(json)
     super()
-    addProperty(
-      :date, 
-      MerrittJsonProperty.new("Lock Date").lookupTimeValue(json, "loc", "date")
+    add_property(
+      :date,
+      MerrittJsonProperty.new('Lock Date').lookup_time_value(json, 'loc', 'date')
     )
-    addProperty(
-      :job, 
-      MerrittJsonProperty.new("Job").lookupValue(json, "loc", "jobID")
+    add_property(
+      :job,
+      MerrittJsonProperty.new('Job').lookup_value(json, 'loc', 'jobID')
     )
-    addProperty(
-      :ark, 
-      MerrittJsonProperty.new("Ark").lookupValue(json, "loc", "iD")
+    add_property(
+      :ark,
+      MerrittJsonProperty.new('Ark').lookup_value(json, 'loc', 'iD')
     )
   end
 
   def self.table_headers
     arr = []
-    LockEntry.placeholder.getPropertyList.each do |sym|
-      arr.append(LockEntry.placeholder.getLabel(sym))
+    LockEntry.placeholder.get_property_list.each do |sym|
+      arr.append(LockEntry.placeholder.get_label(sym))
     end
     arr
   end
 
   def self.table_types
     arr = []
-    LockEntry.placeholder.getPropertyList.each do |sym|
+    LockEntry.placeholder.get_property_list.each do |sym|
       type = ''
       type = 'datetime' if sym == :date
       arr.append(type)
@@ -41,26 +44,27 @@ class LockEntry < MerrittJson
 
   def to_table_row
     arr = []
-    LockEntry.placeholder.getPropertyList.each do |sym|
-      v = getValue(sym)
+    LockEntry.placeholder.get_property_list.each do |sym|
+      v = get_value(sym)
       arr.append(v)
     end
     arr
   end
 
   def jid
-    getValue(:job)
+    get_value(:job)
   end
 
   def date
-    getValue(:date)
+    get_value(:date)
   end
 
   def ark
-    getValue(:ark)
+    get_value(:ark)
   end
 end
 
+# list of merritt locks
 class LockList < MerrittJson
   def initialize(ingest_server, body)
     super()
@@ -68,24 +72,20 @@ class LockList < MerrittJson
     @body = body
     @locks = []
     data = JSON.parse(@body)
-    data = fetchHashVal(data, 'loc:lockState')
-    data = fetchHashVal(data, 'loc:lockEntries')
-    fetchArrayVal(data, 'loc:lockEntryState').each do |qjson|
+    data = fetch_hash_val(data, 'loc:lockState')
+    data = fetch_hash_val(data, 'loc:lockEntries')
+    fetch_array_val(data, 'loc:lockEntryState').each do |qjson|
       @locks.append(LockEntry.new(qjson))
     end
   end
 
-  def locks
-    @locks
-  end
+  attr_reader :locks
 
   def to_table
     table = []
-    @locks.each_with_index do |q, i|
+    @locks.each_with_index do |q, _i|
       table.append(q.to_table_row)
     end
     table
   end
-
 end
-

@@ -1,10 +1,9 @@
-class CollectionNodesQuery < AdminQuery
-  def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
-  end
+# frozen_string_literal: true
 
+# Query class - see config/reports.yml for description
+class CollectionNodesQuery < AdminQuery
   def get_title
-    "Collection Storage Nodes"
+    'Collection Storage Nodes'
   end
 
   def get_sql
@@ -35,39 +34,37 @@ class CollectionNodesQuery < AdminQuery
   end
 
   def add_result_row(data, rdata, unreplicated)
-    if rdata.length > 0
-      while rdata.length < 8
-        rdata.push(nil)
-      end
-      rdata.push(unreplicated)
-      data.push(rdata)
-    end
+    return unless rdata.length.positive?
+
+    rdata.push(nil) while rdata.length < 8
+    rdata.push(unreplicated)
+    data.push(rdata)
   end
 
-  def get_result_data(results, types)
+  def get_result_data(results, _types)
     data = []
-    lastcoll = -1;
+    lastcoll = -1
     rdata = []
     unreplicated = 0
     repneeded = 0
     results.each do |r|
       cname = r.values[0]
       cid = r.values[1]
-      role = r.values[2]
+      r.values[2]
       node = r.values[3]
       obj = r.values[4]
       if cid != lastcoll
         add_result_row(data, rdata, unreplicated)
-        rdata = [ cname, cid ]
+        rdata = [cname, cid]
         repneeded = obj
         unreplicated = 0
         lastcoll = cid
       end
-      if rdata.length < 8
-        rdata.push(node)
-        rdata.push(obj)
-        unreplicated += (repneeded - obj)
-      end
+      next unless rdata.length < 8
+
+      rdata.push(node)
+      rdata.push(obj)
+      unreplicated += (repneeded - obj)
     end
 
     add_result_row(data, rdata, unreplicated)
@@ -75,7 +72,7 @@ class CollectionNodesQuery < AdminQuery
     data
   end
 
-  def get_headers(results)
+  def get_headers(_results)
     [
       'Collection',
       'Collection Id',
@@ -89,8 +86,7 @@ class CollectionNodesQuery < AdminQuery
     ]
   end
 
-  def get_types(results)
-    ['', 'colllist', '', 'dataint', '', 'dataint', '', 'dataint', '', 'dataint', 'dataint' ]
+  def get_types(_results)
+    ['', 'colllist', '', 'dataint', '', 'dataint', '', 'dataint', '', 'dataint', 'dataint']
   end
-
 end

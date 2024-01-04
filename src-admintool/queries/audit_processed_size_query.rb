@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Query class - see config/reports.yml for description
 class AuditProcessedSizeQuery < AdminQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
@@ -38,7 +41,7 @@ class AuditProcessedSizeQuery < AdminQuery
             then 'INFO'
           else 'WARN'
         end as status
-      from 
+      from
         audits_processed
       where
         audit_date > date_add(now(), INTERVAL - #{@days.to_i} DAY)
@@ -47,64 +50,64 @@ class AuditProcessedSizeQuery < AdminQuery
     }
   end
 
-  def get_headers(results)
+  def get_headers(_results)
     [
-      'Time Frame', 
-      'Files Processed', 
-      'Online Files', 
-      'Online Bytes', 
+      'Time Frame',
+      'Files Processed',
+      'Online Files',
+      'Online Bytes',
       'S3 Files',
-      'S3 Bytes', 
+      'S3 Bytes',
       'Glacier Files',
-      'Glacier Bytes', 
+      'Glacier Bytes',
       'SDSC Files',
-      'SDSC Bytes', 
+      'SDSC Bytes',
       'Wasabi Files',
-      'Wasabi Bytes', 
+      'Wasabi Bytes',
       'Other Files',
       'Other Bytes',
       'Status'
     ]
   end
 
-  def get_types(results)
+  def get_types(_results)
     [
-      '', 
-      'dataint', 
-      'dataint', 
-      'bytes', 
-      'dataint', 
-      'bytes', 
-      'dataint', 
-      'bytes', 
-      'dataint', 
-      'bytes', 
-      'dataint', 
-      'bytes', 
-      'dataint', 
+      '',
+      'dataint',
+      'dataint',
+      'bytes',
+      'dataint',
+      'bytes',
+      'dataint',
+      'bytes',
+      'dataint',
+      'bytes',
+      'dataint',
+      'bytes',
+      'dataint',
       'bytes',
       'status'
     ]
   end
 
   def bytes_unit
-    "1000000000"
+    '1000000000'
   end
 
   def get_alternative_queries
     [
       {
-        label: 'Last 30 days', 
+        label: 'Last 30 days',
         url: 'path=audit_processed_size&days=30',
         class: 'graph'
       },
       {
-        label: 'Last 60 days', 
+        label: 'Last 60 days',
         url: 'path=audit_processed_size&days=60',
         class: 'graph'
       },
       {
-        label: 'Last 90 days', 
+        label: 'Last 90 days',
         url: 'path=audit_processed_size&days=90',
         class: 'graph'
       }
@@ -114,5 +117,4 @@ class AuditProcessedSizeQuery < AdminQuery
   def init_status
     :PASS
   end
-
 end

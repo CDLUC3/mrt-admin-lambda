@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Query class - see config/reports.yml for description
 class CollectionsByOwnerQuery < AdminQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
@@ -35,12 +38,11 @@ class CollectionsByOwnerQuery < AdminQuery
     }
   end
 
-  def get_headers(results)
+  def get_headers(_results)
     ['Collection Id', 'Mnemonic', 'Collection Name', 'File Count', 'Billable Size']
   end
 
-  def get_types(results)
+  def get_types(_results)
     ['coll', 'mnemonic', '', 'dataint', 'bytes']
   end
-
 end

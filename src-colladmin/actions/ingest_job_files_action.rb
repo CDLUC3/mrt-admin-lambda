@@ -1,6 +1,9 @@
+# frozen_string_literal: true
+
 require_relative 'action'
 require_relative 'forward_to_ingest_action'
 
+# Collection Admin Task class - see config/actions.yml for description
 class IngestJobFilesAction < ForwardToIngestAction
   def initialize(config, action, path, myparams)
     @batch = myparams.fetch('batch', '')
@@ -24,34 +27,34 @@ class IngestJobFilesAction < ForwardToIngestAction
     JobFiles.new(body).to_table
   end
 
-  def hasTable
+  def has_table
     true
   end
 
   def get_alternative_queries
     [
       {
-        label: 'Job Metadata', 
+        label: 'Job Metadata',
         url: "#{LambdaBase.colladmin_url}?path=job&batch=#{@batch}&job=#{@job}",
         class: 'jobmeta'
       },
       {
-        label: 'Job Manifest', 
+        label: 'Job Manifest',
         url: "#{LambdaBase.colladmin_url}?path=manifest&batch=#{@batch}&job=#{@job}",
         class: 'jobmeta'
-      },
+      }
     ]
   end
-
 end
 
+# representation of a file in an ingest folder
 class JobFile < MerrittJson
   def initialize(obj)
     super()
-    @dtime = obj.fetch("fil:fileDate", "")
-    @path = obj.fetch("fil:file", "")
+    @dtime = obj.fetch('fil:fileDate', '')
+    @path = obj.fetch('fil:file', '')
   end
-  
+
   def table_row
     [
       @dtime,
@@ -60,9 +63,9 @@ class JobFile < MerrittJson
   end
 
   def self.table_headers
-    [
-      'Date',
-      'Path'
+    %w[
+      Date
+      Path
     ]
   end
 
@@ -72,34 +75,29 @@ class JobFile < MerrittJson
       ''
     ]
   end
-  
-  def dtime
-    @dtime
-  end
-  
-  def path
-    @path
-  end
-  
+
+  attr_reader :dtime, :path
 end
-  
+
+# representation of the files in an ingest folder
 class JobFiles < MerrittJson
   def initialize(body)
     super()
     @entries = []
     data = JSON.parse(body)
-    data = fetchHashVal(data, 'fil:batchFileState')
-    data = fetchHashVal(data, 'fil:jobFile')
-    list = fetchArrayVal(data, 'fil:batchFile')
+    data = fetch_hash_val(data, 'fil:batchFileState')
+    data = fetch_hash_val(data, 'fil:jobFile')
+    list = fetch_array_val(data, 'fil:batchFile')
     list.each do |obj|
       @entries.append(JobFile.new(obj))
     end
   end
-  
+
   def to_table
     table = []
     @entries.each_with_index do |jf, i|
-      break if (i >= 5000) 
+      break if i >= 5000
+
       table.append(jf.table_row)
     end
     table

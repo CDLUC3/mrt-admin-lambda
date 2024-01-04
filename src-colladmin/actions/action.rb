@@ -1,8 +1,11 @@
+# frozen_string_literal: true
+
 require_relative '../admin_task'
 require 'cgi'
 require 'zip'
 require 'mysql2'
 
+# Collection Admin Task class - see config/actions.yml for description
 class AdminAction < AdminTask
   def initialize(config, action_def, path, myparams)
     super(config, path, myparams)
@@ -10,12 +13,13 @@ class AdminAction < AdminTask
     @format = 'report'
   end
 
-  def hasTable
+  def has_table
     false
   end
 
-  def convertJsonToTable(body)
-    return body unless hasTable
+  def convert_json_to_table(body)
+    return body unless has_table
+
     data = table_rows(body)
     data = paginate_data(data)
     evaluate_status(table_types, data)
@@ -58,20 +62,19 @@ class AdminAction < AdminTask
     []
   end
 
-  def table_rows(body)
+  def table_rows(_body)
     []
   end
 
   def get_title
-    "Collection Admin Query"
+    'Collection Admin Query'
   end
 
   def get_this_query
     {
-      label: "This Query",
+      label: 'This Query',
       url: "#{LambdaBase.colladmin_url}?#{params_to_str(@myparams.clone)}",
-      class: "rerun"
+      class: 'rerun'
     }
   end
-
 end
