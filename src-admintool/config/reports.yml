@@ -447,6 +447,7 @@ replication_failed:
   description: |
     This report generates a list of objects for which replication has failed.
     For objects with specific know replication issues, a category can be assigned to an object.
+    If replication has processed for only one node at the time the report is run, the status will report as a WARN.
 replic_processed:
   link-title: Replication Processed Over Time
   breadcrumb: bp_replic
