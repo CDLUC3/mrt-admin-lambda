@@ -74,9 +74,6 @@ class Ec2Info
           m = @name.match(/(ui0[0-9])x2/)
           res[k.to_s] = "https://#{m[1]}-aws.cdlib.org/state-audit-replic.json" if m
         end
-      elsif k == 'state' && @subservice == 'sword'
-        # The following should be tested with curl
-        res["*#{k}"] = "http://foo:bar@#{@name}.cdlib.org:39001/mrtsword/servicedocument"
       elsif v =~ /^http/
         res[k] = v
       else
@@ -202,6 +199,7 @@ class TagAction < AdminAction
       resp = cli.get(url, follow_redirect: true)
     end
     ret = resp.body
+    return ret if @label == 'build-info'
     if resp.status == 200
       begin
         JSON.parse(resp.body)
