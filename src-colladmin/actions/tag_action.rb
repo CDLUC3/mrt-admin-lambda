@@ -200,6 +200,7 @@ class TagAction < AdminAction
     end
     ret = resp.body
     return ret if @label == 'build-info'
+
     if resp.status == 200
       begin
         JSON.parse(resp.body)
