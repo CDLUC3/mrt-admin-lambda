@@ -788,6 +788,13 @@ ingest_bytes_by_year:
   category: files
   description: |
     Generate a graphable list of total bytes ingested by year.
+ui_test_cases:
+  link-title: Display arks for interesting UI test cases
+  breadcrumb: bp_repo
+  class: UITestCasesQuery
+  category: objects
+  description: |
+    Generate a list of interesting test cases to preview in the Merritt UI
 
 update_billing:
   link-title: Update the Merritt Billing database (via stored procedure)
