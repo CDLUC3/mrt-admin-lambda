@@ -796,6 +796,8 @@ ui_test_cases:
   description: |
     Generate a list of interesting test cases to preview in the Merritt UI
 
+    Merritt DEV Stack must be running for the DEV ark links to work.
+
 update_billing:
   link-title: Update the Merritt Billing database (via stored procedure)
   breadcrumb: bp_internals
