@@ -9,9 +9,8 @@ class UITestCasesQuery < AdminQuery
   def get_sql
     sample = 3
     sql = ''.dup
-    list = %w[merritt_demo escholarship ucb_lib_cal_cultures ucb_lib_dcpp ucb_lib_metcalf ucb_lib_jar ucb_lib_prechmat 
-      ucb_lib_stone_rubbings]
-    #list = %w[merritt_demo escholarship ucb_lib_cal_cultures ucb_lib_dcpp ucb_lib_metcalf]
+    list = %w[merritt_demo escholarship ucb_lib_cal_cultures ucb_lib_dcpp ucb_lib_metcalf ucb_lib_jar ucb_lib_prechmat
+              ucb_lib_stone_rubbings]
     list.each do |coll|
       sql << 'union ' unless sql.empty?
       sql << %{
@@ -21,14 +20,14 @@ class UITestCasesQuery < AdminQuery
           q.ark ark,
           q.ark arkdev,
           q.erc_what
-        from 
+        from
         (
           select distinct
             f.inv_object_id,
             c.mnemonic,
             o.ark,
             o.erc_what
-          from 
+          from
             inv.inv_files f
           inner join inv.inv_objects o
             on f.inv_object_id = o.id
@@ -36,9 +35,9 @@ class UITestCasesQuery < AdminQuery
             on o.id = icio.inv_object_id
           inner join inv.inv_collections c
             on icio.inv_collection_id = c.id
-          where 
+          where
             length(mime_type) > 70 and source = 'producer'
-          and 
+          and
             c.mnemonic = '#{coll}'
           limit #{sample}
         ) as q
@@ -49,14 +48,14 @@ class UITestCasesQuery < AdminQuery
           q.ark ark,
           q.ark arkdev,
           q.erc_what
-        from 
+        from
         (
           select distinct
             f.inv_object_id,
             c.mnemonic,
             o.ark,
             o.erc_what
-          from 
+          from
             inv.inv_files f
           inner join inv.inv_objects o
             on f.inv_object_id = o.id
@@ -64,9 +63,9 @@ class UITestCasesQuery < AdminQuery
             on o.id = icio.inv_object_id
           inner join inv.inv_collections c
             on icio.inv_collection_id = c.id
-          where 
+          where
             length(SUBSTRING_INDEX(pathname,'/',-1)) > 80 and source = 'producer'
-          and 
+          and
             c.mnemonic = '#{coll}'
           limit #{sample}
         ) as q
@@ -77,14 +76,14 @@ class UITestCasesQuery < AdminQuery
           q.ark ark,
           q.ark arkdev,
           q.erc_what
-        from 
+        from
         (
           select distinct
             os.inv_object_id,
             c.mnemonic,
             o.ark,
             o.erc_what
-          from 
+          from
             billing.object_size os
           inner join inv.inv_objects o
             on os.inv_object_id = o.id
@@ -92,14 +91,16 @@ class UITestCasesQuery < AdminQuery
             on o.id = icio.inv_object_id
           inner join inv.inv_collections c
             on icio.inv_collection_id = c.id
-          where 
+          where
             file_count > 500
-          and 
+          and
             c.mnemonic = '#{coll}'
           limit #{sample}
         ) as q
       }
-      
+
+      next unless coll == 'merritt_demo'
+
       sql << %{
         union
         select
@@ -108,14 +109,14 @@ class UITestCasesQuery < AdminQuery
           q.ark ark,
           q.ark arkdev,
           q.erc_what
-        from 
+        from
         (
           select distinct
             f.inv_object_id,
             c.mnemonic,
             o.ark,
             o.erc_what
-          from 
+          from
             inv.inv_files f
           inner join inv.inv_objects o
             on f.inv_object_id = o.id
@@ -123,9 +124,9 @@ class UITestCasesQuery < AdminQuery
             on o.id = icio.inv_object_id
           inner join inv.inv_collections c
             on icio.inv_collection_id = c.id
-          where 
+          where
             pathname <> CONVERT(pathname USING ASCII) and source = 'producer'
-          and 
+          and
             c.mnemonic = '#{coll}'
           limit #{sample}
         ) as q
@@ -136,26 +137,26 @@ class UITestCasesQuery < AdminQuery
           q.ark ark,
           q.ark arkdev,
           q.erc_what
-        from 
+        from
         (
           select distinct
             o.id,
             c.mnemonic,
             o.ark,
             o.erc_what
-          from 
+          from
             inv.inv_objects o
           inner join inv.inv_collections_inv_objects icio
             on o.id = icio.inv_object_id
           inner join inv.inv_collections c
             on icio.inv_collection_id = c.id
-          where 
+          where
             erc_what <> CONVERT(erc_what USING ASCII)
-          and 
+          and
             c.mnemonic = '#{coll}'
           limit #{sample}
         ) as q
-      } if coll == 'merritt_demo'
+      }
     end
     sql
   end
