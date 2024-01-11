@@ -1,0 +1,451 @@
+# OpenSearch field registry
+#
+# source: 
+# - opensearch - default opensearch
+# - logstash - UC3 logstash adds this value
+# - ui - Ruby lograge ECS field
+# - log4j - Log4j default ECS field
+# - core - does this log directly?
+# - cloud - does this log directly?
+# - store
+# - access
+# - inventory
+# - audit
+# - replic
+# - ingest
+# normalized: normalized field name when differing field names are in use
+# deprecated: true | false
+# recommendation: recommended maintenance action
+
+"@timestamp":
+  source:
+  description:
+"@version":
+  source:
+  description:
+_id:
+  source:
+  description:
+_index:
+  source:
+  description:
+_score:
+  source:
+  description:
+_source:
+  source:
+  description:
+_type:
+  source:
+  description:
+agent.ephemeral_id:
+  source:
+  description:
+agent.id:
+  source:
+  description:
+agent.name:
+  source:
+  description:
+agent.type:
+  source:
+  description:
+agent.version:
+  source:
+  description:
+ark:
+  source:
+  description:
+ark_p1:
+  source:
+  description:
+ark_p2:
+  source:
+  description:
+cdl.environment:
+  source:
+  description:
+cdl.fqsn:
+  source:
+  description:
+cdl.program:
+  source:
+  description:
+cdl.service:
+  source:
+  description:
+cdl.subservice:
+  source:
+  description:
+ecs.version:
+  source:
+  description:
+host.name:
+  source:
+  description:
+input.type:
+  source:
+  description:
+json.@timestamp:
+  source:
+  description:
+json.@version:
+  source:
+  description:
+json.BatchID:
+  source:
+  description:
+json.Bytes:
+  source:
+  description:
+json.DurationMs:
+  source:
+  description:
+json.InvJSON.content.iaddprimeDurationMs:
+  source:
+  description:
+json.InvJSON.content.igetprimeDurationMs:
+  source:
+  description:
+json.InvJSON.content.invbldAttempts:
+  source:
+  description:
+json.InvJSON.content.invbldDurationMs:
+  source:
+  description:
+json.InvJSON.content.invbldFiles:
+  source:
+  description:
+json.InvJSON.content.invbldFilesPerVersions:
+  source:
+  description:
+json.InvJSON.content.invbldMsPerFile:
+  source:
+  description:
+json.InvJSON.content.invbldStatus:
+  source:
+  description:
+json.InvJSON.content.invbldVersions:
+  source:
+  description:
+json.InvJSON.id.ark:
+  source:
+  description:
+json.InvJSON.id.localids:
+  source:
+  description:
+json.InvJSON.id.owner:
+  source:
+  description:
+json.InvJSON.id.processNode:
+  source:
+  description:
+json.InvJSON.id.version:
+  source:
+  description:
+json.InvJSON.properties.manifestURL:
+  source:
+  description:
+json.InvJSON.serviceInfo.service:
+  source:
+  description:
+json.InvJSON.serviceInfo.serviceProcess:
+  source:
+  description:
+json.JobID:
+  source:
+  description:
+json.LocalID:
+  source:
+  description:
+json.Method:
+  source:
+  description:
+json.PrimaryID:
+  source:
+  description:
+json.ResponseBody:
+  source:
+  description:
+json.ResponseCode:
+  source:
+  description:
+json.ResponsePhrase:
+  source:
+  description:
+json.Retries:
+  source:
+  description:
+json.Status:
+  source:
+  description:
+json.StoreJSON.content.addBytes:
+  source:
+  description:
+json.StoreJSON.content.addBytesPerMs:
+  source:
+  description:
+json.StoreJSON.content.addDurationMs:
+  source:
+  description:
+json.StoreJSON.content.addFiles:
+  source:
+  description:
+json.StoreJSON.content.addFilesPerVersions:
+  source:
+  description:
+json.StoreJSON.content.addMsPerFile:
+  source:
+  description:
+json.StoreJSON.content.addVersions:
+  source:
+  description:
+json.StoreJSON.content.tokenBytes:
+  source:
+  description:
+json.StoreJSON.content.tokenBytesPerMs:
+  source:
+  description:
+json.StoreJSON.content.tokenDurationMs:
+  source:
+  description:
+json.StoreJSON.content.tokenFiles:
+  source:
+  description:
+json.StoreJSON.content.tokenFilesPerVersions:
+  source:
+  description:
+json.StoreJSON.content.tokenMsPerFile:
+  source:
+  description:
+json.StoreJSON.content.tokenVersions:
+  source:
+  description:
+json.StoreJSON.content.updateBytes:
+  source:
+  description:
+json.StoreJSON.content.updateBytesPerMs:
+  source:
+  description:
+json.StoreJSON.content.updateDurationMs:
+  source:
+  description:
+json.StoreJSON.content.updateFiles:
+  source:
+  description:
+json.StoreJSON.content.updateFilesPerVersions:
+  source:
+  description:
+json.StoreJSON.content.updateMsPerFile:
+  source:
+  description:
+json.StoreJSON.content.updateVersions:
+  source:
+  description:
+json.StoreJSON.id.ark:
+  source:
+  description:
+json.StoreJSON.id.key:
+  source:
+  description:
+json.StoreJSON.id.processNode:
+  source:
+  description:
+json.StoreJSON.id.version:
+  source:
+  description:
+json.StoreJSON.properties.archiveContent:
+  source:
+  description:
+json.StoreJSON.properties.archiveType:
+  source:
+  description:
+json.StoreJSON.serviceInfo.service:
+  source:
+  description:
+json.StoreJSON.serviceInfo.serviceProcess:
+  source:
+  description:
+json.URL:
+  source:
+  description:
+json.action:
+  source:
+  description:
+json.allocations:
+  source:
+  description:
+json.attempts:
+  source:
+  description:
+json.bytes:
+  source:
+  description:
+json.capacity:
+  source:
+  description:
+json.controller:
+  source:
+  description:
+json.cpacity:
+  source:
+  description:
+json.db:
+  source:
+  description:
+json.duration:
+  source:
+  description:
+json.ecs.version:
+  source:
+  description:
+json.error:
+  source:
+  description:
+json.event.dataset:
+  source:
+  description:
+json.format:
+  source:
+  description:
+json.location:
+  source:
+  description:
+json.log.level:
+  source:
+  description:
+json.log.logger:
+  source:
+  description:
+json.log.origin.file.line:
+  source:
+  description:
+json.log.origin.file.name:
+  source:
+  description:
+json.log.origin.function:
+  source:
+  description:
+json.manifestURL:
+  source:
+  description:
+json.maxSecondaryVersion:
+  source:
+  description:
+json.message:
+  source:
+  description:
+json.method:
+  source:
+  description:
+json.node:
+  source:
+  description:
+json.non-verified:
+  source:
+  description:
+json.objectID:
+  source:
+  description:
+json.path:
+  source:
+  description:
+json.primaryInvNode:
+  source:
+  description:
+json.process.thread.name:
+  source:
+  description:
+json.processMs:
+  source:
+  description:
+json.processStatus:
+  source:
+  description:
+json.replicJSON.content.repaddBytes:
+  source:
+  description:
+json.replicJSON.content.repaddBytesPerMs:
+  source:
+  description:
+json.replicJSON.content.repaddDurationMs:
+  source:
+  description:
+json.replicJSON.content.repaddFiles:
+  source:
+  description:
+json.replicJSON.content.repaddMsPerFile:
+  source:
+  description:
+json.replicJSON.id.ark:
+  source:
+  description:
+json.replicJSON.id.processNode:
+  source:
+  description:
+json.replicJSON.id.sourceNode:
+  source:
+  description:
+json.replicJSON.id.targetNode:
+  source:
+  description:
+json.replicJSON.id.version:
+  source:
+  description:
+json.replicJSON.serviceInfo.service:
+  source:
+  description:
+json.replicJSON.serviceInfo.serviceProcess:
+  source:
+  description:
+json.replicQualify:
+  source:
+  description:
+json.runVerifiedMs:
+  source:
+  description:
+json.secondaryInvNode:
+  source:
+  description:
+json.service.name:
+  source:
+  description:
+json.service.node.name:
+  source:
+  description:
+json.sleepTime:
+  source:
+  description:
+json.status:
+  source:
+  description:
+json.store.function:
+  source:
+  description:
+json.time:
+  source:
+  description:
+json.updates:
+  source:
+  description:
+json.verified:
+  source:
+  description:
+json.versionID:
+  source:
+  description:
+json.view:
+  source:
+  description:
+log.file.path:
+  source:
+  description:
+log.offset:
+  source:
+  description:
+merrittUiRequest:
+  source:
+  description:
+tags:
+  source:
+  description:

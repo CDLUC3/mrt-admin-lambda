@@ -371,6 +371,18 @@ ssm-describe:
     These variables are compared against a [registry of expected SSM variables](https://github.com/CDLUC3/mrt-admin-lambda/blob/main/src-colladmin/config/ssm.registry.yml).
   documentation: |
     Aws: SSM Query
+opensearch-describe:
+  link-title: List and Describe Merritt OpenSearch Fields
+  breadcrumb: bp_internals
+  class: OpenSearchDescribeAction
+  category: Dev Ops
+  sensitivity: readonly
+  testing: automated
+  description: |
+    Generate a report describing the OpenSearch fields generated from Merritt application logs.
+    These variables are compared against a [TBD registry of expected OpenSearch fields](https://github.com/CDLUC3/mrt-admin-lambda/blob/main/src-colladmin/import/filebeat/opensearch.registry.yml).
+  documentation: |
+    Aws: OpenSearch Query
 storage-get-manifest:
   link-title: Get Storage Manifest for an Object from Cloud Storage
   class: StorageAction

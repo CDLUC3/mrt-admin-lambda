@@ -330,7 +330,7 @@ class LambdaBase
   end
 
   def self.log_config(config, message)
-    puts "RequestId: #{config.fetch('request_id', $REQID)}; task: #{$TASKNAME}; #{message}"
+    puts "RequestId: #{config.fetch('request_id', $REQID)}; task: #{$TASKNAME}; #{message.to_s.gsub(/\s+/, ' ')}"
   end
 
   def self.log(message)
