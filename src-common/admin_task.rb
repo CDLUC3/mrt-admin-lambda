@@ -213,10 +213,12 @@ class AdminTask
 
   def no_data
     return_data(
-      [[
-        'No data',
-        'WARN'
-      ]],
+      [
+        [
+          'No data',
+          'WARN'
+        ]
+      ],
       ['', 'status'],
       %w[Message Status]
     )
@@ -224,9 +226,11 @@ class AdminTask
 
   def message_as_table(msg)
     return_data(
-      [[
-        msg
-      ]],
+      [
+        [
+          msg
+        ]
+      ],
       [''],
       ['Message']
     )
@@ -354,10 +358,12 @@ class AdminTask
       type: 'line',
       data: {
         labels: m.keys,
-        datasets: [{
-          label: get_title,
-          data: m.values
-        }]
+        datasets: [
+          {
+            label: get_title,
+            data: m.values
+          }
+        ]
       },
       options: {}
     }
@@ -370,19 +376,23 @@ class AdminTask
       type: 'pie',
       data: {
         labels: m.keys,
-        datasets: [{
-          label: get_title,
-          data: m.values,
-          backgroundColor: chart_colors
-        }]
+        datasets: [
+          {
+            label: get_title,
+            data: m.values,
+            backgroundColor: chart_colors
+          }
+        ]
       },
       options: {}
     }
   end
 
   def chart_colors
-    %w[red yellow blue orange green purple brown pink gray gold cyan magenta silver
-       lavender teal]
+    %w[
+      red yellow blue orange green purple brown pink gray gold cyan magenta silver
+      lavender teal
+    ]
   end
 
   def get_chart(data, types, headers)

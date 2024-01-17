@@ -277,10 +277,10 @@ class IngestProfile < MerrittJson
       end
       diff = [] unless has_diff
       rows.append([
-                    label,
-                    val.empty? ? '' : "list:#{val.join(',')}",
-                    diff.empty? ? '' : "list:#{diff.join(',')}"
-                  ])
+        label,
+        val.empty? ? '' : "list:#{val.join(',')}",
+        diff.empty? ? '' : "list:#{diff.join(',')}"
+      ])
     else
       rows.append([label, val, val == templateval ? '' : templateval])
     end

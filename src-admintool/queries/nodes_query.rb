@@ -40,8 +40,10 @@ class NodesQuery < AdminQuery
   end
 
   def get_headers(_results)
-    ['Node Number', 'Description', 'Total Obj', 'Primary Obj', 'Secondary Obj', 'File Count', 'Billable Size',
-     'Allocation', 'Status']
+    [
+      'Node Number', 'Description', 'Total Obj', 'Primary Obj', 'Secondary Obj', 'File Count', 'Billable Size',
+      'Allocation', 'Status'
+    ]
   end
 
   def get_types(_results)

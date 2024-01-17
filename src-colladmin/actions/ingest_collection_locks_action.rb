@@ -50,14 +50,14 @@ class IngestCollectionLocksAction < ForwardToIngestAction
       p = plist[prof]
       hc = @held_counts.fetch(prof, 0)
       arr.append([
-                   prof,
-                   p[:collid],
-                   p[:name],
-                   p[:locked] ? 'Locked' : '',
-                   "#{p[:locked] ? 'unlock' : 'lock'},#{prof}",
-                   hc,
-                   hc.positive? ? prof : ''
-                 ])
+        prof,
+        p[:collid],
+        p[:name],
+        p[:locked] ? 'Locked' : '',
+        "#{p[:locked] ? 'unlock' : 'lock'},#{prof}",
+        hc,
+        hc.positive? ? prof : ''
+      ])
     end
     arr
   end

@@ -9,8 +9,10 @@ class UITestCasesQuery < AdminQuery
   def get_sql
     sample = 3
     sql = ''.dup
-    list = %w[merritt_demo escholarship ucb_lib_cal_cultures ucb_lib_dcpp ucb_lib_metcalf ucb_lib_jar ucb_lib_prechmat
-              ucb_lib_stone_rubbings]
+    list = %w[
+      merritt_demo escholarship ucb_lib_cal_cultures ucb_lib_dcpp ucb_lib_metcalf ucb_lib_jar ucb_lib_prechmat
+      ucb_lib_stone_rubbings
+    ]
     list.each do |coll|
       sql << 'union ' unless sql.empty?
       sql << %{

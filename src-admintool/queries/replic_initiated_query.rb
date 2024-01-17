@@ -117,8 +117,10 @@ class ReplicationInitiatedQuery < AdminQuery
   end
 
   def get_headers(_results)
-    ['Category', 'Object Id', 'Ark', 'Version', 'Obj Created', 'Replic Start', 'Bytes', 'Sec Count', 'Ver Min',
-     'Ver Max', 'Status']
+    [
+      'Category', 'Object Id', 'Ark', 'Version', 'Obj Created', 'Replic Start', 'Bytes', 'Sec Count', 'Ver Min',
+      'Ver Max', 'Status'
+    ]
   end
 
   def get_types(_results)

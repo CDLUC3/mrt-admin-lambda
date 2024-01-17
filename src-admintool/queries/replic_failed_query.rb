@@ -124,8 +124,10 @@ class ReplicationFailedQuery < AdminQuery
   end
 
   def get_headers(_results)
-    ['Category', 'Object Id', 'Ark', 'Version', 'Obj Created', 'Replic Start', 'Bytes', 'Rep Status', 'Fail Nodes',
-     'Status']
+    [
+      'Category', 'Object Id', 'Ark', 'Version', 'Obj Created', 'Replic Start', 'Bytes', 'Rep Status', 'Fail Nodes',
+      'Status'
+    ]
   end
 
   def get_types(_results)

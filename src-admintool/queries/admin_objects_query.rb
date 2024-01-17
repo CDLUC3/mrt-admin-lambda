@@ -66,8 +66,10 @@ class AdminObjectsQuery < AdminQuery
   end
 
   def get_headers(_results)
-    ['Obj Id', 'Obj Ark', 'Coll/Own Ark', 'Owner', 'OwnerArk', 'Collections', 'Type', 'Role', 'Aggregate Role', 'Name',
-     'Created', 'Status']
+    [
+      'Obj Id', 'Obj Ark', 'Coll/Own Ark', 'Owner', 'OwnerArk', 'Collections', 'Type', 'Role', 'Aggregate Role', 'Name',
+      'Created', 'Status'
+    ]
   end
 
   def get_types(_results)

@@ -81,8 +81,10 @@ class MerrittLdap
   end
 
   def load_users
-    attr = %i[dn objectclass mail sn tzregion cn arkid givenname userpassword displayname uid
-              ds-pwp-last-login-time]
+    attr = %i[
+      dn objectclass mail sn tzregion cn arkid givenname userpassword displayname uid
+      ds-pwp-last-login-time
+    ]
     @ldap.search(base: user_base, attributes: attr) do |entry|
       user = LdapUser.new(entry)
       next if user.uid.empty?

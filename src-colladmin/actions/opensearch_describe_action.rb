@@ -10,7 +10,7 @@ class OpenSearchDescribeAction < AdminAction
     file = 'import/filebeat/fields.json'
     @title = "Merritt OpenSearch Fields (#{File.ctime(file).to_s[0..15]})"
     @fields = JSON.parse(File.read(file))
-    #load_registry
+    # load_registry
   end
 
   def load_registry
@@ -65,6 +65,7 @@ class OpenSearchDescribeAction < AdminAction
     @fields.each do |val|
       name = val.fetch('name', '')
       next if name =~ /\.keyword$/
+
       type = val.fetch('type', '')
       rows.append([name, type, 'PASS'])
     end
