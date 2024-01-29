@@ -38,7 +38,9 @@ default:
     store: |
       jsonstatus: lightweight check of node availability WITH timeout if node is unavailable
       jsonstate: tests read/write for each node with NO timeout
-      state: legacy test of read/write for each node with NO timeout - used in periodic Nagios checks; can recover access to a node that has gone offline
+      state: |
+        Legacy test of read/write for each node with NO timeout.
+        Used in periodic Nagios checks; can recover access to a node that has temporarily gone offline.
       ping: confirm that tomcat is running; returns server start time
       hostname: used by ALB checks; allows ingest to communicate with a specific store instance
     access: |
