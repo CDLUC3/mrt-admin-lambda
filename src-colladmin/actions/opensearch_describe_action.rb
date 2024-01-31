@@ -59,6 +59,7 @@ class OpenSearchDescribeAction < AdminAction
     desc = get_doc(freg, 'description', '')
     source = get_doc(freg, 'source', '')
     note = get_doc(freg, 'note', '')
+    stat = 'INFO' if stat == 'PASS' && desc.empty?
     [
       k,
       f.fetch(:type, ''),
@@ -73,11 +74,12 @@ class OpenSearchDescribeAction < AdminAction
     rows = []
     oskeys = {}
 
-    @fields.keys.each do |k|
+    @fields.each_key do |k|
       oskeys[k] = process_key(k, 'FAIL')
     end
-    @reg.keys.each do |k|
+    @reg.each_key do |k|
       next if oskeys.key?(k)
+
       oskeys[k] = process_key(k, 'WARN')
     end
     oskeys.keys.sort.each do |k|

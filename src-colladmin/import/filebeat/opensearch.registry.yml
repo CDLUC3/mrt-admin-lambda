@@ -1,21 +1,8 @@
 # OpenSearch field registry
 #
-# source: 
-# - opensearch - default opensearch
-# - logstash - UC3 logstash adds this value
-# - ui - Ruby lograge ECS field
-# - log4j - Log4j default ECS field
-# - core - does this log directly?
-# - cloud - does this log directly?
-# - store
-# - access
-# - inventory
-# - audit
-# - replic
-# - ingest
-# normalized: normalized field name when differing field names are in use
-# deprecated: true | false
-# recommendation: recommended maintenance action
+# source: application that creates the field
+# description: purpose of the field
+# note: maintenance note for the Merritt team
 
 "@timestamp":
   source: logstash
@@ -91,10 +78,10 @@ ecs.version:
   description: Version of the Elastic Common Schema in use
 host.name:
   source: filebeat
-  description:
+  description: hostname where message originated
 input.type:
   source: filebeat
-  description:
+  description: "log"
 json.@timestamp:
   source: ECS Standard field (UI and Java)
   description: Date/time that a record was logged
@@ -103,368 +90,428 @@ json.@version:
   description: Version 1 is used
 json.BatchID:
   source: Ingest
-  description:
+  description: Ingest batch id
 json.Bytes:
   source: Ingest
-  description:
+  description: bytes downloaded
 json.DurationMs:
   source: Ingest
-  description:
+  description: bytes downloaded per ms
 json.InvJSON.content.iaddprimeDurationMs:
   source: Inventory
-  description:
+  description: 
+  note: David - TBD
 json.InvJSON.content.igetprimeDurationMs:
   source: Inventory
-  description:
+  description: 
+  note: David - TBD
 json.InvJSON.content.invbldAttempts:
   source: Inventory
-  description:
+  description: 
+  note: David - TBD
 json.InvJSON.content.invbldDurationMs:
   source: Inventory
-  description:
+  description: 
+  note: David - TBD
 json.InvJSON.content.invbldFiles:
   source: Inventory
-  description:
+  description: 
+  note: David - TBD
 json.InvJSON.content.invbldFilesPerVersions:
   source: Inventory
-  description:
+  description: 
+  note: David - TBD
 json.InvJSON.content.invbldMsPerFile:
   source: Inventory
-  description:
+  description: 
+  note: David - TBD
 json.InvJSON.content.invbldStatus:
   source: Inventory
-  description:
+  description: 
+  note: David - TBD
 json.InvJSON.content.invbldVersions:
   source: Inventory
-  description:
+  description: 
+  note: David - TBD
 json.InvJSON.id.ark:
   source: Inventory
-  description:
+  description: 
+  note: David - TBD
 json.InvJSON.id.localids:
   source: Inventory
-  description:
+  description: 
+  note: David - TBD
 json.InvJSON.id.owner:
   source: Inventory
-  description:
+  description: 
+  note: David - TBD
 json.InvJSON.id.processNode:
   source: Inventory
-  description:
+  description: 
+  note: David - TBD
 json.InvJSON.id.version:
   source: Inventory
-  description:
+  description: 
+  note: David - TBD
 json.InvJSON.properties.manifestURL:
   source: Inventory
-  description:
+  description: 
+  note: David - TBD
 json.InvJSON.serviceInfo.service:
   source: Inventory
-  description:
+  description: 
+  note: David - TBD
 json.InvJSON.serviceInfo.serviceProcess:
   source: Inventory
-  description:
+  description: 
+  note: David - TBD
 json.JobID:
   source: Ingest
-  description:
+  description: Ingest Job Id
 json.LocalID:
   source: Ingest
-  description:
+  description: local id being processed
 json.Method:
   source: Ingest
-  description:
+  description: Categorized name of ingest operation
 json.PrimaryID:
   source: Ingest
-  description:
+  description: Primary ID of object being ingested
 json.ResponseBody:
   source: Ingest
-  description:
+  description: response body from api call invoked by ingest
 json.ResponseCode:
   source: Ingest
-  description:
+  description: http response code for api call invoked by ingest
 json.ResponsePhrase:
   source: Ingest
-  description:
+  description: http response summary for api call invoked by ingest
 json.Retries:
   source: Ingest
-  description:
+  description: number of retries needed for ingest operation
 json.Status:
   source: Ingest
-  description:
+  description: usually "complete"
 json.StoreJSON.content.addBytes:
   source: Store, Access
-  description:
+  description: Bytes processed by storage add operation
 json.StoreJSON.content.addBytesPerMs:
   source: Store, Access
-  description:
+  description: Bytes processed per ms by storage add operation
 json.StoreJSON.content.addDurationMs:
   source: Store, Access
-  description:
+  description: Duration for storage add operation
 json.StoreJSON.content.addFiles:
   source: Store, Access
-  description:
+  description: 
+  note: David - TBD
 json.StoreJSON.content.addFilesPerVersions:
   source: Store, Access
-  description:
+  description: 
+  note: David - TBD
 json.StoreJSON.content.addMsPerFile:
   source: Store, Access
-  description:
+  description: 
+  note: David - TBD
 json.StoreJSON.content.addVersions:
   source: Store, Access
-  description:
+  description: 
+  note: David - TBD
 json.StoreJSON.content.tokenBytes:
   source: Store, Access
-  description:
+  description: Bytes processed by assembly operation
 json.StoreJSON.content.tokenBytesPerMs:
   source: Store, Access
-  description:
+  description: Bytes processed by assembly operation per ms
 json.StoreJSON.content.tokenDurationMs:
   source: Store, Access
-  description:
+  description: Duration for assebly operation
 json.StoreJSON.content.tokenFiles:
   source: Store, Access
-  description:
+  description: 
+  note: David - TBD
 json.StoreJSON.content.tokenFilesPerVersions:
   source: Store, Access
-  description:
+  description: 
+  note: David - TBD
 json.StoreJSON.content.tokenMsPerFile:
   source: Store, Access
-  description:
+  description: 
+  note: David - TBD
 json.StoreJSON.content.tokenVersions:
   source: Store, Access
-  description:
+  description: 
+  note: David - TBD
 json.StoreJSON.content.updateBytes:
   source: Store, Access
-  description:
+  description: Bytes processed by storage update operation
 json.StoreJSON.content.updateBytesPerMs:
   source: Store, Access
-  description:
+  description: Bytes processed per ms by storage update operation
 json.StoreJSON.content.updateDurationMs:
   source: Store, Access
-  description:
+  description: Duration for a storage update operation
 json.StoreJSON.content.updateFiles:
   source: Store, Access
-  description:
+  description: 
+  note: David - TBD
 json.StoreJSON.content.updateFilesPerVersions:
   source: Store, Access
-  description:
+  description: 
+  note: David - TBD
 json.StoreJSON.content.updateMsPerFile:
   source: Store, Access
-  description:
+  description: 
+  note: David - TBD
 json.StoreJSON.content.updateVersions:
   source: Store, Access
-  description:
+  description: 
+  note: David - TBD
 json.StoreJSON.id.ark:
   source: Store, Access
-  description:
+  description: 
+  note: David - TBD
 json.StoreJSON.id.key:
   source: Store, Access
-  description:
+  description: 
+  note: David - TBD
 json.StoreJSON.id.processNode:
   source: Store, Access
-  description:
+  description: 
+  note: David - TBD
 json.StoreJSON.id.version:
   source: Store, Access
-  description:
+  description: 
+  note: David - TBD
 json.StoreJSON.properties.archiveContent:
   source: Store, Access
-  description:
-json.StoreJSON.prop Store, Accesserties.archiveType:
-  source:
-  description:
+  description: 
+  note: David - TBD
+json.StoreJSON.properties.archiveType:
+  source: Store, Access
+  description: 
+  note: David - TBD
 json.StoreJSON.serviceInfo.service:
   source: Store, Access
-  description:
+  description: 
+  note: David - TBD
 json.StoreJSON.serviceInfo.serviceProcess:
   source: Store, Access
-  description:
+  description: 
+  note: David - TBD
 json.URL:
   source: Ingest
-  description:
+  description: Download URL or api call URL
 json.action:
   source: UI (lograge standard rails field)
   description: Controller method name
 json.allocations:
   source: UI (lograge standard rails field)
-  description: 
+  description: number of objects allocated during rails operation
 json.attempts:
   source: Inventory
-  description:
+  description: 
+  note: David - TBD
 json.bytes:
   source: Audit
-  description:
+  description: 
+  note: David - TBD
 json.capacity:
   source: Audit
-  description:
+  description: 
+  note: David - TBD
 json.controller:
   source: UI (lograge standard rails field)
-  description:
+  description: Name of rails controller
 json.cpacity:
   source: Replic
-  description:
-  note: this looks like a misspelled field
+  description: 
+  note: this looks like a misspelled field. David - TBD
 json.db:
   source: UI (lograge standard rails field)
-  description:
+  description: duration for rails database operation
 json.duration:
   source: UI (lograge standard rails field)
-  description:
+  description: total duration for a rails request
 json.ecs.version:
   source: ECS Standard field (Java)
-  description: 
+  description: version number
   note: Conflicts with ecs.version
 json.error:
   source: UI (lograge standard rails field)
-  description:
+  description: error message text
 json.error.message:
   source: Merritt Java
-  description:
+  description: error message text
 json.error.stack_trace:
   source: Merritt Java
-  description:
+  description: error stack trace
 json.error.type:
   source: Merritt Java
   description: Exception class name
 json.event.dataset:
-  source:
-  description:
+  source: Merritt Java
+  description: tomcat
+  note: Name of application logging a message
 json.format:
-  source:
-  description:
+  source: UI (lograge standard rails field)
+  description: Logs http content type
 json.location:
-  source:
-  description:
+  source: UI (lograge standard rails field)
+  description: redirect location
 json.log.level:
-  source:
-  description:
+  source: Merritt Java
+  description: log4j log level
 json.log.logger:
-  source:
-  description:
+  source: Merritt Java
+  description: name of Java class logging the message
 json.log.origin.file.line:
-  source:
-  description:
+  source: Merritt Java
+  description: name of Java class line number logging the message
 json.log.origin.file.name:
-  source:
-  description:
+  source: Merritt Java
+  description: name of Java class file name logging the message
 json.log.origin.function:
-  source:
-  description:
+  source: Merritt Java
+  description: name of Java method logging the message
 json.manifestURL:
-  source:
-  description:
+  source: Inventory
+  description: Rarely used.  
+  note: David - TBD
 json.maxSecondaryVersion:
-  source:
-  description:
+  source: Replication
+  description: highest version number for an object across replciation nodes
 json.message:
-  source:
-  description:
+  source: Merritt UI and Merritt Java
+  description: Summary log message
 json.method:
-  source:
-  description:
+  source: UI (lograge standard rails field)
+  description: http method
 json.node:
-  source:
-  description:
+  source: Storage
+  description: Merritt storage node number
 json.non-verified:
-  source:
-  description:
+  source: Audit
+  description: Count of the number of unsuccessful/incomplete fixity checks
 json.objectID:
-  source:
-  description:
+  source: Replic
+  description: Object being replicated
 json.path:
-  source:
-  description:
+  source: UI (lograge standard rails field)
+  description: Url path
 json.primaryInvNode:
-  source:
-  description:
+  source: Storage
+  description: Primary ID of the object being saved to storage
 json.process.thread.name:
-  source:
-  description:
+  source: Merritt Java
+  description: Identifying name for individual threads
 json.processMs:
-  source:
-  description:
+  source: Audit
+  description: Duration to save a batch of fixity checks
 json.processStatus:
-  source:
-  description:
+  source: Inventory
+  description: 
+  note: David - TBD
 json.replicJSON.content.repaddBytes:
-  source:
-  description:
+  source: Replic
+  description: 
+  note: David - TBD
 json.replicJSON.content.repaddBytesPerMs:
-  source:
-  description:
+  source: Replic
+  description: 
+  note: David - TBD
 json.replicJSON.content.repaddDurationMs:
-  source:
-  description:
+  source: Replic
+  description: 
+  note: David - TBD
 json.replicJSON.content.repaddFiles:
-  source:
-  description:
+  source: Replic
+  description: 
+  note: David - TBD
 json.replicJSON.content.repaddMsPerFile:
-  source:
-  description:
+  source: Replic
+  description: 
+  note: David - TBD
 json.replicJSON.id.ark:
-  source:
-  description:
+  source: Replic
+  description: 
+  note: David - TBD
 json.replicJSON.id.processNode:
-  source:
-  description:
+  source: Replic
+  description: 
+  note: David - TBD
 json.replicJSON.id.sourceNode:
-  source:
-  description:
+  source: Replic
+  description: 
+  note: David - TBD
 json.replicJSON.id.targetNode:
-  source:
-  description:
+  source: Replic
+  description: 
+  note: David - TBD
 json.replicJSON.id.version:
-  source:
-  description:
+  source: Replic
+  description: 
+  note: David - TBD
 json.replicJSON.serviceInfo.service:
-  source:
-  description:
+  source: Replic
+  description: 
+  note: David - TBD
 json.replicJSON.serviceInfo.serviceProcess:
-  source:
-  description:
+  source: Replic
+  description: 
+  note: David - TBD
 json.replicQualify:
-  source:
-  description:
+  source: Replic
+  description: 
+  note: David - TBD
 json.runVerifiedMs:
-  source:
-  description:
+  source: Audit
+  description: 
+  note: David - TBD
 json.secondaryInvNode:
-  source:
-  description:
+  source: Replic
+  description: 
+  note: David - TBD
 json.service.name:
-  source:
-  description:
+  source: Merritt Java
+  description: Always set to "service"
 json.service.node.name:
-  source:
-  description:
+  source: Merritt Java
+  description: Always set to "service" except for Ingest
 json.sleepTime:
-  source:
-  description:
+  source: Audit
+  description: 
+  note: David - TBD
 json.status:
-  source:
-  description:
+  source: UI (lograge standard rails field)
+  description: http response code
 json.store.function:
-  source:
-  description:
+  source: Storage
+  description: add or update
 json.time:
-  source:
-  description:
+  source: UI (lograge standard rails field)
+  description: numeric time representation
 json.updates:
-  source:
-  description:
+  source: Replic
+  description: 
+  note: David - TBD
 json.verified:
-  source:
-  description:
+  source: Audit
+  description: Number of files processed in a fixity check batch
 json.versionID:
-  source:
-  description:
+  source: Storage
+  description: Version number processed by storage
 json.view:
-  source:
-  description:
+  source: UI (lograge standard rails field)
+  description: Duration to render a rails view
 log.file.path:
-  source:
-  description:
+  source: filebeat
+  description: path to logfile being imported
 log.offset:
-  source:
-  description:
+  source: filebeat
+  description: file offset for the message being imported
 merrittUiRequest:
-  source: lograge
+  source: logstash
   description: Pattern match categorization of UI request
 tags:
   source: filebeat
