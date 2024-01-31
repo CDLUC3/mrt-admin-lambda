@@ -18,290 +18,310 @@
 # recommendation: recommended maintenance action
 
 "@timestamp":
-  source:
-  description:
+  source: logstash
+  description: |
+    Date/time that a record was added to OpenSearch.
+    For the Tomcat access logs, this is set by logstash.
+  note: For accuracy, should we have logstash copy the source @timestamp?
 "@version":
-  source:
-  description:
+  source: opensearch
+  description: Version number for an opensearch document.  In most instances, Merritt log entries will only have a version 1
 _id:
-  source:
-  description:
+  source: opensearch
+  description: | 
+    Unique id assigned by OpenSearch for a document.  This value can be used to send a document update.
+    In our collection health indexes, we set an explicit value.
 _index:
-  source:
-  description:
+  source: opensearch
+  description: name of the index to which a document was written
 _score:
-  source:
-  description:
+  source: opensearch
+  description: N/A
 _source:
-  source:
-  description:
+  source: opensearch
+  description: Default field.  Not used
 _type:
-  source:
-  description:
+  source: opensearch
+  description: Default field.  Not used
 agent.ephemeral_id:
-  source:
-  description:
+  source: filebeat
+  description: Unique id set for each filebeat source. Used by Merritt UI.
+  note: Merritt Java uses agent.id.
 agent.id:
-  source:
-  description:
+  source: filebeat
+  description: Unique id set for each filebeat source. Used by Merritt Java.
+  note: Merritt UI uses agent.ephemeral_id.
 agent.name:
-  source:
-  description:
+  source: filebeat
+  description: Name of the filebeat agent.
 agent.type:
-  source:
-  description:
+  source: filebeat
+  description: Indicates that filebeat sent the message.
 agent.version:
-  source:
-  description:
+  source: filebeat
+  description: Filebeat version sending the message.
 ark:
-  source:
-  description:
+  source: logstash
+  description: |
+    Ark found in Merritt logs.
+    Opensearch has difficulty searching fields with slashes.  The component nodes of the ark exist as separate fields
 ark_p1:
-  source:
-  description:
+  source: logstash
+  description: first node within the ark path
 ark_p2:
-  source:
-  description:
+  source: logstash
+  description: last node within the ark path
 cdl.environment:
-  source:
-  description:
+  source: filebeat
+  description: Stage or production
 cdl.fqsn:
-  source:
-  description:
+  source: filebeat
+  description: Fully qualified UC3 service and subservice
 cdl.program:
-  source:
-  description:
+  source: filebeat
+  description: CDL program - UC3
 cdl.service:
-  source:
-  description:
+  source: filebeat
+  description: CDL service - Merritt
 cdl.subservice:
-  source:
-  description:
+  source: filebeat
+  description: CDL subservice name
 ecs.version:
-  source:
-  description:
+  source: ECS Standard field (UI and Java)
+  description: Version of the Elastic Common Schema in use
 host.name:
-  source:
+  source: filebeat
   description:
 input.type:
-  source:
+  source: filebeat
   description:
 json.@timestamp:
-  source:
-  description:
+  source: ECS Standard field (UI and Java)
+  description: Date/time that a record was logged
 json.@version:
-  source:
-  description:
+  source: ECS Standard field (UI only)
+  description: Version 1 is used
 json.BatchID:
-  source:
+  source: Ingest
   description:
 json.Bytes:
-  source:
+  source: Ingest
   description:
 json.DurationMs:
-  source:
+  source: Ingest
   description:
 json.InvJSON.content.iaddprimeDurationMs:
-  source:
+  source: Inventory
   description:
 json.InvJSON.content.igetprimeDurationMs:
-  source:
+  source: Inventory
   description:
 json.InvJSON.content.invbldAttempts:
-  source:
+  source: Inventory
   description:
 json.InvJSON.content.invbldDurationMs:
-  source:
+  source: Inventory
   description:
 json.InvJSON.content.invbldFiles:
-  source:
+  source: Inventory
   description:
 json.InvJSON.content.invbldFilesPerVersions:
-  source:
+  source: Inventory
   description:
 json.InvJSON.content.invbldMsPerFile:
-  source:
+  source: Inventory
   description:
 json.InvJSON.content.invbldStatus:
-  source:
+  source: Inventory
   description:
 json.InvJSON.content.invbldVersions:
-  source:
+  source: Inventory
   description:
 json.InvJSON.id.ark:
-  source:
+  source: Inventory
   description:
 json.InvJSON.id.localids:
-  source:
+  source: Inventory
   description:
 json.InvJSON.id.owner:
-  source:
+  source: Inventory
   description:
 json.InvJSON.id.processNode:
-  source:
+  source: Inventory
   description:
 json.InvJSON.id.version:
-  source:
+  source: Inventory
   description:
 json.InvJSON.properties.manifestURL:
-  source:
+  source: Inventory
   description:
 json.InvJSON.serviceInfo.service:
-  source:
+  source: Inventory
   description:
 json.InvJSON.serviceInfo.serviceProcess:
-  source:
+  source: Inventory
   description:
 json.JobID:
-  source:
+  source: Ingest
   description:
 json.LocalID:
-  source:
+  source: Ingest
   description:
 json.Method:
-  source:
+  source: Ingest
   description:
 json.PrimaryID:
-  source:
+  source: Ingest
   description:
 json.ResponseBody:
-  source:
+  source: Ingest
   description:
 json.ResponseCode:
-  source:
+  source: Ingest
   description:
 json.ResponsePhrase:
-  source:
+  source: Ingest
   description:
 json.Retries:
-  source:
+  source: Ingest
   description:
 json.Status:
-  source:
+  source: Ingest
   description:
 json.StoreJSON.content.addBytes:
-  source:
+  source: Store, Access
   description:
 json.StoreJSON.content.addBytesPerMs:
-  source:
+  source: Store, Access
   description:
 json.StoreJSON.content.addDurationMs:
-  source:
+  source: Store, Access
   description:
 json.StoreJSON.content.addFiles:
-  source:
+  source: Store, Access
   description:
 json.StoreJSON.content.addFilesPerVersions:
-  source:
+  source: Store, Access
   description:
 json.StoreJSON.content.addMsPerFile:
-  source:
+  source: Store, Access
   description:
 json.StoreJSON.content.addVersions:
-  source:
+  source: Store, Access
   description:
 json.StoreJSON.content.tokenBytes:
-  source:
+  source: Store, Access
   description:
 json.StoreJSON.content.tokenBytesPerMs:
-  source:
+  source: Store, Access
   description:
 json.StoreJSON.content.tokenDurationMs:
-  source:
+  source: Store, Access
   description:
 json.StoreJSON.content.tokenFiles:
-  source:
+  source: Store, Access
   description:
 json.StoreJSON.content.tokenFilesPerVersions:
-  source:
+  source: Store, Access
   description:
 json.StoreJSON.content.tokenMsPerFile:
-  source:
+  source: Store, Access
   description:
 json.StoreJSON.content.tokenVersions:
-  source:
+  source: Store, Access
   description:
 json.StoreJSON.content.updateBytes:
-  source:
+  source: Store, Access
   description:
 json.StoreJSON.content.updateBytesPerMs:
-  source:
+  source: Store, Access
   description:
 json.StoreJSON.content.updateDurationMs:
-  source:
+  source: Store, Access
   description:
 json.StoreJSON.content.updateFiles:
-  source:
+  source: Store, Access
   description:
 json.StoreJSON.content.updateFilesPerVersions:
-  source:
+  source: Store, Access
   description:
 json.StoreJSON.content.updateMsPerFile:
-  source:
+  source: Store, Access
   description:
 json.StoreJSON.content.updateVersions:
-  source:
+  source: Store, Access
   description:
 json.StoreJSON.id.ark:
-  source:
+  source: Store, Access
   description:
 json.StoreJSON.id.key:
-  source:
+  source: Store, Access
   description:
 json.StoreJSON.id.processNode:
-  source:
+  source: Store, Access
   description:
 json.StoreJSON.id.version:
-  source:
+  source: Store, Access
   description:
 json.StoreJSON.properties.archiveContent:
-  source:
+  source: Store, Access
   description:
-json.StoreJSON.properties.archiveType:
+json.StoreJSON.prop Store, Accesserties.archiveType:
   source:
   description:
 json.StoreJSON.serviceInfo.service:
-  source:
+  source: Store, Access
   description:
 json.StoreJSON.serviceInfo.serviceProcess:
-  source:
+  source: Store, Access
   description:
 json.URL:
-  source:
+  source: Ingest
   description:
 json.action:
-  source:
-  description:
+  source: UI (lograge standard rails field)
+  description: Controller method name
 json.allocations:
-  source:
-  description:
+  source: UI (lograge standard rails field)
+  description: 
 json.attempts:
-  source:
+  source: Inventory
   description:
 json.bytes:
-  source:
+  source: Audit
   description:
 json.capacity:
-  source:
+  source: Audit
   description:
 json.controller:
-  source:
+  source: UI (lograge standard rails field)
   description:
 json.cpacity:
-  source:
+  source: Replic
   description:
+  note: this looks like a misspelled field
 json.db:
-  source:
+  source: UI (lograge standard rails field)
   description:
 json.duration:
-  source:
+  source: UI (lograge standard rails field)
   description:
 json.ecs.version:
-  source:
-  description:
+  source: ECS Standard field (Java)
+  description: 
+  note: Conflicts with ecs.version
 json.error:
-  source:
+  source: UI (lograge standard rails field)
   description:
+json.error.message:
+  source: Merritt Java
+  description:
+json.error.stack_trace:
+  source: Merritt Java
+  description:
+json.error.type:
+  source: Merritt Java
+  description: Exception class name
 json.event.dataset:
   source:
   description:
@@ -444,8 +464,10 @@ log.offset:
   source:
   description:
 merrittUiRequest:
-  source:
-  description:
+  source: lograge
+  description: Pattern match categorization of UI request
 tags:
-  source:
-  description:
+  source: filebeat
+  description: |
+    Assigned by filebeat when sending to logstash.
+    Look at "filebeat::inputs" in https://github.com/CDLUC3/uc3-ops-puppet-hiera
