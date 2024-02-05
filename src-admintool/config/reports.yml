@@ -120,6 +120,13 @@ producer_files:
   category: files
   description: |
     Producer Files for a Mnemonic.
+s3-list:
+  link-title: S3 Download Links
+  breadcrumb: bp_content_projects
+  class: S3ListQuery
+  category: files
+  description: |
+    Generate S3 Download Links
 objects_large:
   link-title: Sample Objects Larger than 1GB
   breadcrumb: bp_obj
