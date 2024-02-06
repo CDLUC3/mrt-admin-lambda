@@ -43,7 +43,7 @@ class S3ListQuery < AdminQuery
   end
 
   def run_sql
-    return_data(@files, get_types, get_headers)
+    format_result_json(get_types, @files, get_headers)
   end
 
   def init_status

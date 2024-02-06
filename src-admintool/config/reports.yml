@@ -126,7 +126,16 @@ s3-list:
   class: S3ListQuery
   category: files
   description: |
-    Generate S3 Download Links
+    Generate S3 Download Links for an S3 prefix.
+
+    ## daily-build
+    - summary.txt: summary of all build steps
+    - git.txt: git command output
+    - docker.txt: docker build output
+    - maven.txt: maven build output
+    - trivy-scan.txt: list all critical vulnerabilities reported by trivy
+    - trivy-scan-ignore.txt: list all critical vulnerabilities not excluded by .trivyidgore
+    - trivy-scan-fixed.txt: list all critical vulnerabilities that have a fix available 
 objects_large:
   link-title: Sample Objects Larger than 1GB
   breadcrumb: bp_obj
