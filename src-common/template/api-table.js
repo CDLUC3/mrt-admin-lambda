@@ -814,6 +814,11 @@ function format(cell, v, type, merritt_path) {
     if (arr.length == 3) {
       makeLink(cell, arr[2], colladmin_home + "?path=queues&profile="+arr[0]+"&qstatus="+arr[1]);
     }
+  } else if (type == 'link') {
+    arr = v.split(";");
+    if (arr.length == 2) {
+      makeLink(cell, arr[0], arr[1]);
+    }
   } else {
     cell.text(v);
   }

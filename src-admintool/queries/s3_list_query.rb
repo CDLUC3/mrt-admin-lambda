@@ -8,30 +8,27 @@ class S3ListQuery < AdminQuery
     super(query_factory, path, myparams)
     rptpath = myparams.fetch('rptpath', 'daily-build')
     @report = "merritt-reports/#{rptpath}"
-  end
-
-  def run_sql
-    no_data
-  end
-
-  def get_alternative_queries
-    res = []
+    @files = [] 
     resp = @s3_client.list_objects_v2({
       bucket: @s3bucket,
       prefix: @report
     })
-    # Delete any prior reports
-    # consistency-reports is intentionally hard coded into the delete
     resp.contents.each do |s3obj|
-      res.push(
-        {
-          label: s3obj.key,
-          url: get_report_url(s3obj.key),
-          class: 'download'
-        }
-      )
+      link = "#{s3obj.key};#{get_report_url(s3obj.key)}"
+      @files.push([link, s3obj.last_modified, s3obj.size])
     end
-
-    res
   end
+
+  def get_headers
+    ['File', 'Modified', 'Size']
+  end
+
+  def get_types
+    ['link', 'datetime', 'bytes']
+  end
+
+  def run_sql
+    return_data(@files, get_types, get_headers)
+  end
+
 end
