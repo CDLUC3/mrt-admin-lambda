@@ -4,10 +4,8 @@ require 'tempfile'
 
 # Query class - see config/reports.yml for description
 class S3ListQuery < AdminQuery
-  def initialize(query_factory, path, myparams)
+  def initialize(query_factory, path, myparams, rptpath, status_file)
     super(query_factory, path, myparams)
-    rptpath = myparams.fetch('rptpath', 'daily-build')
-    status_file = myparams.fetch('status-file', '')
     @report = "merritt-reports/#{rptpath}"
     @files = []
     @status = 'SKIP'
@@ -21,7 +19,7 @@ class S3ListQuery < AdminQuery
         @status = resp.body.read.chop
       end
     rescue StandardError
-      LambdaBase.log_config(config, "#{@report}/#{status_file} does not exist")
+      LambdaBase.log_config(@config, "#{@report}/#{status_file} does not exist")
     end
 
     resp = @s3_client.list_objects_v2({

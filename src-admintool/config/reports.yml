@@ -120,11 +120,12 @@ producer_files:
   category: files
   description: |
     Producer Files for a Mnemonic.
-s3-list:
-  link-title: S3 Download Links
+daily-build-s3-list:
+  link-title: Daily Build Links
   breadcrumb: bp_content_projects
   class: S3ListQuery
   category: files
+  params: ['daily-build', 'build-log.status.txt']
   description: |
     Generate S3 Download Links for an S3 prefix.
 
