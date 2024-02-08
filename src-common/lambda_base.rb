@@ -44,13 +44,6 @@ class LambdaBase
     read_cognito_token(event)
   end
 
-  # exception message strings were including a dump of object properties
-  # this was leaking data to opersearch.
-  # this prevents any object (including MySql2::Client) from dumping properties
-  def inspect
-    "#{self.class} (property listing suppressed)"
-  end
-
   def read_cognito_token(event)
     cognito_token = event.fetch('headers', {}).fetch('x-amzn-oidc-accesstoken', '')
     if cognito_token.empty?
@@ -345,11 +338,11 @@ class LambdaBase
   end
 end
 
-# prevent logging credentials to opensearch
+# exception message strings were including a dump of object properties
+# this was leaking data to opersearch.
+# this prevents any object (including MySql2::Client) from dumping properties
 class Object
   def inspect
-    def inspect
-      "#{self.class} (property listing suppressed)"
-    end
+    "#{self.class} (property listing suppressed)"
   end
 end
