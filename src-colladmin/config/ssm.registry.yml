@@ -61,16 +61,6 @@ billing:
     <<: *dbcred
 audit:
   config:  
-    cleanup: &cleanup
-      msg:
-        description: "Audit Cleanup handling email message"
-        deprecated: No longer needed
-      subject:
-        description: "Audit Cleanup handling email subject"
-        deprecated: No longer needed
-      to:
-        description: "Audit Cleanup handling email delivery target"
-        deprecated: No longer needed
     auditQualify:
       description: "SQL filter for audit processing - used for special circumstances"
     intervalDays:
@@ -264,10 +254,6 @@ replic:
   config:  
     baseURI:
       description: "Appears deprecated"
-    cleanup: 
-      <<: *cleanup
-      from:
-        description: "Replic cleanup from"
     log:
       <<: *loglev
       path: 
