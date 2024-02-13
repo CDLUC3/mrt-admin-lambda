@@ -37,25 +37,19 @@ default:
     # newlines will become comma separators to create bullets. Do not use commas in these blocks.
     store: |
       jsonstatus: lightweight check of node availability WITH timeout if node is unavailable
-      jsonstate: tests read/write for each node with NO timeout
-      state: |
-        Legacy test of read/write for each node with NO timeout.
-        Used in periodic Nagios checks; can recover access to a node that has temporarily gone offline.
+      state: Test of read/write for each node WITH timeout (as of 3/24). Used in periodic Nagios checks; can recover access to a node that has temporarily gone offline.
       ping: confirm that tomcat is running; returns server start time
       hostname: used by ALB checks; allows ingest to communicate with a specific store instance
     access: |
       jsonstatus: lightweight check of node availability WITH timeout if node is unavailable
-      jsonstate: tests read/write for each node with NO timeout
-      state: legacy test of read/write for each node with NO timeout
+      state: legacy test of read/write for each node WITH timeout (as of 3/24).
       ping: confirm that tomcat is running; returns server start time
       hostname: used by ALB checks
     audit: |
       jsonstatus: lightweight check of node availability WITH timeout if node is unavailable
-      jsonstate: tests read/write for each node with NO timeout
       state: service status check without node evaluation; returns server start time
     replic: |
       jsonstatus: lightweight check of node availability
-      jsonstate: tests read/write for each node
       state: service status check without node evaluation; returns server start time
     ingest: |
       state: service status check; returns server start time; used by ALB health check
@@ -75,7 +69,6 @@ default:
       ALB: "{!SSM: colladmin/ingest-service}state?t=json"
     store: 
       jsonstatus: "{!SSM: store/port}/jsonstatus"
-      jsonstate: "{!SSM: store/port}/jsonstate"
       state: "{!SSM: store/port}/state?t=json"
       ping: "{!SSM: store/port}/ping?t=json"
       hostname: "{!SSM: store/port}/hostname"
@@ -83,7 +76,6 @@ default:
       ALB: "{!SSM: colladmin/storage-service}/state?t=json"
     access: 
       jsonstatus: "{!SSM: store/port}/jsonstatus"
-      jsonstate: "{!SSM: store/port}/jsonstate"
       state: "{!SSM: store/port}/state?t=json"
       ping: "{!SSM: store/port}/ping?t=json"
       hostname: "{!SSM: store/port}/hostname"
@@ -97,14 +89,12 @@ default:
       ALB: "{!SSM: colladmin/inventory-service}/state?t=json"
     audit: 
       jsonstatus: "{!SSM: audit/port}/mrtaudit/jsonstatus"
-      jsonstate: "{!SSM: audit/port}/mrtaudit/jsonstate"
       state: "{!SSM: audit/port}/mrtaudit/state?t=json"
       build-info: "{!SSM: audit/port}/mrtaudit/static/build.content.txt"
       start: "{!SSM: audit/port}/mrtaudit/service/start?t=json"
       stop: "{!SSM: audit/port}/mrtaudit/service/stop?t=json"
     replic: 
       jsonstatus: "{!SSM: replic/port}/mrtreplic/jsonstatus"
-      jsonstate: "{!SSM: replic/port}/mrtreplic/jsonstate"
       state: "{!SSM: replic/port}/mrtreplic/state?t=json"
       build-info: "{!SSM: replic/port}/mrtreplic/static/build.content.txt"
       start: "{!SSM: replic/port}/mrtreplic/service/start?t=json"
