@@ -224,18 +224,6 @@ files:
     - system files will be retained
   documentation: |
     Ingest: GET /admin/jid-file/{batch}/{job}
-sword:
-  link-title: Dryad Recent Jobs
-  breadcrumb: bp_ingest
-  class: IngestSwordJobsAction
-  category: Ingest Batches and Folders
-  sensitivity: readonly
-  testing: contextually automated
-  description: |
-    Display the most recent ingest jobs initiated from Dryad via the Sword service.
-    After the page is displayed, a separate search is run to display the ARK and DOI associated with each job.
-  documentation: |
-    Ingest: GET /admin/bid/JOB_ONLY/{days}
 ldap/users:
   link-title: List Merritt LDAP Users
   breadcrumb: bp_users
