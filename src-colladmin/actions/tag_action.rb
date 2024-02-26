@@ -57,13 +57,14 @@ class Ec2Info
     res = {}
     return res unless @state == 'running'
 
-    @config.fetch('server-configs', {}).each do |confname, sconf|
+    @config.fetch('server-configs', {}).each_value do |sconf|
       match = sconf.fetch('match', '.*')
       next unless @name =~ Regexp.new(match)
+
       sconf.fetch('endpoints', {}).fetch(@subservice, {}).each do |k, v|
         if v =~ /^http/
           res[k] = v
-        elsif v =~ /^\//
+        elsif v =~ %r{^/}
           # UI uses this
           res[k] = "https://#{@name}.cdlib.org#{v}"
         else
@@ -87,6 +88,7 @@ class Ec2Info
 
   def notes(action)
     return '' if urls.empty?
+
     note = @config.fetch('notes', {}).fetch(@subservice, '').split("\n").join(',')
     if @subservice == 'access'
       srvr = action.get_ssm('store/zoo/AccessLarge')
