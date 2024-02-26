@@ -57,28 +57,22 @@ class Ec2Info
     res = {}
     return res unless @state == 'running'
 
-    @config.fetch('endpoints', {}).fetch(@subservice, {}).each do |k, v|
-      if k == 'state' && @subservice == 'ui'
-        m = @name.match(/(ui0[0-9])x2-stg/)
-        if m
-          res[k.to_s] = "https://#{m[1]}-aws-stg.cdlib.org/state.json"
+    @config.fetch('server-configs', {}).each_value do |sconf|
+      match = sconf.fetch('match', '.*')
+      next unless @name =~ Regexp.new(match)
+
+      sconf.fetch('endpoints', {}).fetch(@subservice, {}).each do |k, v|
+        if v =~ /^http/
+          res[k] = v
+        elsif v =~ %r{^/}
+          # UI uses this
+          res[k] = "https://#{@name}.cdlib.org#{v}"
         else
-          m = @name.match(/(ui0[0-9])x2/)
-          res[k.to_s] = "https://#{m[1]}-aws.cdlib.org/state.json" if m
+          # assume value starts with port number, no http expected
+          res[k] = "http://#{@name}.cdlib.org:#{v}"
         end
-      elsif k == 'audit_rep' && @subservice == 'ui'
-        m = @name.match(/(ui0[0-9])x2-stg/)
-        if m
-          res[k.to_s] = "https://#{m[1]}-aws-stg.cdlib.org/state-audit-replic.json"
-        else
-          m = @name.match(/(ui0[0-9])x2/)
-          res[k.to_s] = "https://#{m[1]}-aws.cdlib.org/state-audit-replic.json" if m
-        end
-      elsif v =~ /^http/
-        res[k] = v
-      else
-        res[k] = "http://#{@name}.cdlib.org:#{v}"
       end
+      break
     end
     res
   end
@@ -93,6 +87,8 @@ class Ec2Info
   end
 
   def notes(action)
+    return '' if urls.empty?
+
     note = @config.fetch('notes', {}).fetch(@subservice, '').split("\n").join(',')
     if @subservice == 'access'
       srvr = action.get_ssm('store/zoo/AccessLarge')
