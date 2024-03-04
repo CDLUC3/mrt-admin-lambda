@@ -21,7 +21,7 @@ class AuditOldestQuery < AdminQuery
         status != 'processing'
       AND NOT
         verified IS null
-      AND 
+      AND
         inv_node_id not in (4,14,18) /*dryad nodes*/
       order by
         verified
