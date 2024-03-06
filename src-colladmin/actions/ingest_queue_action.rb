@@ -1,19 +1,19 @@
 # frozen_string_literal: true
 
-require_relative 'forward_to_ingest_action'
+require_relative 'zookeeper_action'
 
 # Collection Admin Task class - see config/actions.yml for description
-class IngestQueueAction < ForwardToIngestAction
+class IngestQueueAction < ZookeeperAction
   def initialize(config, action, path, myparams)
     @batch = myparams.fetch('batch', '')
     @profile = myparams.fetch('profile', '')
     @qstatus = myparams.fetch('qstatus', '')
-    super(config, action, path, myparams, 'admin/queues')
     @filter = {
       batch: @batch,
       profile: @profile,
       qstatus: @qstatus
     }
+    super(config, action, path, myparams, @filter)
     @batches = {}
   end
 
@@ -27,12 +27,6 @@ class IngestQueueAction < ForwardToIngestAction
 
   def table_types
     QueueEntry.table_types
-  end
-
-  def table_rows(body)
-    queue_list = QueueList.new(get_ingest_server, body, @filter)
-    @batches = queue_list.batches
-    queue_list.to_table
   end
 
   def has_table

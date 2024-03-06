@@ -194,6 +194,7 @@ default:
     keylist: 7001:scanlist/9502.log 
   disable-scan-nodenums: "{!SSM: colladmin/disable-scan-nodenums !DEFAULT: 0}"
   uc3inv_home: "{!SSM: admintool/uc3inv_home !DEFAULT: ''}"
+  zookeeper: "{!SSM: inventory/zoo/queueService}"
 # use personal credentials when configuring a local environment
 # set up a script to set these variables
 docker:
@@ -233,4 +234,5 @@ docker:
   # Provide state endpoints for specific subservices - not applicable for docker
   endpoints:
   uc3inv_home: ""
+  zookeeper: "zoo:2181"
 
