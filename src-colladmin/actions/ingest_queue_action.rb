@@ -3,7 +3,7 @@
 require_relative 'zookeeper_action'
 
 # Collection Admin Task class - see config/actions.yml for description
-class IngestQueueAction < ZookeeperAction
+class IngestQueueAction < IngestQueueZookeeperAction
   def initialize(config, action, path, myparams)
     @batch = myparams.fetch('batch', '')
     @profile = myparams.fetch('profile', '')
