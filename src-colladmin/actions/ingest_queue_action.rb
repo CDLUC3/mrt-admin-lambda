@@ -17,6 +17,27 @@ class IngestQueueAction < IngestQueueZookeeperAction
     @batches = {}
   end
 
+  def filter_batch
+    @filter.fetch(:batch, '')
+  end
+
+  def filter_profile
+    @filter.fetch(:profile, '')
+  end
+
+  def filter_qstatus
+    @filter.fetch(:qstatus, '')
+  end
+
+  def register_item(item)
+    return unless filter_batch.empty? || filter_batch == item.bid
+    return unless filter_profile.empty? || filter_profile == item.profile
+    return unless filter_qstatus.empty? || filter_qstatus == item.qstatus
+    super(item)
+  end
+
+
+
   def get_title
     'List Ingest Queues'
   end

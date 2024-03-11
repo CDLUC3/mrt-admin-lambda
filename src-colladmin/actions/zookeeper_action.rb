@@ -103,13 +103,17 @@ class ZookeeperAction < AdminAction
     @items
   end
 
+  def register_item(item)
+    @items.add_item(item)
+  end
+
   def perform_action
     @zk.children(zk_path).each do |cp|
       puts cp
       arr = @zk.get("#{zk_path}/#{cp}")
       po = QueueItemReader.new(self, cp, arr[0]).payload_object
       puts po.to_json
-      @items.add_item(QueueEntry.new(po))
+      register_item(QueueEntry.new(po))
     end
     convert_json_to_table('')
   end
