@@ -72,6 +72,51 @@ default:
           +ALB: "{!ENV: MERRITT_PATH}/state.json"
         ldap: 
           -ALB: "https://{!SSM: ldap/host}"
+    al2023prd:
+      match: '.*prd[0-9][0-9]$'
+      endpoints:
+        ingest: 
+          state: "{!SSM: ingest/port}/state?t=json"
+          build-info: "{!SSM: ingest/port}/static/build.content.txt"
+          ALB: "{!SSM: colladmin/ingest-service}state?t=json"
+        store: 
+          jsonstatus: "{!SSM: store/port}/jsonstatus"
+          state: "{!SSM: store/port}/state?t=json"
+          ping: "{!SSM: store/port}/ping?t=json"
+          hostname: "{!SSM: store/port}/hostname"
+          build-info: "{!SSM: store/port}/static/build.content.txt"
+          ALB: "{!SSM: colladmin/storage-service}/state?t=json"
+        access: 
+          jsonstatus: "{!SSM: store/port}/jsonstatus"
+          state: "{!SSM: store/port}/state?t=json"
+          ping: "{!SSM: store/port}/ping?t=json"
+          hostname: "{!SSM: store/port}/hostname"
+          build-info: "{!SSM: store/port}/static/build.content.txt"
+          ALB: "{!SSM: colladmin/access-service}/state?t=json"
+        inventory: 
+          state: "{!SSM: inventory/port}/state?t=json"
+          build-info: "{!SSM: inventory/port}/static/build.content.txt"
+          #start: "{!SSM: inventory/port}/service/start?t=json"
+          #stop: "{!SSM: inventory/port}/service/stop?t=json"
+          ALB: "{!SSM: colladmin/inventory-service}/state?t=json"
+        audit: 
+          jsonstatus: "{!SSM: audit/port}/jsonstatus"
+          state: "{!SSM: audit/port}/state?t=json"
+          build-info: "{!SSM: audit/port}/static/build.content.txt"
+          #start: "{!SSM: audit/port}/service/start?t=json"
+          #stop: "{!SSM: audit/port}/service/stop?t=json"
+        replic: 
+          jsonstatus: "{!SSM: replic/port}/jsonstatus"
+          state: "{!SSM: replic/port}/state?t=json"
+          build-info: "{!SSM: replic/port}/static/build.content.txt"
+          #start: "{!SSM: replic/port}/service/start?t=json"
+          #stop: "{!SSM: replic/port}/service/stop?t=json"
+        ui: 
+          state: "/state.json"
+          audit_rep: "/state-audit-replic.json"
+          +ALB: "{!ENV: MERRITT_PATH}/state.json"
+        ldap: 
+          -ALB: "https://{!SSM: ldap/host}"
     al2023:
       match: '.*stg[0-9][0-9]$'
       endpoints:
@@ -124,6 +169,7 @@ default:
           state: "{!SSM: ingest/port}/state?t=json"
           build-info: "{!SSM: ingest/port}/static/build.content.txt"
           ALB: "{!SSM: colladmin/ingest-service}state?t=json"
+          -al2-config: "#default"
         store: 
           jsonstatus: "{!SSM: store/port}/jsonstatus"
           state: "{!SSM: store/port}/state?t=json"
@@ -131,6 +177,7 @@ default:
           hostname: "{!SSM: store/port}/hostname"
           build-info: "{!SSM: store/port}/static/build.content.txt"
           ALB: "{!SSM: colladmin/storage-service}/state?t=json"
+          -al2-config: "#default"
         access: 
           jsonstatus: "{!SSM: store/port}/jsonstatus"
           state: "{!SSM: store/port}/state?t=json"
@@ -138,30 +185,36 @@ default:
           hostname: "{!SSM: store/port}/hostname"
           build-info: "{!SSM: store/port}/static/build.content.txt"
           ALB: "{!SSM: colladmin/access-service}/state?t=json"
+          -al2-config: "#default"
         inventory: 
           state: "{!SSM: inventory/port}/mrtinv/state?t=json"
           build-info: "{!SSM: inventory/port}/mrtinv/static/build.content.txt"
           start: "{!SSM: inventory/port}/mrtinv/service/start?t=json"
           stop: "{!SSM: inventory/port}/mrtinv/service/stop?t=json"
           ALB: "{!SSM: colladmin/inventory-service}/state?t=json"
+          -al2-config: "#default"
         audit: 
           jsonstatus: "{!SSM: audit/port}/mrtaudit/jsonstatus"
           state: "{!SSM: audit/port}/mrtaudit/state?t=json"
           build-info: "{!SSM: audit/port}/mrtaudit/static/build.content.txt"
           start: "{!SSM: audit/port}/mrtaudit/service/start?t=json"
           stop: "{!SSM: audit/port}/mrtaudit/service/stop?t=json"
+          -al2-config: "#default"
         replic: 
           jsonstatus: "{!SSM: replic/port}/mrtreplic/jsonstatus"
           state: "{!SSM: replic/port}/mrtreplic/state?t=json"
           build-info: "{!SSM: replic/port}/mrtreplic/static/build.content.txt"
           start: "{!SSM: replic/port}/mrtreplic/service/start?t=json"
           stop: "{!SSM: replic/port}/mrtreplic/service/stop?t=json"
+          -al2-config: "#default"
         ui: 
           state: "/state.json"
           audit_rep: "/state-audit-replic.json"
           +ALB: "{!ENV: MERRITT_PATH}/state.json"
+          -al2-config: "#default"
         ldap: 
           -ALB: "https://{!SSM: ldap/host}"
+          -al2-config: "#default"
   replic-service: "{!SSM: colladmin/replic-service}"
   storage-service: "{!SSM: colladmin/storage-service}"
   access-service: "{!SSM: colladmin/access-service}"
