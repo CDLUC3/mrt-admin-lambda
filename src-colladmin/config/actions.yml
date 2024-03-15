@@ -347,6 +347,19 @@ instances:
   - instances
   documentation: |
     Aws: Tag Query
+uc3-instances:
+  link-title: List and Describe UC3 EC2 Servers
+  breadcrumb: bp_internals
+  class: TagUc3Action
+  category: Dev Ops
+  sensitivity: readonly
+  testing: automated
+  description: |
+    Generate a report describing the EC2 servers used by UC3.
+  report-datatypes:
+  - instances
+  documentation: |
+    Aws: Tag Query
 ssm-describe:
   link-title: List and Describe Merritt SSM Variables
   breadcrumb: bp_internals
