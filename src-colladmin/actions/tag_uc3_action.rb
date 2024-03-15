@@ -6,7 +6,6 @@ require 'aws-sdk-ssm'
 
 # represents information about an EC2 instance
 class Ec2InfoUc3
-
   # See https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/EC2/Client.html#describe_instances-instance_method
   def initialize(config, inst)
     @config = config
@@ -16,6 +15,7 @@ class Ec2InfoUc3
     @az = inst.placement.availability_zone
     inst.tags.each do |tag|
       @name = tag.value if tag.key == 'Name'
+      @service = tag.value if tag.key == 'Service'
       @subservice = tag.value if tag.key == 'Subservice'
     end
   end
@@ -25,6 +25,7 @@ class Ec2InfoUc3
   def self.table_headers
     [
       'Name',
+      'Service',
       'Subservice',
       'Type',
       'SERVER State',
@@ -40,13 +41,15 @@ class Ec2InfoUc3
       '',
       '',
       '',
+      '',
       ''
     ]
   end
 
-  def table_row(action)
+  def table_row(_action)
     [
       @name,
+      @service,
       @subservice,
       @type,
       @state,
