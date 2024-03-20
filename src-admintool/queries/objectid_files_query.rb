@@ -16,6 +16,17 @@ class ObjectIdFilesQuery < AdminQuery
       select
         o.ark,
         v.number,
+        (
+          select max(vv.number) 
+          from inv.inv_files ff 
+          inner join inv.inv_versions vv 
+            on ff.inv_version_id = vv.id 
+          where 
+            ff.inv_object_id = o.id 
+          and exists (
+            select 1 where ff.pathname=f.pathname
+          )
+        ) as maxv,
         f.source,
         binary f.pathname,
         f.full_size,
@@ -69,11 +80,11 @@ class ObjectIdFilesQuery < AdminQuery
   end
 
   def get_headers(_results)
-    ['Ark', 'Version', 'Source', 'Path', 'File Size', 'Created', 'Nodes', 'Unverified']
+    ['Ark', 'Version', 'MaxVer', 'Source', 'Path', 'File Size', 'Created', 'Nodes', 'Unverified']
   end
 
   def get_types(_results)
-    ['ark', '', '', 'name', 'bytes', 'datetime', '', '']
+    ['ark', '', '', '', 'name', 'bytes', 'datetime', '', '']
   end
 
   def get_alternative_queries
