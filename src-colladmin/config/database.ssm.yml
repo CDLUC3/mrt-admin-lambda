@@ -171,20 +171,8 @@ default:
           ALB: "{!SSM: colladmin/ingest-service}state?t=json"
           -al2-config: "#default"
         store: 
-          jsonstatus: "{!SSM: store/port}/jsonstatus"
-          state: "{!SSM: store/port}/state?t=json"
-          ping: "{!SSM: store/port}/ping?t=json"
-          hostname: "{!SSM: store/port}/hostname"
-          build-info: "{!SSM: store/port}/static/build.content.txt"
-          ALB: "{!SSM: colladmin/storage-service}/state?t=json"
           -al2-config: "#default"
         access: 
-          jsonstatus: "{!SSM: store/port}/jsonstatus"
-          state: "{!SSM: store/port}/state?t=json"
-          ping: "{!SSM: store/port}/ping?t=json"
-          hostname: "{!SSM: store/port}/hostname"
-          build-info: "{!SSM: store/port}/static/build.content.txt"
-          ALB: "{!SSM: colladmin/access-service}/state?t=json"
           -al2-config: "#default"
         inventory: 
           state: "{!SSM: inventory/port}/mrtinv/state?t=json"

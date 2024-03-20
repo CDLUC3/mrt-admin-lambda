@@ -17,12 +17,12 @@ class ObjectIdFilesQuery < AdminQuery
         o.ark,
         v.number,
         (
-          select max(vv.number) 
-          from inv.inv_files ff 
-          inner join inv.inv_versions vv 
-            on ff.inv_version_id = vv.id 
-          where 
-            ff.inv_object_id = o.id 
+          select max(vv.number)
+          from inv.inv_files ff
+          inner join inv.inv_versions vv
+            on ff.inv_version_id = vv.id
+          where
+            ff.inv_object_id = o.id
           and exists (
             select 1 where ff.pathname=f.pathname
           )
