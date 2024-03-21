@@ -67,9 +67,7 @@ default:
       match: '.*x2-stg$'
       endpoints:
         ui: 
-          state: "/state.json"
-          audit_rep: "/state-audit-replic.json"
-          +ALB: "{!ENV: MERRITT_PATH}/state.json"
+          -al2-config: "#default"
         ldap: 
           -ALB: "https://{!SSM: ldap/host}"
     al2023prd:
@@ -112,8 +110,8 @@ default:
           start: "{!SSM: replic/port}/service/start?t=json"
           stop: "{!SSM: replic/port}/service/stop?t=json"
         ui: 
-          state: "/state.json"
-          audit_rep: "/state-audit-replic.json"
+          state: "{!SSM: ui/port}/state.json"
+          audit_rep: "{!SSM: ui/port}/state-audit-replic.json"
           +ALB: "{!ENV: MERRITT_PATH}/state.json"
         ldap: 
           -ALB: "https://{!SSM: ldap/host}"
@@ -157,8 +155,8 @@ default:
           start: "{!SSM: replic/port}/service/start?t=json"
           stop: "{!SSM: replic/port}/service/stop?t=json"
         ui: 
-          state: "/state.json"
-          audit_rep: "/state-audit-replic.json"
+          state: "{!SSM: ui/port}/state.json"
+          audit_rep: "{!SSM: ui/port}/state-audit-replic.json"
           +ALB: "{!ENV: MERRITT_PATH}/state.json"
         ldap: 
           -ALB: "https://{!SSM: ldap/host}"
