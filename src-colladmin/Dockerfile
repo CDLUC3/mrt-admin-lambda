@@ -13,7 +13,7 @@ FROM ${ECR_REGISTRY}/uc3-mrt-admin-common
 RUN yum -y update
 
 # Build rest-client gem from source
-RUN yum -y install gcc-c++
+RUN yum -y install gcc-c++ && yum -y groupinstall "Development Tools"
 
 # Add Admin Tool Code to the image
 COPY . /var/task/
