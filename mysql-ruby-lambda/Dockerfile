@@ -5,9 +5,9 @@
 # This image is based on an architecture that matches the Lambda Ruby runtime
 # docker build -t ${ECR_REGISTRY}/mysql-ruby-lambda .
 
-FROM public.ecr.aws/lambda/ruby:3
+FROM public.ecr.aws/lambda/ruby:3.2
 
-RUN yum -y update
+RUN yum -y update && yum -y upgrade
 
 # Install an os-specific MySQL installation.  
 # gcc and make are required to build mysql.

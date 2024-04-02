@@ -7,9 +7,9 @@
 # This image is not actively used
 # docker build -t ${ECR_REGISTRY}/simulate-lambda-alb .
 
-FROM ruby:3
+FROM ruby:3.2
 
-RUN apt-get update -y && apt-get -y upgrade
+RUN yum -y update && yum -y upgrade
 
 RUN gem install bundler
 

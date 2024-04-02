@@ -5,10 +5,12 @@
 # This image is based on an architecture that matches the Lambda Ruby runtime
 # docker build -t ${ECR_REGISTRY}/cognito-lambda-nonvpc .
 
-FROM public.ecr.aws/lambda/ruby:3
+FROM public.ecr.aws/lambda/ruby:3.2
 
-RUN yum -y update
+RUN yum -y update && yum -y upgrade
+
 RUN yum -y install gcc make git
+
 RUN gem update bundler 
 
 # Start with a Gemfile containing only MySQL
