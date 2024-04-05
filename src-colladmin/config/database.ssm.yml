@@ -94,8 +94,8 @@ default:
         inventory: 
           state: "{!SSM: inventory/port}/state?t=json"
           build-info: "{!SSM: inventory/port}/static/build.content.txt"
-          #start: "{!SSM: inventory/port}/service/start?t=json"
-          #stop: "{!SSM: inventory/port}/service/stop?t=json"
+          start: "{!SSM: inventory/port}/service/start?t=json"
+          stop: "{!SSM: inventory/port}/service/stop?t=json"
           ALB: "{!SSM: colladmin/inventory-service}/state?t=json"
         audit: 
           jsonstatus: "{!SSM: audit/port}/jsonstatus"
@@ -173,20 +173,12 @@ default:
         access: 
           -al2-config: "#default"
         inventory: 
-          state: "{!SSM: inventory/port}/mrtinv/state?t=json"
-          build-info: "{!SSM: inventory/port}/mrtinv/static/build.content.txt"
-          start: "{!SSM: inventory/port}/mrtinv/service/start?t=json"
-          stop: "{!SSM: inventory/port}/mrtinv/service/stop?t=json"
-          ALB: "{!SSM: colladmin/inventory-service}/state?t=json"
           -al2-config: "#default"
         audit: 
           -al2-config: "#default"
         replic: 
           -al2-config: "#default"
         ui: 
-          state: "/state.json"
-          audit_rep: "/state-audit-replic.json"
-          +ALB: "{!ENV: MERRITT_PATH}/state.json"
           -al2-config: "#default"
         ldap: 
           -ALB: "https://{!SSM: ldap/host}"
