@@ -569,7 +569,22 @@
       </ul>
     </div>
 
-    
+    <h3>Prune Candidate Files</h3>
+    <ul>
+      <li class="graph">
+        <form action="{{ADMINTOOL_HOME}}">
+          Prune Candidate Files for a Mnemonic:
+          <select name="mnemonic">
+            {{#MCOLLS}}
+            <option value="{{mnemonic}}">{{mnemonic}}: {{name}}</option>
+            {{/MCOLLS}}
+          </select>
+          <input name="path" type="hidden" value="prune_candidates"/>
+          <input type="submit" value="Go!"/>
+        </form>
+    </ul>
+  </div>
+  
     </div>
     <div id="data" class="admin-tool">
       <div id="alternative">

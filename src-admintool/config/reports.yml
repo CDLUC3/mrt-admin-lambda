@@ -120,6 +120,13 @@ producer_files:
   category: files
   description: |
     Producer Files for a Mnemonic.
+prune_candidates:
+  link-title: Prune Candidate Files for a Mnemonic
+  breadcrumb: bp_content_projects
+  class: PruneCandidateFilesQuery
+  category: files
+  description: |
+    Prune Candidate Files for a Mnemonic.
 daily-build-s3-list:
   link-title: Daily Build Links
   breadcrumb: bp_content_projects
