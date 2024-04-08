@@ -236,11 +236,9 @@ class TagAction < AdminAction
   end
 
   def get_table_rows
-    rows = []
-    @instances.keys.sort.each do |k|
-      rows.append(@instances[k].table_row(self))
+    @instances.keys.sort.map do |k|
+      @instances[k].table_row(self)
     end
-    rows
   end
 
   def has_table

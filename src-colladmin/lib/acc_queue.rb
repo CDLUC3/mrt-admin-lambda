@@ -80,11 +80,9 @@ class AccQueueEntry < QueueJson
   end
 
   def self.table_headers
-    arr = []
-    AccQueueEntry.placeholder.get_property_list.each do |sym|
-      arr.append(AccQueueEntry.placeholder.get_label(sym))
+    AccQueueEntry.placeholder.get_property_list.map do |sym|
+      AccQueueEntry.placeholder.get_label(sym)
     end
-    arr
   end
 
   def self.table_types

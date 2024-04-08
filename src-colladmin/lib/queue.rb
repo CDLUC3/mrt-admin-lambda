@@ -102,11 +102,9 @@ class QueueEntry < QueueJson
   end
 
   def self.table_headers
-    arr = []
-    QueueEntry.placeholder.get_property_list.each do |sym|
-      arr.append(QueueEntry.placeholder.get_label(sym))
+    QueueEntry.placeholder.get_property_list.map do |sym|
+      QueueEntry.placeholder.get_label(sym)
     end
-    arr
   end
 
   def self.table_types

@@ -80,11 +80,9 @@ class JobManifestEntry < MerrittJson
   end
 
   def self.table_headers
-    arr = []
-    JobManifestEntry.placeholder.get_property_list.each do |sym|
-      arr.append(JobManifestEntry.placeholder.get_label(sym))
+    JobManifestEntry.placeholder.get_property_list.map do |sym|
+      JobManifestEntry.placeholder.get_label(sym)
     end
-    arr
   end
 
   def self.table_types

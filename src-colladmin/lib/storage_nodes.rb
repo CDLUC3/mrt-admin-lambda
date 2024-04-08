@@ -841,18 +841,16 @@ class ObjectQuery < MerrittQuery
   end
 
   def search
-    objects = []
-    params = []
-    @norm_search.each do |p|
-      params.append(p)
+    params = @norm_search.map do |p|
+      p
     end
     params.push(@owner) unless @owner.empty?
 
     run_query(
       get_sql,
       params
-    ).each do |r|
-      objects.push({
+    ).map do |r|
+      {
         coll: r[0],
         owner: r[1],
         id: r[2],
@@ -867,17 +865,15 @@ class ObjectQuery < MerrittQuery
         file_count_fmt: MerrittQuery.num_format(r[10]),
         billable_size: r[11].nil? ? 0 : r[11],
         billable_size_fmt: MerrittQuery.num_format(r[11].nil? ? 0 : r[11])
-      })
+      }
     end
-    objects
   end
 
   attr_reader :objects
 
   def get_placeholders
-    p = []
-    @norm_search.each do |_s|
-      p.append('?')
+    p = @norm_search.map do |_s|
+      '?'
     end
     p.join(',')
   end

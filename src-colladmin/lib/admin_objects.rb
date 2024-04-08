@@ -261,13 +261,7 @@ class AdminProfileList < MerrittJson
   end
 
   def table_rows
-    rows = []
-    @profiles.each do |p|
-      rows.push(
-        p.to_table_row
-      )
-    end
-    rows
+    @profiles.map(&:to_table_row)
   end
 
   attr_reader :profiles

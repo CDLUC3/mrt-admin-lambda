@@ -381,11 +381,9 @@ module LambdaFunctions
         actmap[path] = [] unless actmap.key?(path)
         actmap[path].push(act)
       end
-      maplist = []
-      actmap.keys.sort.each do |p|
-        maplist.push({ path: p, actions: actmap[p] })
+      actmap.keys.sort.map do |p|
+        { path: p, actions: actmap[p] }
       end
-      maplist
     end
   end
 end

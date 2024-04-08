@@ -25,11 +25,9 @@ class LockEntry < MerrittJson
   end
 
   def self.table_headers
-    arr = []
-    LockEntry.placeholder.get_property_list.each do |sym|
-      arr.append(LockEntry.placeholder.get_label(sym))
+    LockEntry.placeholder.get_property_list.map do |sym|
+      LockEntry.placeholder.get_label(sym)
     end
-    arr
   end
 
   def self.table_types

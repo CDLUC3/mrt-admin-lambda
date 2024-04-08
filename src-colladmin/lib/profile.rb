@@ -28,12 +28,7 @@ class ProfileList < MerrittJson
   end
 
   def table_rows
-    rows = []
-    @profiles.each do |p|
-      # next if p.is_template?
-      rows.append(p.summary_values)
-    end
-    rows
+    @profiles.map(&:summary_values)
   end
 
   def notification_map
@@ -41,14 +36,12 @@ class ProfileList < MerrittJson
     @profiles.each do |p|
       map[p.get_value(:context)] = p.get_value(:contactsEmail).join(',')
     end
-    omap = []
-    map.keys.sort.each do |k|
-      omap.push({
+    map.keys.sort.map do |k|
+      {
         mnemonic: k,
         contacts: map[k]
-      })
+      }
     end
-    omap
   end
 
   def recent_profiles
@@ -60,14 +53,12 @@ class ProfileList < MerrittJson
         context: p.get_value(:context)
       }
     end
-    omap = []
-    map.keys.sort.reverse.each do |k|
-      omap.push({
+    map.keys.sort.reverse.map do |k|
+      {
         ark: map[k][:ark],
         name: "#{map[k][:context]}: #{map[k][:name]}"
-      })
+      }
     end
-    omap
   end
 
   attr_reader :profiles
@@ -330,9 +321,8 @@ class IngestProfile < MerrittJson
   end
 
   def summary_headers
-    arr = []
-    summary_symbols.each do |sym|
-      arr.append(get_label(sym))
+    arr = summary_symbols.map do |sym|
+      get_label(sym)
     end
     arr.append('Score')
     arr.append('Collection')

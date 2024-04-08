@@ -71,7 +71,6 @@ class OpenSearchDescribeAction < AdminAction
   end
 
   def table_rows(_body)
-    rows = []
     oskeys = {}
 
     @fields.each_key do |k|
@@ -82,10 +81,9 @@ class OpenSearchDescribeAction < AdminAction
 
       oskeys[k] = process_key(k, 'WARN')
     end
-    oskeys.keys.sort.each do |k|
-      rows.append(oskeys[k])
+    oskeys.keys.sort.map do |k|
+      oskeys[k]
     end
-    rows
   end
 
   def has_table

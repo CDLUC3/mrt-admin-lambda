@@ -38,9 +38,8 @@ class ReplicationAction < AdminAction
   end
 
   def maintidlist_placeholders
-    placeholders = []
-    @myparams.fetch('maintidlist', '').split(',').each do |_id|
-      placeholders.append('?')
+    placeholders = @myparams.fetch('maintidlist', '').split(',').map do |_id|
+      '?'
     end
     placeholders.join(',')
   end

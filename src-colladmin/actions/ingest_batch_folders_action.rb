@@ -163,7 +163,6 @@ class BatchFolderList < MerrittJson
   end
 
   def to_table
-    table = []
     bfs = @batch_folders.sort do |a, b|
       if a.status == b.status
         b.dtime <=> a.dtime
@@ -171,10 +170,7 @@ class BatchFolderList < MerrittJson
         AdminTask.status_sort_val(a.status) <=> AdminTask.status_sort_val(b.status)
       end
     end
-    bfs.each do |bf|
-      table.append(bf.table_row)
-    end
-    table
+    bfs.map(&:table_row)
   end
 
   def apply_queue_list(queue_list)

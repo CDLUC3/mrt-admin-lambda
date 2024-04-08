@@ -92,10 +92,6 @@ class JobMetadata < MerrittJson
   end
 
   def to_table
-    rows = []
-    @metadata.each do |jmr|
-      rows.append(jmr.to_table_row)
-    end
-    rows
+    @metadata.map(&:to_table_row)
   end
 end

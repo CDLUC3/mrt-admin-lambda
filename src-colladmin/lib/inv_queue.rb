@@ -69,11 +69,9 @@ class InvQueueEntry < QueueJson
   end
 
   def self.table_headers
-    arr = []
-    InvQueueEntry.placeholder.get_property_list.each do |sym|
-      arr.append(InvQueueEntry.placeholder.get_label(sym))
+    InvQueueEntry.placeholder.get_property_list.map do |sym|
+      InvQueueEntry.placeholder.get_label(sym)
     end
-    arr
   end
 
   def self.table_types
