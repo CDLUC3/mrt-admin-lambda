@@ -112,7 +112,7 @@ class PruneCandidateFilesQuery < AdminQuery
   end
 
   def get_headers(_results)
-    ['Type','Ark', 'Version', 'Path', 'Ext', 'Max Ver', 'Path Count', 'Digest Count', 'Status']
+    ['Type', 'Ark', 'Version', 'Path', 'Ext', 'Max Ver', 'Path Count', 'Digest Count', 'Status']
   end
 
   def get_types(_results)
