@@ -14,12 +14,19 @@ class PruneCandidateFilesQuery < AdminQuery
   def get_sql
     %{
     select distinct
+      'urlparam' type,
       o.ark,
       o.version_number,
       substring_index(f.pathname, '?', 1) norm,
+      lower(substring_index(substring_index(f.pathname, '?', 1), '.', -1)) ext,
       max(v.number),
       count(distinct f.pathname),
-      count(distinct digest_value)
+      count(distinct digest_value),
+      case
+        when lower(substring_index(substring_index(f.pathname, '?', 1), '.', -1)) in ('txt', 'json', 'xml')
+          then 'INFO'
+        else 'WARN'
+      end as status
     from
       inv.inv_objects o
     inner join
@@ -53,13 +60,20 @@ class PruneCandidateFilesQuery < AdminQuery
       count(distinct digest_value) > 1
     union
     select distinct
+      'deleted' type,
       o.ark,
       o.version_number,
       substring_index(f.pathname, '?', 1) norm,
+      lower(substring_index(substring_index(f.pathname, '?', 1), '.', -1)) ext,
       max(v.number),
       count(distinct f.pathname),
-      count(distinct digest_value)
-    from
+      count(distinct digest_value),
+      case
+        when lower(substring_index(substring_index(f.pathname, '?', 1), '.', -1)) in ('txt', 'json', 'xml')
+          then 'INFO'
+        else 'WARN'
+      end as status
+  from
       inv.inv_objects o
     inner join
        inv.inv_files f
@@ -98,10 +112,10 @@ class PruneCandidateFilesQuery < AdminQuery
   end
 
   def get_headers(_results)
-    ['Ark', 'Version', 'Path', 'Max Ver', 'Path Count', 'Digest Count']
+    ['Type','Ark', 'Version', 'Path', 'Ext', 'Max Ver', 'Path Count', 'Digest Count', 'Status']
   end
 
   def get_types(_results)
-    ['ark', '', 'name', '', '', '']
+    ['', 'ark', 'data', 'name', '', 'data', 'data', 'data', 'status']
   end
 end
