@@ -14,14 +14,7 @@ RUN yum -y update && yum -y upgrade
 # UC3 ruby code pulls a common gem from github for use in Lambda code.
 RUN yum -y install mysql-devel gcc make git
 
-RUN gem update bundler && \
-    git clone https://github.com/cdluc3/uc3-ssm.git && \
-    cd uc3-ssm && \
-    # pull a particular branch in order to build it
-    git checkout main && \
-    gem build uc3-ssm.gemspec && \
-    gem install uc3-ssm*.gem && \
-    cd ..
+RUN gem update bundler
 
 # Start with a Gemfile containing only MySQL
 COPY * ./
@@ -29,8 +22,7 @@ COPY * ./
 RUN bundle config --local build.mysql2 --with-mysql2-config=/usr/lib64/mysql/mysql_config && \
     bundle config --local silence_root_warning true && \
     bundle config set path 'vendor/bundle' && \
-    bundle install && \
-    gem install uc3-ssm/uc3-ssm*.gem --install-dir vendor/bundle/ruby/3.2.0
+    bundle install
 
 # This structure assumes the following:
 #   lambda_function.rb contains a module name LambdaFunctions which contains a class Handler

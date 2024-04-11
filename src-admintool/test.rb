@@ -4,6 +4,12 @@
 # docker build -t x .
 # docker run --rm -it --entrypoint 'bundle' -e SSM_ROOT_PATH=... x exec ruby test.rb
 
+# Docs say that the LambdaLayer gems are found mounted as /opt/ruby/gems but an inspection
+# of the $LOAD_PATH shows that only /opt/ruby/lib is available. So we add what we want here
+# and indicate exactly which folders contain the *.rb files
+my_gem_path = Dir['/var/task/vendor/bundle/ruby/3.2.0/bundler/gems/**/lib/']
+$LOAD_PATH.unshift(*my_gem_path)
+
 require 'json'
 require 'yaml'
 require 'uc3-ssm'
