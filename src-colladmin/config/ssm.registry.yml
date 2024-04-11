@@ -311,6 +311,8 @@ ui:
     description: Byte count file size limit for direct upload through the Merritt UI
   upload-limit-message:
     description: Human readable byte count file size limit for direct upload through the Merritt UI
+  port:
+    description: Microservice port
 integ-tests: 
   skip: true
   for-stage: &inttest
