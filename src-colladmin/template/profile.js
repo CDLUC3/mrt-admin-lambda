@@ -128,12 +128,12 @@ function doForm() {
         .tabs("enable", 1)
         .tabs("enable", 2)
         .tabs("enable", 3)
-        .tabs('select', 1);
+        .tabs('option', 'active', 1);
     },
     error: function( xhr, status ) {
       showResult(xhr.responseText);
       $("#tabs").tabs("enable", 1);
-      $('#tabs').tabs('select', 1)
+      $('#tabs').tabs('option', 'active', 1)
     }
   });
 }
