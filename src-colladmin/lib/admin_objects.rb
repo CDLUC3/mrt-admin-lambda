@@ -77,7 +77,10 @@ class AdminProfile < MerrittJson
     return false if @ark == LambdaFunctions::Handler.merritt_admin_coll_owners
 
     # Only allow submission for profiles newer than 2 years old
-    Time.new(@created) > (DateTime.now - (365 * 2)).to_time
+    Time.parse(@created) > (DateTime.now - (365 * 2)).to_time
+    rescue
+      LambdaBase.log("Time issue for #{path}: #{name}")
+      return false
   end
 
   def load_from_json(json)
@@ -204,7 +207,12 @@ class AdminProfileList < MerrittJson
 
   def parse_profiles(data)
     fetch_array_val(data, 'pros:profileFile').each do |json|
-      p = AdminProfile.new(@artifact).load_from_json(json)
+      begin
+        p = AdminProfile.new(@artifact).load_from_json(json)
+      rescue
+        LambdaBase.log("SKIP Profile #{json.to_s}")
+        next
+      end
       next if p.skip
 
       @profiles.push(p)
@@ -225,7 +233,12 @@ class AdminProfileList < MerrittJson
       elsif @profile_names.key?(name)
         @profile_arks[ark] = @profile_names[name].load_from_db(rec)
       else
-        p = AdminProfile.new(@artifact).load_from_db(rec)
+        begin
+          p = AdminProfile.new(@artifact).load_from_db(rec)
+        rescue
+          LambdaBase.log("SKIP OBJ:#{name}")
+          next
+        end
         @profile_arks[ark] = p
         @profiles.push(p)
       end
