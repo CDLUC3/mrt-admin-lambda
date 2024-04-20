@@ -3,6 +3,7 @@
 require_relative 'action'
 require_relative '../lib/queue'
 require 'zk'
+require 'merritt_zk'
 
 # Collection Admin Task class - see config/actions.yml for description
 class ZkList
@@ -113,6 +114,7 @@ class ZookeeperAction < AdminAction
       arr = @zk.get("#{zk_path}/#{cp}")
       po = QueueItemReader.new(self, cp, arr[0]).payload_object
       puts po.to_json
+      puts MerrittZK::LegacyIngestJob.list_jobs(@zk)
       register_item(QueueEntry.new(po))
     end
     convert_json_to_table('')

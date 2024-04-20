@@ -24,11 +24,17 @@ GEM
       aws-sigv4 (~> 1.1)
     aws-sigv4 (1.8.0)
       aws-eventstream (~> 1, >= 1.0.2)
+    base64 (0.2.0)
+    httpclient (2.8.3)
     jmespath (1.6.2)
     json (2.7.2)
+    jwt (2.8.1)
+      base64
     language_server-protocol (3.17.0.3)
     logger (1.6.0)
+    mustache (1.1.1)
     mysql2 (0.5.6)
+    net-ldap (0.19.0)
     parallel (1.24.0)
     parser (3.3.0.5)
       ast (~> 2.4.1)
@@ -51,6 +57,7 @@ GEM
     rubocop-ast (1.31.2)
       parser (>= 3.3.0.4)
     ruby-progressbar (1.13.0)
+    rubyzip (2.3.2)
     unicode-display_width (2.5.0)
     yaml (0.2.1)
 
@@ -58,8 +65,14 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  httpclient
+  json
+  jwt
+  mustache
   mysql2
+  net-ldap
   rubocop
+  rubyzip
   uc3-ssm (= 0.3.10)!
 
 BUNDLED WITH

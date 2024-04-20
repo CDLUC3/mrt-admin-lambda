@@ -16,10 +16,4 @@ mysql-deps/mysql-dependencies.zip
 ~$MerrittAdminTool.pptx
 .bundle/
 vendor/
-src-admintool/Gemfile.lock
-src-admintool/vendor/bundle/ruby/2.6.0/bundler/gems/uc3-ssm-74b5d8da5e54
 consistency-driver/out.txt
-consistency-driver/Gemfile.lock
-src-colladmin/Gemfile.lock
-src-common/Gemfile.lock
-src-testdriver/Gemfile.lock
