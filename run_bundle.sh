@@ -10,7 +10,7 @@ bundle install
 bundle update
 cd ../src-colladmin
 rm -rf vendor/bundle/ruby/3*/bundler/gems/mrt-zk*
-bundle install --redownload
+bundle install
 bundle update
 cd ../src-testdriver
 bundle install

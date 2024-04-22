@@ -109,12 +109,13 @@ class ZookeeperAction < AdminAction
   end
 
   def perform_action
+    jobs = MerrittZK::LegacyIngestJob.list_jobs(@zk)
+    jobs.each do |po|
+      register_item(QueueEntry.new(po))
+    end
     @zk.children(zk_path).each do |cp|
-      puts cp
       arr = @zk.get("#{zk_path}/#{cp}")
       po = QueueItemReader.new(self, cp, arr[0]).payload_object
-      puts po.to_json
-      puts MerrittZK::LegacyIngestJob.list_jobs(@zk)
       register_item(QueueEntry.new(po))
     end
     convert_json_to_table('')
@@ -125,7 +126,8 @@ class ZookeeperAction < AdminAction
   end
 
   def get_zookeeper_conn
-    @config.fetch('zookeeper', '').split(',').first
+    #@config.fetch('zookeeper', '').split(',').first
+    @config.fetch('zookeeper', '')
   end
 end
 
