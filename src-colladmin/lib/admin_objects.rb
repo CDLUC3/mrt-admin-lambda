@@ -31,10 +31,6 @@ class AdminProfile < MerrittJson
     MerrittQuery.num_format(@child_count)
   end
 
-  def toggle_harvest
-    @harvest == 'none' ? 'public' : 'none'
-  end
-
   def key
     return @mnemonic unless @mnemonic.empty?
 
@@ -108,21 +104,6 @@ class AdminProfile < MerrittJson
     @harvest = rec.fetch(:harvest, 'none')
     @child_count = rec.fetch(:child_count, 0)
     self
-  end
-
-  def toggle
-    return false unless @artifact == 'collection'
-    return false if ark.empty?
-    return false if ark == LambdaFunctions::Handler.merritt_admin_coll_owners
-    return false if ark == LambdaFunctions::Handler.merritt_curatorial
-    return false if ark == LambdaFunctions::Handler.merritt_system
-    return false if ark == LambdaFunctions::Handler.merritt_admin_coll_sla
-
-    true
-  end
-
-  def notoggle
-    !toggle
   end
 
   def set_mnemonic

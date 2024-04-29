@@ -113,10 +113,12 @@ class ZookeeperAction < AdminAction
     jobs.each do |po|
       register_item(QueueEntry.new(po))
     end
-    @zk.children(zk_path).each do |cp|
-      arr = @zk.get("#{zk_path}/#{cp}")
-      po = QueueItemReader.new(self, cp, arr[0]).payload_object
-      register_item(QueueEntry.new(po))
+    if false
+      @zk.children(zk_path).each do |cp|
+        arr = @zk.get("#{zk_path}/#{cp}")
+        po = QueueItemReader.new(self, cp, arr[0]).payload_object
+        register_item(QueueEntry.new(po))
+      end
     end
     convert_json_to_table('')
   end
@@ -137,7 +139,7 @@ class IngestQueueZookeeperAction < ZookeeperAction
   end
 
   def status_vals
-    ['Pending', 'Consumed', 'Deleted', 'Completed', 'Failed', 'Resolved']
+    ['Pending', 'Consumed', 'Deleted', 'Failed', 'Completed', 'Held']
   end
 
   def is_json

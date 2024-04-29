@@ -29,7 +29,7 @@ class MerrittJsonProperty
     begin
       @value = DateTime.parse(@value).to_time
     rescue StandardError
-      puts 'Time format error'
+      # puts 'Time format error'
       @value = Time.new
     end
     self

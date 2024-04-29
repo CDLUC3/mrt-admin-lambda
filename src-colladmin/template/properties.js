@@ -3,12 +3,6 @@ $(document).ready(function(){
 });
 
 function init() {
-$(".toggle_harvest").on("click", function(){
-  do_action({
-    path: "toggle_harvest",
-    ark: $(this).attr("data")
-  });
-});
 $(".set_mnemonic").on("click", function(){
   do_action({
     path: "set_mnemonic",

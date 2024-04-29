@@ -102,12 +102,6 @@ class AdminProfileAction < ForwardToIngestAction
     return { message: "Ark #{ark} not found" }.to_json if p.nil?
 
     case @path
-    when 'toggle_harvest'
-      MerrittQuery.new(@config).run_update(
-        'update inv_collections set harvest_privilege = ? where ark = ?',
-        [p.toggle_harvest, ark],
-        'Update successful, reload page to see result'
-      ).to_json
     when 'set_mnemonic'
       return { message: 'Context not found' }.to_json if p.key.empty?
 
