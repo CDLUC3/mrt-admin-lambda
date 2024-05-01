@@ -5,7 +5,7 @@ class IngestBytesByMonthQuery < AdminQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
     @defyears = 10
-    @totit = @defyears * 12 + 1
+    @totit = (@defyears * 12) + 1
     @tend = ((Date.today - Date.today.day + 1) >> 1).strftime('%Y-%m-%d')
     @tstart = ((Date.today - Date.today.day + 1) << (12 * @defyears)).strftime('%Y-%m-%d')
   end

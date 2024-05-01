@@ -3,7 +3,7 @@
 # Query class - see config/reports.yml for description
 class ConsistencySecondaryNodeQuery < AdminQuery
   def get_title
-    'Collections with Non-standard Secondary Nodes (Not Glacier+Wasabi or SDSC+Wasabi or Dryad Glacier+SDSC)'
+    'Collections with Non-standard Secondary Nodes (Not Glacier+Wasabi or SDSC+Wasabi)'
   end
 
   def get_sql
@@ -25,7 +25,6 @@ class ConsistencySecondaryNodeQuery < AdminQuery
           when c.name like 'Merritt %' then 'INFO'
           when lower(c.name) like '%service level agreement%' then 'INFO'
           when c.name like '%SLA' then 'INFO'
-          when c.name like 'CDL Dryad Stage' then 'INFO'
           when c.name like 'CDL Wasabi Demo Collection' then 'INFO'
           else 'FAIL'
         end as status
@@ -48,7 +47,7 @@ class ConsistencySecondaryNodeQuery < AdminQuery
       group by
         collection
       having
-        nodes not in ('2001,6001', '2001,9501', '2002,6001', '2002,9502', '3641,9501')
+        nodes not in ('2001,6001', '2001,9501', '2002,6001', '2002,9502')
       ;
     }
   end

@@ -19,12 +19,6 @@ class ConsistencyFilesQuery < AdminQuery
     %{
       select
         case
-          when c.mnemonic like 'cdl_dryad%'
-            then 'Dryad'
-          when c.mnemonic = 'oneshare_dataup'
-            then 'DataOne'
-          when c.mnemonic = 'dataone_dash'
-            then 'DataOne'
           when ifnull(c.mnemonic, '') = ''
             then 'No Mnemonic'
           when age.inv_object_id = (
@@ -74,7 +68,6 @@ class ConsistencyFilesQuery < AdminQuery
         case
           when count(*) = 0 then 'PASS'
           when #{@copies.to_i} = 3 then 'PASS'
-          when #{@copies.to_i} = 4 and c.mnemonic = 'cdl_dryad' then 'INFO'
           when ifnull(
             sum(
               case

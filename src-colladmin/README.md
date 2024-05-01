@@ -37,7 +37,7 @@
     - GET /admin/bids/*Age in Days*
       - Get list of batches on disk
     - GET /admin/bid/*BID*/<age in days>
-      - Get batch info in days (Useful for Dryad: JOB_ONLY)
+      - Get batch info in days 
 - Display Job Detail (job metadata)
   - Colladmin
     - GET job?bid=*BID*&job=*JID*
@@ -98,8 +98,8 @@ Ingest Admin APIs
 - GET /admin/locks                - list ingest locks
 - GET /admin/lock/<lock>          - query specific ingest lock
 
-- GET /admin/bid/<bid>            - batch listing (dryad will be "JOB_ONLY")
-- GET /admin/bid/<bid>/<age in days>      - batch listing, with age (dryad will be "JOB_ONLY")
+- GET /admin/bid/<bid>            - batch listing )
+- GET /admin/bid/<bid>/<age in days>      - batch listing, with age 
 - GET /admin/bids/<age in days>   - batch listing
 
 - GET /admin/jid-erc/<bid>/<jid>  - Job ERC data

@@ -84,7 +84,7 @@ objects_by_local_id:
   class: ObjectsByLocalIdQuery
   category: objects
   description: |
-    This report displays an object with an exact match to a localid such as `doi:10.5061/dryad.9999`.  
+    This report displays an object with an exact match to a localid .
     Wildcard searching is not permitted.
     
     Click the Object Id link to see a detailed listing of the files contained in the object.
@@ -495,7 +495,6 @@ recent_ingests:
   category: ingest
   description: |
     Enumerate the ingest batches that were processed on a specific date.
-    All Dryad submissions for the specific date will be counted as a single batch.
 arklist:
   link-title: Objects by Ark List Query
   breadcrumb: bp_obj

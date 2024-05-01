@@ -3,7 +3,7 @@
 # Query class - see config/reports.yml for description
 class ConsistencyPrimaryNodeQuery < AdminQuery
   def get_title
-    'Collections with Non-standard Primary Nodes (Not SDSC or Dryad S3)'
+    'Collections with Non-standard Primary Nodes (Not SDSC)'
   end
 
   def get_sql
@@ -27,7 +27,6 @@ class ConsistencyPrimaryNodeQuery < AdminQuery
         case
           when n.number = 4001 then 'SKIP'
           when n.number = 5001 then 'INFO'
-          when c.name like 'CDL Dryad Stage' then 'INFO'
           when c.name like 'CDL Wasabi Demo Collection' then 'INFO'
           else 'FAIL'
         end as status
@@ -54,7 +53,7 @@ class ConsistencyPrimaryNodeQuery < AdminQuery
       and
         o.aggregate_role = 'MRT-collection'
       where
-        n.number not in (3041, 9501, 9502)
+        n.number not in (9501, 9502)
       group by
         nodenum,
         nodename,

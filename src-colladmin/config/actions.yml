@@ -453,7 +453,7 @@ cognito-users:
     Users are not created explicitly in the admin tool. A user is created by (1)performing an SSO login or (2)registering as a non-SAML user.  
     This screen contains buttons that could trigger the addition/removal of specific users from a *Cognito User Group*.
 
-    Note: While the tool supports non-SAML users, in practice, we have not authorized any non-SAML users.  This is intended for partners such as Dryad staff.
+    Note: While the tool supports non-SAML users, in practice, we have not authorized any non-SAML users.
   documentation: |
     Aws: Lambda Invoke (Lambda interface to Cognito enpoints)
   migration: m0
