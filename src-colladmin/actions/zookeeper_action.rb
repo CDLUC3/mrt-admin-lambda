@@ -31,61 +31,21 @@ class ZkList
   end
 end
 
-class QueueItemReader
-  @@na = "NA"
-  def initialize(zk_action, id, payload)
-    @bytes = payload.nil? ? [] : payload.bytes
-    @is_json = zk_action.is_json
-    @status_vals = zk_action.status_vals
-    @queue_node = zk_action.zk_path
-    @id = id
-  end
-
-  def status_byte
-    @bytes.empty? ? 0 : @bytes[0]
-  end
-
-  def status
-    return @@na if status_byte > @status_vals.length
-    @status_vals[status_byte]
-  end
-
-  def time
-    return nil if @bytes.length < 9
-      # https://stackoverflow.com/a/68855488/3846548
-      t = @bytes[1..8].inject(0) {|m, b| (m << 8) + b }
-    Time.at(t/1000)
-  end
-
-  def payload_text
-    return "" if @bytes.length < 10
-    @bytes[9..].pack('c*')
-  end
-
-  def payload_object
-    if @is_json
-      json = JSON.parse(payload_text)
-    else
-      json = {
-        payload: payload_text
-      }
-    end
-    json['queueNode'] = @queue_node
-    json['id'] = @id
-    json['date'] = time
-    json['status'] = status
-    json
-  end
-
-end
-
-
 class ZookeeperAction < AdminAction
   def initialize(config, action, path, myparams, filters)
     super(config, action, path, myparams)
     @filters = {}
     @zk = ZK.new(get_zookeeper_conn)
     @items = ZkList.new
+  end
+
+  def migration_level
+    return :m1 if @zk.exists?("/migration/m1")
+    :none
+  end
+
+  def migration_m1?
+    migration_level == :m1
   end
 
   def zk_path
@@ -109,16 +69,9 @@ class ZookeeperAction < AdminAction
   end
 
   def perform_action
-    jobs = MerrittZK::LegacyIngestJob.list_jobs(@zk)
+    jobs = migration_m1? ? MerrittZK::Job.list_jobs(@zk) : MerrittZK::LegacyIngestJob.list_jobs(@zk)
     jobs.each do |po|
       register_item(QueueEntry.new(po))
-    end
-    if false
-      @zk.children(zk_path).each do |cp|
-        arr = @zk.get("#{zk_path}/#{cp}")
-        po = QueueItemReader.new(self, cp, arr[0]).payload_object
-        register_item(QueueEntry.new(po))
-      end
     end
     convert_json_to_table('')
   end
