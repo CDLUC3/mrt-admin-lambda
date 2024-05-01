@@ -5,6 +5,7 @@ class IngestBytesByMonthQuery < AdminQuery
   def initialize(query_factory, path, myparams)
     super(query_factory, path, myparams)
     @defyears = 10
+    @totit = @defyears * 12 + 1
     @tend = ((Date.today - Date.today.day + 1) >> 1).strftime('%Y-%m-%d')
     @tstart = ((Date.today - Date.today.day + 1) << (12 * @defyears)).strftime('%Y-%m-%d')
   end
@@ -21,7 +22,7 @@ class IngestBytesByMonthQuery < AdminQuery
       from
         (
     }
-    121.times do |y|
+    @totit.times do |y|
       sql += %( union ) unless y.zero?
       sql += %{
           select date_add(date('#{@tstart}'), interval #{y} MONTH) as ts
