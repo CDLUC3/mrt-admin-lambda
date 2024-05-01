@@ -18,16 +18,16 @@ class ObsoleteQuery < AdminQuery
           when o.created > date_add(now(), interval -1 month) then 'PASS'
           when o.created > date_add(now(), interval -1 year) then 'INFO'
           else 'WARN'
-        end status 
-      from 
+        end status
+      from
         inv.inv_owners own
       inner join inv.inv_objects o
         on own.inv_object_id = o.id
-      where 
+      where
         not exists (
-          select 1 
-            from inv.inv_objects o 
-          where 
+          select 1
+            from inv.inv_objects o
+          where
             o.inv_owner_id=own.id
         )
       union
@@ -41,16 +41,16 @@ class ObsoleteQuery < AdminQuery
           when o.created > date_add(now(), interval -1 month) then 'PASS'
           when o.created > date_add(now(), interval -1 year) then 'INFO'
           else 'WARN'
-        end status 
-      from 
+        end status
+      from
         inv.inv_collections c
       inner join inv.inv_objects o
         on c.inv_object_id = o.id
-      where 
+      where
         not exists (
-          select 1 
-          from inv.inv_collections_inv_objects icio 
-          where 
+          select 1
+          from inv.inv_collections_inv_objects icio
+          where
             icio.inv_collection_id = c.id
         )
       ;
@@ -58,7 +58,7 @@ class ObsoleteQuery < AdminQuery
   end
 
   def get_headers(_results)
-    ['Category', 'Id', 'Mnemonic', 'Name', 'Created', 'Status']
+    %w[Category Id Mnemonic Name Created Status]
   end
 
   def get_types(_results)
