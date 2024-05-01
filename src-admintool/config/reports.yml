@@ -293,6 +293,18 @@ collections_by_time_count:
     - year by year since the Merritt system was established
     - day by day for the past week
     - week by week for the last 4 weeks
+collections_by_time_count_obj:
+  link-title: Objects Added by Date 
+  breadcrumb: bp_ingest
+  class: CollectionObjectsByTimeQuery
+  category: collections/time
+  description: |
+    This report shows the count of objects added to each Merritt collection.
+    This report includes both system and producer files. 
+    Based on the interval parameter, the report may show Counts
+    - year by year since the Merritt system was established
+    - day by day for the past week
+    - week by week for the last 4 weeks
 collections_by_time_size:
   link-title: Bytes Added by Date 
   breadcrumb: bp_ingest
