@@ -98,9 +98,8 @@ class AdminQuery < AdminTask
   end
 
   def get_types(results)
-    types = []
-    results.fields.each do
-      types.push('')
+    results.fields.map do |_col|
+      ''
     end
   end
 

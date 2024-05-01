@@ -31,8 +31,9 @@ class ZkList
   end
 end
 
+## Base class for actions that interact directly with Zookeeper using the mrt-zk library
 class ZookeeperAction < AdminAction
-  def initialize(config, action, path, myparams, filters)
+  def initialize(config, action, path, myparams, _filters)
     super(config, action, path, myparams)
     @filters = {}
     @zk = ZK.new(get_zookeeper_conn)
@@ -40,7 +41,8 @@ class ZookeeperAction < AdminAction
   end
 
   def migration_level
-    return :m1 if @zk.exists?("/migration/m1")
+    return :m1 if @zk.exists?('/migration/m1')
+
     :none
   end
 
@@ -60,9 +62,7 @@ class ZookeeperAction < AdminAction
     false
   end
 
-  def items
-    @items
-  end
+  attr_reader :items
 
   def register_item(item)
     @items.add_item(item)
@@ -81,18 +81,19 @@ class ZookeeperAction < AdminAction
   end
 
   def get_zookeeper_conn
-    #@config.fetch('zookeeper', '').split(',').first
+    # @config.fetch('zookeeper', '').split(',').first
     @config.fetch('zookeeper', '')
   end
 end
 
+## Class for reading the legacy Merritt Ingest Queue
 class IngestQueueZookeeperAction < ZookeeperAction
   def zk_path
     '/ingest'
   end
 
   def status_vals
-    ['Pending', 'Consumed', 'Deleted', 'Failed', 'Completed', 'Held']
+    %w[Pending Consumed Deleted Failed Completed Held]
   end
 
   def is_json

@@ -40,7 +40,7 @@ class IngestQueueProfileCountAction < IngestQueueZookeeperAction
     @profiles[k].append(item)
   end
 
-  def table_rows(body)
+  def table_rows(_body)
     arr = []
     @profiles.keys.sort.each do |k|
       ka = k.split(',')

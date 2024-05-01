@@ -12,9 +12,8 @@ class IdlistQuery < AdminQuery
   end
 
   def get_placeholders
-    buf = []
-    get_params.each do |_ark|
-      buf.append('?')
+    buf = get_params.map do |_ark|
+      '?'
     end
     buf.join(',')
   end

@@ -12,13 +12,13 @@ class QueueEntry < QueueJson
 
   def initialize(json)
     # not yet used
-    #{
+    # {
     #  "queuePriority": "03",
     #  "responseForm": "xml",
     #  "localID": "2024_03_04_1717_v1file",
     #  "update": true
-    #}
-    
+    # }
+
     super()
     # until July 2023, Merritt had 3 separate queues identified as a queue node
     add_property(

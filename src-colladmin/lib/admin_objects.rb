@@ -74,9 +74,9 @@ class AdminProfile < MerrittJson
 
     # Only allow submission for profiles newer than 2 years old
     Time.parse(@created) > (DateTime.now - (365 * 2)).to_time
-    rescue
-      LambdaBase.log("Time issue for #{path}: #{name}")
-      return false
+  rescue StandardError
+    LambdaBase.log("Time issue for #{path}: #{name}")
+    false
   end
 
   def load_from_json(json)
@@ -190,8 +190,8 @@ class AdminProfileList < MerrittJson
     fetch_array_val(data, 'pros:profileFile').each do |json|
       begin
         p = AdminProfile.new(@artifact).load_from_json(json)
-      rescue
-        LambdaBase.log("SKIP Profile #{json.to_s}")
+      rescue StandardError
+        LambdaBase.log("SKIP Profile #{json}")
         next
       end
       next if p.skip
@@ -216,7 +216,7 @@ class AdminProfileList < MerrittJson
       else
         begin
           p = AdminProfile.new(@artifact).load_from_db(rec)
-        rescue
+        rescue StandardError
           LambdaBase.log("SKIP OBJ:#{name}")
           next
         end
