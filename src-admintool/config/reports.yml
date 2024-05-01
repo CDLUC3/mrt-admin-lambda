@@ -682,6 +682,15 @@ object_mult_coll:
   description: |
     Enumerate objects that have been assigned to multiple Merritt collections.
     Objects residing in multiple collections is a legacy Merritt feature.
+obsolete:
+  link-title: Obosolete Container Objects
+  breadcrumb: bp_obj
+  class: ObsoleteQuery
+  category: admin obj
+  description: |
+    List obsolete Collection and Owner Objects
+  report-datatypes:
+  - aggrole
 admin_obj:
   link-title: Merritt Admin Objects with a Specific Role
   breadcrumb: bp_obj
