@@ -355,15 +355,13 @@ class InvoicesQuery < AdminQuery
   end
 
   def get_alternative_queries
-    queries = []
     campuses = @campus.empty? ? %w[UCB UCD UCI UCLA UCM UCR UCSB UCSC UCSD UCSF] : ['']
-    campuses.each do |campus|
-      queries.append({
+    campuses.map do |campus|
+      {
         label: campus.empty? ? 'All Campuses' : campus,
         url: params_to_str(campus_params(campus)),
         class: 'campus'
-      })
+      }
     end
-    queries
   end
 end

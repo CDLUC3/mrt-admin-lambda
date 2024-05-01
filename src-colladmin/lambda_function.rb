@@ -360,6 +360,7 @@ module LambdaFunctions
           sensitivity: act.fetch('sensitivity', ''),
           is_readonly: act.fetch('sensitivity', '') == 'readonly',
           category: act.fetch('category', ''),
+          migration: act.fetch('migration', ''),
           testing: act.fetch('testing_instructions', act.fetch('testing', ''))
         })
       end

@@ -11,51 +11,61 @@ class QueueEntry < QueueJson
   end
 
   def initialize(json)
+    # not yet used
+    # {
+    #  "queuePriority": "03",
+    #  "responseForm": "xml",
+    #  "localID": "2024_03_04_1717_v1file",
+    #  "update": true
+    # }
+
     super()
     # until July 2023, Merritt had 3 separate queues identified as a queue node
     add_property(
       :queueNode,
-      MerrittJsonProperty.new('Ingest Worker').lookup_value(json, 'que', 'queueNode')
+      MerrittJsonProperty.new('Ingest Worker').lookup_value(json, '', 'queueNode')
     )
     add_property(
       :bid,
-      MerrittJsonProperty.new('Batch').lookup_value(json, 'que', 'batchID')
+      MerrittJsonProperty.new('Batch').lookup_value(json, '', 'batchID')
     )
     add_property(
       :job,
-      MerrittJsonProperty.new('Job').lookup_value(json, 'que', 'jobID')
+      MerrittJsonProperty.new('Job').lookup_value(json, '', 'jobID')
     )
     add_property(
       :profile,
-      MerrittJsonProperty.new('Profile').lookup_value(json, 'que', 'profile')
+      MerrittJsonProperty.new('Profile').lookup_value(json, '', 'profile')
     )
+    # insert binary time field
     add_property(
       :date,
-      MerrittJsonProperty.new('Date').lookup_time_value(json, 'que', 'date')
+      MerrittJsonProperty.new('Date').lookup_time_value(json, '', 'date')
     )
     add_property(
       :user,
-      MerrittJsonProperty.new('User').lookup_value(json, 'que', 'user')
+      MerrittJsonProperty.new('User').lookup_value(json, '', 'submitter')
     )
     add_property(
       :title,
-      MerrittJsonProperty.new('Title').lookup_value(json, 'que', 'objectTitle')
+      MerrittJsonProperty.new('Title').lookup_value(json, '', 'title')
     )
     add_property(
       :file_type,
-      MerrittJsonProperty.new('File Type').lookup_value(json, 'que', 'file_type')
+      MerrittJsonProperty.new('File Type').lookup_value(json, '', 'type')
     )
+    # insert status from binary field
     add_property(
       :qstatus,
-      MerrittJsonProperty.new('QStatus').lookup_value(json, 'que', 'status')
+      MerrittJsonProperty.new('QStatus').lookup_value(json, '', 'status')
     )
     add_property(
       :queue,
-      MerrittJsonProperty.new('Name').lookup_value(json, 'que', 'name')
+      MerrittJsonProperty.new('Name').lookup_value(json, '', 'filename')
     )
     add_property(
       :queueId,
-      MerrittJsonProperty.new('Queue ID').lookup_value(json, 'que', 'iD')
+      MerrittJsonProperty.new('Queue ID').lookup_value(json, '', 'id')
     )
     # extract the ingest worker node from the queue id string
     qid = get_value(:queueId, '')

@@ -1,4 +1,13 @@
 GIT
+  remote: https://github.com/CDLUC3/mrt-zk.git
+  revision: 0666a075c9026c8f81868a1d81c8c4572296c9c1
+  tag: 1.0.2.a
+  specs:
+    mrt-zk (1.0.1)
+      zk (~> 1.10.0)
+      zookeeper (~> 1.5.5)
+
+GIT
   remote: https://github.com/CDLUC3/uc3-ssm.git
   revision: 9765a8d08d9103501e61905e7fa91088ea9c0d09
   branch: main
@@ -19,16 +28,38 @@ GEM
       aws-partitions (~> 1, >= 1.651.0)
       aws-sigv4 (~> 1.8)
       jmespath (~> 1, >= 1.6.1)
+    aws-sdk-ec2 (1.453.0)
+      aws-sdk-core (~> 3, >= 3.193.0)
+      aws-sigv4 (~> 1.1)
+    aws-sdk-kms (1.80.0)
+      aws-sdk-core (~> 3, >= 3.193.0)
+      aws-sigv4 (~> 1.1)
+    aws-sdk-lambda (1.119.0)
+      aws-sdk-core (~> 3, >= 3.193.0)
+      aws-sigv4 (~> 1.1)
+    aws-sdk-s3 (1.149.0)
+      aws-sdk-core (~> 3, >= 3.194.0)
+      aws-sdk-kms (~> 1)
+      aws-sigv4 (~> 1.8)
     aws-sdk-ssm (1.168.0)
       aws-sdk-core (~> 3, >= 3.193.0)
       aws-sigv4 (~> 1.1)
     aws-sigv4 (1.8.0)
       aws-eventstream (~> 1, >= 1.0.2)
+    csv (3.3.0)
+    domain_name (0.6.20240107)
+    http-accept (1.7.0)
+    http-cookie (1.0.5)
+      domain_name (~> 0.5)
     jmespath (1.6.2)
     json (2.7.2)
     language_server-protocol (3.17.0.3)
     logger (1.6.0)
+    mime-types (3.5.2)
+      mime-types-data (~> 3.2015)
+    mime-types-data (3.2024.0305)
     mysql2 (0.5.6)
+    netrc (0.11.0)
     parallel (1.24.0)
     parser (3.3.1.0)
       ast (~> 2.4.1)
@@ -36,6 +67,11 @@ GEM
     racc (1.7.3)
     rainbow (3.1.1)
     regexp_parser (2.9.0)
+    rest-client (2.1.0)
+      http-accept (>= 1.7.0, < 2.0)
+      http-cookie (>= 1.0.2, < 2.0)
+      mime-types (>= 1.16, < 4.0)
+      netrc (~> 0.8)
     rexml (3.2.6)
     rubocop (1.63.4)
       json (~> 2.3)
@@ -51,16 +87,31 @@ GEM
     rubocop-ast (1.31.3)
       parser (>= 3.3.1.0)
     ruby-progressbar (1.13.0)
+    unf_ext (0.0.7.7)
     unicode-display_width (2.5.0)
     yaml (0.2.1)
+    zk (1.10.0)
+      zookeeper (~> 1.5.0)
+    zookeeper (1.5.5)
 
 PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  aws-sdk-ec2
+  aws-sdk-lambda
+  aws-sdk-s3
+  aws-sdk-ssm
+  csv
+  json
+  mrt-zk!
   mysql2
+  rest-client
   rubocop
   uc3-ssm (= 0.3.10)!
+  unf_ext (~> 0.0.7.7)
+  zk
+  zookeeper
 
 BUNDLED WITH
    2.2.33

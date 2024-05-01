@@ -31,10 +31,6 @@ class AdminProfile < MerrittJson
     MerrittQuery.num_format(@child_count)
   end
 
-  def toggle_harvest
-    @harvest == 'none' ? 'public' : 'none'
-  end
-
   def key
     return @mnemonic unless @mnemonic.empty?
 
@@ -78,9 +74,9 @@ class AdminProfile < MerrittJson
 
     # Only allow submission for profiles newer than 2 years old
     Time.parse(@created) > (DateTime.now - (365 * 2)).to_time
-    rescue
-      LambdaBase.log("Time issue for #{path}: #{name}")
-      return false
+  rescue StandardError
+    LambdaBase.log("Time issue for #{path}: #{name}")
+    false
   end
 
   def load_from_json(json)
@@ -108,21 +104,6 @@ class AdminProfile < MerrittJson
     @harvest = rec.fetch(:harvest, 'none')
     @child_count = rec.fetch(:child_count, 0)
     self
-  end
-
-  def toggle
-    return false unless @artifact == 'collection'
-    return false if ark.empty?
-    return false if ark == LambdaFunctions::Handler.merritt_admin_coll_owners
-    return false if ark == LambdaFunctions::Handler.merritt_curatorial
-    return false if ark == LambdaFunctions::Handler.merritt_system
-    return false if ark == LambdaFunctions::Handler.merritt_admin_coll_sla
-
-    true
-  end
-
-  def notoggle
-    !toggle
   end
 
   def set_mnemonic
@@ -209,8 +190,8 @@ class AdminProfileList < MerrittJson
     fetch_array_val(data, 'pros:profileFile').each do |json|
       begin
         p = AdminProfile.new(@artifact).load_from_json(json)
-      rescue
-        LambdaBase.log("SKIP Profile #{json.to_s}")
+      rescue StandardError
+        LambdaBase.log("SKIP Profile #{json}")
         next
       end
       next if p.skip
@@ -235,7 +216,7 @@ class AdminProfileList < MerrittJson
       else
         begin
           p = AdminProfile.new(@artifact).load_from_db(rec)
-        rescue
+        rescue StandardError
           LambdaBase.log("SKIP OBJ:#{name}")
           next
         end

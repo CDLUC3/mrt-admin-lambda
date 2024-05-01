@@ -99,17 +99,15 @@ module LambdaFunctions
     end
 
     def self.get_collection_map(client)
-      m = []
       stmt = client.prepare(%(
         select mnemonic,name from inv.inv_collections
         where mnemonic is not null and mnemonic not like '%sla'
         order by mnemonic
       ))
       results = stmt.execute
-      results.each do |r|
-        m.push({ mnemonic: r.values[0], name: r.values[1] })
+      results.map do |r|
+        { mnemonic: r.values[0], name: r.values[1] }
       end
-      m
     end
 
     def get_report_url(key)
@@ -185,11 +183,9 @@ module LambdaFunctions
         rptmap[path] = [] unless rptmap.key?(path)
         rptmap[path].push(rpt)
       end
-      maplist = []
-      rptmap.keys.sort.each do |p|
-        maplist.push({ path: p, reports: rptmap[p] })
+      rptmap.keys.sort.map do |p|
+        { path: p, reports: rptmap[p] }
       end
-      maplist
     end
   end
 end

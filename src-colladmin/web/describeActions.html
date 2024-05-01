@@ -44,15 +44,31 @@
       Most actions generate a report.  
       Other actions trigger changes in the Merritt system by forwarding POST/PUT/DELETE requests to Merritt microservices.
     </div>
+    <div>
+      <h3>Migration Levels</h3>
+      <ul>
+        <li>m0: no migration</li>
+        <li>m0r: retire immediately</li>
+        <li>m1: support legacy queues</li>
+        <li>m2: support mrt-zk migration (ingest and inventory)</li>
+        <li>m2r: retire with the introduction of mrt-zk (ingest and inventory)</li>
+        <li>m3: support mrt-zk migration (access and store)</li>
+        <li>m4: profiles accessible to lambda</li>
+        <li>m5: refactor collection creation</li>
+      </ul>
+
+    </div>
     <table class="sortable results">
       <thead>
         <tr>
+          <th width="10%">migration</th>
           <th class="description">Description</th>
         </tr>
       </thead>
       <tbody>
         {{#ACTIONS}}
         <tr>
+          <td>{{migration}}</td>
           <td class="description">
             <h3>{{title}} (<span class="navlabel">{{action}}</span>)</h3>
             <div class="markdown">{{description_doc}}</div>

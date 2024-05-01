@@ -3,9 +3,10 @@
 require_relative 'forward_to_ingest_action'
 
 # Collection Admin Task class - see config/actions.yml for description
-class IngestQueueProfileCountAction < ForwardToIngestAction
+class IngestQueueProfileCountAction < IngestQueueZookeeperAction
   def initialize(config, action, path, myparams)
-    super(config, action, path, myparams, 'admin/queues')
+    super(config, action, path, myparams, {})
+    @profiles = {}
   end
 
   def get_title
@@ -32,14 +33,20 @@ class IngestQueueProfileCountAction < ForwardToIngestAction
     ]
   end
 
-  def table_rows(body)
-    queue_list = QueueList.new(get_ingest_server, body)
+  def register_item(item)
+    super(item)
+    k = "#{item.profile},#{item.qstatus}"
+    @profiles[k] = @profiles.fetch(k, [])
+    @profiles[k].append(item)
+  end
+
+  def table_rows(_body)
     arr = []
-    queue_list.profiles.keys.sort.each do |k|
+    @profiles.keys.sort.each do |k|
       ka = k.split(',')
       qs = ka[1]
       profile = ka[0]
-      list = queue_list.profiles[k]
+      list = @profiles[k]
       count = list.length
       status = 'PASS'
       status = 'FAIL' if qs == 'Failed'
