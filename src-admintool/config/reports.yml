@@ -481,21 +481,6 @@ replic_processed:
   description: |
     Count the number of object replications performed over a period of time.
     The need for replication is driven by ingest actions or by the reconfiguration of storage nodes, so the number of records processed over time may be irregular.
-doi:
-  link-title: DOI Ark Conflicts
-  breadcrumb: bp_obj
-  class: DoiConflictQuery
-  category: objects
-  description: |
-    Identify potential localid conflicts by looking for duplicate DOI's within `inv_objects.erc_where`.  
-    This issue has occasionally occurred for Dryad content.
-doi_dryad:
-  link-title: Dryad Counts by Campus DOI
-  breadcrumb: bp_obj
-  class: DoiDryadQuery
-  category: objects
-  description: |
-    Compute stats by campus DOI shoulders.
 localid_no_ark:
   link-title: Local Id No Ark
   breadcrumb: bp_obj
@@ -503,13 +488,6 @@ localid_no_ark:
   category: objects
   description: |
     List counts of localids with no corresponding arks.  No [resolution](https://github.com/CDLUC3/mrt-doc/issues/1047) has been implemented yet.
-big_ingest:
-  link-title: Big Ingests (conatining 200+ objects) - Last 14 days
-  breadcrumb: bp_ingest
-  class: BigIngestQuery
-  category: ingest
-  description: |
-    Enumerate large batch ingests (by object count) in the last X days.
 recent_ingests:
   link-title: Recent Ingests
   breadcrumb: bp_ingest

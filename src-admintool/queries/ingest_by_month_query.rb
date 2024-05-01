@@ -33,6 +33,7 @@ class IngestBytesByMonthQuery < AdminQuery
         on times.ts = date_add(date(f.date_added), interval - dayofmonth(f.date_added) + 1 DAY)
         and f.date_added >= '#{@tstart}'
         and f.date_added < '#{@tend}'
+        and f.billable_size >= 0
       group by timeblock
       order by timeblock
       ;

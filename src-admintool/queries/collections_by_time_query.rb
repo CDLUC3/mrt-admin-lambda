@@ -87,6 +87,8 @@ class CollectionsByTimeQuery < AdminQuery
             date_added >= ?
           and
             date_added < ?
+          and
+            #{verify_files_col(@col)} > 0
             #{
               if @source == 'producer'
                 " and source='producer'"

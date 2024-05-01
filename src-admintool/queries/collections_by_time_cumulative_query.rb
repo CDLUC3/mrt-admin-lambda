@@ -68,6 +68,8 @@ class CollectionsByTimeCumulativeQuery < AdminQuery
             date_added >= ?
           and
             date_added < ?
+          and
+            #{verify_files_col(@col)} > 0
           #{
             if @source == 'producer'
               " and source='producer'"
@@ -82,6 +84,8 @@ class CollectionsByTimeCumulativeQuery < AdminQuery
             owner_coll_mime_use_details ocmud
           where
             oc.ogroup = ocmud.ogroup
+          and
+            #{verify_files_col(@col)} > 0
           and
             oc.inv_collection_id = ocmud.inv_collection_id
           and

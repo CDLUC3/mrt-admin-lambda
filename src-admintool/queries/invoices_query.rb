@@ -186,6 +186,8 @@ class InvoicesQuery < AdminQuery
         ogroup like ?
       and
         collection_name not like '% Dash'
+      and
+        collection_name not like '%Dryad%'
     }
 
     %{

@@ -120,6 +120,7 @@
    <div class="nav_section nav_campus nav_campus_invoices">
       <h3>Campus Invoices</h3>
       <ul>
+        <li class="campus"><a class="json" href="{{ADMINTOOL_HOME}}?path=invoices&fy=2024">FY2024 Invoices</a></li>
         <li class="campus"><a class="json" href="{{ADMINTOOL_HOME}}?path=invoices&fy=2023">FY2023 Invoices</a></li>
         <li class="campus"><a class="json" href="{{ADMINTOOL_HOME}}?path=invoices&fy=2022">FY2022 Invoices</a></li>
         <li class="campus"><a class="json" href="{{ADMINTOOL_HOME}}?path=invoices&fy=2021">FY2021 Invoices</a></li>
@@ -274,7 +275,6 @@
     <div class="nav_section nav_objects nav_objects_localid">
       <h3>Objects Local Id</h3>
       <ul>
-        <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=doi">DOI Ark Conflicts</a></li>
         <li class="objects"><a href="{{ADMINTOOL_HOME}}?path=con_localid">Counts: Objects Missing LocalId</a></li>
         <li class="objects"><a href="{{ADMINTOOL_HOME}}?path=object_localid_needed">Objects Missing LocalId</a></li>
         <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=localid_no_ark">Local id without Ark Counts</a></li>
@@ -365,7 +365,6 @@
         <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=ingest_bytes_by_month">Bytes ingested by Month</a></li>
         <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=ingest_bytes_by_year">Bytes ingested by Year</a></li>
         <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=recent_ingests">Recent Ingests</a></li>
-        <li class="objects"><a href="{{ADMINTOOL_HOME}}?path=big_ingest&items=200&days=14">Big Ingests (200+) - Last 14 days</a></li>
       </ul>
     </div>
     
@@ -548,11 +547,6 @@
     </div>
 
     <div class="nav_section nav_content_projects">
-      <h3>Dryad</h3>
-      <ul>
-        <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=doi_dryad">Dryad Counts by Campus DOI</a></li>
-      </ul>
-
       <h3>Inventory Comparison</h3>
       <ul>
         <li class="graph">
@@ -567,22 +561,22 @@
             <input type="submit" value="Go!"/>
           </form>
       </ul>
+      <h3>Prune Candidate Files</h3>
+      <ul>
+        <li class="graph">
+          <form action="{{ADMINTOOL_HOME}}">
+            Prune Candidate Files for a Mnemonic:
+            <select name="mnemonic">
+              {{#MCOLLS}}
+              <option value="{{mnemonic}}">{{mnemonic}}: {{name}}</option>
+              {{/MCOLLS}}
+            </select>
+            <input name="path" type="hidden" value="prune_candidates"/>
+            <input type="submit" value="Go!"/>
+          </form>
+      </ul>
     </div>
 
-    <h3>Prune Candidate Files</h3>
-    <ul>
-      <li class="graph">
-        <form action="{{ADMINTOOL_HOME}}">
-          Prune Candidate Files for a Mnemonic:
-          <select name="mnemonic">
-            {{#MCOLLS}}
-            <option value="{{mnemonic}}">{{mnemonic}}: {{name}}</option>
-            {{/MCOLLS}}
-          </select>
-          <input name="path" type="hidden" value="prune_candidates"/>
-          <input type="submit" value="Go!"/>
-        </form>
-    </ul>
   </div>
   
     </div>

@@ -53,6 +53,7 @@ class IngestBytesByWeekQuery < AdminQuery
         on times.ts = date_add(date(f.date_added), interval - dayofweek(f.date_added) DAY)
         and f.date_added >= '#{@tstart}'
         and f.date_added < '#{@tend}'
+        and f.billable_size >= 0
       group by timeblock
       order by timeblock
       ;
