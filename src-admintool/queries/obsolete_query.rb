@@ -46,6 +46,7 @@ class ObsoleteQuery < AdminQuery
         inv.inv_collections c
       inner join inv.inv_objects o
         on c.inv_object_id = o.id
+        and o.aggregate_role = 'MRT-collection'
       where
         not exists (
           select 1
