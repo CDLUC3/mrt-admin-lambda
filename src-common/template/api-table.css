@@ -298,18 +298,18 @@ td.hold a,
 td.release a, 
 td.colllock a, 
 td.collqitems a,
-td.qdelete-m1 a, 
-td.requeue-m1 a, 
-td.hold-m1 a, 
-td.release-m1 a, 
-td.colllock-m1 a, 
-td.collqitems-m1 a,
-td.qdelete-m2 a, 
-td.requeue-m2 a, 
-td.hold-m2 a, 
-td.release-m2 a, 
-td.colllock-m2 a, 
-td.collqitems-m2 a {
+td.qdelete-mrtzk a, 
+td.requeue-mrtzk a, 
+td.hold-mrtzk a, 
+td.release-mrtzk a, 
+td.colllock-mrtzk a, 
+td.collqitems-mrtzk a,
+td.qdelete-legacy a, 
+td.requeue-legacy a, 
+td.hold-legacy a, 
+td.release-legacy a, 
+td.colllock-legacy a, 
+td.collqitems-legacy a {
   display: block;
   text-align: center;
   border-radius: 5px;
@@ -321,12 +321,12 @@ td.collqitems-m2 a {
   padding: 2px 6px;
 }
 
-td.qdelete-m1 a, 
-td.requeue-m1 a, 
-td.hold-m1 a, 
-td.release-m1 a, 
-td.colllock-m1 a, 
-td.collqitems-m1 a {
+td.qdelete-mrtzk a, 
+td.requeue-mrtzk a, 
+td.hold-mrtzk a, 
+td.release-mrtzk a, 
+td.colllock-mrtzk a, 
+td.collqitems-mrtzk a {
   display: block;
   text-align: center;
   border-radius: 5px;
@@ -338,12 +338,12 @@ td.collqitems-m1 a {
   padding: 2px 6px;
 }
 
-td.qdelete-m2 a, 
-td.requeue-m2 a, 
-td.hold-m2 a, 
-td.release-m2 a, 
-td.colllock-m2 a, 
-td.collqitems-m2 a {
+td.qdelete-legacy a, 
+td.requeue-legacy a, 
+td.hold-legacy a, 
+td.release-legacy a, 
+td.colllock-legacy a, 
+td.collqitems-legacy a {
   display: block;
   text-align: center;
   border-radius: 5px;

@@ -14,23 +14,23 @@ class InvQueueEntry < QueueJson
     super()
     add_property(
       :queueNode,
-      MerrittJsonProperty.new('Queue Node').lookup_value(json, 'que', 'queueNode')
+      MerrittJsonProperty.new('Queue Node').lookup_value(json, '', 'queueNode')
     )
     add_property(
       :manifestURL,
-      MerrittJsonProperty.new('Manifest URL').lookup_value(json, 'que', 'manifestURL')
+      MerrittJsonProperty.new('Manifest URL').lookup_value(json, '', 'manifestURL')
     )
     add_property(
       :date,
-      MerrittJsonProperty.new('Date').lookup_time_value(json, 'que', 'date')
+      MerrittJsonProperty.new('Date').lookup_time_value(json, '', 'date')
     )
     add_property(
       :qstatus,
-      MerrittJsonProperty.new('QStatus').lookup_value(json, 'que', 'status')
+      MerrittJsonProperty.new('QStatus').lookup_value(json, '', 'status')
     )
     add_property(
       :queueId,
-      MerrittJsonProperty.new('Queue ID').lookup_value(json, 'que', 'iD')
+      MerrittJsonProperty.new('Queue ID').lookup_value(json, '', 'iD')
     )
     qs = get_value(:qstatus, '')
     qt = get_value(:date, '')

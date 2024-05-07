@@ -69,11 +69,6 @@ class ZookeeperListAction < AdminAction
   end
 
   def perform_action
-    $migration = migration_level if migration_m1?
-    jobs = migration_m1? ? MerrittZK::Job.list_jobs(@zk) : MerrittZK::LegacyIngestJob.list_jobs(@zk)
-    jobs.each do |po|
-      register_item(QueueEntry.new(po))
-    end
     convert_json_to_table('')
   end
 
@@ -120,44 +115,97 @@ end
 
 class LegacyZkAction < ZookeeperAction
   def status_vals
-    %w[Pending Consumed Deleted Failed Completed Held]
+    MerrittZK::LegacyIngestJob.status_vals
+  end
+
+  def prefix
+    'na'
+  end
+
+  def path
+    "/#{prefix}/#{@qid}"
+  end
+
+  def bytes
+    data = @zk.get(path)
+    return if data.nil?
+    data[0].bytes
+  end
+
+  def orig_stat
+    return if bytes.nil?
+    bytes[0]
+  end
+
+  def orig_stat_name
+    return if orig_stat.nil?
+    status_vals[orig_stat]
+  end
+
+  def write_status(status)
+    pbytes = bytes
+    pbytes[0] = status
+    @zk.set(path, pbytes.pack("CCCCCCCCCc*"))
   end
 
   def set_status(status)
-    path = "/ingest/#{@qid}"
     i = status_vals.find_index(status)
-    retun if i.nil?
-    data = @zk.get(path)
-    return if data.nil?
-    bytes = data[0].bytes
-    orig = bytes[0]
-    bytes[0] = i 
-    @zk.set(path, bytes.pack("CCCCCCCCCc*"))
-    {message: "Status #{orig} -- > #{status}"}.to_json
+    return if i.nil?
+    orig_name = orig_stat_name
+    return {message: 'Illegal status'}.to_json unless check_status(orig_name)
+    write_status(i)
+    {message: "Status #{orig_name} -- > #{status}"}.to_json
+  end
+
+  def check_status(status)
+    true
   end
 end
 
-class ZkRequeueM2Action < LegacyZkAction
+class LegacyIngestZkAction < LegacyZkAction
+  def prefix
+    'ingest'
+  end
+
+end
+
+class ZkRequeueLegacyIngestAction < LegacyIngestZkAction
   def perform_action
     set_status('Pending')
   end
+
+  def check_status(status)
+    %w[Consumed Failed].include?(status)
+  end
 end
 
-class ZkDeleteM2Action < LegacyZkAction
+class ZkDeleteLegacyIngestAction < LegacyIngestZkAction
   def perform_action
     set_status('Deleted')
   end
-end
 
-class ZkHoldM2Action < LegacyZkAction
-  def perform_action
-    set_status('Held')
+  def check_status(status)
+    %w[Failed Completed].include?(status)
   end
 end
 
-class ZkReleaseM2Action < LegacyZkAction
+class ZkHoldLegacyIngestAction < LegacyIngestZkAction
+  def perform_action
+    set_status('Held')
+  end
+
+  def check_status(status)
+    %w[Pending].include?(status)
+  end
+end
+
+class ZkReleaseLegacyIngestAction < LegacyIngestZkAction
   def perform_action
     set_status('Pending')
+  end
+
+  def check_status(status)
+    %w[Held].include?(status)
   end
 end
 
@@ -168,10 +216,42 @@ class IngestQueueZookeeperAction < ZookeeperListAction
   end
 
   def status_vals
-    %w[Pending Consumed Deleted Failed Completed Held]
+    MerrittZK::LegacyIngestJob.status_vals
   end
 
   def is_json
     true
+  end
+
+  def perform_action
+    $migration = migration_level if migration_m1?
+    jobs = migration_m1? ? MerrittZK::Job.list_jobs(@zk) : MerrittZK::LegacyIngestJob.list_jobs(@zk)
+    jobs.each do |po|
+      register_item(QueueEntry.new(po))
+    end
+    convert_json_to_table('')
+  end
+end
+
+class InventoryQueueZookeeperAction < ZookeeperListAction
+  def zk_path
+    '/mrt.inventory.full'
+  end
+
+  def status_vals
+    MerrittZK::LegacyInventoryJob.status_vals
+  end
+
+  def is_json
+    true
+  end
+
+  def perform_action
+    $migration = migration_level if migration_m1?
+    jobs = migration_m1? ? [] : MerrittZK::LegacyInventoryJob.list_jobs(@zk)
+    jobs.each do |po|
+      register_item(InvQueueEntry.new(po))
+    end
+    convert_json_to_table('')
   end
 end

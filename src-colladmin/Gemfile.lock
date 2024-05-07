@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/CDLUC3/mrt-zk.git
-  revision: 0e70ab21c3588d8519366039905e5255b8e4ec58
-  tag: 1.0.3.c
+  revision: 4297c486b446942d4ae748908f7a838b68e44428
+  tag: 1.0.3.d
   specs:
     mrt-zk (1.0.1)
       zk (~> 1.10.0)
@@ -22,8 +22,8 @@ GEM
   specs:
     ast (2.4.2)
     aws-eventstream (1.3.0)
-    aws-partitions (1.924.0)
-    aws-sdk-core (3.194.1)
+    aws-partitions (1.925.0)
+    aws-sdk-core (3.194.2)
       aws-eventstream (~> 1, >= 1.3.0)
       aws-partitions (~> 1, >= 1.651.0)
       aws-sigv4 (~> 1.8)
@@ -37,7 +37,7 @@ GEM
     aws-sdk-lambda (1.119.0)
       aws-sdk-core (~> 3, >= 3.193.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-s3 (1.149.0)
+    aws-sdk-s3 (1.149.1)
       aws-sdk-core (~> 3, >= 3.194.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.8)
@@ -57,7 +57,7 @@ GEM
     logger (1.6.0)
     mime-types (3.5.2)
       mime-types-data (~> 3.2015)
-    mime-types-data (3.2024.0305)
+    mime-types-data (3.2024.0507)
     mysql2 (0.5.6)
     netrc (0.11.0)
     parallel (1.24.0)

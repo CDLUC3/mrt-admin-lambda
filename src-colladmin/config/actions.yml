@@ -918,7 +918,7 @@ queue-delete:
   documentation: |
     Ingest: POST /admin/deleteq
   migration: m1, m2, m3
-queue-delete-m1:
+queue-delete-mrtzk:
   link-title: Remove an item from a Zookeeper queue
   class: ZkDeleteM1Action
   category: Queue Management
@@ -931,9 +931,9 @@ queue-delete-m1:
   documentation: |
     Zk: tbd
   migration: m1
-queue-delete-m2:
+queue-delete-legacy:
   link-title: Remove an item from a Zookeeper queue
-  class: ZkDeleteM2Action
+  class: ZkDeleteLegacyIngestAction
   category: Queue Management
   sensitivity: irreversible change
   testing: manual
@@ -958,7 +958,7 @@ requeue:
   documentation: |
     Ingest: POST /admin/requeue
   migration: m1, m2, m3
-requeue-m1:
+requeue-mrtzk:
   link-title: Re-queue an item from a Zookeeper queue
   class: ZkRequeueM1Action
   category: Queue Management
@@ -971,9 +971,9 @@ requeue-m1:
   documentation: |
     ZK tbd
   migration: m1
-requeue-m2:
+requeue-legacy:
   link-title: Re-queue an item from a Zookeeper queue
-  class: ZkRequeueM2Action
+  class: ZkRequeueLegacyIngestAction
   category: Queue Management
   sensitivity: irreversible change
   testing: manual
@@ -998,7 +998,7 @@ hold-queue-item:
   documentation: |
     Ingest: POST /admin/hold
   migration: m1, m2
-hold-queue-item-m1:
+hold-queue-item-mrtzk:
   link-title: Move a pending item from in Zookeeper queue to a Held status
   class: ZkHoldM1Action
   category: Queue Management
@@ -1011,9 +1011,9 @@ hold-queue-item-m1:
   documentation: |
     Zk: tbd
   migration: m1
-hold-queue-item-m2:
+hold-queue-item-legacy:
   link-title: Move a pending item from in Zookeeper queue to a Held status
-  class: ZkHoldM2Action
+  class: ZkHoldLegacyIngestAction
   category: Queue Management
   sensitivity: irreversible change
   testing: manual
@@ -1038,7 +1038,7 @@ release-queue-item:
   documentation: |
     Ingest: POST /admin/release
   migration: m1, m2
-release-queue-item-m1:
+release-queue-item-mrtzk:
   link-title: Release a held item from in Zookeeper queue to a Pending status
   class: ZkReleaseM1Action
   category: Queue Management
@@ -1051,9 +1051,9 @@ release-queue-item-m1:
   documentation: |
     Zk: tbd
   migration: m1
-release-queue-item-m2:
+release-queue-item-legacy:
   link-title: Release a held item from in Zookeeper queue to a Pending status
-  class: ZkReleaseM2Action
+  class: ZkReleaseLegacyIngestAction
   category: Queue Management
   sensitivity: irreversible change
   testing: manual

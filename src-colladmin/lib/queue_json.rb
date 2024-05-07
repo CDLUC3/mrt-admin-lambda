@@ -29,21 +29,15 @@ class QueueJson < MerrittJson
     "#{get_queue_node}/#{get_value(:queueId, '')}/#{st}"
   end
 
-  def get_queue_path_m1(requeue: false)
-    case get_value(:qstatus, '')
-    when 'Consumed'
-      # no action
-    when 'Held'
-      return '' if requeue
+  def get_del_queue_path_m1
+    st = get_value(:qstatus, '')
+    return '' unless %w[Failed Completed Held].include?(st)
+    get_value(:queueId, '')
+  end
 
-    when 'Completed'
-      return '' if requeue
-
-    when 'Failed'
-      # no action
-    else
-      return ''
-    end
+  def get_requeue_path_m1
+    st = get_value(:qstatus, '')
+    return '' unless %w[Consumed Failed].include?(st)
     get_value(:queueId, '')
   end
 
@@ -59,15 +53,15 @@ class QueueJson < MerrittJson
     "#{get_queue_node}/#{get_value(:queueId, '')}"
   end
 
-  def get_hold_path_m1(release: false)
+  def get_hold_path_m1
     st = get_value(:qstatus, '')
-    if st == 'Held' && release
-      'release'
-    elsif st == 'Pending' && !release
-      'hold'
-    else
-      return ''
-    end
+    return '' unless %w[Pending].include?(st)
+    get_value(:queueId, '')
+  end
+
+  def get_release_path_m1
+    st = get_value(:qstatus, '')
+    return '' unless %w[Held].include?(st)
     get_value(:queueId, '')
   end
 end

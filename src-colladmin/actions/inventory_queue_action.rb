@@ -4,7 +4,7 @@ require_relative 'forward_to_ingest_action'
 require_relative '../lib/inv_queue'
 
 # Collection Admin Task class - see config/actions.yml for description
-class InventoryQueueAction < ForwardToIngestAction
+class InventoryQueueAction < InventoryQueueZookeeperAction
   def initialize(config, action, path, myparams)
     super(config, action, path, myparams, 'admin/queues-inv')
   end
@@ -19,11 +19,6 @@ class InventoryQueueAction < ForwardToIngestAction
 
   def table_types
     InvQueueEntry.table_types
-  end
-
-  def table_rows(body)
-    queue_list = InvQueueList.new(get_ingest_server, body)
-    queue_list.to_table
   end
 
   def has_table

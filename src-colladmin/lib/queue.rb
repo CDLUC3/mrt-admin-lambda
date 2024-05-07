@@ -86,41 +86,22 @@ class QueueEntry < QueueJson
       MerrittJsonProperty.new('Status', st)
     )
 
-    if $migration == :m1
-      add_property(
-        :qdelete,
-        MerrittJsonProperty.new('Queue Del', get_queue_path_m1(requeue: false))
-      )
-      add_property(
-        :requeue,
-        MerrittJsonProperty.new('Requeue', get_queue_path_m1(requeue: true))
-      )
-      add_property(
-        :hold,
-        MerrittJsonProperty.new('Hold', get_hold_path_m1(release: false))
-      )
-      add_property(
-        :release,
-        MerrittJsonProperty.new('Release', get_hold_path_m1(release: true))
-      )
-    else
-      add_property(
-        :qdelete,
-        MerrittJsonProperty.new('Queue Del', get_queue_path_m1(requeue: false))
-      )
-      add_property(
-        :requeue,
-        MerrittJsonProperty.new('Requeue', get_queue_path_m1(requeue: true))
-      )
-      add_property(
-        :hold,
-        MerrittJsonProperty.new('Hold', get_hold_path_m1(release: false))
-      )
-      add_property(
-        :release,
-        MerrittJsonProperty.new('Release', get_hold_path_m1(release: true))
-      )
-    end
+    add_property(
+      :qdelete,
+      MerrittJsonProperty.new('Queue Del', get_del_queue_path_m1)
+    )
+    add_property(
+      :requeue,
+      MerrittJsonProperty.new('Requeue', get_requeue_path_m1)
+    )
+    add_property(
+      :hold,
+      MerrittJsonProperty.new('Hold', get_hold_path_m1)
+    )
+    add_property(
+      :release,
+      MerrittJsonProperty.new('Release', get_release_path_m1)
+    )
   end
 
   def check_filter(filter)
@@ -148,15 +129,15 @@ class QueueEntry < QueueJson
       type = 'status' if sym == :status
       type = 'datetime' if sym == :date
       if $migration == :m1
-        type = 'qdelete-m1' if sym == :qdelete
-        type = 'requeue-m1' if sym == :requeue
-        type = 'hold-m1' if sym == :hold
-        type = 'release-m1' if sym == :release
+        type = 'qdelete-mrtzk' if sym == :qdelete
+        type = 'requeue-mrtzk' if sym == :requeue
+        type = 'hold-mrtzk' if sym == :hold
+        type = 'release-mrtzk' if sym == :release
       else
-        type = 'qdelete-m2' if sym == :qdelete
-        type = 'requeue-m2' if sym == :requeue
-        type = 'hold-m2' if sym == :hold
-        type = 'release-m2' if sym == :release
+        type = 'qdelete-legacy' if sym == :qdelete
+        type = 'requeue-legacy' if sym == :requeue
+        type = 'hold-legacy' if sym == :hold
+        type = 'release-legacy' if sym == :release
       end
       type = 'container' if sym == :queue
       arr.append(type)
