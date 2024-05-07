@@ -785,14 +785,38 @@ function format(cell, v, type, merritt_path) {
   } else if (type == 'qdelete'  && v != '') {
     p = colladmin_root + "/lambda?path=queue-delete&queue-path="+v;
     makeLink(cell, 'Delete', "javascript:ajax_invoke('"+encodeURIComponent(p)+"')").addClass("ajax");
+  } else if (type == 'qdelete-m1'  && v != '') {
+    p = colladmin_root + "/lambda?path=queue-delete-m1&queue-path="+v;
+    makeLink(cell, 'Delete', "javascript:ajax_invoke('"+encodeURIComponent(p)+"')").addClass("ajax");
+  } else if (type == 'qdelete-m2'  && v != '') {
+    p = colladmin_root + "/lambda?path=queue-delete-m2&queue-path="+v;
+    makeLink(cell, 'Delete', "javascript:ajax_invoke('"+encodeURIComponent(p)+"')").addClass("ajax");
   } else if (type == 'requeue'  && v != '') {
     p = colladmin_root + "/lambda?path=requeue&queue-path="+v;
+    makeLink(cell, 'Requeue', "javascript:ajax_invoke('"+encodeURIComponent(p)+"');testRequeue()").addClass("ajax");
+  } else if (type == 'requeue-m1'  && v != '') {
+    p = colladmin_root + "/lambda?path=requeue-m1&queue-path="+v;
+    makeLink(cell, 'Requeue', "javascript:ajax_invoke('"+encodeURIComponent(p)+"');testRequeue()").addClass("ajax");
+  } else if (type == 'requeue-m2'  && v != '') {
+    p = colladmin_root + "/lambda?path=requeue-m2&queue-path="+v;
     makeLink(cell, 'Requeue', "javascript:ajax_invoke('"+encodeURIComponent(p)+"');testRequeue()").addClass("ajax");
   } else if (type == 'hold'  && v != '') {
     p = colladmin_root + "/lambda?path=hold-queue-item&queue-path="+v;
     makeLink(cell, 'Hold', "javascript:ajax_invoke('"+encodeURIComponent(p)+"')").addClass("ajax");
+  } else if (type == 'hold-m1'  && v != '') {
+    p = colladmin_root + "/lambda?path=hold-queue-item-m1&queue-path="+v;
+    makeLink(cell, 'Hold', "javascript:ajax_invoke('"+encodeURIComponent(p)+"')").addClass("ajax");
+  } else if (type == 'hold-m2'  && v != '') {
+    p = colladmin_root + "/lambda?path=hold-queue-item-m2&queue-path="+v;
+    makeLink(cell, 'Hold', "javascript:ajax_invoke('"+encodeURIComponent(p)+"')").addClass("ajax");
   } else if (type == 'release'  && v != '') {
     p = colladmin_root + "/lambda?path=release-queue-item&queue-path="+v;
+    makeLink(cell, 'Release', "javascript:ajax_invoke('"+encodeURIComponent(p)+"')").addClass("ajax");
+  } else if (type == 'release-m1'  && v != '') {
+    p = colladmin_root + "/lambda?path=release-queue-item-m1&queue-path="+v;
+    makeLink(cell, 'Release', "javascript:ajax_invoke('"+encodeURIComponent(p)+"')").addClass("ajax");
+  } else if (type == 'release-m2'  && v != '') {
+    p = colladmin_root + "/lambda?path=release-queue-item-m2&queue-path="+v;
     makeLink(cell, 'Release', "javascript:ajax_invoke('"+encodeURIComponent(p)+"')").addClass("ajax");
   } else if (type == 'collqitems'  && v != '') {
     p = colladmin_root + "/lambda?path=release-coll-queue-items&coll="+v;

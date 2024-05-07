@@ -29,6 +29,24 @@ class QueueJson < MerrittJson
     "#{get_queue_node}/#{get_value(:queueId, '')}/#{st}"
   end
 
+  def get_queue_path_m1(requeue: false)
+    case get_value(:qstatus, '')
+    when 'Consumed'
+      # no action
+    when 'Held'
+      return '' if requeue
+
+    when 'Completed'
+      return '' if requeue
+
+    when 'Failed'
+      # no action
+    else
+      return ''
+    end
+    get_value(:queueId, '')
+  end
+
   def get_hold_path(release: false)
     st = get_value(:qstatus, '')
     if st == 'Held' && release
@@ -39,5 +57,17 @@ class QueueJson < MerrittJson
       return ''
     end
     "#{get_queue_node}/#{get_value(:queueId, '')}"
+  end
+
+  def get_hold_path_m1(release: false)
+    st = get_value(:qstatus, '')
+    if st == 'Held' && release
+      'release'
+    elsif st == 'Pending' && !release
+      'hold'
+    else
+      return ''
+    end
+    get_value(:queueId, '')
   end
 end

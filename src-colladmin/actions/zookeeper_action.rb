@@ -32,7 +32,7 @@ class ZkList
 end
 
 ## Base class for actions that interact directly with Zookeeper using the mrt-zk library
-class ZookeeperAction < AdminAction
+class ZookeeperListAction < AdminAction
   def initialize(config, action, path, myparams, _filters)
     super(config, action, path, myparams)
     @filters = {}
@@ -69,6 +69,7 @@ class ZookeeperAction < AdminAction
   end
 
   def perform_action
+    $migration = migration_level if migration_m1?
     jobs = migration_m1? ? MerrittZK::Job.list_jobs(@zk) : MerrittZK::LegacyIngestJob.list_jobs(@zk)
     jobs.each do |po|
       register_item(QueueEntry.new(po))
@@ -81,13 +82,87 @@ class ZookeeperAction < AdminAction
   end
 
   def get_zookeeper_conn
-    # @config.fetch('zookeeper', '').split(',').first
     @config.fetch('zookeeper', '')
   end
 end
 
+class ZookeeperAction < AdminAction
+  def initialize(config, action, path, myparams)
+    super(config, action, path, myparams)
+    @zk = ZK.new(get_zookeeper_conn)
+    @qid = myparams.fetch('queue-path', '')
+  end
+
+  def get_zookeeper_conn
+    @config.fetch('zookeeper', '')
+  end
+
+  def perform_action
+    { message: "No response for #{@path}: #{@qid}" }.to_json
+  rescue StandardError => e
+    log(e.message)
+    log(e.backtrace)
+    { error: "#{e.message} for #{@path}: #{@qid}" }.to_json
+  end
+end
+
+class ZkRequeueM1Action < ZookeeperAction
+end
+
+class ZkDeleteM1Action < ZookeeperAction
+end
+
+class ZkHoldM1Action < ZookeeperAction
+end
+
+class ZkReleaseM1Action < ZookeeperAction
+end
+
+class LegacyZkAction < ZookeeperAction
+  def status_vals
+    %w[Pending Consumed Deleted Failed Completed Held]
+  end
+
+  def set_status(status)
+    path = "/ingest/#{@qid}"
+    i = status_vals.find_index(status)
+    retun if i.nil?
+    data = @zk.get(path)
+    return if data.nil?
+    bytes = data[0].bytes
+    orig = bytes[0]
+    bytes[0] = i 
+    @zk.set(path, bytes.pack("CCCCCCCCCc*"))
+    {message: "Status #{orig} -- > #{status}"}.to_json
+  end
+end
+
+class ZkRequeueM2Action < LegacyZkAction
+  def perform_action
+    set_status('Pending')
+  end
+end
+
+class ZkDeleteM2Action < LegacyZkAction
+  def perform_action
+    set_status('Deleted')
+  end
+end
+
+class ZkHoldM2Action < LegacyZkAction
+  def perform_action
+    set_status('Held')
+  end
+end
+
+class ZkReleaseM2Action < LegacyZkAction
+  def perform_action
+    set_status('Pending')
+  end
+end
+
 ## Class for reading the legacy Merritt Ingest Queue
-class IngestQueueZookeeperAction < ZookeeperAction
+class IngestQueueZookeeperAction < ZookeeperListAction
   def zk_path
     '/ingest'
   end

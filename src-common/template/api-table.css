@@ -297,7 +297,19 @@ td.requeue a,
 td.hold a, 
 td.release a, 
 td.colllock a, 
-td.collqitems a {
+td.collqitems a,
+td.qdelete-m1 a, 
+td.requeue-m1 a, 
+td.hold-m1 a, 
+td.release-m1 a, 
+td.colllock-m1 a, 
+td.collqitems-m1 a,
+td.qdelete-m2 a, 
+td.requeue-m2 a, 
+td.hold-m2 a, 
+td.release-m2 a, 
+td.colllock-m2 a, 
+td.collqitems-m2 a {
   display: block;
   text-align: center;
   border-radius: 5px;
@@ -309,6 +321,39 @@ td.collqitems a {
   padding: 2px 6px;
 }
 
+td.qdelete-m1 a, 
+td.requeue-m1 a, 
+td.hold-m1 a, 
+td.release-m1 a, 
+td.colllock-m1 a, 
+td.collqitems-m1 a {
+  display: block;
+  text-align: center;
+  border-radius: 5px;
+  font-weight: bold;
+  border: thin solid black;
+  background-color: pink;
+  text-decoration: none;
+  width: fit-content;
+  padding: 2px 6px;
+}
+
+td.qdelete-m2 a, 
+td.requeue-m2 a, 
+td.hold-m2 a, 
+td.release-m2 a, 
+td.colllock-m2 a, 
+td.collqitems-m2 a {
+  display: block;
+  text-align: center;
+  border-radius: 5px;
+  font-weight: bold;
+  border: thin solid black;
+  background-color: paleturquoise;
+  text-decoration: none;
+  width: fit-content;
+  padding: 2px 6px;
+}
 
 div.admin-tool td.qdelete a, 
 div.admin-tool td.requeue a, 

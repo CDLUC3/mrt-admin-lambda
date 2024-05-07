@@ -5,6 +5,7 @@ require_relative 'queue_json'
 # representation of an ingest queue entry
 class QueueEntry < QueueJson
   @@placeholder = nil
+  @@migration = :none
   def self.placeholder
     @@placeholder = QueueEntry.new({}) if @@placeholder.nil?
     @@placeholder
@@ -20,52 +21,53 @@ class QueueEntry < QueueJson
     # }
 
     super()
+
     # until July 2023, Merritt had 3 separate queues identified as a queue node
     add_property(
       :queueNode,
-      MerrittJsonProperty.new('Ingest Worker').lookup_value(json, '', 'queueNode')
+      MerrittJsonProperty.new('Ingest Worker').lookup_value(json, '', :queueNode)
     )
     add_property(
       :bid,
-      MerrittJsonProperty.new('Batch').lookup_value(json, '', 'batchID')
+      MerrittJsonProperty.new('Batch').lookup_value(json, '', :batchID)
     )
     add_property(
       :job,
-      MerrittJsonProperty.new('Job').lookup_value(json, '', 'jobID')
+      MerrittJsonProperty.new('Job').lookup_value(json, '', :jobID)
     )
     add_property(
       :profile,
-      MerrittJsonProperty.new('Profile').lookup_value(json, '', 'profile')
+      MerrittJsonProperty.new('Profile').lookup_value(json, '', :profile)
     )
     # insert binary time field
     add_property(
       :date,
-      MerrittJsonProperty.new('Date').lookup_time_value(json, '', 'date')
+      MerrittJsonProperty.new('Date').lookup_time_value(json, '', :date)
     )
     add_property(
       :user,
-      MerrittJsonProperty.new('User').lookup_value(json, '', 'submitter')
+      MerrittJsonProperty.new('User').lookup_value(json, '', :submitter)
     )
     add_property(
       :title,
-      MerrittJsonProperty.new('Title').lookup_value(json, '', 'title')
+      MerrittJsonProperty.new('Title').lookup_value(json, '', :title)
     )
     add_property(
       :file_type,
-      MerrittJsonProperty.new('File Type').lookup_value(json, '', 'type')
+      MerrittJsonProperty.new('File Type').lookup_value(json, '', :type)
     )
     # insert status from binary field
     add_property(
       :qstatus,
-      MerrittJsonProperty.new('QStatus').lookup_value(json, '', 'status')
+      MerrittJsonProperty.new('QStatus').lookup_value(json, '', :status)
     )
     add_property(
       :queue,
-      MerrittJsonProperty.new('Name').lookup_value(json, '', 'filename')
+      MerrittJsonProperty.new('Name').lookup_value(json, '', :filename)
     )
     add_property(
       :queueId,
-      MerrittJsonProperty.new('Queue ID').lookup_value(json, '', 'id')
+      MerrittJsonProperty.new('Queue ID').lookup_value(json, '', :id)
     )
     # extract the ingest worker node from the queue id string
     qid = get_value(:queueId, '')
@@ -83,22 +85,42 @@ class QueueEntry < QueueJson
       :status,
       MerrittJsonProperty.new('Status', st)
     )
-    add_property(
-      :qdelete,
-      MerrittJsonProperty.new('Queue Del', get_queue_path(requeue: false))
-    )
-    add_property(
-      :requeue,
-      MerrittJsonProperty.new('Requeue', get_queue_path(requeue: true))
-    )
-    add_property(
-      :hold,
-      MerrittJsonProperty.new('Hold', get_hold_path(release: false))
-    )
-    add_property(
-      :release,
-      MerrittJsonProperty.new('Release', get_hold_path(release: true))
-    )
+
+    if $migration == :m1
+      add_property(
+        :qdelete,
+        MerrittJsonProperty.new('Queue Del', get_queue_path_m1(requeue: false))
+      )
+      add_property(
+        :requeue,
+        MerrittJsonProperty.new('Requeue', get_queue_path_m1(requeue: true))
+      )
+      add_property(
+        :hold,
+        MerrittJsonProperty.new('Hold', get_hold_path_m1(release: false))
+      )
+      add_property(
+        :release,
+        MerrittJsonProperty.new('Release', get_hold_path_m1(release: true))
+      )
+    else
+      add_property(
+        :qdelete,
+        MerrittJsonProperty.new('Queue Del', get_queue_path_m1(requeue: false))
+      )
+      add_property(
+        :requeue,
+        MerrittJsonProperty.new('Requeue', get_queue_path_m1(requeue: true))
+      )
+      add_property(
+        :hold,
+        MerrittJsonProperty.new('Hold', get_hold_path_m1(release: false))
+      )
+      add_property(
+        :release,
+        MerrittJsonProperty.new('Release', get_hold_path_m1(release: true))
+      )
+    end
   end
 
   def check_filter(filter)
@@ -125,10 +147,17 @@ class QueueEntry < QueueJson
       type = 'qjob' if sym == :job
       type = 'status' if sym == :status
       type = 'datetime' if sym == :date
-      type = 'qdelete' if sym == :qdelete
-      type = 'requeue' if sym == :requeue
-      type = 'hold' if sym == :hold
-      type = 'release' if sym == :release
+      if $migration == :m1
+        type = 'qdelete-m1' if sym == :qdelete
+        type = 'requeue-m1' if sym == :requeue
+        type = 'hold-m1' if sym == :hold
+        type = 'release-m1' if sym == :release
+      else
+        type = 'qdelete-m2' if sym == :qdelete
+        type = 'requeue-m2' if sym == :requeue
+        type = 'hold-m2' if sym == :hold
+        type = 'release-m2' if sym == :release
+      end
       type = 'container' if sym == :queue
       arr.append(type)
     end
@@ -182,7 +211,7 @@ class QueueEntry < QueueJson
   end
 
   def get_queue_node
-    '/ingest'
+    $migration == :m1 ? '/jobs' : '/ingest'
   end
 end
 
