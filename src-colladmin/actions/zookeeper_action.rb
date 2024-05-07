@@ -81,6 +81,7 @@ class ZookeeperListAction < AdminAction
   end
 end
 
+## Queue manipulation action using mrt-zk
 class ZookeeperAction < AdminAction
   def initialize(config, action, path, myparams)
     super(config, action, path, myparams)
@@ -101,18 +102,23 @@ class ZookeeperAction < AdminAction
   end
 end
 
+## Queue manipulation action using new mrt-zk
 class ZkRequeueM1Action < ZookeeperAction
 end
 
+## Queue manipulation action using new mrt-zk
 class ZkDeleteM1Action < ZookeeperAction
 end
 
+## Queue manipulation action using new mrt-zk
 class ZkHoldM1Action < ZookeeperAction
 end
 
+## Queue manipulation action using new mrt-zk
 class ZkReleaseM1Action < ZookeeperAction
 end
 
+## Legacy Queue manipulation action using new mrt-zk
 class LegacyZkAction < ZookeeperAction
   def status_vals
     MerrittZK::LegacyIngestJob.status_vals
@@ -129,46 +135,54 @@ class LegacyZkAction < ZookeeperAction
   def bytes
     data = @zk.get(path)
     return if data.nil?
+
     data[0].bytes
   end
 
   def orig_stat
     return if bytes.nil?
+
     bytes[0]
   end
 
   def orig_stat_name
     return if orig_stat.nil?
+
     status_vals[orig_stat]
   end
 
   def write_status(status)
     pbytes = bytes
     pbytes[0] = status
-    @zk.set(path, pbytes.pack("CCCCCCCCCc*"))
+    @zk.set(path, pbytes.pack('CCCCCCCCCc*'))
   end
 
   def set_status(status)
     i = status_vals.find_index(status)
     return if i.nil?
+
     orig_name = orig_stat_name
-    return {message: 'Illegal status'}.to_json unless check_status(orig_name)
+    return { message: 'Illegal status' }.to_json unless check_status(orig_name)
+
     write_status(i)
-    {message: "Status #{orig_name} -- > #{status}"}.to_json
+    { message: "Status #{orig_name} -- > #{status}" }.to_json
   end
 
-  def check_status(status)
+  def check_status(_status)
     true
   end
 end
 
+##
+# Legacy Ingest queue action
 class LegacyIngestZkAction < LegacyZkAction
   def prefix
     'ingest'
   end
-
 end
 
+##
+# Legacy Ingest queue action
 class ZkRequeueLegacyIngestAction < LegacyIngestZkAction
   def perform_action
     set_status('Pending')
@@ -179,6 +193,8 @@ class ZkRequeueLegacyIngestAction < LegacyIngestZkAction
   end
 end
 
+##
+# Legacy Ingest queue action
 class ZkDeleteLegacyIngestAction < LegacyIngestZkAction
   def perform_action
     set_status('Deleted')
@@ -189,6 +205,8 @@ class ZkDeleteLegacyIngestAction < LegacyIngestZkAction
   end
 end
 
+##
+# Legacy Ingest queue action
 class ZkHoldLegacyIngestAction < LegacyIngestZkAction
   def perform_action
     set_status('Held')
@@ -199,6 +217,8 @@ class ZkHoldLegacyIngestAction < LegacyIngestZkAction
   end
 end
 
+##
+# Legacy Ingest queue action
 class ZkReleaseLegacyIngestAction < LegacyIngestZkAction
   def perform_action
     set_status('Pending')
@@ -233,6 +253,7 @@ class IngestQueueZookeeperAction < ZookeeperListAction
   end
 end
 
+## Class for reading the legacy Merritt Inventory Queue
 class InventoryQueueZookeeperAction < ZookeeperListAction
   def zk_path
     '/mrt.inventory.full'
