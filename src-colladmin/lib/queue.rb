@@ -216,64 +216,26 @@ class QueueBatch < MerrittJson
   end
 end
 
-# representation of the ingest queue
-class IngestQueue < MerrittJson
-  def initialize(queue_list, body)
-    data = JSON.parse(body)
-    data = fetch_hash_val(data, 'que:queueState')
-    data = fetch_hash_val(data, 'que:queueEntries')
-    list = fetch_array_val(data, 'que:queueEntryState')
-    list.each do |obj|
-      q = QueueEntry.new(obj)
-      next unless q.check_filter(queue_list.filter)
-
-      qenrtylist = queue_list.batches.fetch(q.bid, QueueBatch.new(q.bid, q.user))
-      qenrtylist.add_job(q)
-      queue_list.batches[q.bid] = qenrtylist
-      queue_list.jobs.append(q)
-
-      # next if q.qstatus == "Completed" || q.qstatus == "Deleted"
-      k = "#{q.profile},#{q.qstatus}"
-      queue_list.profiles[k] = queue_list.profiles.fetch(k, [])
-      queue_list.profiles[k].append(q)
-      super()
-    end
-  end
-end
-
 # List of queues of a particular type - ingest once had separate queues for each worker
 class QueueList < MerrittJson
-  def initialize(ingest_server, body, filter = {})
+  def initialize(zk, filter = {})
     super()
-    @ingest_server = ingest_server
-    @body = body
     @batches = {}
     @jobs = []
     @profiles = {}
     @filter = filter
-    retrieve_queues
-  end
 
-  def self.get_queue_list(ingest_server, filter = {})
-    qjson = HttpGetJson.new(ingest_server, 'admin/queues')
-    QueueList.new(ingest_server, qjson.body, filter)
-  end
+    jobs = ZookeeperListAction.migration_m1? ? MerrittZK::Job.list_jobs(zk) : MerrittZK::LegacyIngestJob.list_jobs(zk)
+    jobs.each do |j|
+      job = QueueEntry.new(j)
+      @jobs << job
+      qb = @batches.fetch(job.bid, QueueBatch.new(job.bid, job.user))
+      qb.add_job(job)
+      @batches[job.bid] = qb
 
-  def retrieve_queues
-    data = JSON.parse(@body)
-    data = fetch_hash_val(data, 'ingq:ingestQueueNameState')
-    data = fetch_hash_val(data, 'ingq:ingestQueueName')
-    fetch_array_val(data, 'ingq:ingestQueue').each do |qjson|
-      node = fetch_hash_val(qjson, 'ingq:node').gsub(%r{^/}, '')
-      begin
-        qjson = HttpGetJson.new(@ingest_server, "admin/queue/#{node}")
-        next unless qjson.status == 200
-
-        IngestQueue.new(self, qjson.body)
-      rescue StandardError => e
-        LambdaBase.log(e.message)
-        LambdaBase.log(e.backtrace)
-      end
+      k = "#{job.profile},#{job.qstatus}"
+      profiles[k] = profiles.fetch(k, [])
+      profiles[k].append(job)
     end
   end
 

@@ -904,20 +904,6 @@ createProfile/sla:
   documentation: |
     Ingest: POST /admin/profile/sla
   migration: m5
-queue-delete:
-  link-title: Remove an item from a Zookeeper queue
-  class: QueueAction
-  params: ["admin/deleteq"]
-  category: Queue Management
-  sensitivity: irreversible change
-  testing: manual
-  description: |
-    Remove an item from a Zookeeper queue.
-  report-datatypes:
-  - qdelete
-  documentation: |
-    Ingest: POST /admin/deleteq
-  migration: m1, m2, m3
 queue-delete-mrtzk:
   link-title: Remove an item from a Zookeeper queue
   class: ZkDeleteM1Action
@@ -944,20 +930,6 @@ queue-delete-legacy:
   documentation: |
     Zk: tbd
   migration: m1
-requeue:
-  link-title: Re-queue an item from a Zookeeper queue
-  class: QueueAction
-  params: ["admin/requeue"]
-  category: Queue Management
-  sensitivity: irreversible change
-  testing: manual
-  description: |
-    Re-queue an item from a Zookeeper queue.
-  report-datatypes:
-  - requeue
-  documentation: |
-    Ingest: POST /admin/requeue
-  migration: m1, m2, m3
 requeue-mrtzk:
   link-title: Re-queue an item from a Zookeeper queue
   class: ZkRequeueM1Action
@@ -984,20 +956,6 @@ requeue-legacy:
   documentation: |
     ZK tbd
   migration: m1
-hold-queue-item:
-  link-title: Move a pending item from in Zookeeper queue to a Held status
-  class: QueueAction
-  params: ["admin/hold"]
-  category: Queue Management
-  sensitivity: irreversible change
-  testing: manual
-  description: |
-    Move a pending item from in Zookeeper queue to a Held status.
-  report-datatypes:
-  - hold
-  documentation: |
-    Ingest: POST /admin/hold
-  migration: m1, m2
 hold-queue-item-mrtzk:
   link-title: Move a pending item from in Zookeeper queue to a Held status
   class: ZkHoldM1Action
@@ -1024,20 +982,6 @@ hold-queue-item-legacy:
   documentation: |
     Zk: tbd
   migration: m1
-release-queue-item:
-  link-title: Release a held item from in Zookeeper queue to a Pending status
-  class: QueueAction
-  params: ["admin/release"]
-  category: Queue Management
-  sensitivity: irreversible change
-  testing: manual
-  description: |
-    Release a held item from in Zookeeper queue to a Pending status.
-  report-datatypes:
-  - release
-  documentation: |
-    Ingest: POST /admin/release
-  migration: m1, m2
 release-queue-item-mrtzk:
   link-title: Release a held item from in Zookeeper queue to a Pending status
   class: ZkReleaseM1Action

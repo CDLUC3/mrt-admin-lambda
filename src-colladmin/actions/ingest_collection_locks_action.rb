@@ -15,13 +15,19 @@ class IngestCollectionLocksAction < ForwardToIngestAction
     @collections = Collections.new(config)
 
     super(config, action, path, myparams, endpoint)
+    @zk = ZK.new(get_zookeeper_conn)
+    ZookeeperListAction.migration_level(@zk)
     @held_counts = {}
-    ql = QueueList.get_queue_list(get_ingest_server)
+    ql = QueueList.new(@zk)
     ql.jobs.each do |qe|
       next if qe.qstatus != 'Held'
 
       @held_counts[qe.profile] = @held_counts.fetch(qe.profile, 0) + 1
     end
+  end
+
+  def get_zookeeper_conn
+    @config.fetch('zookeeper', '')
   end
 
   def specific_profile?

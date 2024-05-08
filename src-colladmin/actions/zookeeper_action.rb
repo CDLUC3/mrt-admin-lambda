@@ -33,20 +33,20 @@ end
 
 ## Base class for actions that interact directly with Zookeeper using the mrt-zk library
 class ZookeeperListAction < AdminAction
-  def initialize(config, action, path, myparams, _filters)
+  def initialize(config, action, path, myparams, _filters = {})
     super(config, action, path, myparams)
     @filters = {}
     @zk = ZK.new(get_zookeeper_conn)
+    ZookeeperListAction.migration_level(@zk)
     @items = ZkList.new
-    migration_level
   end
 
-  def migration_level
+  def self.migration_level(zk)
     return unless $migration.nil?
 
     $migration = []
-    $migration << :m1 if @zk.exists?('/migration/m1')
-    $migration << :m3 if @zk.exists?('/migration/m3')
+    $migration << :m1 if zk.exists?('/migration/m1')
+    $migration << :m3 if zk.exists?('/migration/m3')
   end
 
   def self.migration_m1?
@@ -85,6 +85,7 @@ class ZookeeperAction < AdminAction
   def initialize(config, action, path, myparams)
     super(config, action, path, myparams)
     @zk = ZK.new(get_zookeeper_conn)
+    ZookeeperListAction.migration_level(@zk)
     @qpath = myparams.fetch('queue-path', '')
   end
 

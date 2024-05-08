@@ -6,7 +6,7 @@ require_relative '../lib/inv_queue'
 # Collection Admin Task class - see config/actions.yml for description
 class InventoryQueueAction < ZookeeperListAction
   def initialize(config, action, path, myparams)
-    super(config, action, path, myparams, 'admin/queues-inv')
+    super(config, action, path, myparams)
   end
 
   def perform_action

@@ -8,6 +8,12 @@ class IngestBatchFoldersAction < ForwardToIngestAction
     @days = myparams.fetch('days', '7').to_i
     @days = 60 if @days > 60
     super(config, action, path, myparams, "admin/bids/#{@days}")
+    @zk = ZK.new(get_zookeeper_conn)
+    ZookeeperListAction.migration_level(@zk)
+  end
+
+  def get_zookeeper_conn
+    @config.fetch('zookeeper', '')
   end
 
   def get_title
@@ -28,7 +34,7 @@ class IngestBatchFoldersAction < ForwardToIngestAction
 
   def table_rows(body)
     bflist = BatchFolderList.new(body)
-    bflist.apply_queue_list(QueueList.get_queue_list(get_ingest_server))
+    bflist.apply_queue_list(QueueList.new(@zk))
     bflist.apply_recent_ingests(RecentIngests.new(@config, @days))
     bflist.to_table
   end
