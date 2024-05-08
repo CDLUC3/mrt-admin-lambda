@@ -86,7 +86,7 @@ class ZookeeperAction < AdminAction
   def initialize(config, action, path, myparams)
     super(config, action, path, myparams)
     @zk = ZK.new(get_zookeeper_conn)
-    @qid = myparams.fetch('queue-path', '')
+    @qpath = myparams.fetch('queue-path', '')
   end
 
   def get_zookeeper_conn
@@ -94,11 +94,11 @@ class ZookeeperAction < AdminAction
   end
 
   def perform_action
-    { message: "No response for #{@path}: #{@qid}" }.to_json
+    { message: "No response for #{@path}: #{@qpath}" }.to_json
   rescue StandardError => e
     log(e.message)
     log(e.backtrace)
-    { error: "#{e.message} for #{@path}: #{@qid}" }.to_json
+    { error: "#{e.message} for #{@path}: #{@qpath}" }.to_json
   end
 end
 
@@ -121,19 +121,19 @@ end
 ## Legacy Queue manipulation action using new mrt-zk
 class LegacyZkAction < ZookeeperAction
   def status_vals
-    MerrittZK::LegacyIngestJob.status_vals
+    MerrittZK::LegacyItem::STATUS_VALS
   end
 
   def prefix
     'na'
   end
 
-  def path
-    "/#{prefix}/#{@qid}"
+  def qpath
+    @qpath
   end
 
   def bytes
-    data = @zk.get(path)
+    data = @zk.get(qpath)
     return if data.nil?
 
     data[0].bytes
@@ -154,7 +154,7 @@ class LegacyZkAction < ZookeeperAction
   def write_status(status)
     pbytes = bytes
     pbytes[0] = status
-    @zk.set(path, pbytes.pack('CCCCCCCCCc*'))
+    @zk.set(qpath, pbytes.pack('CCCCCCCCCc*'))
   end
 
   def set_status(status)
@@ -175,15 +175,7 @@ end
 
 ##
 # Legacy Ingest queue action
-class LegacyIngestZkAction < LegacyZkAction
-  def prefix
-    'ingest'
-  end
-end
-
-##
-# Legacy Ingest queue action
-class ZkRequeueLegacyIngestAction < LegacyIngestZkAction
+class ZkRequeueLegacyAction < LegacyZkAction
   def perform_action
     set_status('Pending')
   end
@@ -195,7 +187,7 @@ end
 
 ##
 # Legacy Ingest queue action
-class ZkDeleteLegacyIngestAction < LegacyIngestZkAction
+class ZkDeleteLegacyAction < LegacyZkAction
   def perform_action
     set_status('Deleted')
   end
@@ -207,7 +199,7 @@ end
 
 ##
 # Legacy Ingest queue action
-class ZkHoldLegacyIngestAction < LegacyIngestZkAction
+class ZkHoldLegacyAction < LegacyZkAction
   def perform_action
     set_status('Held')
   end
@@ -219,7 +211,7 @@ end
 
 ##
 # Legacy Ingest queue action
-class ZkReleaseLegacyIngestAction < LegacyIngestZkAction
+class ZkReleaseLegacyAction < LegacyZkAction
   def perform_action
     set_status('Pending')
   end
@@ -236,7 +228,7 @@ class IngestQueueZookeeperAction < ZookeeperListAction
   end
 
   def status_vals
-    MerrittZK::LegacyIngestJob.status_vals
+    MerrittZK::LegacyItem::STATUS_VALS
   end
 
   def is_json
@@ -260,7 +252,7 @@ class InventoryQueueZookeeperAction < ZookeeperListAction
   end
 
   def status_vals
-    MerrittZK::LegacyInventoryJob.status_vals
+    MerrittZK::LegacyItem::STATUS_VALS
   end
 
   def is_json

@@ -297,19 +297,7 @@ td.requeue a,
 td.hold a, 
 td.release a, 
 td.colllock a, 
-td.collqitems a,
-td.qdelete-mrtzk a, 
-td.requeue-mrtzk a, 
-td.hold-mrtzk a, 
-td.release-mrtzk a, 
-td.colllock-mrtzk a, 
-td.collqitems-mrtzk a,
-td.qdelete-legacy a, 
-td.requeue-legacy a, 
-td.hold-legacy a, 
-td.release-legacy a, 
-td.colllock-legacy a, 
-td.collqitems-legacy a {
+td.collqitems a {
   display: block;
   text-align: center;
   border-radius: 5px;

@@ -933,7 +933,7 @@ queue-delete-mrtzk:
   migration: m1
 queue-delete-legacy:
   link-title: Remove an item from a Zookeeper queue
-  class: ZkDeleteLegacyIngestAction
+  class: ZkDeleteLegacyAction
   category: Queue Management
   sensitivity: irreversible change
   testing: manual
@@ -973,7 +973,7 @@ requeue-mrtzk:
   migration: m1
 requeue-legacy:
   link-title: Re-queue an item from a Zookeeper queue
-  class: ZkRequeueLegacyIngestAction
+  class: ZkRequeueLegacyAction
   category: Queue Management
   sensitivity: irreversible change
   testing: manual
@@ -1013,7 +1013,7 @@ hold-queue-item-mrtzk:
   migration: m1
 hold-queue-item-legacy:
   link-title: Move a pending item from in Zookeeper queue to a Held status
-  class: ZkHoldLegacyIngestAction
+  class: ZkHoldLegacyAction
   category: Queue Management
   sensitivity: irreversible change
   testing: manual
@@ -1053,7 +1053,7 @@ release-queue-item-mrtzk:
   migration: m1
 release-queue-item-legacy:
   link-title: Release a held item from in Zookeeper queue to a Pending status
-  class: ZkReleaseLegacyIngestAction
+  class: ZkReleaseLegacyAction
   category: Queue Management
   sensitivity: irreversible change
   testing: manual

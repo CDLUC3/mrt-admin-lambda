@@ -14,23 +14,23 @@ class InvQueueEntry < QueueJson
     super()
     add_property(
       :queueNode,
-      MerrittJsonProperty.new('Queue Node').lookup_value(json, '', 'queueNode')
+      MerrittJsonProperty.new('Queue Node').lookup_value(json, '', :queueNode)
     )
     add_property(
       :manifestURL,
-      MerrittJsonProperty.new('Manifest URL').lookup_value(json, '', 'manifestURL')
+      MerrittJsonProperty.new('Manifest URL').lookup_value(json, '', :manifestURL)
     )
     add_property(
       :date,
-      MerrittJsonProperty.new('Date').lookup_time_value(json, '', 'date')
+      MerrittJsonProperty.new('Date').lookup_time_value(json, '', :date)
     )
     add_property(
       :qstatus,
-      MerrittJsonProperty.new('QStatus').lookup_value(json, '', 'status')
+      MerrittJsonProperty.new('QStatus').lookup_value(json, '', :status)
     )
     add_property(
       :queueId,
-      MerrittJsonProperty.new('Queue ID').lookup_value(json, '', 'iD')
+      MerrittJsonProperty.new('Queue ID').lookup_value(json, '', :id)
     )
     qs = get_value(:qstatus, '')
     qt = get_value(:date, '')
@@ -60,11 +60,11 @@ class InvQueueEntry < QueueJson
 
     add_property(
       :qdelete,
-      MerrittJsonProperty.new('Queue Del', get_queue_path(requeue: false))
+      MerrittJsonProperty.new('Queue Del', get_del_queue_path_m1)
     )
     add_property(
       :requeue,
-      MerrittJsonProperty.new('Requeue', get_queue_path(requeue: true))
+      MerrittJsonProperty.new('Requeue', get_requeue_path_m1)
     )
   end
 
@@ -80,8 +80,13 @@ class InvQueueEntry < QueueJson
       type = ''
       type = 'status' if sym == :status
       type = 'datetime' if sym == :date
-      type = 'qdelete' if sym == :qdelete
-      type = 'requeue' if sym == :requeue
+      if $migration == :m1
+        type = 'qdelete-mrtzk' if sym == :qdelete
+        type = 'requeue-mrtzk' if sym == :requeue
+      else
+        type = 'qdelete-legacy' if sym == :qdelete
+        type = 'requeue-legacy' if sym == :requeue
+      end
       arr.append(type)
     end
     arr
@@ -102,71 +107,5 @@ class InvQueueEntry < QueueJson
 
   def date
     get_value(:date)
-  end
-end
-
-# inventory queue
-class InventoryQueue < MerrittJson
-  def initialize(queue_list, body)
-    data = JSON.parse(body)
-    data = fetch_hash_val(data, 'que:queueState')
-    data = fetch_hash_val(data, 'que:queueEntries')
-    list = fetch_array_val(data, 'que:queueEntryState')
-    list.each do |obj|
-      q = InvQueueEntry.new(obj)
-      queue_list.manifests.append(q)
-    end
-    super()
-  end
-end
-
-# list of all inventory queues - only one exists
-class InvQueueList < MerrittJson
-  def initialize(ingest_server, body, _filter = {})
-    super()
-    @ingest_server = ingest_server
-    @body = body
-    @manifests = []
-    retrieve_queues
-  end
-
-  def self.get_queue_list(ingest_server, filter = {})
-    qjson = HttpGetJson.new(ingest_server, 'admin/queues-inv')
-    InvQueueList.new(ingest_server, qjson.body, filter)
-  end
-
-  def retrieve_queues
-    data = JSON.parse(@body)
-    data = fetch_hash_val(data, 'ingq:ingestQueueNameState')
-    data = fetch_hash_val(data, 'ingq:ingestQueueName')
-    fetch_array_val(data, 'ingq:ingestQueue').each do |qjson|
-      node = fetch_hash_val(qjson, 'ingq:node')
-      begin
-        qjson = HttpGetJson.new(@ingest_server, "admin/queue-inv#{node}")
-        next unless qjson.status == 200
-
-        InventoryQueue.new(self, qjson.body)
-      rescue StandardError => e
-        LambdaBase.log(e.message)
-        LambdaBase.log(e.backtrace)
-      end
-    end
-  end
-
-  attr_reader :manifests, :body
-
-  def to_table
-    table = []
-    ms = @manifests.sort do |a, b|
-      if a.status == b.status
-        b.date <=> a.date
-      else
-        AdminTask.status_sort_val(a.status) <=> AdminTask.status_sort_val(b.status)
-      end
-    end
-    ms.each_with_index do |q, _i|
-      table.append(q.to_table_row)
-    end
-    table
   end
 end
