@@ -1,12 +1,20 @@
 # frozen_string_literal: true
 
-require_relative 'forward_to_ingest_action'
+require_relative 'zookeeper_action'
 require_relative '../lib/inv_queue'
 
 # Collection Admin Task class - see config/actions.yml for description
-class InventoryQueueAction < InventoryQueueZookeeperAction
+class InventoryQueueAction < ZookeeperListAction
   def initialize(config, action, path, myparams)
     super(config, action, path, myparams, 'admin/queues-inv')
+  end
+
+  def perform_action
+    jobs = ZookeeperListAction.migration_m1? ? [] : MerrittZK::LegacyInventoryJob.list_jobs(@zk)
+    jobs.each do |po|
+      register_item(InvQueueEntry.new(po))
+    end
+    convert_json_to_table('')
   end
 
   def get_title

@@ -80,7 +80,7 @@ class InvQueueEntry < QueueJson
       type = ''
       type = 'status' if sym == :status
       type = 'datetime' if sym == :date
-      if $migration == :m1
+      if ZookeeperListAction.migration_m1?
         type = 'qdelete-mrtzk' if sym == :qdelete
         type = 'requeue-mrtzk' if sym == :requeue
       else

@@ -14,35 +14,35 @@ class AccQueueEntry < QueueJson
     super()
     add_property(
       :queueNode,
-      MerrittJsonProperty.new('Queue Node').lookup_value(json, 'que', 'queueNode')
+      MerrittJsonProperty.new('Queue Node').lookup_value(json, '', :queueNode)
     )
     add_property(
       :token,
-      MerrittJsonProperty.new('Token').lookup_value(json, 'que', 'token')
+      MerrittJsonProperty.new('Token').lookup_value(json, '', :token)
     )
     add_property(
       :bytes,
-      MerrittJsonProperty.new('Bytes').lookup_value(json, 'que', 'cloudContentByte')
+      MerrittJsonProperty.new('Bytes').lookup_value(json, '', :'cloud-content-byte')
     )
     add_property(
       :node,
-      MerrittJsonProperty.new('Node').lookup_value(json, 'que', 'deliveryNode')
+      MerrittJsonProperty.new('Node').lookup_value(json, '', :'delivery-node')
     )
     add_property(
       :status_code,
-      MerrittJsonProperty.new('Status Code').lookup_value(json, 'que', 'queueStatus')
+      MerrittJsonProperty.new('Status Code').lookup_value(json, '', :queueStatus)
     )
     add_property(
       :date,
-      MerrittJsonProperty.new('Date').lookup_time_value(json, 'que', 'date')
+      MerrittJsonProperty.new('Date').lookup_time_value(json, '', :date)
     )
     add_property(
       :qstatus,
-      MerrittJsonProperty.new('QStatus').lookup_value(json, 'que', 'status')
+      MerrittJsonProperty.new('QStatus').lookup_value(json, '', :status)
     )
     add_property(
       :queueId,
-      MerrittJsonProperty.new('Queue ID').lookup_value(json, 'que', 'iD')
+      MerrittJsonProperty.new('Queue ID').lookup_value(json, '', :id)
     )
     qs = get_value(:qstatus, '')
     qt = get_value(:date, '')
@@ -71,11 +71,11 @@ class AccQueueEntry < QueueJson
     )
     add_property(
       :qdelete,
-      MerrittJsonProperty.new('Queue Del', get_queue_path(requeue: false))
+      MerrittJsonProperty.new('Queue Del', get_del_queue_path_m1)
     )
     add_property(
       :requeue,
-      MerrittJsonProperty.new('Requeue', get_queue_path(requeue: true))
+      MerrittJsonProperty.new('Requeue', get_requeue_path_m1)
     )
   end
 
@@ -93,8 +93,13 @@ class AccQueueEntry < QueueJson
       type = 'name' if sym == :token
       type = 'bytes' if sym == :bytes
       type = 'datetime' if sym == :date
-      type = 'qdelete' if sym == :qdelete
-      type = 'requeue' if sym == :requeue
+      if ZookeeperListAction.migration_m3?
+        type = 'qdelete-mrtzk' if sym == :qdelete
+        type = 'requeue-mrtzk' if sym == :requeue
+      else
+        type = 'qdelete-legacy' if sym == :qdelete
+        type = 'requeue-legacy' if sym == :requeue
+      end
       arr.append(type)
     end
     arr

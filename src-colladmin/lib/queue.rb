@@ -128,7 +128,7 @@ class QueueEntry < QueueJson
       type = 'qjob' if sym == :job
       type = 'status' if sym == :status
       type = 'datetime' if sym == :date
-      if $migration == :m1
+      if ZookeeperListAction.migration_m1?
         type = 'qdelete-mrtzk' if sym == :qdelete
         type = 'requeue-mrtzk' if sym == :requeue
         type = 'hold-mrtzk' if sym == :hold
@@ -192,7 +192,7 @@ class QueueEntry < QueueJson
   end
 
   def get_queue_node
-    $migration == :m1 ? '/jobs' : '/ingest'
+    ZookeeperListAction.migration_m1? ? '/jobs' : '/ingest'
   end
 end
 

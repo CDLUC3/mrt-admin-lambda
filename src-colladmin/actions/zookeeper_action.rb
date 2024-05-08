@@ -38,28 +38,27 @@ class ZookeeperListAction < AdminAction
     @filters = {}
     @zk = ZK.new(get_zookeeper_conn)
     @items = ZkList.new
+    migration_level
   end
 
   def migration_level
-    return :m1 if @zk.exists?('/migration/m1')
+    return unless $migration.nil?
 
-    :none
+    $migration = []
+    $migration << :m1 if @zk.exists?('/migration/m1')
+    $migration << :m3 if @zk.exists?('/migration/m3')
   end
 
-  def migration_m1?
-    migration_level == :m1
+  def self.migration_m1?
+    return false if $migration.nil?
+
+    $migration.include?(:m1)
   end
 
-  def zk_path
-    '/tbd'
-  end
+  def self.migration_m3?
+    return false if $migration.nil?
 
-  def status_vals
-    []
-  end
-
-  def is_json
-    false
+    $migration.include?(:m3)
   end
 
   attr_reader :items
@@ -120,7 +119,7 @@ end
 
 ## Legacy Queue manipulation action using new mrt-zk
 class LegacyZkAction < ZookeeperAction
-  def status_vals
+  def legacy_status_vals
     MerrittZK::LegacyItem::STATUS_VALS
   end
 
@@ -128,9 +127,7 @@ class LegacyZkAction < ZookeeperAction
     'na'
   end
 
-  def qpath
-    @qpath
-  end
+  attr_reader :qpath
 
   def bytes
     data = @zk.get(qpath)
@@ -148,7 +145,7 @@ class LegacyZkAction < ZookeeperAction
   def orig_stat_name
     return if orig_stat.nil?
 
-    status_vals[orig_stat]
+    legacy_status_vals[orig_stat]
   end
 
   def write_status(status)
@@ -158,7 +155,7 @@ class LegacyZkAction < ZookeeperAction
   end
 
   def set_status(status)
-    i = status_vals.find_index(status)
+    i = legacy_status_vals.find_index(status)
     return if i.nil?
 
     orig_name = orig_stat_name
@@ -223,47 +220,10 @@ end
 
 ## Class for reading the legacy Merritt Ingest Queue
 class IngestQueueZookeeperAction < ZookeeperListAction
-  def zk_path
-    '/ingest'
-  end
-
-  def status_vals
-    MerrittZK::LegacyItem::STATUS_VALS
-  end
-
-  def is_json
-    true
-  end
-
   def perform_action
-    $migration = migration_level if migration_m1?
-    jobs = migration_m1? ? MerrittZK::Job.list_jobs(@zk) : MerrittZK::LegacyIngestJob.list_jobs(@zk)
+    jobs = ZookeeperListAction.migration_m1? ? MerrittZK::Job.list_jobs(@zk) : MerrittZK::LegacyIngestJob.list_jobs(@zk)
     jobs.each do |po|
       register_item(QueueEntry.new(po))
-    end
-    convert_json_to_table('')
-  end
-end
-
-## Class for reading the legacy Merritt Inventory Queue
-class InventoryQueueZookeeperAction < ZookeeperListAction
-  def zk_path
-    '/mrt.inventory.full'
-  end
-
-  def status_vals
-    MerrittZK::LegacyItem::STATUS_VALS
-  end
-
-  def is_json
-    true
-  end
-
-  def perform_action
-    $migration = migration_level if migration_m1?
-    jobs = migration_m1? ? [] : MerrittZK::LegacyInventoryJob.list_jobs(@zk)
-    jobs.each do |po|
-      register_item(InvQueueEntry.new(po))
     end
     convert_json_to_table('')
   end
