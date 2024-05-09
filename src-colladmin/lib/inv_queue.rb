@@ -81,6 +81,7 @@ class InvQueueEntry < QueueJson
       type = 'status' if sym == :status
       type = 'datetime' if sym == :date
       if ZookeeperListAction.migration_m1?
+        # under m1 migration, there is no INV queue
         type = 'qdelete-mrtzk' if sym == :qdelete
         type = 'requeue-mrtzk' if sym == :requeue
       else

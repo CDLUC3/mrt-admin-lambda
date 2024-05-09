@@ -8,12 +8,6 @@ class IngestBatchFoldersAction < ForwardToIngestAction
     @days = myparams.fetch('days', '7').to_i
     @days = 60 if @days > 60
     super(config, action, path, myparams, "admin/bids/#{@days}")
-    @zk = ZK.new(get_zookeeper_conn)
-    ZookeeperListAction.migration_level(@zk)
-  end
-
-  def get_zookeeper_conn
-    @config.fetch('zookeeper', '')
   end
 
   def get_title

@@ -5,14 +5,6 @@ require_relative 'forward_to_ingest_action'
 require_relative '../lib/http_post_json'
 
 # Collection Admin Task class - see config/actions.yml for description
-class QueueAction < PostToIngestAction
-  def initialize(config, action, path, myparams, endpoint)
-    qp = CGI.unescape(myparams.fetch('queue-path', 'na'))
-    super(config, action, path, myparams, "#{endpoint}#{qp}")
-  end
-end
-
-# Collection Admin Task class - see config/actions.yml for description
 class CollQueueAction < PostToIngestAction
   def initialize(config, action, path, myparams, endpoint)
     coll = myparams.fetch('coll', '')
@@ -22,27 +14,19 @@ class CollQueueAction < PostToIngestAction
 end
 
 # Collection Admin Task class - see config/actions.yml for description
-class CollIterateQueueAction < PostToIngestAction
-  def initialize(config, action, path, myparams, endpoint)
-    coll = myparams.fetch('coll', '')
-    @it_endpoint = endpoint.gsub(/coll$/, coll) unless coll.empty?
-    super(config, action, path, myparams, 'admin/queues')
+class CollIterateQueueAction < ZookeeperAction
+  def initialize(config, action, path, myparams)
+    super(config, action, path, myparams)
+    @coll = myparams.fetch('coll', '')
   end
 
   def perform_action
-    resp = { status: 500 }
-    data = JSON.parse(get_body)
-    data = data.fetch('ingq:ingestQueueNameState', {})
-    data = data.fetch('ingq:ingestQueueName', {})
-    data.fetch('ingq:ingestQueue', []).each do |qjson|
-      node = qjson.fetch('ingq:node', '')
-      next if node.empty?
-
-      begin
-        resp = HttpPostJson.new(get_ingest_server, @it_endpoint.gsub('queue', node))
-      rescue StandardError => e
-        log(e.message)
-        log(e.backtrace)
+    if ZookeeperListAction.migration_m1?
+      ql = QueueList.new(@zk, { deletable: true })
+      puts "PROF: #{ql.profiles.keys}"
+    else
+      MerrittZK::LegacyIngestJob.list_jobs(@zk) do |job|
+        puts "TEST COLL #{@coll}: #{job}"
       end
     end
     { message: 'queue release submitted' }.to_json
@@ -50,30 +34,54 @@ class CollIterateQueueAction < PostToIngestAction
 end
 
 # Collection Admin Task class - see config/actions.yml for description
-class IterateQueueAction < PostToIngestAction
-  def initialize(config, action, path, myparams, endpoint)
+class IterateQueueAction < ZookeeperAction
+  def initialize(config, action, path, myparams)
+    super(config, action, path, myparams)
     @queue = myparams.fetch('queue', 'na')
     @reload_path = myparams.fetch('reload_path', 'na')
-    @it_endpoint = endpoint
-    super(config, action, path, myparams, "admin/#{@queue}")
+  end
+
+  def legacy_delete(job)
+    status = job.fetch(:status, '')
+    path = job.fetch(:path, '')
+    return unless %w[Completed Deleted].include?(status)
+    return if path.empty?
+
+    @zk.delete(path)
   end
 
   def perform_action
-    resp = { status: 500 }
-    data = JSON.parse(get_body)
-    data = data.fetch('ingq:ingestQueueNameState', {})
-    data = data.fetch('ingq:ingestQueueName', {})
-    MerrittJson.json_fetch_array_val(data, 'ingq:ingestQueue').each do |qjson|
-      node = qjson.fetch('ingq:node', '')
-      next if node.empty?
+    if @queue == 'queues-acc' && ZookeeperListAction.migration_m3?
+      MerrittZK::Access.list_jobs(@zk).each do |job|
+        qn = job.fetch(:queueNode, MerrittZK::Access::SMALL).gsub(%r{^/access/}, '')
+        j = MerrittZK::Access.new(qn, job.fetch(:id, ''))
+        j.load(@zk)
+        next unless j.status.deletable?
 
-      begin
-        endpt = @it_endpoint.gsub('queue', node).gsub(%r{//}, '/')
-        resp = HttpPostJson.new(get_ingest_server, endpt)
-        return { message: "Status #{resp.status} for #{endpt}" }.to_json unless resp.status == 200
-      rescue StandardError => e
-        log(e.message)
-        log(e.backtrace)
+        j.delete(@zk)
+      end
+    elsif @queue == 'queues-acc'
+      MerrittZK::LegacyAccessJob.list_jobs(@zk).each do |job|
+        legacy_delete(job)
+      end
+    elsif @queue == 'queues-inv' && ZookeeperListAction.migration_m1?
+      # no action
+    elsif @queue == 'queues-inv'
+      MerrittZK::LegacyInventoryJob.list_jobs(@zk).each do |job|
+        legacy_delete(job)
+      end
+    elsif ZookeeperListAction.migration_m1?
+      ql = QueueList.new(@zk, { deletable: true })
+      ql.batches.each_key do |bid|
+        batch = MerrittZK::Batch.find_batch_by_uuid(@zk, bid)
+        batch.load(@zk)
+        next unless batch.status.deletable?
+
+        batch.delete(@zk)
+      end
+    else
+      MerrittZK::LegacyIngestJob.list_jobs(@zk).each do |job|
+        legacy_delete(job)
       end
     end
     {

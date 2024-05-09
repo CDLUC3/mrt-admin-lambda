@@ -5,10 +5,6 @@ require_relative '../lib/acc_queue'
 
 # Collection Admin Task class - see config/actions.yml for description
 class AccessQueueAction < ZookeeperListAction
-  def initialize(config, action, path, myparams)
-    super(config, action, path, myparams)
-  end
-
   def perform_action
     jobs = []
     if ZookeeperListAction.migration_m3?

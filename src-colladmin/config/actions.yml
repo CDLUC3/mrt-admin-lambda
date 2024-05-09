@@ -1011,7 +1011,6 @@ release-queue-item-legacy:
 cleanup-queue:
   link-title: Cleanup Deleted and Completed items from a Zookeeper Queue
   class: IterateQueueAction
-  params: ["admin/cleanupq/queue"]
   category: Queue Management
   sensitivity: irreversible change
   testing: manual

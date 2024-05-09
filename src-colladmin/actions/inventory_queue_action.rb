@@ -5,10 +5,6 @@ require_relative '../lib/inv_queue'
 
 # Collection Admin Task class - see config/actions.yml for description
 class InventoryQueueAction < ZookeeperListAction
-  def initialize(config, action, path, myparams)
-    super(config, action, path, myparams)
-  end
-
   def perform_action
     jobs = ZookeeperListAction.migration_m1? ? [] : MerrittZK::LegacyInventoryJob.list_jobs(@zk)
     jobs.each do |po|

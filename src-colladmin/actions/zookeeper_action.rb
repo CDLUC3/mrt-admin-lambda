@@ -42,8 +42,6 @@ class ZookeeperListAction < AdminAction
   end
 
   def self.migration_level(zk)
-    return unless $migration.nil?
-
     $migration = []
     $migration << :m1 if zk.exists?('/migration/m1')
     $migration << :m3 if zk.exists?('/migration/m3')

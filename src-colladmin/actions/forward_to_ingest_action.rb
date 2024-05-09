@@ -9,6 +9,13 @@ class ForwardToIngestAction < AdminAction
   def initialize(config, action, path, myparams, endpoint)
     super(config, action, path, myparams)
     @endpoint = endpoint
+
+    @zk = ZK.new(get_zookeeper_conn)
+    ZookeeperListAction.migration_level(@zk)
+  end
+
+  def get_zookeeper_conn
+    @config.fetch('zookeeper', '')
   end
 
   def get_body

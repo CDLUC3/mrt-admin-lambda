@@ -7,7 +7,7 @@ class IngestBatchAction < ZookeeperListAction
   def initialize(config, action, path, myparams)
     @batch = myparams.fetch('batch', 'no-batch-provided')
     @batch_obj = Batch.new(@batch)
-    super(config, action, path, myparams, {batch: @batch})
+    super(config, action, path, myparams, { batch: @batch })
   end
 
   def get_title
@@ -22,7 +22,7 @@ class IngestBatchAction < ZookeeperListAction
     @batch_obj.table_types
   end
 
-  def table_rows(body)
+  def table_rows(_body)
     queue_list = QueueList.new(@zk, { batch: @batch })
     queue_list.jobs.each do |qe|
       @batch_obj.add_queue_job(qe)

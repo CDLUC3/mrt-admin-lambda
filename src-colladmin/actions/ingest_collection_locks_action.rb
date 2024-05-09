@@ -15,8 +15,6 @@ class IngestCollectionLocksAction < ForwardToIngestAction
     @collections = Collections.new(config)
 
     super(config, action, path, myparams, endpoint)
-    @zk = ZK.new(get_zookeeper_conn)
-    ZookeeperListAction.migration_level(@zk)
     @held_counts = {}
     ql = QueueList.new(@zk)
     ql.jobs.each do |qe|
