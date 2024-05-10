@@ -25,7 +25,7 @@ class CollIterateQueueAction < ZookeeperAction
       ql = QueueList.new(@zk, { deletable: true })
       puts "PROF: #{ql.profiles.keys}"
     else
-      MerrittZK::LegacyIngestJob.list_jobs(@zk) do |job|
+      MerrittZK::LegacyIngestJob.list_jobs_as_json(@zk) do |job|
         puts "TEST COLL #{@coll}: #{job}"
       end
     end
@@ -52,7 +52,7 @@ class IterateQueueAction < ZookeeperAction
 
   def perform_action
     if @queue == 'queues-acc' && ZookeeperListAction.migration_m3?
-      MerrittZK::Access.list_jobs(@zk).each do |job|
+      MerrittZK::Access.list_jobs_as_json(@zk).each do |job|
         qn = job.fetch(:queueNode, MerrittZK::Access::SMALL).gsub(%r{^/access/}, '')
         j = MerrittZK::Access.new(qn, job.fetch(:id, ''))
         j.load(@zk)
@@ -61,13 +61,13 @@ class IterateQueueAction < ZookeeperAction
         j.delete(@zk)
       end
     elsif @queue == 'queues-acc'
-      MerrittZK::LegacyAccessJob.list_jobs(@zk).each do |job|
+      MerrittZK::LegacyAccessJob.list_jobs_as_json(@zk).each do |job|
         legacy_delete(job)
       end
     elsif @queue == 'queues-inv' && ZookeeperListAction.migration_m1?
       # no action
     elsif @queue == 'queues-inv'
-      MerrittZK::LegacyInventoryJob.list_jobs(@zk).each do |job|
+      MerrittZK::LegacyInventoryJob.list_jobs_as_json(@zk).each do |job|
         legacy_delete(job)
       end
     elsif ZookeeperListAction.migration_m1?
@@ -80,7 +80,7 @@ class IterateQueueAction < ZookeeperAction
         batch.delete(@zk)
       end
     else
-      MerrittZK::LegacyIngestJob.list_jobs(@zk).each do |job|
+      MerrittZK::LegacyIngestJob.list_jobs_as_json(@zk).each do |job|
         legacy_delete(job)
       end
     end

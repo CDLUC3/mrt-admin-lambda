@@ -225,7 +225,12 @@ class QueueList < MerrittJson
     @profiles = {}
     @filter = filter
 
-    jobs = ZookeeperListAction.migration_m1? ? MerrittZK::Job.list_jobs(zk) : MerrittZK::LegacyIngestJob.list_jobs(zk)
+    jobs = []
+    if ZookeeperListAction.migration_m1?
+      jobs = MerrittZK::Job.list_jobs_as_json(zk)
+    else
+      jobs = MerrittZK::LegacyIngestJob.list_jobs_as_json(zk)
+    end
     jobs.each do |j|
       job = QueueEntry.new(j)
       @jobs << job

@@ -100,20 +100,86 @@ class ZookeeperAction < AdminAction
   end
 end
 
-## Queue manipulation action using new mrt-zk
-class ZkRequeueM1Action < ZookeeperAction
+## Base class for new style action
+class ZkM1Action < ZookeeperAction
+  def get_id
+    @qpath.split('/')[-1]
+  end
+
+  def get_access_queue
+    @qpath.split('/')[-2]
+  end
+
+  def perform_action
+    { message: "path: #{@path}; qpath: #{@qpath}" }.to_json
+  end
 end
 
 ## Queue manipulation action using new mrt-zk
-class ZkDeleteM1Action < ZookeeperAction
+class ZkRequeueM1Action < ZkM1Action
+  def perform_action
+    if @qpath =~ /access/
+      acc = MerrittZK::Access.new(get_access_queue, get_id)
+      acc.load(@zk)
+      acc.set_status(@zk, MerrittZK::AccessState::Pending)
+      { message: "Acc #{acc.id} requeue not yet implemented " }.to_json
+    else
+      job = MerrittZK::Job.new(get_id)
+      job.load(@zk)
+      js = job.json_property(@zk, MerrittZK::ZkKeys::STATUS)
+      laststat = js.fetch(:last_successful_status, '')
+      case laststat
+      when 'Estimating', '', nil
+        job.set_status(@zk, MerrittZK::JobState::Estimating)
+      when 'Downloading'
+        job.set_status(@zk, MerrittZK::JobState::Downloading)
+      when 'Processing'
+        job.set_status(@zk, MerrittZK::JobState::Processing)
+      when 'Recording'
+        job.set_status(@zk, MerrittZK::JobState::Recording)
+      when 'Notify'
+        job.set_status(@zk, MerrittZK::JobState::Notify)
+      end
+      { message: "Job #{job.id} requeued to status #{job.status_name}" }.to_json
+    end
+  end
 end
 
 ## Queue manipulation action using new mrt-zk
-class ZkHoldM1Action < ZookeeperAction
+class ZkDeleteM1Action < ZkM1Action
+  def perform_action
+    if @qpath =~ /access/
+      acc = MerrittZK::Access.new(get_access_queue, get_id)
+      acc.load(@zk)
+      acc.set_status(@zk, MerrittZK::AccessState::Deleted)
+      { message: "Acc #{@acc.id} deleted" }.to_json
+    else
+      job = MerrittZK::Job.new(get_id)
+      job.load(@zk)
+      job.set_status(@zk, MerrittZK::JobState::Deleted)
+      { message: "Job #{@job.id} deleted" }.to_json
+    end
+  end
 end
 
 ## Queue manipulation action using new mrt-zk
-class ZkReleaseM1Action < ZookeeperAction
+class ZkHoldM1Action < ZkM1Action
+  def perform_action
+    job = MerrittZK::Job.new(get_id)
+    job.load(@zk)
+    job.set_status(@zk, MerrittZK::JobState::Held)
+    { message: "Job #{@qpath} held" }.to_json
+  end
+end
+
+## Queue manipulation action using new mrt-zk
+class ZkReleaseM1Action < ZkM1Action
+  def perform_action
+    job = MerrittZK::Job.new(get_id)
+    job.load(@zk)
+    job.set_status(@zk, MerrittZK::JobState::Pending)
+    { message: "Job #{@qpath} released" }.to_json
+  end
 end
 
 ## Legacy Queue manipulation action using new mrt-zk
@@ -220,7 +286,12 @@ end
 ## Class for reading the legacy Merritt Ingest Queue
 class IngestQueueZookeeperAction < ZookeeperListAction
   def perform_action
-    jobs = ZookeeperListAction.migration_m1? ? MerrittZK::Job.list_jobs(@zk) : MerrittZK::LegacyIngestJob.list_jobs(@zk)
+    jobs = []
+    if ZookeeperListAction.migration_m1?
+      jobs = MerrittZK::Job.list_jobs_as_json(@zk)
+    else
+      MerrittZK::LegacyIngestJob.list_jobs_as_json(@zk)
+    end
     jobs.each do |po|
       register_item(QueueEntry.new(po))
     end
