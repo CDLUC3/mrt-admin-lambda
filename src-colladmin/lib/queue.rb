@@ -155,7 +155,7 @@ class QueueEntry < QueueJson
     arr
   end
 
-  def queueId
+  def queue_id
     get_value(:queueId)
   end
 
@@ -237,15 +237,10 @@ class QueueList < MerrittJson
     end
     jobs.each do |j|
       job = QueueEntry.new(j)
-      if @filter.key?(:batch)
-        next unless job.bid == @filter[:batch]
-      end
-      if @filter.fetch(:deletable, false)
-        next unless %w[Completed Deleted].include?(job.qstatus)
-      end
-      if @filter.fetch(:held, false)
-        next unless %w[Held].include?(job.qstatus)
-      end
+      next if @filter.key?(:batch) && job.bid != @filter[:batch]
+      next if @filter.fetch(:deletable, false) && !%w[Completed Deleted].include?(job.qstatus)
+      next if @filter.fetch(:held, false) && !%w[Held].include?(job.qstatus)
+
       @jobs << job
       qb = @batches.fetch(job.bid, QueueBatch.new(job.bid, job.user))
       qb.add_job(job)

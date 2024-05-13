@@ -310,7 +310,7 @@ class CollIterateQueueM1Action < ZkM1Action
     count = 0
     ql = QueueList.new(@zk, { held: true })
     ql.jobs.each do |j|
-      job = MerrittZK::Job.new(j.queueId)
+      job = MerrittZK::Job.new(j.queue_id)
       job.load(@zk)
       job.set_status(@zk, MerrittZK::JobState::Pending)
       count += 1
@@ -332,7 +332,8 @@ class CollIterateQueueLegacyAction < LegacyZkAction
       job = QueueEntry.new(j)
       next unless job.qstatus == 'Held'
       next unless job.profile == @coll
-      set_legacy_status("/ingest/#{job.queueId}", 'Pending')
+
+      set_legacy_status("/ingest/#{job.queue_id}", 'Pending')
       count += 1
     end
     { message: "queue release submitted for #{count}" }.to_json
