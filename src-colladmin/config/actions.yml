@@ -555,10 +555,22 @@ lock-coll:
   documentation: |
     Ingest: POST /admin/submission/freeze/{coll}
   migration: m2
-release-coll-queue-items:
+release-coll-queue-items-m1:
   link-title: Release any held items for a collection
-  class: CollIterateQueueAction
-  params: ["admin/release-all/queue/coll"]
+  class: CollIterateQueueM1Action
+  category: Queue Management
+  sensitivity: reversible change
+  testing: automatable
+  description: |
+    Release any held items for a collection.
+  report-datatypes:
+  - collqitems
+  documentation: |
+    Ingest: POST /admin/release-all/queue/{coll}
+  migration: m2
+release-coll-queue-items-legacy:
+  link-title: Release any held items for a collection (legacy)
+  class: CollIterateQueueLegacyAction
   category: Queue Management
   sensitivity: reversible change
   testing: automatable

@@ -818,8 +818,11 @@ function format(cell, v, type, merritt_path) {
   } else if (type == 'release-legacy'  && v != '') {
     p = colladmin_root + "/lambda?path=release-queue-item-legacy&queue-path="+v;
     makeLink(cell, 'Release', "javascript:ajax_invoke('"+encodeURIComponent(p)+"')").addClass("ajax");
-  } else if (type == 'collqitems'  && v != '') {
-    p = colladmin_root + "/lambda?path=release-coll-queue-items&coll="+v;
+  } else if (type == 'collqitems-mrtzk'  && v != '') {
+    p = colladmin_root + "/lambda?path=release-coll-queue-items-m1&coll="+v;
+    makeLink(cell, 'Release Items', "javascript:ajax_invoke('"+encodeURIComponent(p)+"')").addClass("ajax");
+  } else if (type == 'collqitems-legacy'  && v != '') {
+    p = colladmin_root + "/lambda?path=release-coll-queue-items-legacy&coll="+v;
     makeLink(cell, 'Release Items', "javascript:ajax_invoke('"+encodeURIComponent(p)+"')").addClass("ajax");
   } else if (type == 'colllock') {
     var arr = v.split(",");

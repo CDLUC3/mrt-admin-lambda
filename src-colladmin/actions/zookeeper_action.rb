@@ -194,39 +194,39 @@ class LegacyZkAction < ZookeeperAction
 
   attr_reader :qpath
 
-  def bytes
-    data = @zk.get(qpath)
+  def bytes(p)
+    data = @zk.get(p)
     return if data.nil?
 
     data[0].bytes
   end
 
-  def orig_stat
-    return if bytes.nil?
+  def orig_stat(p)
+    return if bytes(p).nil?
 
-    bytes[0]
+    bytes(p)[0]
   end
 
-  def orig_stat_name
-    return if orig_stat.nil?
+  def orig_stat_name(p)
+    return if orig_stat(p).nil?
 
-    legacy_status_vals[orig_stat]
+    legacy_status_vals[orig_stat(p)]
   end
 
-  def write_status(status)
-    pbytes = bytes
+  def write_status(p, status)
+    pbytes = bytes(p)
     pbytes[0] = status
-    @zk.set(qpath, pbytes.pack('CCCCCCCCCc*'))
+    @zk.set(p, pbytes.pack('CCCCCCCCCc*'))
   end
 
-  def set_status(status)
+  def set_legacy_status(p, status)
     i = legacy_status_vals.find_index(status)
     return if i.nil?
 
-    orig_name = orig_stat_name
+    orig_name = orig_stat_name(p)
     return { message: 'Illegal status' }.to_json unless check_status(orig_name)
 
-    write_status(i)
+    write_status(p, i)
     { message: "Status #{orig_name} -- > #{status}" }.to_json
   end
 
@@ -239,7 +239,7 @@ end
 # Legacy Ingest queue action
 class ZkRequeueLegacyAction < LegacyZkAction
   def perform_action
-    set_status('Pending')
+    set_legacy_status(qpath, 'Pending')
   end
 
   def check_status(status)
@@ -251,7 +251,7 @@ end
 # Legacy Ingest queue action
 class ZkDeleteLegacyAction < LegacyZkAction
   def perform_action
-    set_status('Deleted')
+    set_legacy_status(qpath, 'Deleted')
   end
 
   def check_status(status)
@@ -263,7 +263,7 @@ end
 # Legacy Ingest queue action
 class ZkHoldLegacyAction < LegacyZkAction
   def perform_action
-    set_status('Held')
+    set_legacy_status(qpath, 'Held')
   end
 
   def check_status(status)
@@ -275,7 +275,7 @@ end
 # Legacy Ingest queue action
 class ZkReleaseLegacyAction < LegacyZkAction
   def perform_action
-    set_status('Pending')
+    set_legacy_status(qpath, 'Pending')
   end
 
   def check_status(status)
@@ -290,11 +290,108 @@ class IngestQueueZookeeperAction < ZookeeperListAction
     if ZookeeperListAction.migration_m1?
       jobs = MerrittZK::Job.list_jobs_as_json(@zk)
     else
-      MerrittZK::LegacyIngestJob.list_jobs_as_json(@zk)
+      jobs = MerrittZK::LegacyIngestJob.list_jobs_as_json(@zk)
     end
     jobs.each do |po|
       register_item(QueueEntry.new(po))
     end
     convert_json_to_table('')
+  end
+end
+
+# Collection Admin Task class - see config/actions.yml for description
+class CollIterateQueueM1Action < ZkM1Action
+  def initialize(config, action, path, myparams)
+    super(config, action, path, myparams)
+    @coll = myparams.fetch('coll', '')
+  end
+
+  def perform_action
+    count = 0
+    ql = QueueList.new(@zk, { held: true })
+    ql.jobs.each do |j|
+      job = MerrittZK::Job.new(j.queueId)
+      job.load(@zk)
+      job.set_status(@zk, MerrittZK::JobState::Pending)
+      count += 1
+    end
+    { message: "queue release submitted for #{count}" }.to_json
+  end
+end
+
+# Collection Admin Task class - see config/actions.yml for description
+class CollIterateQueueLegacyAction < LegacyZkAction
+  def initialize(config, action, path, myparams)
+    super(config, action, path, myparams)
+    @coll = myparams.fetch('coll', '')
+  end
+
+  def perform_action
+    count = 0
+    MerrittZK::LegacyIngestJob.list_jobs_as_json(@zk).each do |j|
+      job = QueueEntry.new(j)
+      next unless job.qstatus == 'Held'
+      next unless job.profile == @coll
+      set_legacy_status("/ingest/#{job.queueId}", 'Pending')
+      count += 1
+    end
+    { message: "queue release submitted for #{count}" }.to_json
+  end
+end
+
+# Collection Admin Task class - see config/actions.yml for description
+class IterateQueueAction < ZookeeperAction
+  def initialize(config, action, path, myparams)
+    super(config, action, path, myparams)
+    @queue = myparams.fetch('queue', 'na')
+    @reload_path = myparams.fetch('reload_path', 'na')
+  end
+
+  def legacy_delete(job)
+    status = job.fetch(:status, '')
+    path = job.fetch(:path, '')
+    return unless %w[Completed Deleted].include?(status)
+    return if path.empty?
+
+    @zk.delete(path)
+  end
+
+  def perform_action
+    if @queue == 'queues-acc' && ZookeeperListAction.migration_m3?
+      MerrittZK::Access.list_jobs_as_json(@zk).each do |job|
+        qn = job.fetch(:queueNode, MerrittZK::Access::SMALL).gsub(%r{^/access/}, '')
+        j = MerrittZK::Access.new(qn, job.fetch(:id, ''))
+        j.load(@zk)
+        next unless j.status.deletable?
+
+        j.delete(@zk)
+      end
+    elsif @queue == 'queues-acc'
+      MerrittZK::LegacyAccessJob.list_jobs_as_json(@zk).each do |job|
+        legacy_delete(job)
+      end
+    elsif @queue == 'queues-inv' && ZookeeperListAction.migration_m1?
+      # no action
+    elsif @queue == 'queues-inv'
+      MerrittZK::LegacyInventoryJob.list_jobs_as_json(@zk).each do |job|
+        legacy_delete(job)
+      end
+    elsif ZookeeperListAction.migration_m1?
+      ql = QueueList.new(@zk, { deletable: true })
+      ql.batches.each_key do |bid|
+        batch = MerrittZK::Batch.find_batch_by_uuid(@zk, bid)
+        batch.load(@zk)
+        next unless batch.status.deletable?
+
+        batch.delete(@zk)
+      end
+    else
+      MerrittZK::LegacyIngestJob.list_jobs_as_json(@zk).each do |job|
+        legacy_delete(job)
+      end
+    end
+    {
+      redirect_location: "/web/collIndex.html?path=#{@reload_path}"
+    }.to_json
   end
 end

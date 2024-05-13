@@ -37,7 +37,11 @@ class IngestCollectionLocksAction < ForwardToIngestAction
   end
 
   def table_types
-    ['', 'colllist', '', '', 'colllock', 'dataint', 'collqitems']
+    if ZookeeperListAction.migration_m1?
+      ['', 'colllist', '', '', 'colllock', 'dataint', 'collqitems-mrtzk']
+    else
+      ['', 'colllist', '', '', 'colllock', 'dataint', 'collqitems-legacy']
+    end
   end
 
   def table_rows(_body)
