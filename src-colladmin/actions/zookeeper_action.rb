@@ -396,3 +396,40 @@ class IterateQueueAction < ZookeeperAction
     }.to_json
   end
 end
+
+## Control Access Queue Hold/Release (legacy and mrt-zk)
+class AccessLockAction < ZookeeperAction
+  def initialize(config, action, path, myparams)
+    super(config, action, path, myparams)
+    @op = @myparams.fetch('op', 'set')
+    @op = 'state' unless %w[set clear state].include?(@op)
+    @flag = @myparams.fetch('object', '')
+  end
+
+  def largeq?
+    @flag == 'LargeAccessHold'
+  end
+
+  def perform_action
+    lockpath = 'tbd'
+    if ZookeeperListAction.migration_m3?
+      lockpath = largeq? ? MerrittZK::Locks::LOCKS_QUEUE_ACCESS_LARGE : MerrittZK::Locks::LOCKS_QUEUE_ACCESS_SMALL
+      case @op
+      when 'set'
+        largeq? ? MerrittZK::Locks.lock_large_access_queue(@zk) : MerrittZK::Locks.lock_small_access_queue(@zk)
+      when 'clear'
+        largeq? ? MerrittZK::Locks.unlock_large_access_queue(@zk) : MerrittZK::Locks.unlock_small_access_queue(@zk)
+      end
+    else
+      lockpath = "/mrt.lock/access/#{@flag}"
+      case @op
+      when 'set'
+        @zk.create(lockpath, data: nil) unless exists?(lockpath)
+      when 'clear'
+        @zk.delete(lockpath) if @zk.exists?(lockpath)
+      end
+    end
+    state = @zk.exists?(lockpath) ? 'Held' : 'Released'
+    message_as_table("Lock #{@op} status result: #{lockpath}=#{state}").to_json
+  end
+end
