@@ -433,3 +433,38 @@ class AccessLockAction < ZookeeperAction
     message_as_table("Lock #{@op} status result: #{lockpath}=#{state}").to_json
   end
 end
+
+## Display ingest locks on objects
+class IngestLockAction < ZookeeperAction
+  def get_title
+    'List Ingest Locks'
+  end
+
+  def table_headers
+    ['Ark']
+  end
+
+  def table_types
+    ['ark']
+  end
+
+  def table_rows(_body)
+    dir = ZookeeperListAction.migration_m1? ? MerrittZK::Locks::LOCKS_STORAGE : '/mrt.lock'
+    rows = []
+    @zk.children(dir).each do |cp|
+      next unless cp =~ /^ark/
+      ark = cp.gsub(/ark-/, 'ark:/').gsub(/-/, '/')
+      rows << [ark]
+    end
+    rows
+  end
+
+  def perform_action
+    convert_json_to_table('')
+  end
+
+  def has_table
+    true
+  end
+
+end

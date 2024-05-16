@@ -29,7 +29,6 @@ require_relative 'actions/tag_uc3_action'
 require_relative 'actions/ssm_describe_action'
 require_relative 'actions/opensearch_describe_action'
 require_relative 'actions/replication_action'
-require_relative 'actions/ingest_lock_action'
 require_relative 'actions/consistency_report_cleanup_action'
 require 'yaml'
 
