@@ -5,6 +5,7 @@ require_relative 'queue_json'
 # representation of an ingest queue entry
 class QueueEntry < QueueJson
   @@placeholder = nil
+  @@migration = :none
   def self.placeholder
     @@placeholder = QueueEntry.new({}) if @@placeholder.nil?
     @@placeholder
@@ -20,52 +21,53 @@ class QueueEntry < QueueJson
     # }
 
     super()
+
     # until July 2023, Merritt had 3 separate queues identified as a queue node
     add_property(
       :queueNode,
-      MerrittJsonProperty.new('Ingest Worker').lookup_value(json, '', 'queueNode')
+      MerrittJsonProperty.new('Ingest Worker').lookup_value(json, '', :queueNode)
     )
     add_property(
       :bid,
-      MerrittJsonProperty.new('Batch').lookup_value(json, '', 'batchID')
+      MerrittJsonProperty.new('Batch').lookup_value(json, '', :batchID)
     )
     add_property(
       :job,
-      MerrittJsonProperty.new('Job').lookup_value(json, '', 'jobID')
+      MerrittJsonProperty.new('Job').lookup_value(json, '', :jobID)
     )
     add_property(
       :profile,
-      MerrittJsonProperty.new('Profile').lookup_value(json, '', 'profile')
+      MerrittJsonProperty.new('Profile').lookup_value(json, '', :profile)
     )
     # insert binary time field
     add_property(
       :date,
-      MerrittJsonProperty.new('Date').lookup_time_value(json, '', 'date')
+      MerrittJsonProperty.new('Date').lookup_time_value(json, '', :date)
     )
     add_property(
       :user,
-      MerrittJsonProperty.new('User').lookup_value(json, '', 'submitter')
+      MerrittJsonProperty.new('User').lookup_value(json, '', :submitter)
     )
     add_property(
       :title,
-      MerrittJsonProperty.new('Title').lookup_value(json, '', 'title')
+      MerrittJsonProperty.new('Title').lookup_value(json, '', :title)
     )
     add_property(
       :file_type,
-      MerrittJsonProperty.new('File Type').lookup_value(json, '', 'type')
+      MerrittJsonProperty.new('File Type').lookup_value(json, '', :type)
     )
     # insert status from binary field
     add_property(
       :qstatus,
-      MerrittJsonProperty.new('QStatus').lookup_value(json, '', 'status')
+      MerrittJsonProperty.new('QStatus').lookup_value(json, '', :status)
     )
     add_property(
       :queue,
-      MerrittJsonProperty.new('Name').lookup_value(json, '', 'filename')
+      MerrittJsonProperty.new('Name').lookup_value(json, '', :filename)
     )
     add_property(
       :queueId,
-      MerrittJsonProperty.new('Queue ID').lookup_value(json, '', 'id')
+      MerrittJsonProperty.new('Queue ID').lookup_value(json, '', :id)
     )
     # extract the ingest worker node from the queue id string
     qid = get_value(:queueId, '')
@@ -83,21 +85,22 @@ class QueueEntry < QueueJson
       :status,
       MerrittJsonProperty.new('Status', st)
     )
+
     add_property(
       :qdelete,
-      MerrittJsonProperty.new('Queue Del', get_queue_path(requeue: false))
+      MerrittJsonProperty.new('Queue Del', get_del_queue_path_m1)
     )
     add_property(
       :requeue,
-      MerrittJsonProperty.new('Requeue', get_queue_path(requeue: true))
+      MerrittJsonProperty.new('Requeue', get_requeue_path_m1)
     )
     add_property(
       :hold,
-      MerrittJsonProperty.new('Hold', get_hold_path(release: false))
+      MerrittJsonProperty.new('Hold', get_hold_path_m1)
     )
     add_property(
       :release,
-      MerrittJsonProperty.new('Release', get_hold_path(release: true))
+      MerrittJsonProperty.new('Release', get_release_path_m1)
     )
   end
 
@@ -125,10 +128,17 @@ class QueueEntry < QueueJson
       type = 'qjob' if sym == :job
       type = 'status' if sym == :status
       type = 'datetime' if sym == :date
-      type = 'qdelete' if sym == :qdelete
-      type = 'requeue' if sym == :requeue
-      type = 'hold' if sym == :hold
-      type = 'release' if sym == :release
+      if ZookeeperListAction.migration_m1?
+        type = 'qdelete-mrtzk' if sym == :qdelete
+        type = 'requeue-mrtzk' if sym == :requeue
+        type = 'hold-mrtzk' if sym == :hold
+        type = 'release-mrtzk' if sym == :release
+      else
+        type = 'qdelete-legacy' if sym == :qdelete
+        type = 'requeue-legacy' if sym == :requeue
+        type = 'hold-legacy' if sym == :hold
+        type = 'release-legacy' if sym == :release
+      end
       type = 'container' if sym == :queue
       arr.append(type)
     end
@@ -143,6 +153,10 @@ class QueueEntry < QueueJson
       arr.append(v)
     end
     arr
+  end
+
+  def queue_id
+    get_value(:queueId)
   end
 
   def bid
@@ -182,7 +196,7 @@ class QueueEntry < QueueJson
   end
 
   def get_queue_node
-    '/ingest'
+    ZookeeperListAction.migration_m1? ? '/jobs' : '/ingest'
   end
 end
 
@@ -206,64 +220,35 @@ class QueueBatch < MerrittJson
   end
 end
 
-# representation of the ingest queue
-class IngestQueue < MerrittJson
-  def initialize(queue_list, body)
-    data = JSON.parse(body)
-    data = fetch_hash_val(data, 'que:queueState')
-    data = fetch_hash_val(data, 'que:queueEntries')
-    list = fetch_array_val(data, 'que:queueEntryState')
-    list.each do |obj|
-      q = QueueEntry.new(obj)
-      next unless q.check_filter(queue_list.filter)
-
-      qenrtylist = queue_list.batches.fetch(q.bid, QueueBatch.new(q.bid, q.user))
-      qenrtylist.add_job(q)
-      queue_list.batches[q.bid] = qenrtylist
-      queue_list.jobs.append(q)
-
-      # next if q.qstatus == "Completed" || q.qstatus == "Deleted"
-      k = "#{q.profile},#{q.qstatus}"
-      queue_list.profiles[k] = queue_list.profiles.fetch(k, [])
-      queue_list.profiles[k].append(q)
-      super()
-    end
-  end
-end
-
 # List of queues of a particular type - ingest once had separate queues for each worker
 class QueueList < MerrittJson
-  def initialize(ingest_server, body, filter = {})
+  def initialize(zk, filter = {})
     super()
-    @ingest_server = ingest_server
-    @body = body
     @batches = {}
     @jobs = []
     @profiles = {}
     @filter = filter
-    retrieve_queues
-  end
 
-  def self.get_queue_list(ingest_server, filter = {})
-    qjson = HttpGetJson.new(ingest_server, 'admin/queues')
-    QueueList.new(ingest_server, qjson.body, filter)
-  end
+    jobs = []
+    if ZookeeperListAction.migration_m1?
+      jobs = MerrittZK::Job.list_jobs_as_json(zk)
+    else
+      jobs = MerrittZK::LegacyIngestJob.list_jobs_as_json(zk)
+    end
+    jobs.each do |j|
+      job = QueueEntry.new(j)
+      next if @filter.key?(:batch) && job.bid != @filter[:batch]
+      next if @filter.fetch(:deletable, false) && !%w[Completed Deleted].include?(job.qstatus)
+      next if @filter.fetch(:held, false) && !%w[Held].include?(job.qstatus)
 
-  def retrieve_queues
-    data = JSON.parse(@body)
-    data = fetch_hash_val(data, 'ingq:ingestQueueNameState')
-    data = fetch_hash_val(data, 'ingq:ingestQueueName')
-    fetch_array_val(data, 'ingq:ingestQueue').each do |qjson|
-      node = fetch_hash_val(qjson, 'ingq:node').gsub(%r{^/}, '')
-      begin
-        qjson = HttpGetJson.new(@ingest_server, "admin/queue/#{node}")
-        next unless qjson.status == 200
+      @jobs << job
+      qb = @batches.fetch(job.bid, QueueBatch.new(job.bid, job.user))
+      qb.add_job(job)
+      @batches[job.bid] = qb
 
-        IngestQueue.new(self, qjson.body)
-      rescue StandardError => e
-        LambdaBase.log(e.message)
-        LambdaBase.log(e.backtrace)
-      end
+      k = "#{job.profile},#{job.qstatus}"
+      profiles[k] = profiles.fetch(k, [])
+      profiles[k].append(job)
     end
   end
 

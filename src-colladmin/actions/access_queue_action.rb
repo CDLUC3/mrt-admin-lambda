@@ -1,12 +1,21 @@
 # frozen_string_literal: true
 
-require_relative 'forward_to_ingest_action'
+require_relative 'zookeeper_action'
 require_relative '../lib/acc_queue'
 
 # Collection Admin Task class - see config/actions.yml for description
-class AccessQueueAction < ForwardToIngestAction
-  def initialize(config, action, path, myparams)
-    super(config, action, path, myparams, 'admin/queues-acc')
+class AccessQueueAction < ZookeeperListAction
+  def perform_action
+    jobs = []
+    if ZookeeperListAction.migration_m3?
+      jobs = MerrittZK::Access.list_jobs_as_json(@zk)
+    else
+      jobs = MerrittZK::LegacyAccessJob.list_jobs_as_json(@zk)
+    end
+    jobs.each do |po|
+      register_item(AccQueueEntry.new(po))
+    end
+    convert_json_to_table('')
   end
 
   def get_title
@@ -19,11 +28,6 @@ class AccessQueueAction < ForwardToIngestAction
 
   def table_types
     AccQueueEntry.table_types
-  end
-
-  def table_rows(body)
-    queue_list = AccQueueList.new(get_ingest_server, body)
-    queue_list.to_table
   end
 
   def has_table

@@ -1,12 +1,16 @@
 # frozen_string_literal: true
 
-require_relative 'forward_to_ingest_action'
+require_relative 'zookeeper_action'
 require_relative '../lib/inv_queue'
 
 # Collection Admin Task class - see config/actions.yml for description
-class InventoryQueueAction < ForwardToIngestAction
-  def initialize(config, action, path, myparams)
-    super(config, action, path, myparams, 'admin/queues-inv')
+class InventoryQueueAction < ZookeeperListAction
+  def perform_action
+    jobs = ZookeeperListAction.migration_m1? ? [] : MerrittZK::LegacyInventoryJob.list_jobs_as_json(@zk)
+    jobs.each do |po|
+      register_item(InvQueueEntry.new(po))
+    end
+    convert_json_to_table('')
   end
 
   def get_title
@@ -19,11 +23,6 @@ class InventoryQueueAction < ForwardToIngestAction
 
   def table_types
     InvQueueEntry.table_types
-  end
-
-  def table_rows(body)
-    queue_list = InvQueueList.new(get_ingest_server, body)
-    queue_list.to_table
   end
 
   def has_table

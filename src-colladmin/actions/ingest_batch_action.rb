@@ -3,11 +3,11 @@
 require_relative 'forward_to_ingest_action'
 
 # Collection Admin Task class - see config/actions.yml for description
-class IngestBatchAction < ForwardToIngestAction
+class IngestBatchAction < ZookeeperListAction
   def initialize(config, action, path, myparams)
     @batch = myparams.fetch('batch', 'no-batch-provided')
     @batch_obj = Batch.new(@batch)
-    super(config, action, path, myparams, 'admin/queues')
+    super(config, action, path, myparams, { batch: @batch })
   end
 
   def get_title
@@ -22,8 +22,8 @@ class IngestBatchAction < ForwardToIngestAction
     @batch_obj.table_types
   end
 
-  def table_rows(body)
-    queue_list = QueueList.new(get_ingest_server, body, { batch: @batch })
+  def table_rows(_body)
+    queue_list = QueueList.new(@zk, { batch: @batch })
     queue_list.jobs.each do |qe|
       @batch_obj.add_queue_job(qe)
     end

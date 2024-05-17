@@ -115,7 +115,7 @@ queues:
   documentation: |
     Ingest: GET /admin/queues
     Ingest: GET /admin/queue/{node}
-  migration: m1, m2
+  migration: m1
 ingest-queue-by-profile:
   link-title: Ingest Queue Activity by Profile
   breadcrumb: bp_ingest
@@ -128,7 +128,7 @@ ingest-queue-by-profile:
   documentation: |
     Ingest: GET /admin/queues
     Ingest: GET /admin/queue/{node}
-  migration: m1, m2
+  migration: m1
 inv-queues:
   link-title: Inventory Queue Jobs
   breadcrumb: bp_inventory
@@ -142,7 +142,7 @@ inv-queues:
   documentation: |
     Ingest: GET /admin/queues-inv
     Ingest: GET /admin/queue-inv/{node}
-  migration: m1, m2
+  migration: m1
 acc-queues:
   link-title: Access Queue Jobs
   breadcrumb: bp_storage
@@ -159,7 +159,7 @@ acc-queues:
   documentation: |
     Ingest: GET /admin/queues-acc
     Ingest: GET /admin/queue-acc/{node}
-  migration: m1, m3
+  migration: m1
 batchFolders:
   link-title: Ingest Batch Folders
   breadcrumb: bp_ingest
@@ -196,7 +196,7 @@ batch:
   documentation: |
     Ingest: GET /admin/queues
     Ingest: GET /admin/queue/{node}
-  migration: m1, m2
+  migration: m1
 job:
   link-title: Ingest Job
   breadcrumb: bp_ingest
@@ -496,7 +496,7 @@ ingest-locks:
     Display the ingest storage locks existing for object arks.
   documentation: |
     Ingest: GET /admin/lock/mrt.lock
-  migration: m1, m2
+  migration: m1
 
 # Operations that change system state - Reversible
 
@@ -555,10 +555,9 @@ lock-coll:
   documentation: |
     Ingest: POST /admin/submission/freeze/{coll}
   migration: m2
-release-coll-queue-items:
+release-coll-queue-items-m1:
   link-title: Release any held items for a collection
-  class: CollIterateQueueAction
-  params: ["admin/release-all/queue/coll"]
+  class: CollIterateQueueM1Action
   category: Queue Management
   sensitivity: reversible change
   testing: automatable
@@ -568,7 +567,20 @@ release-coll-queue-items:
   - collqitems
   documentation: |
     Ingest: POST /admin/release-all/queue/{coll}
-  migration: m2
+  migration: m1
+release-coll-queue-items-legacy:
+  link-title: Release any held items for a collection (legacy)
+  class: CollIterateQueueLegacyAction
+  category: Queue Management
+  sensitivity: reversible change
+  testing: automatable
+  description: |
+    Release any held items for a collection.
+  report-datatypes:
+  - collqitems
+  documentation: |
+    Ingest: POST /admin/release-all/queue/{coll}
+  migration: m1
 storage-force-audit-for-object:
   link-title: Trigger audit processing for all files in an object on a specific node
   class: StorageAction
@@ -904,10 +916,9 @@ createProfile/sla:
   documentation: |
     Ingest: POST /admin/profile/sla
   migration: m5
-queue-delete:
+queue-delete-mrtzk:
   link-title: Remove an item from a Zookeeper queue
-  class: QueueAction
-  params: ["admin/deleteq"]
+  class: ZkDeleteM1Action
   category: Queue Management
   sensitivity: irreversible change
   testing: manual
@@ -916,12 +927,24 @@ queue-delete:
   report-datatypes:
   - qdelete
   documentation: |
-    Ingest: POST /admin/deleteq
-  migration: m1, m2, m3
-requeue:
+    Zk: tbd
+  migration: m1
+queue-delete-legacy:
+  link-title: Remove an item from a Zookeeper queue
+  class: ZkDeleteLegacyAction
+  category: Queue Management
+  sensitivity: irreversible change
+  testing: manual
+  description: |
+    Remove an item from a Zookeeper queue.
+  report-datatypes:
+  - qdelete
+  documentation: |
+    Zk: tbd
+  migration: m1
+requeue-mrtzk:
   link-title: Re-queue an item from a Zookeeper queue
-  class: QueueAction
-  params: ["admin/requeue"]
+  class: ZkRequeueM1Action
   category: Queue Management
   sensitivity: irreversible change
   testing: manual
@@ -930,12 +953,24 @@ requeue:
   report-datatypes:
   - requeue
   documentation: |
-    Ingest: POST /admin/requeue
-  migration: m1, m2, m3
-hold-queue-item:
+    ZK tbd
+  migration: m1
+requeue-legacy:
+  link-title: Re-queue an item from a Zookeeper queue
+  class: ZkRequeueLegacyAction
+  category: Queue Management
+  sensitivity: irreversible change
+  testing: manual
+  description: |
+    Re-queue an item from a Zookeeper queue.
+  report-datatypes:
+  - requeue
+  documentation: |
+    ZK tbd
+  migration: m1
+hold-queue-item-mrtzk:
   link-title: Move a pending item from in Zookeeper queue to a Held status
-  class: QueueAction
-  params: ["admin/hold"]
+  class: ZkHoldM1Action
   category: Queue Management
   sensitivity: irreversible change
   testing: manual
@@ -944,12 +979,24 @@ hold-queue-item:
   report-datatypes:
   - hold
   documentation: |
-    Ingest: POST /admin/hold
-  migration: m1, m2
-release-queue-item:
+    Zk: tbd
+  migration: m1
+hold-queue-item-legacy:
+  link-title: Move a pending item from in Zookeeper queue to a Held status
+  class: ZkHoldLegacyAction
+  category: Queue Management
+  sensitivity: irreversible change
+  testing: manual
+  description: |
+    Move a pending item from in Zookeeper queue to a Held status.
+  report-datatypes:
+  - hold
+  documentation: |
+    Zk: tbd
+  migration: m1
+release-queue-item-mrtzk:
   link-title: Release a held item from in Zookeeper queue to a Pending status
-  class: QueueAction
-  params: ["admin/release"]
+  class: ZkReleaseM1Action
   category: Queue Management
   sensitivity: irreversible change
   testing: manual
@@ -958,12 +1005,24 @@ release-queue-item:
   report-datatypes:
   - release
   documentation: |
-    Ingest: POST /admin/release
-  migration: m1, m2
+    Zk: tbd
+  migration: m1
+release-queue-item-legacy:
+  link-title: Release a held item from in Zookeeper queue to a Pending status
+  class: ZkReleaseLegacyAction
+  category: Queue Management
+  sensitivity: irreversible change
+  testing: manual
+  description: |
+    Release a held item from in Zookeeper queue to a Pending status.
+  report-datatypes:
+  - release
+  documentation: |
+    Zk: tbd
+  migration: m1
 cleanup-queue:
   link-title: Cleanup Deleted and Completed items from a Zookeeper Queue
   class: IterateQueueAction
-  params: ["admin/cleanupq/queue"]
   category: Queue Management
   sensitivity: irreversible change
   testing: manual
@@ -973,7 +1032,7 @@ cleanup-queue:
   - release
   documentation: |
     Ingest: POST /admin/cleanupq/{queue}
-  migration: m1, m2, m3
+  migration: m1
 apply-review-changes:
   link-title: Apply bulk changes to storage scan results by uploading a CSV containing a set of desired changes
   class: ReplicationAction
@@ -1052,9 +1111,9 @@ storage-del-node-for-collection:
   documentation: |
     SQL: DELETE FROM inv_collections_inv_nodes WHERE inv_collection_id = ?
   migration: m0
-storage-set-flag:
+access-lock-control:
   link-title: Storage set zookeeper flag
-  class: StorageAction
+  class: AccessLockAction
   category: Queue Management
   sensitivity: reversible change
   testing: manual
@@ -1062,7 +1121,7 @@ storage-set-flag:
     Change the state of a zookeeper flag (SET or CLEAR).
   documentation: |
     ZK: set boolean flag
-  migration: m1, m3?
+  migration: m3
 replic-delete-coll-batch-from-node:
   link-title: Delete a batch of objects from the collection from storage node
   class: ReplicationAction

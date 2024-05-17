@@ -28,7 +28,7 @@ class IngestBatchFoldersAction < ForwardToIngestAction
 
   def table_rows(body)
     bflist = BatchFolderList.new(body)
-    bflist.apply_queue_list(QueueList.get_queue_list(get_ingest_server))
+    bflist.apply_queue_list(QueueList.new(@zk))
     bflist.apply_recent_ingests(RecentIngests.new(@config, @days))
     bflist.to_table
   end

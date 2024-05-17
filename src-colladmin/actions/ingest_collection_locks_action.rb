@@ -16,12 +16,16 @@ class IngestCollectionLocksAction < ForwardToIngestAction
 
     super(config, action, path, myparams, endpoint)
     @held_counts = {}
-    ql = QueueList.get_queue_list(get_ingest_server)
+    ql = QueueList.new(@zk)
     ql.jobs.each do |qe|
       next if qe.qstatus != 'Held'
 
       @held_counts[qe.profile] = @held_counts.fetch(qe.profile, 0) + 1
     end
+  end
+
+  def get_zookeeper_conn
+    @config.fetch('zookeeper', '')
   end
 
   def specific_profile?
@@ -33,7 +37,11 @@ class IngestCollectionLocksAction < ForwardToIngestAction
   end
 
   def table_types
-    ['', 'colllist', '', '', 'colllock', 'dataint', 'collqitems']
+    if ZookeeperListAction.migration_m1?
+      ['', 'colllist', '', '', 'colllock', 'dataint', 'collqitems-mrtzk']
+    else
+      ['', 'colllist', '', '', 'colllock', 'dataint', 'collqitems-legacy']
+    end
   end
 
   def table_rows(_body)

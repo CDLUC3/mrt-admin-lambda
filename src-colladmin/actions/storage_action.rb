@@ -245,50 +245,27 @@ class StorageAction < AdminAction
       return res
     end
 
-    if @path == 'storage-rebuild-inventory'
-      # INV DELETE object/ARK
-      srvc = get_inventory_service
-      endpoint = "/object/#{CGI.escape(ark)}"
-      return { message: 'Inventory service undefined' }.to_json if srvc.empty?
-      return { message: 'Empty Ark' }.to_json if ark.empty?
+    return unless @path == 'storage-rebuild-inventory'
 
-      qjson = HttpDeleteJson.new(srvc, endpoint)
-      return { message: 'Inventory delete failed' }.to_json if qjson.status != 200
+    # INV DELETE object/ARK
+    srvc = get_inventory_service
+    endpoint = "/object/#{CGI.escape(ark)}"
+    return { message: 'Inventory service undefined' }.to_json if srvc.empty?
+    return { message: 'Empty Ark' }.to_json if ark.empty?
 
-      endpoint = '/add'
-      data = {
-        'url' => "#{get_storage_service}/manifest/#{nodenum}/#{CGI.escape(ark)}",
-        'responseForm' => 'json'
-      }
+    qjson = HttpDeleteJson.new(srvc, endpoint)
+    return { message: 'Inventory delete failed' }.to_json if qjson.status != 200
 
-      qjson = HttpPostMultipartJson.new(srvc, endpoint, data)
-      return { message: 'Inventory recreate failed' }.to_json if qjson.status != 200
+    endpoint = '/add'
+    data = {
+      'url' => "#{get_storage_service}/manifest/#{nodenum}/#{CGI.escape(ark)}",
+      'responseForm' => 'json'
+    }
 
-      { message: 'Inventory Delete and Recreate Successful' }.to_json
-    end
+    qjson = HttpPostMultipartJson.new(srvc, endpoint, data)
+    return { message: 'Inventory recreate failed' }.to_json if qjson.status != 200
 
-    # if @path == "storage-update-manifest"
-    # end
-    return unless @path == 'storage-set-flag'
-
-    op = @myparams.fetch('op', 'set')
-    op = 'state' unless %w[set clear state].include?(op)
-    qobj = @myparams.fetch('object', '')
-    srvc = get_access_service
-    endpoint = "/flag/#{op}/access/#{qobj}?t=json"
-    qjson = HttpPostJson.new(srvc, endpoint)
-    return message_as_table('Access ZK flag set failed').to_json if qjson.status != 200
-
-    ts = JSON.parse(qjson.body).fetch('tok:zooTokenState', {})
-    tss = ts.fetch('tok:tokenStatus', '')
-    tso = ts.fetch('tok:zooFlagPath', 'na')
-    reload_path = @myparams.fetch('reload_path', '')
-    unless reload_path.empty?
-      return {
-        redirect_location: "/web/collIndex.html?path=#{reload_path}"
-      }.to_json
-    end
-    message_as_table("Token result: #{tso}=#{tss}").to_json
+    { message: 'Inventory Delete and Recreate Successful' }.to_json
   end
 
   def get_storage_service

@@ -224,7 +224,6 @@ class ReplicationAction < AdminAction
         [coll, nodenum]
       ).each do |r|
         endpoint = "delete/#{nodenum}/#{CGI.escape(r[0])}"
-        puts endpoint
         begin
           qjson = HttpDeleteJson.new(get_replic_server, endpoint)
           puts qjson.status
