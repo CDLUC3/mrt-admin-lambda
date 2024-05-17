@@ -453,7 +453,8 @@ class IngestLockAction < ZookeeperAction
     rows = []
     @zk.children(dir).each do |cp|
       next unless cp =~ /^ark/
-      ark = cp.gsub(/ark-/, 'ark:/').gsub(/-/, '/')
+
+      ark = cp.gsub('ark-', 'ark:/').gsub('-', '/')
       rows << [ark]
     end
     rows
@@ -466,5 +467,4 @@ class IngestLockAction < ZookeeperAction
   def has_table
     true
   end
-
 end
