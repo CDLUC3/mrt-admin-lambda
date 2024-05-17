@@ -42,3 +42,10 @@ echo '==========='
 bundle install
 bundle update
 bundle exec rubocop || exit
+cd ../simulate-lambda-alb
+echo
+pwd
+echo '==========='
+bundle install
+bundle update
+bundle exec rubocop || exit
