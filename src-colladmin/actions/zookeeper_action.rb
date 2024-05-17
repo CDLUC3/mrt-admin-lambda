@@ -424,7 +424,7 @@ class AccessLockAction < ZookeeperAction
       lockpath = "/mrt.lock/access/#{@flag}"
       case @op
       when 'set'
-        @zk.create(lockpath, data: nil) unless exists?(lockpath)
+        @zk.create(lockpath, data: nil) unless @zk.exists?(lockpath)
       when 'clear'
         @zk.delete(lockpath) if @zk.exists?(lockpath)
       end
