@@ -64,6 +64,6 @@ class ManifestToYaml
       manifest[:files][f][:DELETED] = true unless current
     end
     manifest = JSON.parse(manifest.to_json)
-    YAML.dump(manifest)
+    "# See https://github.com/CDLUC3/merritt-tinker/tree/main/yaml-manifest for more info\n#{YAML.dump(manifest)}"
   end
 end
