@@ -231,6 +231,19 @@ function init() {
     invoke_xml(params, fname);
   });
 
+  $("button.storage-get-manifest-yaml").on("click", function(){
+    var ark = $(this).attr("data-ark");
+    var nodenum = $(this).attr("data-node-num");
+    params = {
+      path: 'storage-get-manifest-yaml',
+      ark: ark,
+      nodenum: nodenum
+    }
+    const RE=/[\/:]+/g;
+    fname = "manifest." + ark.replaceAll(RE, '_') + ".yml";
+    invoke_text(params, fname);
+  });
+
   $("button.storage-get-augmented-manifest").on("click", function(){
     var ark = $(this).attr("data-ark");
     var nodenum = $(this).attr("data-node-num");
