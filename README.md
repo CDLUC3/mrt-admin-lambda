@@ -149,6 +149,14 @@ The Lambda code is deployed to the Ruby 2.7 environment.  A build process is req
   - web: web resources served from the lambda
 - cognito-lambda-nonvpc: Wrapper around the Cognito API (used by Colladmin)
   - Cognito API calls cannot be made directly from the VPC 
+
+## Code Preparation
+
+Install Gems, Update Gems, Lint all code directories.
+```bash
+run_bundle.sh
+```
+
 ## Deployment Preparation
 - This code relies on a set of SSM parameters to control the application.
 - https://github.com/CDLUC3/uc3-aws-cli contains the code for reading Merritt SSM parameters.
