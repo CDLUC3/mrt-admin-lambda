@@ -6,7 +6,7 @@ require 'yaml'
 # Collection Admin Task class - see config/actions.yml for description
 class OpenSearchDescribeAction < AdminAction
   def initialize(config, action, path, myparams)
-    super(config, action, path, myparams)
+    super
     file = 'import/filebeat/fields.json'
     @title = "Merritt OpenSearch Fields (#{File.mtime(file).to_s[0..15]})"
     @fields = {}

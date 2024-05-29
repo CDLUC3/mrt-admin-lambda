@@ -3,7 +3,7 @@
 # Query class - see config/reports.yml for description
 class ObjectsByContainerNameQuery < ObjectsQuery
   def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
+    super
     @container = CGI.unescape(get_param('container', ''))
   end
 

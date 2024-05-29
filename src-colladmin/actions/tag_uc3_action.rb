@@ -62,7 +62,7 @@ end
 # Collection Admin Task class - see config/actions.yml for description
 class TagUc3Action < AdminAction
   def initialize(config, action, path, myparams)
-    super(config, action, path, myparams)
+    super
     region = ENV['AWS_REGION'] || 'us-west-2'
     @ec2 = Aws::EC2::Client.new(
       region: region

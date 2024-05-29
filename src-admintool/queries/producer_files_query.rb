@@ -3,7 +3,7 @@
 # Query class - see config/reports.yml for description
 class ProducerFilesQuery < S3AdminQuery
   def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
+    super
     @mnemonic = get_param('mnemonic', 'merritt_demo')
   end
 

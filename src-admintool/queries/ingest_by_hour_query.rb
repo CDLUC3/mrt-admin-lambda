@@ -3,7 +3,7 @@
 # Query class - see config/reports.yml for description
 class IngestBytesByHourQuery < AdminQuery
   def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
+    super
     defdays = 7
     defend = (Time.new + spd).strftime('%Y-%m-%d')
     defstart = (Time.new - (defdays * spd)).strftime('%Y-%m-%d')

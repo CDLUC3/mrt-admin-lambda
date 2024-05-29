@@ -3,7 +3,7 @@
 # Query class - see config/reports.yml for description
 class ObjectsLargestFilesQuery < ObjectsQuery
   def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
+    super
     subsql = %(
       select
         inv_object_id

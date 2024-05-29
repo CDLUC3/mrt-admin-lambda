@@ -9,6 +9,6 @@ class CollQueueAction < PostToIngestAction
   def initialize(config, action, path, myparams, endpoint)
     coll = myparams.fetch('coll', '')
     endpoint = endpoint.gsub(/coll$/, coll) unless coll.empty?
-    super(config, action, path, myparams, endpoint)
+    super
   end
 end

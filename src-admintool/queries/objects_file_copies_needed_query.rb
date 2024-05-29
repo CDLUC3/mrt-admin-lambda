@@ -3,7 +3,7 @@
 # Query class - see config/reports.yml for description
 class ObjectsFileCopiesNeededQuery < ObjectsQuery
   def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
+    super
     @copies = CGI.unescape(get_param('copies', '2')).to_i
     @days = CGI.unescape(get_param('days', '2')).to_i
     subsql = %{

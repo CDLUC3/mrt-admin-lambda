@@ -5,7 +5,7 @@ require 'tempfile'
 # Query class - see config/reports.yml for description
 class S3AdminQuery < AdminQuery
   def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
+    super
     @csvlen = 0
     @message = ''
     @report = 'merritt-reports/temp.csv'

@@ -34,7 +34,7 @@ class IngestQueueProfileCountAction < IngestQueueZookeeperAction
   end
 
   def register_item(item)
-    super(item)
+    super
     k = "#{item.profile},#{item.qstatus}"
     @profiles[k] = @profiles.fetch(k, [])
     @profiles[k].append(item)

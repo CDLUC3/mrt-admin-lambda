@@ -6,7 +6,7 @@ require 'aws-sdk-lambda'
 # Collection Admin Task class - see config/actions.yml for description
 class ConsistencyReportCleanupAction < AdminAction
   def initialize(config, action, path, myparams)
-    super(config, action, path, myparams)
+    super
     ENV['AWS_REGION'] || 'us-west-2'
     @num_found = 0
     @num_deleted = 0

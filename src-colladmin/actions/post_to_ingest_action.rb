@@ -8,7 +8,7 @@ require_relative '../lib/http_post_json'
 class PostToIngestAction < ForwardToIngestAction
   def initialize(config, action, path, myparams, endpoint)
     @reload_path = myparams.fetch('reload_path', '')
-    super(config, action, path, myparams, endpoint)
+    super
   end
 
   def perform_action

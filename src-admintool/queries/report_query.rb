@@ -3,7 +3,7 @@
 # Query class - see config/reports.yml for description
 class ReportRetrieve < AdminQuery
   def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
+    super
     @day = Time.new.strftime('%Y-%m-%d')
     @report = CGI.unescape(get_param('report', "#{@s3consistency}#{@day}"))
     @report_base = @report

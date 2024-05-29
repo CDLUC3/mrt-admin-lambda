@@ -170,7 +170,7 @@ module LambdaFunctions
     end
 
     def template_parameters(path, myparams)
-      map = super(path, myparams)
+      map = super
       map['COLL_LAMBDABASE_JS'] = Mustache.render(File.read('template/coll-lambda.base.js'), map)
       map['PROFILE_JS'] = Mustache.render(File.read('template/profile.js'), map)
       map['SUBPROFILE_JS'] = Mustache.render(File.read('template/subprofile.js'), map)

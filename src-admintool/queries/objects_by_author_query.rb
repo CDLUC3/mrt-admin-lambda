@@ -3,7 +3,7 @@
 # Query class - see config/reports.yml for description
 class ObjectsByAuthorQuery < ObjectsQuery
   def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
+    super
     @author = CGI.unescape(get_param('author', ''))
   end
 

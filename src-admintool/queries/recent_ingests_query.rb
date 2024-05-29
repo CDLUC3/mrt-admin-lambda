@@ -5,7 +5,7 @@ require 'time'
 # Query class - see config/reports.yml for description
 class RecentIngestsQuery < AdminQuery
   def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
+    super
     @day = get_param('day', Time.new.strftime('%Y-%m-%d'))
   end
 

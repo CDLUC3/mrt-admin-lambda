@@ -3,7 +3,7 @@
 # Query class - see config/reports.yml for description
 class AuditStatusTimeQuery < AdminQuery
   def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
+    super
     @count = CGI.unescape(get_param('count', '-1')).to_i
     @unit = verify_interval_unit(CGI.unescape(get_param('unit', 'HOUR')))
   end

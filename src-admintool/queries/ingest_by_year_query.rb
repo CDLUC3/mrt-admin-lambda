@@ -3,7 +3,7 @@
 # Query class - see config/reports.yml for description
 class IngestBytesByYearQuery < AdminQuery
   def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
+    super
     @defyears = 10
     @tend = "#{Time.new.year + 1}-01-01"
     @tstart = "#{Time.new.year - @defyears}-01-01"

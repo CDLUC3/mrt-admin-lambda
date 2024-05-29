@@ -3,7 +3,7 @@
 # Query class - see config/reports.yml for description
 class CollectionsByNodeQuery < AdminQuery
   def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
+    super
     @node = get_param('node', '')
   end
 

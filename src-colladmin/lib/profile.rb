@@ -390,7 +390,7 @@ end
 # represetation of the set of merritt collections
 class Collections < MerrittQuery
   def initialize(config)
-    super(config)
+    super
     @collections = {}
     @mnemonics = {}
     @ids = {}

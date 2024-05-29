@@ -3,7 +3,7 @@
 # Query class - see config/reports.yml for description
 class ObjectsByBatchQuery < ObjectsQuery
   def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
+    super
     @batch = CGI.unescape(get_param('batch', ''))
   end
 

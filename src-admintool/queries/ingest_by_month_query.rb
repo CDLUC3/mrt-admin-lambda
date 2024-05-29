@@ -3,7 +3,7 @@
 # Query class - see config/reports.yml for description
 class IngestBytesByMonthQuery < AdminQuery
   def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
+    super
     @defyears = 10
     @totit = (@defyears * 12) + 1
     @tend = ((Date.today - Date.today.day + 1) >> 1).strftime('%Y-%m-%d')

@@ -3,7 +3,7 @@
 # Query class - see config/reports.yml for description
 class AuditProcessedSizeQuery < AdminQuery
   def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
+    super
     @days = get_param('days', 30).to_i
   end
 

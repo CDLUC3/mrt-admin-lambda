@@ -3,7 +3,7 @@
 # Query class - see config/reports.yml for description
 class InvoicesQuery < AdminQuery
   def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
+    super
     # Fiscal year to report on.  Starting with FY2019,
     # there are significant changes to the rate and adjustments for charge backs.
     @fy = get_param('fy', DateTime.now.next_day(-182).year).to_i

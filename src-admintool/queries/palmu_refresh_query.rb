@@ -3,7 +3,7 @@
 # Query class - see config/reports.yml for description - deprecated code
 class PalmuRefreshQuery < AdminQuery
   def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
+    super
 
     @files = {}
     @matched = 0

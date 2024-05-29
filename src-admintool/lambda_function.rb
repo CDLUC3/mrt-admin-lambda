@@ -87,7 +87,7 @@ module LambdaFunctions
     end
 
     def template_parameters(path, myparams)
-      map = super(path, myparams)
+      map = super
       map['ARKFORM_JS'] = Mustache.render(File.read('template/arkform.js'), map)
       map['LAMBDABASE_JS'] = Mustache.render(File.read('template/lambda.base.js'), map)
       if path == '/web/describeReports.html'

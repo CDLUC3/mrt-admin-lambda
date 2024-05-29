@@ -3,7 +3,7 @@
 # Query class - see config/reports.yml for description
 class ObjectsByLocalIdQuery < ObjectsQuery
   def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
+    super
     @localid = CGI.unescape(get_param('localid', ''))
   end
 

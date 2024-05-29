@@ -3,7 +3,7 @@
 # Query class - see config/reports.yml for description
 class CollectionsByOwnerQuery < AdminQuery
   def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
+    super
     @own = get_param('own', '')
   end
 

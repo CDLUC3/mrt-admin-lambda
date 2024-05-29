@@ -3,7 +3,7 @@
 # Query class - see config/reports.yml for description
 class AdminObjectsFilesQuery < AdminQuery
   def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
+    super
     @aggrole = verify_aggregate_role(get_param('aggrole', 'Null_Value'))
   end
 

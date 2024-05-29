@@ -102,7 +102,7 @@ end
 # Collection Admin Task class - see config/actions.yml for description
 class SsmDescribeAction < AdminAction
   def initialize(config, action, path, myparams)
-    super(config, action, path, myparams)
+    super
     region = ENV['AWS_REGION'] || 'us-west-2'
     @ssm = Aws::SSM::Client.new(
       region: region

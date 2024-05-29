@@ -6,7 +6,7 @@ require 'aws-sdk-lambda'
 # Collection Admin Task class - see config/actions.yml for description
 class CognitoAction < AdminAction
   def initialize(config, action, path, myparams)
-    super(config, action, path, myparams)
+    super
     region = ENV['AWS_REGION'] || 'us-west-2'
     @lambda = Aws::Lambda::Client.new(
       region: region,

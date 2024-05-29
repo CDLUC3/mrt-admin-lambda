@@ -286,7 +286,7 @@ end
 # Information about storage nodes to support storage admin actions
 class Nodes < MerrittQuery
   def initialize(config)
-    super(config)
+    super
     skiplist = @config.fetch('disable-scan-nodenums', '').split(',')
     @nodes = []
     run_query(

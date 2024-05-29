@@ -3,7 +3,7 @@
 # Query class - see config/reports.yml for description
 class IngestBytesByWeekQuery < AdminQuery
   def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
+    super
     defweeks = 52
     defend = (Time.new + spw).strftime('%Y-%m-%d')
     defstart = (Time.new - (defweeks * spw)).strftime('%Y-%m-%d')

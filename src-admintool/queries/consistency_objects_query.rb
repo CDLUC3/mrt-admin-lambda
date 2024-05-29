@@ -3,7 +3,7 @@
 # Query class - see config/reports.yml for description
 class ConsistencyObjectsQuery < AdminQuery
   def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
+    super
     @copies = get_param('copies', '2').to_i
   end
 

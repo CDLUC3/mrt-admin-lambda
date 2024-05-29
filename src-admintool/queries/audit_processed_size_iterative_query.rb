@@ -3,7 +3,7 @@
 # Query class - see config/reports.yml for description
 class AuditProcessedSizeIterativeQuery < AdminQuery
   def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
+    super
     @day = verify_day(get_param('day', Time.new.strftime('%Y-%m-%d')))
   end
 

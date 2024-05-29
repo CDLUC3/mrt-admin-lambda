@@ -34,7 +34,7 @@ class IngestQueueAction < IngestQueueZookeeperAction
     return unless filter_profile.empty? || filter_profile == item.profile
     return unless filter_qstatus.empty? || filter_qstatus == item.qstatus
 
-    super(item)
+    super
   end
 
   def get_title

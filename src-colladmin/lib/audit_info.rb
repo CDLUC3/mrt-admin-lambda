@@ -5,7 +5,7 @@ require_relative 'merritt_query'
 # query merritt for audit batches and records by audit status
 class AuditInfo < MerrittQuery
   def initialize(config)
-    super(config)
+    super
     @statuses = []
     @batches = []
 

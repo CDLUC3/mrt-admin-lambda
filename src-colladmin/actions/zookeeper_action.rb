@@ -81,7 +81,7 @@ end
 ## Queue manipulation action using mrt-zk
 class ZookeeperAction < AdminAction
   def initialize(config, action, path, myparams)
-    super(config, action, path, myparams)
+    super
     @zk = ZK.new(get_zookeeper_conn)
     ZookeeperListAction.migration_level(@zk)
     @qpath = myparams.fetch('queue-path', '')
@@ -302,7 +302,7 @@ end
 # Collection Admin Task class - see config/actions.yml for description
 class CollIterateQueueM1Action < ZkM1Action
   def initialize(config, action, path, myparams)
-    super(config, action, path, myparams)
+    super
     @coll = myparams.fetch('coll', '')
   end
 
@@ -322,7 +322,7 @@ end
 # Collection Admin Task class - see config/actions.yml for description
 class CollIterateQueueLegacyAction < LegacyZkAction
   def initialize(config, action, path, myparams)
-    super(config, action, path, myparams)
+    super
     @coll = myparams.fetch('coll', '')
   end
 
@@ -343,7 +343,7 @@ end
 # Collection Admin Task class - see config/actions.yml for description
 class IterateQueueAction < ZookeeperAction
   def initialize(config, action, path, myparams)
-    super(config, action, path, myparams)
+    super
     @queue = myparams.fetch('queue', 'na')
     @reload_path = myparams.fetch('reload_path', 'na')
   end
@@ -400,7 +400,7 @@ end
 ## Control Access Queue Hold/Release (legacy and mrt-zk)
 class AccessLockAction < ZookeeperAction
   def initialize(config, action, path, myparams)
-    super(config, action, path, myparams)
+    super
     @op = @myparams.fetch('op', 'set')
     @op = 'state' unless %w[set clear state].include?(@op)
     @flag = @myparams.fetch('object', '')

@@ -6,7 +6,7 @@ require_relative '../lib/merritt_ldap'
 # Collection Admin Task class - see config/actions.yml for description
 class LDAPAction < AdminAction
   def initialize(config, action, path, myparams)
-    super(config, action, path, myparams)
+    super
     @merritt_ldap = MerrittLdap.new(@config)
     @data = {}
     @title = 'LDAP Queries'
@@ -70,7 +70,7 @@ end
 # Collection Admin Task class - see config/actions.yml for description
 class LDAPActionUsers < LDAPAction
   def initialize(config, action, path, myparams)
-    super(config, action, path, myparams)
+    super
     @data = @merritt_ldap.users
     @title = 'LDAP Users'
   end
@@ -87,7 +87,7 @@ end
 # Collection Admin Task class - see config/actions.yml for description
 class LDAPActionUserDetailed < LDAPAction
   def initialize(config, action, path, myparams)
-    super(config, action, path, myparams)
+    super
     uid = myparams.fetch('uid', '')
     @data = @merritt_ldap.user_detail_records(uid)
     @title = "Role Details for LDAP User #{@merritt_ldap.user_displayname(uid)}"
@@ -105,7 +105,7 @@ end
 # Collection Admin Task class - see config/actions.yml for description
 class LDAPActionRoles < LDAPAction
   def initialize(config, action, path, myparams)
-    super(config, action, path, myparams)
+    super
     @data = @merritt_ldap.roles
     @title = 'LDAP Roles'
   end
@@ -122,7 +122,7 @@ end
 # Collection Admin Task class - see config/actions.yml for description
 class LDAPActionColls < LDAPAction
   def initialize(config, action, path, myparams)
-    super(config, action, path, myparams)
+    super
     @data = @merritt_ldap.collections
     @title = 'LDAP Collections'
   end
@@ -139,7 +139,7 @@ end
 # Collection Admin Task class - see config/actions.yml for description
 class LDAPActionCollDetailed < LDAPAction
   def initialize(config, action, path, myparams)
-    super(config, action, path, myparams)
+    super
     coll = myparams.fetch('coll', '')
     @data = @merritt_ldap.collection_detail_records(coll)
     @title = "Role Details for Collection #{@merritt_ldap.coll_displayname(coll)} (#{coll})"
@@ -157,7 +157,7 @@ end
 # Collection Admin Task class - see config/actions.yml for description
 class LDAPActionCollArk < LDAPAction
   def initialize(config, action, path, myparams)
-    super(config, action, path, myparams)
+    super
     ark = CGI.unescape(myparams.fetch('ark', ''))
     @data = @merritt_ldap.collection_detail_records_for_ark(ark)
     @title = "Role Details for Collection #{ark}"
@@ -175,7 +175,7 @@ end
 # Collection Admin Task class - see config/actions.yml for description
 class LDAPActionCollmap < LDAPAction
   def initialize(config, action, path, myparams)
-    super(config, action, path, myparams)
+    super
     @data = {}
     @title = 'LDAP Collection Map'
     @merritt_ldap.collections.each_key do |m|

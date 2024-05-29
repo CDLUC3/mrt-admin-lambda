@@ -3,7 +3,7 @@
 # Query class - see config/reports.yml for description
 class ObjectIdFilesQuery < AdminQuery
   def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
+    super
     @id = myparams.fetch('id', 0).to_i
   end
 

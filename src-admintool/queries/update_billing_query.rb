@@ -3,7 +3,7 @@
 # Query class - see config/reports.yml for description
 class UpdateBillingDatabaseQuery < AdminQuery
   def initialize(query_factory, path, myparams)
-    super(query_factory, path, myparams)
+    super
     stmt = @client.prepare('call update_object_size()')
     stmt.execute
     stmt = @client.prepare('call update_node_counts()')
