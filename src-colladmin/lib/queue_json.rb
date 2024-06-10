@@ -23,8 +23,26 @@ class QueueJson < MerrittJson
     path
   end
 
+  def get_acc_del_queue_path
+    st = get_value(:qstatus, '').to_s
+    if ZookeeperListAction.migration_m3?
+      return '' unless %w[Failed Completed].include?(st)
+    else
+      return '' unless %w[Failed Completed].include?(st)
+    end
+
+    path
+  end
+
   def get_requeue_path_m1
     st = get_value(:qstatus, '')
+    return '' unless %w[Consumed Failed].include?(st)
+
+    path
+  end
+
+  def get_acc_requeue_path
+    st = get_value(:qstatus, '').to_s
     return '' unless %w[Consumed Failed].include?(st)
 
     path

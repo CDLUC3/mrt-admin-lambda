@@ -71,11 +71,11 @@ class AccQueueEntry < QueueJson
     )
     add_property(
       :qdelete,
-      MerrittJsonProperty.new('Queue Del', get_del_queue_path_m1)
+      MerrittJsonProperty.new('Queue Del', get_acc_del_queue_path)
     )
     add_property(
       :requeue,
-      MerrittJsonProperty.new('Requeue', get_requeue_path_m1)
+      MerrittJsonProperty.new('Requeue', get_acc_requeue_path)
     )
   end
 

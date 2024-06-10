@@ -122,7 +122,7 @@ class ZkRequeueM1Action < ZkM1Action
       acc = MerrittZK::Access.new(get_access_queue, get_id)
       acc.load(@zk)
       acc.set_status(@zk, MerrittZK::AccessState::Pending)
-      { message: "Acc #{acc.id} requeue not yet implemented " }.to_json
+      { message: "Acc #{acc.id} requeued " }.to_json
     else
       job = MerrittZK::Job.new(get_id)
       job.load(@zk)
@@ -152,12 +152,12 @@ class ZkDeleteM1Action < ZkM1Action
       acc = MerrittZK::Access.new(get_access_queue, get_id)
       acc.load(@zk)
       acc.set_status(@zk, MerrittZK::AccessState::Deleted)
-      { message: "Acc #{@acc.id} deleted" }.to_json
+      { message: "Acc #{acc.id} deleted" }.to_json
     else
       job = MerrittZK::Job.new(get_id)
       job.load(@zk)
       job.set_status(@zk, MerrittZK::JobState::Deleted)
-      { message: "Job #{@job.id} deleted" }.to_json
+      { message: "Job #{job.id} deleted" }.to_json
     end
   end
 end
