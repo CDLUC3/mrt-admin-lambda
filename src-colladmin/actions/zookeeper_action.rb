@@ -434,6 +434,20 @@ class AccessLockAction < ZookeeperAction
   end
 end
 
+class IngestQueueLockAction < ZookeeperAction
+  def perform_action
+    MerrittZK::Locks.lock_ingest_queue(@zk)
+    message_as_table("Ingest Queue Locked").to_json
+  end
+end
+
+class IngestQueueUnlockAction < ZookeeperAction
+  def perform_action
+    MerrittZK::Locks.unlock_ingest_queue(@zk)
+    message_as_table("Ingest Queue Unlocked").to_json
+  end
+end
+
 ## Display ingest locks on objects
 class IngestLockAction < ZookeeperAction
   def get_title

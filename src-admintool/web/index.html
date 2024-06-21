@@ -357,8 +357,10 @@
       <h3>Ingest Activity</h3>
       <ul>
         <li class="report"><a href="{{COLLADMIN_HOME}}?path=state">Ingest Service State Request</a></li>
-        <li class="action"><a href="{{COLLADMIN_HOME}}?path=submissions/pause&reload_path=state">Pause Submissions</a></li>
-        <li class="action"><a href="{{COLLADMIN_HOME}}?path=submissions/unpause&reload_path=state">Unpause Submissions</a></li>
+        <li class="action"><a href="{{COLLADMIN_HOME}}?path=submissions/pause&reload_path=state">Pause Submissions Legacy</a></li>
+        <li class="action"><a href="{{COLLADMIN_HOME}}?path=submissions/unpause&reload_path=state">Unpause Submissions Legacy</a></li>
+        <li class="action"><a href="{{COLLADMIN_HOME}}?path=ing-lock">Pause Submissions ZK</a></li>
+        <li class="action"><a href="{{COLLADMIN_HOME}}?path=ing-unlock">Unpause Submissions ZK</a></li>
         <li class="graph"><a href="{{COLLADMIN_HOME}}?path=ingest-queue-by-profile">Ingest Queues - Counts by Profile</a></li>
         <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=ingest_bytes_by_hour">Recent Bytes ingested by hour</a></li>
         <li class="graph"><a href="{{ADMINTOOL_HOME}}?path=ingest_bytes_by_hour&days=30">Recent Bytes ingested by day - last 30 days</a></li>

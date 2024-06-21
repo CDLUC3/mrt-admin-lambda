@@ -543,6 +543,31 @@ submissions/unpause:
   documentation: |
     Ingest: POST /admin/submissions/thaw
   migration: m2
+ing-lock:
+  link-title: Pause all ingest processing
+  breadcrumb: bp_ingest
+  class: IngestQueueLockAction
+  category: Queue Management
+  sensitivity: reversible change
+  testing: automatable
+  description: |
+    Pause all ingest processing.  Return the effective state of the ingest queues.
+    This is typically done before a patching cycle or a software release that impacts ingest or storage.
+  documentation: |
+    ZK
+  migration: m2
+ing-unlock:
+  link-title: Unpause all ingest processing
+  breadcrumb: bp_ingest
+  class: IngestQueueUnlockAction
+  category: Queue Management
+  sensitivity: reversible change
+  testing: automatable
+  description: |
+    Unpause ingest processing.  Return the effective state of the ingest queues.
+  documentation: |
+    ZK
+  migration: m2
 unlock-coll:
   link-title: Unlock ingest for a collection
   class: CollQueueAction
