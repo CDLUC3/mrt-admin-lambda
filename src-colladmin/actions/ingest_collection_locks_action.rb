@@ -90,12 +90,10 @@ class IngestCollectionLocksAction < ForwardToIngestAction
           locked: false,
           name: p.get_value(:profileDescription)
         }
-        if ZookeeperListAction.migration_m1? 
-          pstat[:locked] = MerrittZK::Locks.check_lock_collection(@zk, profile)
-        end
+        pstat[:locked] = MerrittZK::Locks.check_lock_collection(@zk, profile) if ZookeeperListAction.migration_m1?
         names[profile] = pstat
       end
-      if !ZookeeperListAction.migration_m1?
+      unless ZookeeperListAction.migration_m1?
         IngestStateAction.new(@config, {}, 'state', {}).get_locked_collections.each do |k|
           names.fetch(k, {})[:locked] = true
         end
