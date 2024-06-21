@@ -830,6 +830,12 @@ function format(cell, v, type, merritt_path) {
       p = colladmin_root + "/lambda?path=" + arr[0] + "-coll&coll=" + arr[1];
       makeLink(cell, arr[0], "javascript:ajax_invoke('"+encodeURIComponent(p)+"')").addClass("ajax");  
     }
+  } else if (type == 'colllockzk') {
+    var arr = v.split(",");
+    if (arr.length == 2) {
+      p = colladmin_root + "/lambda?path=" + arr[0] + "-collzk&coll=" + arr[1];
+      makeLink(cell, arr[0], "javascript:ajax_invoke('"+encodeURIComponent(p)+"')").addClass("ajax");  
+    }
   } else if (type == 'collnode'  && v != '') {
     makeLink(cell, 'Manage Coll Nodes', colladmin_root + "/web/storeCollNode.html?coll="+v);
   } else if (type == 'fprofile') {

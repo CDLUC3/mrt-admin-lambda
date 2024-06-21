@@ -297,6 +297,7 @@ td.requeue a,
 td.hold a, 
 td.release a, 
 td.colllock a, 
+td.colllockzk a, 
 td.collqitems a {
   display: block;
   text-align: center;
@@ -348,6 +349,7 @@ div.admin-tool td.requeue a,
 div.admin-tool td.hold a, 
 div.admin-tool td.release a, 
 div.admin-tool td.colllock a, 
+div.admin-tool td.colllockzk a, 
 div.admin-tool td.collqitems a {
     display: none;
 }
@@ -358,6 +360,7 @@ td.requeue a.disabled,
 td.hold a.disabled, 
 td.release a.disabled, 
 td.colllock a.disabled, 
+td.colllockzk a.disabled, 
 td.collqitems a.disabled {
   border: thin solid gray;
   color: gray;

@@ -596,6 +596,32 @@ lock-coll:
   documentation: |
     Ingest: POST /admin/submission/freeze/{coll}
   migration: m2
+unlock-collzk:
+  link-title: Unlock ingest for a collection
+  class: CollUnlockZkAction
+  category: Queue Management
+  sensitivity: reversible change
+  testing: automatable
+  description: |
+    Unlock ingest for a collection.
+  report-datatypes:
+  - colllock
+  documentation: |
+    ZK
+  migration: m2
+lock-collzk:
+  link-title: Lock ingest for a collection
+  class: CollLockZkAction
+  category: Queue Management
+  sensitivity: reversible change
+  testing: automatable
+  description: |
+    Lock ingest for a collection.
+  report-datatypes:
+  - colllock
+  documentation: |
+    ZK
+  migration: m2
 release-coll-queue-items-m1:
   link-title: Release any held items for a collection
   class: CollIterateQueueM1Action

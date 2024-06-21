@@ -299,6 +299,32 @@ class IngestQueueZookeeperAction < ZookeeperListAction
   end
 end
 
+## Lock collection action
+class CollLockZkAction < ZkM1Action
+  def initialize(config, action, path, myparams)
+    super
+    @coll = myparams.fetch('coll', '')
+  end
+
+  def perform_action
+    MerrittZK::Locks.lock_collection(@zk, @coll)
+    { message: "Collection #{@coll} locked" }.to_json
+  end
+end
+
+## Unlock collection action
+class CollUnlockZkAction < ZkM1Action
+  def initialize(config, action, path, myparams)
+    super
+    @coll = myparams.fetch('coll', '')
+  end
+
+  def perform_action
+    MerrittZK::Locks.unlock_collection(@zk, @coll)
+    { message: "Collection #{@coll} unlocked" }.to_json
+  end
+end
+
 # Collection Admin Task class - see config/actions.yml for description
 class CollIterateQueueM1Action < ZkM1Action
   def initialize(config, action, path, myparams)
@@ -434,17 +460,19 @@ class AccessLockAction < ZookeeperAction
   end
 end
 
+## Lock ingest queue
 class IngestQueueLockAction < ZookeeperAction
   def perform_action
     MerrittZK::Locks.lock_ingest_queue(@zk)
-    message_as_table("Ingest Queue Locked").to_json
+    message_as_table('Ingest Queue Locked').to_json
   end
 end
 
+## Unlock ingest queue
 class IngestQueueUnlockAction < ZookeeperAction
   def perform_action
     MerrittZK::Locks.unlock_ingest_queue(@zk)
-    message_as_table("Ingest Queue Unlocked").to_json
+    message_as_table('Ingest Queue Unlocked').to_json
   end
 end
 

@@ -18,7 +18,12 @@ class IngestCollectionLocksAction < ForwardToIngestAction
     @held_counts = {}
     ql = QueueList.new(@zk)
     ql.jobs.each do |qe|
-      next if qe.qstatus != 'Held'
+      if ZookeeperListAction.migration_m1?
+        next if qe.profile.empty?
+        next unless MerrittZK::Locks.check_lock_collection(@zk, qe.profile)
+      elsif qe.qstatus != 'Held'
+        next
+      end
 
       @held_counts[qe.profile] = @held_counts.fetch(qe.profile, 0) + 1
     end
@@ -33,12 +38,16 @@ class IngestCollectionLocksAction < ForwardToIngestAction
   end
 
   def table_headers
-    ['Profile', 'CollId', 'Name', 'Locked', 'Locks', 'Held Items', 'Release']
+    if ZookeeperListAction.migration_m1?
+      ['Profile', 'CollId', 'Name', 'Locked', 'Locks ZK', 'Held Items', 'Release']
+    else
+      ['Profile', 'CollId', 'Name', 'Locked', 'Locks', 'Held Items', 'Release']
+    end
   end
 
   def table_types
     if ZookeeperListAction.migration_m1?
-      ['', 'colllist', '', '', 'colllock', 'dataint', 'collqitems-mrtzk']
+      ['', 'colllist', '', '', 'colllockzk', 'dataint', 'collqitems-mrtzk']
     else
       ['', 'colllist', '', '', 'colllock', 'dataint', 'collqitems-legacy']
     end
@@ -81,10 +90,15 @@ class IngestCollectionLocksAction < ForwardToIngestAction
           locked: false,
           name: p.get_value(:profileDescription)
         }
+        if ZookeeperListAction.migration_m1? 
+          pstat[:locked] = MerrittZK::Locks.check_lock_collection(@zk, profile)
+        end
         names[profile] = pstat
       end
-      IngestStateAction.new(@config, {}, 'state', {}).get_locked_collections.each do |k|
-        names.fetch(k, {})[:locked] = true
+      if !ZookeeperListAction.migration_m1?
+        IngestStateAction.new(@config, {}, 'state', {}).get_locked_collections.each do |k|
+          names.fetch(k, {})[:locked] = true
+        end
       end
     rescue StandardError => e
       log(e.message)

@@ -44,14 +44,23 @@
         <button
           data-collection="{{profname}}"
           class="colladmin lock-coll"
-        >Lock Collection</button>
+        >Lock Collection Legacy</button>
+        <button
+          data-collection="{{profname}}"
+          class="colladmin lock-collzk"
+        >Lock Collection ZK</button>
         {{/ingest_unpaused}}
 
         {{#ingest_paused}}
         <button
           data-collection="{{profname}}"
           class="colladmin unlock-coll"
-        >Unlock Collection</button>
+        >Unlock Collection Legacy</button>
+
+        <button
+          data-collection="{{profname}}"
+          class="colladmin unlock-collzk"
+        >Unlock Collection ZK</button>
         {{/ingest_paused}}
       </div>
       {{/has_profname}}

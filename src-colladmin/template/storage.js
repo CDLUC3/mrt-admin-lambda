@@ -335,6 +335,30 @@ function init() {
     );
   });
 
+  $("button.lock-collzk").on("click", function(){
+    var coll = $(this).attr("data-collection");
+    invoke(
+      {
+        path: "lock-collzk",
+        coll: coll
+      },
+      false,
+      true
+    );
+  });
+
+  $("button.unlock-collzk").on("click", function(){
+    var coll = $(this).attr("data-collection");
+    invoke(
+      {
+        path: "unlock-collzk",
+        coll: coll
+      },
+      false,
+      true
+    );
+  });
+
   if ($("button.storage-cancel-all-scans").is("*")) {
     invoke(
       {
