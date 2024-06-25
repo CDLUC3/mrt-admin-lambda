@@ -7,7 +7,7 @@
 # This image is not actively used
 # docker build -t ${ECR_REGISTRY}/simulate-lambda-alb .
 
-FROM ruby:3
+FROM public.ecr.aws/docker/library/ruby:3
 
 RUN apt-get -y update && apt-get -y upgrade
 
