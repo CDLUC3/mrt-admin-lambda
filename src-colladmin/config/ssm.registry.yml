@@ -101,6 +101,12 @@ cloud:
         SDSC credential. This should be rotated periodically. 
         Rotation is coordinated with SDSC staff.
         See https://github.com/CDLUC3/mrt-doc-private/blob/main/docs/system-recovery/cloud-credential-rotate.md
+    sdsc-S3-accessKey:
+      description: |
+        SDSC S3 accessKey credential. Node used for backup
+    sdsc-S3-secretKey:
+      description: |
+        SDSC S3 secetKey credential. Nodes used for backup
     wasabi-accessKey: 
       description: |
         Wasabi credential. This should be rotated periodically. 
