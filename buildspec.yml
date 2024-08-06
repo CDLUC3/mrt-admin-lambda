@@ -16,6 +16,12 @@ phases:
 
     - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin ${ECR_REGISTRY}
 
+    - aws ecr create-repository --repository-name mysql-ruby-lambda || echo 'ignore if exists...'
+    - aws ecr create-repository --repository-name uc3-mrt-admin-common || echo 'ignore if exists...'
+    - aws ecr create-repository --repository-name uc3-mrt-admin-lambda || echo 'ignore if exists...'
+    - aws ecr create-repository --repository-name uc3-mrt-colladmin-lambda || echo 'ignore if exists...'
+    - aws ecr create-repository --repository-name uc3-mrt-cognitousers || echo 'ignore if exists...'
+
   build:
     on-failure: ABORT
     commands:
@@ -33,4 +39,4 @@ phases:
     - docker push ${ECR_IMAGE_TAG}/uc3-mrt-colladmin-lambda:${BRANCHTAG}
     # the following is rarely modified by code changes
     - docker build --pull --build-arg ECR_REGISTRY=${ECR_REGISTRY} -t ${ECR_IMAGE_TAG}/uc3-mrt-cognitousers cognito-lambda-nonvpc
-    - docker push ${ECR_REGISTRY}/mysql-ruby-lambda:${BRANCH}
+    - docker push ${ECR_REGISTRY}/uc3-mrt-cognitousers
