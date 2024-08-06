@@ -29,11 +29,11 @@ phases:
     - |
       docker build --pull --quiet --push \
         -t ${ECR_REGISTRY}/mysql-ruby-lambda mysql-ruby-lambda
-    # common code is not executed as a deployed lambda... use branch name only
+    # common code is not executed as a deployed lambda... do not tag
     - |
       docker build --pull --quiet --push \
         --build-arg ECR_REGISTRY=${ECR_REGISTRY} \
-        -t ${ECR_REGISTRY}/uc3-mrt-admin-common:${BRANCH} src-common
+        -t ${ECR_REGISTRY}/uc3-mrt-admin-common src-common
     # use tag or branch for the deployed image
     - |
       docker build --pull --quiet --push \
