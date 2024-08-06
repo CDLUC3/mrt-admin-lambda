@@ -29,28 +29,23 @@ phases:
     - |
       docker build --pull --quiet --push \
         -t ${ECR_REGISTRY}/mysql-ruby-lambda mysql-ruby-lambda
-    #- docker push ${ECR_REGISTRY}/mysql-ruby-lambda
     # common code is not executed as a deployed lambda... use branch name only
     - |
       docker build --pull --quiet --push \
         --build-arg ECR_REGISTRY=${ECR_REGISTRY} \
         -t ${ECR_REGISTRY}/uc3-mrt-admin-common:${BRANCH} src-common
-    #- docker push ${ECR_REGISTRY}/uc3-mrt-admin-common:${BRANCH}
     # use tag or branch for the deployed image
     - |
       docker build --pull --quiet --push \
         --build-arg ECR_REGISTRY=${ECR_REGISTRY} \
         -t ${ECR_REGISTRY}/uc3-mrt-admin-lambda:${BRANCHTAG} src-admintool
-    #- docker push ${ECR_IMAGE_TAG}/uc3-mrt-admin-lambda:${BRANCHTAG}
     # use tag or branch for the deployed image
     - |
       docker build --pull --quiet --push \
         --build-arg ECR_REGISTRY=${ECR_REGISTRY} \
         -t ${ECR_REGISTRY}/uc3-mrt-colladmin-lambda:${BRANCHTAG} src-colladmin
-    #- docker push ${ECR_IMAGE_TAG}/uc3-mrt-colladmin-lambda:${BRANCHTAG}
     # the following is rarely modified by code changes
     - |
       docker build --pull --quiet --push \
         --build-arg ECR_REGISTRY=${ECR_REGISTRY} \
         -t ${ECR_REGISTRY}/uc3-mrt-cognitousers cognito-lambda-nonvpc
-    #- docker push ${ECR_REGISTRY}/uc3-mrt-cognitousers
