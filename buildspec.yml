@@ -1,0 +1,36 @@
+version: 0.2
+
+# Pre-requisites
+# - Create CodeBuild project
+#   - Provide minimal github credentials to access public repo
+
+phases:
+  pre_build:
+    on-failure: ABORT
+    commands:
+    - COMMIT=`git rev-parse --short HEAD`
+    - BRANCH=`git symbolic-ref -q --short HEAD || git name-rev $(git rev-parse --short HEAD) | cut -d' ' -f2 || echo ''`
+    - TAG=`git describe --tags --exact-match 2> /dev/null || echo ''`
+    - BRANCHTAG=`git describe --tags --exact-match 2> /dev/null || git symbolic-ref -q --short HEAD || git name-rev $(git rev-parse --short HEAD) | cut -d' ' -f2 || git rev-parse --short HEAD`
+    - echo "Branchtag ${BRANCHTAG}"
+
+    - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin ${ECR_REGISTRY}
+
+  build:
+    on-failure: ABORT
+    commands:
+    # the following is rarely modified by code changes
+    - docker build --pull -t ${ECR_REGISTRY}/mysql-ruby-lambda mysql-ruby-lambda
+    - docker push ${ECR_REGISTRY}/mysql-ruby-lambda
+    # common code is not executed as a deployed lambda... use branch name only
+    - docker build --pull --build-arg ECR_REGISTRY=${ECR_REGISTRY} -t ${ECR_REGISTRY}/uc3-mrt-admin-common:${BRANCH} src-common
+    - docker push ${ECR_REGISTRY}/uc3-mrt-admin-common:${BRANCH}
+    # use tag or branch for the deployed image
+    - docker build --pull --build-arg ECR_REGISTRY=${ECR_REGISTRY} -t ${ECR_IMAGE_TAG}/uc3-mrt-admin-lambda:${BRANCHTAG} src-admintool
+    - docker push ${ECR_IMAGE_TAG}/uc3-mrt-admin-lambda:${BRANCHTAG}
+    # use tag or branch for the deployed image
+    - docker build --pull --build-arg ECR_REGISTRY=${ECR_REGISTRY} -t ${ECR_IMAGE_TAG}/uc3-mrt-colladmin-lambda:${BRANCHTAG} src-colladmin
+    - docker push ${ECR_IMAGE_TAG}/uc3-mrt-colladmin-lambda:${BRANCHTAG}
+    # the following is rarely modified by code changes
+    - docker build --pull --build-arg ECR_REGISTRY=${ECR_REGISTRY} -t ${ECR_IMAGE_TAG}/uc3-mrt-cognitousers cognito-lambda-nonvpc
+    - docker push ${ECR_REGISTRY}/mysql-ruby-lambda:${BRANCH}
