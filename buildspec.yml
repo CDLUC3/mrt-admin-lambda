@@ -16,12 +16,6 @@ phases:
 
     - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin ${ECR_REGISTRY}
 
-    - aws ecr create-repository --repository-name mysql-ruby-lambda || echo 'ignore if exists...'
-    - aws ecr create-repository --repository-name uc3-mrt-admin-common || echo 'ignore if exists...'
-    - aws ecr create-repository --repository-name uc3-mrt-admin-lambda || echo 'ignore if exists...'
-    - aws ecr create-repository --repository-name uc3-mrt-colladmin-lambda || echo 'ignore if exists...'
-    - aws ecr create-repository --repository-name uc3-mrt-cognitousers || echo 'ignore if exists...'
-
   build:
     on-failure: ABORT
     commands:
