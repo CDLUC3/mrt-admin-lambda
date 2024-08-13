@@ -2,8 +2,6 @@
 #   Copyright 2021 Regents of the University of California
 #   All rights reserved
 #*********************************************************************
-# This image is based on an architecture that matches the Lambda Ruby runtime
-# docker build -t ${ECR_REGISTRY}/cognito-lambda-nonvpc .
 
 FROM public.ecr.aws/lambda/ruby:3.2
 
