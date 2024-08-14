@@ -24,8 +24,8 @@ phases:
     # the following is rarely modified by code changes
     - docker pull ${ECR_REGISTRY}/mysql-ruby-lambda
     - docker pull ${ECR_REGISTRY}/uc3-mrt-admin-common
-    - docker pull ${ECR_REGISTRY}/uc3-mrt-admin-lambda:${DOCKTAG}
-    - docker pull ${ECR_REGISTRY}/uc3-mrt-colladmin-lambda:${DOCKTAG}
+    - docker pull ${ECR_REGISTRY}/uc3-mrt-admin-lambda
+    - docker pull ${ECR_REGISTRY}/uc3-mrt-colladmin-lambda
     - docker pull ${ECR_REGISTRY}/uc3-mrt-cognitousers
     - |
       docker build --quiet --push \
