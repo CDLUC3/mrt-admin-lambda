@@ -9,6 +9,8 @@ ARG ECR_REGISTRY=ecr_registry_not_set
 # MySql binary dependencies have been embedded into the image
 
 FROM ${ECR_REGISTRY}/uc3-mrt-admin-common
+ARG COMMITDATE=''
+ARG DOCKTAG=''
 
 RUN yum -y update
 
@@ -21,3 +23,6 @@ RUN bundle install
 # https://serverfault.com/questions/683605/docker-container-time-timezone-will-not-reflect-changes
 ENV TZ=America/Los_Angeles
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+ENV COMMITDATE=$COMMITDATE
+ENV DOCKTAG=$DOCKTAG

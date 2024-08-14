@@ -14,18 +14,8 @@ LAMBDA_ARN=arn:aws:lambda:${AWS_REGION}:${AWS_ACCOUNT_ID}:function:uc3-mrt-cogni
 
 # Get the ECR image to publish
 ECR_REGISTRY=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
-ECR_IMAGE_TAG=${ECR_REGISTRY}/${FUNCTNAME}:latest
-
-# login to ecr
-aws ecr get-login-password --region us-west-2 | \
-  docker login --username AWS \
-    --password-stdin ${ECR_REGISTRY}
-
-# build cognito lambda
-docker build --pull --build-arg ECR_REGISTRY=${ECR_REGISTRY} -t ${ECR_IMAGE_TAG} cognito-lambda-nonvpc || die "Image build failure for ${ECR_IMAGE_TAG}"
-
-# aws ecr create-repository --repository-name ${FUNCTNAME}
-docker push ${ECR_IMAGE_TAG} || die "Image push failure for ${ECR_IMAGE_TAG}"
+UC3_ECR_REGISTRY=`get_ssm_value_by_name admintool/uc3-ecr-registry`
+ECR_IMAGE_TAG=${UC3_ECR_REGISTRY}/${FUNCTNAME}:latest
 
 # deploy lambda code
 aws lambda update-function-code \

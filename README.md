@@ -168,7 +168,13 @@ The following script should be run from a host that is authorized to
 - push to ECR
 - deploy to Lambda.
 
-Deploy Scripts
+### Config Scripts
+- Admin Tool: [lambda-config.sh](lambda-config.sh)
+- Collection Admin Tool: [colladmin-lambda-config.sh](colladmin-lambda-config.sh)
+- Cognito User Management: [cognito-lambda-config.sh](colladmin-lambda-config.sh)
+
+
+### Build and Deploy Scripts
 - Admin Tool: [lambda-deploy.sh](lambda-deploy.sh)
 - Collection Admin Tool: [colladmin-lambda-deploy.sh](colladmin-lambda-deploy.sh)
 - Cognito User Management: [cognito-lambda-deploy.sh](colladmin-lambda-deploy.sh)
@@ -179,6 +185,12 @@ This script requires SSM parameters to be configured.  Requires lambda update fu
 
 This script **requires aws cli V2** in order to deploy a docker image to lambda.  
 - The host running this script needs to be able to push to ECR and to update a lambda.
+
+### Cross-account ECR Deploy Scripts
+- Admin Tool: [lambda-tagdeploy.sh](lambda-tagdeploy.sh)
+- Collection Admin Tool: [colladmin-lambda-dtagdeployeploy.sh](colladmin-lambda-tagdeploy.sh)
+- Cognito User Management: [cognito-lambda-tagdeploy.sh](colladmin-lambda-tagdeploy.sh)
+
 
 ## Automated Testing
 
