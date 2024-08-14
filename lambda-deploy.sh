@@ -2,9 +2,6 @@
 
 DEPLOY_ENV=${1:-dev}
 
-# Set param 2 to Y if the lambda config should be updated
-run_config=${2:-N}
-
 EXIT_ON_DIE=true
 source ~/.profile.d/uc3-aws-util.sh
 
@@ -25,15 +22,6 @@ LAMBDA_ARN=${LAMBDA_ARN_BASE}-${DEPLOY_ENV}
 ECR_REGISTRY=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
 ECR_IMAGE_TAG=${ECR_REGISTRY}/${FUNCTNAME}:${DEPLOY_ENV}
 
-# Get the URL for links to Merritt
-if [ $DEPLOY_ENV == 'stg' ]
-then
-  MERRITT_PATH=https://merritt-stage.cdlib.org
-elif [ $DEPLOY_ENV == 'prd' ]
-then
-  MERRITT_PATH=https://merritt.cdlib.org
-fi
-
 # login to ecr
 aws ecr get-login-password --region us-west-2 | \
   docker login --username AWS \
@@ -51,8 +39,16 @@ docker build --pull --build-arg ECR_REGISTRY=${ECR_REGISTRY} -t ${ECR_REGISTRY}/
 # aws ecr create-repository --repository-name uc3-mrt-admin-common
 docker push ${ECR_REGISTRY}/uc3-mrt-admin-common || die "Image push failure for ${ECR_REGISTRY}/uc3-mrt-admin-common"
 
+COMMITDATE=`date "+local: %Y-%m-%dT%H:%M:%S%z"`
+DOCKTAG="local: ${DEPLOY_ENV}"
+
 # build the admin tool
-docker build --pull --build-arg ECR_REGISTRY=${ECR_REGISTRY} -t ${ECR_IMAGE_TAG} src-admintool || die "Image build failure for ${ECR_IMAGE_TAG}"
+docker build --pull \
+  --build-arg ECR_REGISTRY=${ECR_REGISTRY} \
+  --build-arg COMMITDATE="${COMMITDATE}" \
+  --build-arg DOCKTAG="${DOCKTAG}" \
+  -t ${ECR_IMAGE_TAG} src-admintool \
+  || die "Image build failure for ${ECR_IMAGE_TAG}"
 
 # aws ecr create-repository --repository-name ${FUNCTNAME}
 docker push ${ECR_IMAGE_TAG} || die "Image push failure"
@@ -65,32 +61,4 @@ aws lambda update-function-code \
   --no-cli-pager \
   || die "Lambda Update failure"
 
-if [ "$run_config" == 'Y' ]
-then
-  echo " -- pause 60 sec then update function config"
-  sleep 60
-
-  if [ "${DEPLOY_ENV}" == "prd" ]
-  then
-    REP=
-  else
-    REP=-${DEPLOY_ENV}
-  fi
-
-  ADMIN_ALB_URL=`get_ssm_value_by_name admintool/api-path`
-  ADMIN_ALB_URL=${ADMIN_ALB_URL//-dev/${REP}}
-
-  COLLADMIN_ALB_URL=`get_ssm_value_by_name colladmin/api-path`
-  COLLADMIN_ALB_URL=${COLLADMIN_ALB_URL//-dev/${REP}}
-
-  aws lambda update-function-configuration \
-    --function-name ${LAMBDA_ARN} \
-    --region us-west-2 \
-    --output text \
-    --timeout 360 \
-    --memory-size 2500 \
-    --ephemeral-storage "Size=2048" \
-    --no-cli-pager \
-    --environment "Variables={SSM_ROOT_PATH=${SSM_DEPLOY_PATH},MERRITT_PATH=${MERRITT_PATH},ADMIN_ALB_URL=${ADMIN_ALB_URL},COLLADMIN_ALB_URL=${COLLADMIN_ALB_URL}}" 
-fi
 date

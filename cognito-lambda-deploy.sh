@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Set param 1 to Y if the lambda config should be updated
-run_config=${1:-N}
-
 EXIT_ON_DIE=true
 source ~/.profile.d/uc3-aws-util.sh
 
@@ -37,17 +34,3 @@ aws lambda update-function-code \
   --output text --region us-west-2 \
   --no-cli-pager \
   || die "Lambda Update failure"
-
-if [ "$run_config" == 'Y' ]
-then
-  echo " -- pause 60 sec then update function config"
-  sleep 60
-
-  aws lambda update-function-configuration \
-    --function-name ${LAMBDA_ARN} \
-    --region us-west-2 \
-    --output text \
-    --timeout 180 \
-    --memory-size 128 \
-    --no-cli-pager 
-fi

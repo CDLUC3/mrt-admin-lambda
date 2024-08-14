@@ -2,9 +2,6 @@
 
 DEPLOY_ENV=${1:-dev}
 
-# Set param 2 to Y if the lambda config should be updated
-run_config=${2:-N}
-
 EXIT_ON_DIE=true
 source ~/.profile.d/uc3-aws-util.sh
 
@@ -26,15 +23,6 @@ LAMBDA_ARN=${LAMBDA_ARN_BASE}-${DEPLOY_ENV}
 # Get the ECR image to publish
 ECR_REGISTRY=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
 ECR_IMAGE_TAG=${ECR_REGISTRY}/${FUNCTNAME}:${DEPLOY_ENV}
-
-# Get the URL for links to Merritt
-if [ $DEPLOY_ENV == 'stg' ]
-then
-  MERRITT_PATH=https://merritt-stage.cdlib.org
-elif [ $DEPLOY_ENV == 'prd' ]
-then
-  MERRITT_PATH=https://merritt.cdlib.org
-fi
 
 # login to ecr
 aws ecr get-login-password --region us-west-2 | \
@@ -67,43 +55,4 @@ aws lambda update-function-code \
   --no-cli-pager \
   || die "Lambda Update failure"
 
-if [ "$run_config" == 'Y' ]
-then
-  echo " -- pause 60 sec then update function config"
-  sleep 60
-
-  if [ "${DEPLOY_ENV}" == "prd" ]
-  then
-    REP=
-    FORMENV=production
-  elif [ "${DEPLOY_ENV}" == "stg" ]
-  then
-    REP=-${DEPLOY_ENV}
-    FORMENV=stage
-  else
-    REP=-${DEPLOY_ENV}
-    FORMENV=docker
-  fi
-
-  ADMIN_ALB_URL=`get_ssm_value_by_name admintool/api-path`
-  ADMIN_ALB_URL=${ADMIN_ALB_URL//-dev/${REP}}
-
-  COLLADMIN_ALB_URL=`get_ssm_value_by_name colladmin/api-path`
-  COLLADMIN_ALB_URL=${COLLADMIN_ALB_URL//-dev/${REP}}
-
-  VARS="SSM_ROOT_PATH=${SSM_DEPLOY_PATH}"
-  VARS="${VARS},MERRITT_PATH=${MERRITT_PATH}"
-  VARS="${VARS},ADMIN_ALB_URL=${ADMIN_ALB_URL}"
-  VARS="${VARS},COLLADMIN_ALB_URL=${COLLADMIN_ALB_URL}"
-  VARS="${VARS},FORMENV=${FORMENV}"
-
-  aws lambda update-function-configuration \
-    --function-name ${LAMBDA_ARN} \
-    --region us-west-2 \
-    --output text \
-    --timeout 180 \
-    --memory-size 1024 \
-    --no-cli-pager \
-    --environment "Variables={${VARS}}" 
-fi
 date

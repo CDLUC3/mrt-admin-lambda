@@ -35,12 +35,14 @@ phases:
       docker build --pull --quiet --push \
         --build-arg ECR_REGISTRY=${ECR_REGISTRY} \
         --build-arg COMMITDATE="${COMMITDATE}" \
+        --build-arg DOCKTAG="${DOCKTAG}" \
         -t ${ECR_REGISTRY}/uc3-mrt-admin-lambda:${DOCKTAG} src-admintool
     # use tag or branch for the deployed image
     - |
       docker build --pull --quiet --push \
         --build-arg ECR_REGISTRY=${ECR_REGISTRY} \
         --build-arg COMMITDATE="${COMMITDATE}" \
+        --build-arg DOCKTAG="${DOCKTAG}" \
         -t ${ECR_REGISTRY}/uc3-mrt-colladmin-lambda:${DOCKTAG} src-colladmin
     # the following is rarely modified by code changes
     - |
