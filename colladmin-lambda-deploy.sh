@@ -41,8 +41,16 @@ docker build --pull --build-arg ECR_REGISTRY=${ECR_REGISTRY} -t ${ECR_REGISTRY}/
 # aws ecr create-repository --repository-name uc3-mrt-admin-common
 docker push ${ECR_REGISTRY}/uc3-mrt-admin-common || die "Image push failure for ${ECR_REGISTRY}/uc3-mrt-admin-common"
 
+COMMITDATE=`date "+local: %Y-%m-%dT%H:%M:%S%z"`
+DOCKTAG="local: ${DEPLOY_ENV}"
+
 # build the admin tool
-docker build --pull --build-arg ECR_REGISTRY=${ECR_REGISTRY} -t ${ECR_IMAGE_TAG} src-colladmin || die "Image build failure ${ECR_REGISTRY}/${ECR_IMAGE_TAG}"
+docker build --pull \
+  --build-arg ECR_REGISTRY=${ECR_REGISTRY} \
+  --build-arg COMMITDATE="${COMMITDATE}" \
+  --build-arg DOCKTAG="${DOCKTAG}" \
+  -t ${ECR_IMAGE_TAG} src-colladmin \
+  || die "Image build failure ${ECR_REGISTRY}/${ECR_IMAGE_TAG}"
 
 # aws ecr create-repository --repository-name ${FUNCTNAME}
 docker push ${ECR_IMAGE_TAG} || die "Image push failure"
