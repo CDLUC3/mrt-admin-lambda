@@ -9,6 +9,8 @@ ARG ECR_REGISTRY=ecr_registry_not_set
 # MySql binary dependencies have been embedded into the image
 
 FROM ${ECR_REGISTRY}/uc3-mrt-admin-common
+ARG COMMITDATE=''
+ENV COMMITDATE=$COMMITDATE
 
 RUN yum -y update
 

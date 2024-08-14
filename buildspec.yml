@@ -12,7 +12,9 @@ phases:
     - BRANCH=`git symbolic-ref -q --short HEAD || git name-rev $(git rev-parse --short HEAD) | cut -d' ' -f2 || echo ''`
     - TAG=`git describe --tags --exact-match 2> /dev/null || echo ''`
     - BRANCHTAG=`git describe --tags --exact-match 2> /dev/null || git symbolic-ref -q --short HEAD || git name-rev $(git rev-parse --short HEAD) | cut -d' ' -f2 || git rev-parse --short HEAD`
-    - echo "Branchtag ${BRANCHTAG}"
+    - DOCKTAG=$BRANCHTAG
+    - COMMITDATE=`git --no-pager log -1 --pretty='format:%cd' --date='format:%Y-%m-%d %H:%M:%S'`
+    - echo "Branchtag ${BRANCHTAG}; COMMITDATE=${COMMITDATE}"
 
     - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin ${ECR_REGISTRY}
 
@@ -32,12 +34,14 @@ phases:
     - |
       docker build --pull --quiet --push \
         --build-arg ECR_REGISTRY=${ECR_REGISTRY} \
-        -t ${ECR_REGISTRY}/uc3-mrt-admin-lambda:${BRANCHTAG} src-admintool
+        --build-arg COMMITDATE="${COMMITDATE}" \
+        -t ${ECR_REGISTRY}/uc3-mrt-admin-lambda:${DOCKTAG} src-admintool
     # use tag or branch for the deployed image
     - |
       docker build --pull --quiet --push \
         --build-arg ECR_REGISTRY=${ECR_REGISTRY} \
-        -t ${ECR_REGISTRY}/uc3-mrt-colladmin-lambda:${BRANCHTAG} src-colladmin
+        --build-arg COMMITDATE="${COMMITDATE}" \
+        -t ${ECR_REGISTRY}/uc3-mrt-colladmin-lambda:${DOCKTAG} src-colladmin
     # the following is rarely modified by code changes
     - |
       docker build --pull --quiet --push \
