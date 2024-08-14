@@ -18,6 +18,9 @@ admintool:
     description: "DEV Only: ecr registry name used to deploy the lambda"
     skip: true
     deprecated: No longer needed
+  uc3-ecr-registry:
+    description: "DEV Only: UC3 ecr registry name for cross-account deployment"
+    skip: true
   merritt-path:
     description: "DEV Only: used to assist in computing the path to Merritt for a particular environment"
     skip: true
