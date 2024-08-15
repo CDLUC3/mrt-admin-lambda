@@ -52,8 +52,8 @@ phases:
     - mkdir -p reports
     - RPT=reports/mrt-admin-lambda.md
     - echo "## Semantic Tags" > $RPT
-    - git for-each-ref --sort=-creatordate --format '- %(refname) %(creatordate:short)' refs/tags | egrep "tags\/[0-9]+\.[0-9]+\.[0-9]+ " | head -10 >> $RPT
+    - git for-each-ref --sort=-creatordate --format '- %(refname) %(creatordate:short)' refs/tags | egrep "tags/[0-9]+\.[0-9]+\.[0-9]+ " | head -10 >> $RPT
     - echo "## Feature Tags" >> $RPT
-    - git for-each-ref --sort=-creatordate --format '- %(refname) %(creatordate:short)' refs/tags | egrep -v "tags\/[0-9]+\.[0-9]+\.[0-9]+ " | head -10 >> $RPT
-    - aws s3 cp --recursive reports/* s3://${S3CFBUCKET}/reports
+    - git for-each-ref --sort=-creatordate --format '- %(refname) %(creatordate:short)' refs/tags | egrep -v "tags/[0-9]+\.[0-9]+\.[0-9]+ " | head -10 >> $RPT
+    - aws s3 cp reports/* s3://${S3CFBUCKET}/reports
     - aws cloudfront create-invalidation --distribution-id ${CFDISTRIBUTIONID} --paths /reports/* --region us-east-1
