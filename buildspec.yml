@@ -55,5 +55,5 @@ phases:
     - git for-each-ref --sort=-creatordate --format '- %(refname) %(creatordate:short)' refs/tags | egrep "tags/[0-9]+\.[0-9]+\.[0-9]+ " | head -10 >> $RPT
     - echo "## Feature Tags" >> $RPT
     - git for-each-ref --sort=-creatordate --format '- %(refname) %(creatordate:short)' refs/tags | egrep -v "tags/[0-9]+\.[0-9]+\.[0-9]+ " | head -10 >> $RPT
-    - aws s3 cp $RPT s3://${S3CFBUCKET}/
+    - aws s3 cp $RPT s3://${S3CFBUCKET}/$RPT
     - aws cloudfront create-invalidation --distribution-id ${CFDISTRIBUTIONID} --paths /reports/* --region us-east-1
