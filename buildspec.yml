@@ -54,15 +54,15 @@ phases:
     - echo "# Build Summary Report" > $RPT
     - echo "## Semantic Tags" >> $RPT
     - echo "" >> $RPT
-    - echo "|tag|date|" >> $RPT
-    - echo "|-|-|" >> $RPT
-    - git for-each-ref --sort=-creatordate --format '|%(refname)|%(creatordate:short)|' refs/tags | egrep "tags/[0-9]+\.[0-9]+\.[0-9]+ " | sed -e "s/refs\/tags\///" | head -10 >> $RPT
+    - echo "| tag | date |" >> $RPT
+    - echo "|---|---|" >> $RPT
+    - git for-each-ref --sort=-creatordate --format '| %(refname) | %(creatordate:short) |' refs/tags | egrep "tags/[0-9]+\.[0-9]+\.[0-9]+ " | sed -e "s/refs\/tags\///" | head -10 >> $RPT
     - echo "" >> $RPT
     - echo "## Feature Tags" >> $RPT
     - echo "" >> $RPT
-    - echo "|tag|date|" >> $RPT
-    - echo "|-|-|" >> $RPT
-    - git for-each-ref --sort=-creatordate --format '|%(refname)|%(creatordate:short)|' refs/tags | egrep -v "tags/[0-9]+\.[0-9]+\.[0-9]+ " | sed -e "s/refs\/tags\///" | head -10 >> $RPT
+    - echo "| tag | date |" >> $RPT
+    - echo "|---|---|" >> $RPT
+    - git for-each-ref --sort=-creatordate --format '| %(refname) | %(creatordate:short) |' refs/tags | egrep -v "tags/[0-9]+\.[0-9]+\.[0-9]+ " | sed -e "s/refs\/tags\///" | head -10 >> $RPT
     - echo "" >> $RPT
     - aws s3 cp $RPT s3://${S3CFBUCKET}/$RPT
     - aws cloudfront create-invalidation --distribution-id ${CFDISTRIBUTIONID} --paths /reports/* --region us-east-1
