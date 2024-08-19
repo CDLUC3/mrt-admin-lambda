@@ -2,7 +2,7 @@
 
 This library is part of the [Merritt Preservation System](https://github.com/CDLUC3/mrt-doc).
 
-## Admin Tool Web Interface 
+## Admin Tool Web Interface  
 Each Admin Lambda application functions as a simple web server displaying the pages for the application.
 
 ```mermaid
