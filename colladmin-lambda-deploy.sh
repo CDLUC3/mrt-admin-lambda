@@ -42,6 +42,8 @@ docker build --build-arg ECR_REGISTRY=${ECR_REGISTRY} -t ${ECR_REGISTRY}/uc3-mrt
 docker push ${ECR_REGISTRY}/uc3-mrt-admin-common || die "Image push failure for ${ECR_REGISTRY}/uc3-mrt-admin-common"
 
 COMMITDATE=`date "+local: %Y-%m-%dT%H:%M:%S%z"`
+# the build runs faster if the build tag does not change
+COMMITDATE=devserver
 DOCKTAG="local: ${DEPLOY_ENV}"
 
 # build the admin tool
