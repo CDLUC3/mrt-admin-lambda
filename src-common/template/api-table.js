@@ -285,19 +285,6 @@ function postLoad() {
     });
   });
 
-  if ($("tr:has('td.srvstart:empty')").length > 0) {
-    $("tr:has('td.srvstart:empty'):first").each(function(){
-      var tr = $(this);
-      //colladmin function
-      srvstartPing(tr);
-    });  
-  } else {
-    $("tr:has('td.buildtag:empty'):first").each(function(){
-      var tr = $(this);
-      //colladin function
-      buildtag(tr);
-    });  
-  }
 }
 
 function query_iterate(show_iterative_total, types, data){
