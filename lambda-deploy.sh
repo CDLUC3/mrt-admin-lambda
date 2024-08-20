@@ -28,13 +28,13 @@ aws ecr get-login-password --region us-west-2 | \
     --password-stdin ${ECR_REGISTRY}/
 
 # build a ruby lambda container with mysql
-docker build --pull -t ${ECR_REGISTRY}/mysql-ruby-lambda mysql-ruby-lambda || die "Image build failure for ${ECR_REGISTRY}/mysql-ruby-lambda"
+docker build -t ${ECR_REGISTRY}/mysql-ruby-lambda mysql-ruby-lambda || die "Image build failure for ${ECR_REGISTRY}/mysql-ruby-lambda"
 
 # aws ecr create-repository --repository-name mysql-ruby-lambda
 docker push ${ECR_REGISTRY}/mysql-ruby-lambda || die "Image push failure for mysql-ruby-lambda"
 
 # build common image for admintool and colladmin
-docker build --pull --build-arg ECR_REGISTRY=${ECR_REGISTRY} -t ${ECR_REGISTRY}/uc3-mrt-admin-common src-common || die "Image build failure for ${ECR_REGISTRY}/uc3-mrt-admin-common"
+docker build --build-arg ECR_REGISTRY=${ECR_REGISTRY} -t ${ECR_REGISTRY}/uc3-mrt-admin-common src-common || die "Image build failure for ${ECR_REGISTRY}/uc3-mrt-admin-common"
 
 # aws ecr create-repository --repository-name uc3-mrt-admin-common
 docker push ${ECR_REGISTRY}/uc3-mrt-admin-common || die "Image push failure for ${ECR_REGISTRY}/uc3-mrt-admin-common"
@@ -43,7 +43,7 @@ COMMITDATE=`date "+local: %Y-%m-%dT%H:%M:%S%z"`
 DOCKTAG="local: ${DEPLOY_ENV}"
 
 # build the admin tool
-docker build --pull \
+docker build \
   --build-arg ECR_REGISTRY=${ECR_REGISTRY} \
   --build-arg COMMITDATE="${COMMITDATE}" \
   --build-arg DOCKTAG="${DOCKTAG}" \
