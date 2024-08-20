@@ -360,6 +360,10 @@ instances:
   testing: automated
   description: |
     Generate a report describing the EC2 servers used by Merritt domain.  Server details are discovered by querying EC2 tags.
+    ## Status Checks
+    - FAIL: if service does not return a state of OK 
+    - FAIL: if build tags are inconsistent for a subservice 
+    - WARN: if build tag does not conform to a semantic tag pattern N.N.N
 
     ### ALB Links
     - `ALB`: Route a state request through the ALB, process the response by the Collection Admin Tool

@@ -40,6 +40,8 @@ class Ec2Info
     @buildtag = ''
     @starttime = ''
     @servicestate = ''
+    @status = 'SKIP'
+    @service_tag = {}
   end
 
   attr_reader :name
@@ -56,7 +58,8 @@ class Ec2Info
       'Notes',
       'Build Tag',
       'Service Start',
-      'SERVICE State'
+      'Service State',
+      'Status'
     ]
   end
 
@@ -70,9 +73,10 @@ class Ec2Info
       '',
       'endpoint',
       'list',
-      '_buildtag',
-      '_srvstart',
-      '_srvstate'
+      '',
+      '',
+      '',
+      'status'
     ]
   end
 
@@ -134,8 +138,14 @@ class Ec2Info
   end
 
   def urlinfo
-    @buildtag = urldata(urls['build-info']).gsub('Building tag', '').gsub(/;.*$/, '') if urls.key?('build-info')
+    test = false
+    if urls.key?('build-info')
+      test = true
+      @buildtag = urldata(urls['build-info']).gsub('Building tag', '').gsub(/;.*$/, '').strip
+    end
+
     if urls.key?('state')
+      test = true
       data = urldata(urls['state'])
       begin
         json = JSON.parse(data)
@@ -144,29 +154,44 @@ class Ec2Info
         @stateinfo = data
       end
     end
-    return unless urls.key?('ping')
 
-    data = urldata(urls['ping'])
-    begin
-      json = JSON.parse(data)
-      @starttime = json.fetch('ping:pingState', {}).fetch('ping:dateTime', '')
-    rescue StandardError
-      @starttime = data
+    if urls.key?('ping')
+      test = true
+      data = urldata(urls['ping'])
+      begin
+        json = JSON.parse(data)
+        @starttime = json.fetch('ping:pingState', {}).fetch('ping:dateTime', '')
+      rescue StandardError
+        @starttime = data
+      end
+    end
+
+    if test
+      @service_tag[@subservice] = @buildtag unless @service_tag.key?(@subservice)
+      if @servicestate != 'OK'
+        @status = 'FAIL'
+      elsif @buildtag != @service_tag[@subservice]
+        @status = 'FAIL'
+      elsif @buildtag !~ /^\d+\.\d+\.\d+$/
+        @status = 'WARN'
+      else 
+        @status = 'PASS'
+      end
     end
   end
 
   def evaluate_service_state(data)
     if data.key?(REPSRV)
-      @servicestate = data[REPSRV].fetch(REPSTAT, '')
+      @servicestate = data[REPSRV].fetch(REPSTAT, '').gsub(/running/, 'OK')
       @starttime = data[REPSRV].fetch(REPSTART, '')
     elsif data.key?(AUDSRV)
-      @servicestate = data[AUDSRV].fetch(AUDSTAT, '')
+      @servicestate = data[AUDSRV].fetch(AUDSTAT, '').gsub(/running/, 'OK')
       @starttime = data[AUDSRV].fetch(AUDSTART, '')
     elsif data.key?(INVSRV)
-      @servicestate = data[INVSRV].fetch(INVSTAT, '')
+      @servicestate = data[INVSRV].fetch(INVSTAT, '').gsub(/running/, 'OK')
       @starttime = data[INVSRV].fetch(INVSTART, '')
     elsif data.key?(INGSRV)
-      @servicestate = data[INGSRV].fetch(INGSTAT, '')
+      @servicestate = data[INGSRV].fetch(INGSTAT, '').gsub(/thawed/, 'OK')
       @starttime = data[INGSRV].fetch(INGSTART, '')
     elsif data.key?(STOSRV)
       fc = data[STOSRV].fetch(STOSTAT, '')
@@ -191,7 +216,8 @@ class Ec2Info
       notes(action),
       @buildtag,
       @starttime,
-      @servicestate
+      @servicestate,
+      @status
     ]
   end
 end
