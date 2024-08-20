@@ -7,6 +7,23 @@ require 'aws-sdk-ssm'
 
 # represents information about an EC2 instance
 class Ec2Info
+  AUDSRV = 'fix:fixityServiceState'
+  AUDSTAT = 'fix:status'
+  AUDSTART = 'fix:serviceStartTime'
+  REPSRV = 'repsvc:replicationServiceState'
+  REPSTAT = 'repsvc:status'
+  REPSTART = 'repsvc:serviceStartTime'
+  INVSRV = 'invsv:invServiceState'
+  INVSTAT = 'invsv:systemStatus'
+  INVSTART = 'invsv:serviceStartTime'
+  INGSRV = 'ing:ingestServiceState'
+  INGSTAT = 'ing:submissionState'
+  INGSTART = 'ing:serviceStartTime'
+  STOSRV = 'sto:storageServiceState'
+  STOSTAT = 'sto:failNodesCnt'
+  UISTART = 'start_time'
+  UITAG = 'version'
+
   # See https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/EC2/Client.html#describe_instances-instance_method
   def initialize(config, inst)
     @config = config
@@ -20,9 +37,9 @@ class Ec2Info
     end
     @httpclient = HTTPClient.new
     @httpclient.receive_timeout = 1000
-    @buildtag=''
-    @starttime=''
-    @servicestate=''
+    @buildtag = ''
+    @starttime = ''
+    @servicestate = ''
   end
 
   attr_reader :name
@@ -109,69 +126,52 @@ class Ec2Info
 
   def urldata(url)
     return '' if url.empty?
+
     resp = @httpclient.get(url)
     return resp.status unless resp.status == 200
+
     resp.body
   end
 
   def urlinfo
-    if urls.key?('build-info')
-      @buildtag = urldata(urls['build-info']).gsub(/Building tag/, '').gsub(/;.*$//)
-    end
+    @buildtag = urldata(urls['build-info']).gsub('Building tag', '').gsub(/;.*$/, '') if urls.key?('build-info')
     if urls.key?('state')
       data = urldata(urls['state'])
       begin
         json = JSON.parse(data)
         evaluate_service_state(json)
-      rescue
+      rescue StandardError
         @stateinfo = data
       end
     end
-    if urls.key?('ping')
-      data = urldata(urls['ping'])
-      begin
-        json = JSON.parse(data)
-        @starttime = json.fetch('ping:pingState', {}).fetch('ping:dateTime', '')
-      rescue
-        @starttime = data
-      end
+    return unless urls.key?('ping')
+
+    data = urldata(urls['ping'])
+    begin
+      json = JSON.parse(data)
+      @starttime = json.fetch('ping:pingState', {}).fetch('ping:dateTime', '')
+    rescue StandardError
+      @starttime = data
     end
   end
 
-  AUDSRV = 'fix:fixityServiceState'
-  AUDSTAT = 'fix:status'
-  AUDSTART = 'fix:serviceStartTime'
-  REPSRV = 'repsvc:replicationServiceState'
-  REPSTAT = 'repsvc:status'
-  REPSTART = 'repsvc:serviceStartTime'
-  INVSRV = 'invsv:invServiceState'
-  INVSTAT = 'invsv:systemStatus'
-  INVSTART = 'invsv:serviceStartTime'
-  INGSRV = 'ing:ingestServiceState'
-  INGSTAT = 'ing:submissionState'
-  INGSTART = 'ing:serviceStartTime'
-  STOSRV = 'sto:storageServiceState'
-  STOSTAT = 'sto:failNodesCnt'
-  UISTART = 'start_time'
-  UITAG = 'version'
-
   def evaluate_service_state(data)
-    if (data.key?(REPSRV))
+    if data.key?(REPSRV)
       @servicestate = data[REPSRV].fetch(REPSTAT, '')
       @starttime = data[REPSRV].fetch(REPSTART, '')
-    elsif (data.key?(AUDSRV)) 
+    elsif data.key?(AUDSRV)
       @servicestate = data[AUDSRV].fetch(AUDSTAT, '')
       @starttime = data[AUDSRV].fetch(AUDSTART, '')
-    elsif (data.key?(INVSRV)) 
+    elsif data.key?(INVSRV)
       @servicestate = data[INVSRV].fetch(INVSTAT, '')
       @starttime = data[INVSRV].fetch(INVSTART, '')
-    elsif (data.key?(INGSRV)) 
+    elsif data.key?(INGSRV)
       @servicestate = data[INGSRV].fetch(INGSTAT, '')
       @starttime = data[INGSRV].fetch(INGSTART, '')
-    elsif (data.key?(STOSRV)) 
+    elsif data.key?(STOSRV)
       fc = data[STOSRV].fetch(STOSTAT, '')
-      @servicestate = fc == 0 ? 'OK' : fc
-    elsif (data.key?(UISTART)) 
+      @servicestate = fc.zero? ? 'OK' : fc
+    elsif data.key?(UISTART)
       @servicestate = 'OK'
       @starttime = data[UISTART]
       @buildtag = data[UITAG]

@@ -130,7 +130,7 @@ class SsmDescribeAction < AdminAction
   end
 
   def load_registry
-    reg = YAML.safe_load(File.read('config/ssm.registry.yml'), aliases: true)
+    reg = YAML.safe_load_file('config/ssm.registry.yml', aliases: true)
     process_registry_node(LambdaBase.ssm_root_path.chop, reg)
   end
 

@@ -10,7 +10,7 @@ require_relative 'idlist_compare_query'
 require 'yaml'
 
 # Include all Query classes
-Dir["#{File.dirname(__FILE__)}/*query.rb"].sort.each { |file| require file }
+Dir["#{File.dirname(__FILE__)}/*query.rb"].each { |file| require file }
 
 # class to construct query objects from yaml definitions
 class QueryFactory

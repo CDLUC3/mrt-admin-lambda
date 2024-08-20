@@ -25,7 +25,7 @@ class OpenSearchDescribeAction < AdminAction
   end
 
   def load_registry
-    YAML.safe_load(File.read('import/filebeat/opensearch.registry.yml'), aliases: true)
+    YAML.safe_load_file('import/filebeat/opensearch.registry.yml', aliases: true)
   end
 
   def get_title
