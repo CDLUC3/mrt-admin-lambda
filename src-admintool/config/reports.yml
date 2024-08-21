@@ -833,3 +833,12 @@ update_billing:
 #     SQL: get palmu file list
 #     S3: get /merritt-reports/palmu/inventory.txt
 #     S3: put /merritt-reports/palmu/match.json
+lambda_tag:
+  link-title: Check lambda deployment tag
+  breadcrumb: bp_internals
+  class: LambdaTagQuery
+  category: reports
+  description: |
+    Check that the deployment tag conforms to semantic naming standards.
+    While the lambda can temporarily be pushed to ECR from a DEV box, a proper deployment should
+    be created on the build system and deployed with a semantic tag.

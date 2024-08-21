@@ -182,6 +182,8 @@ class LambdaBase
     rescue StandardError
       # no action taken here
     end
+    vt = ENV.fetch('COMMITDATE', 'devserver')
+    vt = File.mtime('/etc/timezone').strftime('%Y-%m-%dT%H:%M:%S') if vt == 'devserver'
     {
       UC3INV_HOME: @config.fetch('uc3inv_home', ''),
       ADMINTOOL_BASE: LambdaBase.admintool_base,
@@ -190,7 +192,7 @@ class LambdaBase
       COLLADMIN_ROOT: LambdaBase.colladmin_root_url,
       COLLADMIN_ADMIN: LambdaBase.colladmin_url_admin,
       NOW: Time.now.strftime('%Y-%m-%dT%H:%M:%S%z'),
-      VERTIME: ENV.fetch('COMMITDATE', 'na'),
+      VERTIME: vt,
       DOCKTAG: ENV.fetch('DOCKTAG', 'na'),
       RECENT: recent,
       MYENV: LambdaBase.get_environment,

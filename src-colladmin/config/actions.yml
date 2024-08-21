@@ -1277,3 +1277,14 @@ consistency-report-cleanup:
   documentation: |
     S3: DELETE consistency-reports/...
   migration: m0
+lambda_tag:
+  link-title: Lambda Tag Check
+  class: LambdaTagAction
+  category: reports
+  sensitivity: readonly
+  testing: automated
+  breadcrumb: bp_internals
+  description: |
+    Check that the deployment tag conforms to semantic naming standards.
+    While the lambda can temporarily be pushed to ECR from a DEV box, a proper deployment should
+    be created on the build system and deployed with a semantic tag.
