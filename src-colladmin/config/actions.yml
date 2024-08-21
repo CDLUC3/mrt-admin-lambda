@@ -1277,7 +1277,7 @@ consistency-report-cleanup:
   documentation: |
     S3: DELETE consistency-reports/...
   migration: m0
-lambda_tag:
+coll_lambda_tag:
   link-title: Lambda Tag Check
   class: LambdaTagAction
   category: reports

@@ -318,28 +318,10 @@ class TagAction < AdminAction
   def perform_action
     return endpoint_call unless @list_servers
 
-    evaluate_status(table_types, get_table_rows)
-    {
-      format: 'report',
-      title: get_title_with_pagination,
-      breadcrumb: get_breadcrumb,
-      headers: table_headers,
-      types: table_types,
-      data: get_table_rows,
-      filter_col: nil,
-      group_col: nil,
-      show_grand_total: false,
-      merritt_path: @merritt_path,
-      alternative_queries: get_alternative_queries_with_pagination,
-      iterate: false,
-      saveable: is_saveable?,
-      report_path: report_path,
-      chart: nil,
-      description: get_description
-    }.to_json
+    convert_json_to_table({}.to_json)
   end
 
-  def get_table_rows
+  def table_rows(_body)
     @instances.keys.sort.map do |k|
       @instances[k].table_row(self)
     end
@@ -351,5 +333,9 @@ class TagAction < AdminAction
 
   def get_alternative_queries
     []
+  end
+  
+  def init_status
+    :PASS
   end
 end
