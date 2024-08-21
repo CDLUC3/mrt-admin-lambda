@@ -329,12 +329,6 @@ integ-tests:
       description: merritt login (dev only)
     password: 
       description: merritt password (dev only)
-    state-urls: 
-      description: comma separated list of services to poll with a state commands (dev only)
-    state-urls-lb: 
-      description: comma separated list of load balancer urls to poll with a state command (dev only)
-    storage-state: 
-      description: storage service state command url (dev only)
   for-prod: 
     <<: *inttest      
 objhealth:
