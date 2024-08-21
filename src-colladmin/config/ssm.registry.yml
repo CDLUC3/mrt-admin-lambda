@@ -326,9 +326,9 @@ integ-tests:
   skip: true
   for-stage: &inttest
     user: 
-      description: merritt login (dev only)
+      description: merritt login (dev only); copied to UC3 SSM
     password: 
-      description: merritt password (dev only)
+      description: merritt password (dev only); copied to UC3 SSM
   for-prod: 
     <<: *inttest      
 objhealth:
