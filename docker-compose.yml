@@ -8,7 +8,7 @@ networks:
 services:
   lambda-container:
     container_name: lambda-container
-    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/mysql-ruby-lambda
+    image: ${ECR_REGISTRY}/mysql-ruby-lambda
     build:
       context: mysql-ruby-lambda
       dockerfile: Dockerfile
@@ -21,7 +21,7 @@ services:
       mynet:
   alb-simulate:
     container_name: alb-simulate
-    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/simulate-lambda-alb
+    image: ${ECR_REGISTRY}/simulate-lambda-alb
     build:
       context: simulate-lambda-alb
       dockerfile: Dockerfile

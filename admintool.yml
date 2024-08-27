@@ -5,12 +5,12 @@
 version: '3.9'
 services:
   lambda-container:
-    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/uc3-mrt-admin-lambda:dev
+    image: ${ECR_REGISTRY}/uc3-mrt-admin-lambda:dev
     build:
       context: src-admintool
       dockerfile: Dockerfile
       args:
-        ECR_REGISTRY: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+        ECR_REGISTRY: ${ECR_REGISTRY}
     environment:
       SSM_ROOT_PATH: /uc3/mrt/dev/
   alb-simulate:

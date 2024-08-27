@@ -33,6 +33,8 @@ admintool:
     description: Path to UC3 Service Inventory
   site-url:
     description: Used by mrt-cron code to create links to admin tool reports
+  uc3account:
+    description: Account id for the UC3 account
 atom: 
   atom-credential: 
     description: |

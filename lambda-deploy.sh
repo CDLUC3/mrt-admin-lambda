@@ -12,6 +12,7 @@ check_ssm_root
 # Set ENV based on deploy env
 SSM_DEPLOY_PATH=${SSM_ROOT_PATH//dev/${DEPLOY_ENV}}
 AWS_ACCOUNT_ID=`aws sts get-caller-identity| jq -r .Account` || die "AWS Account Not Found"
+UC3_ACCOUNT_ID=`get_ssm_value_by_name admintool/uc3account` || die "UC3 Account Not Found"
 FUNCTNAME=uc3-mrt-admin-lambda
 
 # Get the ARN for the lambda to publish
@@ -19,7 +20,7 @@ LAMBDA_ARN_BASE=arn:aws:lambda:${AWS_REGION}:${AWS_ACCOUNT_ID}:function:uc3-mrt-
 LAMBDA_ARN=${LAMBDA_ARN_BASE}-${DEPLOY_ENV}
 
 # Get the ECR image to publish
-ECR_REGISTRY=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+ECR_REGISTRY=${UC3_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
 ECR_IMAGE_TAG=${ECR_REGISTRY}/${FUNCTNAME}:${DEPLOY_ENV}
 
 # login to ecr
@@ -28,16 +29,23 @@ aws ecr get-login-password --region us-west-2 | \
     --password-stdin ${ECR_REGISTRY}/
 
 # build a ruby lambda container with mysql
-docker build -t ${ECR_REGISTRY}/mysql-ruby-lambda mysql-ruby-lambda || die "Image build failure for ${ECR_REGISTRY}/mysql-ruby-lambda"
+docker build --pull \
+  -t ${ECR_REGISTRY}/mysql-ruby-lambda mysql-ruby-lambda \
+  || die "Image build failure for ${ECR_REGISTRY}/mysql-ruby-lambda"
 
 # aws ecr create-repository --repository-name mysql-ruby-lambda
-docker push ${ECR_REGISTRY}/mysql-ruby-lambda || die "Image push failure for mysql-ruby-lambda"
+docker push ${ECR_REGISTRY}/mysql-ruby-lambda \
+  || die "Image push failure for mysql-ruby-lambda"
 
 # build common image for admintool and colladmin
-docker build --build-arg ECR_REGISTRY=${ECR_REGISTRY} -t ${ECR_REGISTRY}/uc3-mrt-admin-common src-common || die "Image build failure for ${ECR_REGISTRY}/uc3-mrt-admin-common"
+docker build --pull \
+  --build-arg ECR_REGISTRY=${ECR_REGISTRY} \
+  -t ${ECR_REGISTRY}/uc3-mrt-admin-common src-common \
+  || die "Image build failure for ${ECR_REGISTRY}/uc3-mrt-admin-common"
 
 # aws ecr create-repository --repository-name uc3-mrt-admin-common
-docker push ${ECR_REGISTRY}/uc3-mrt-admin-common || die "Image push failure for ${ECR_REGISTRY}/uc3-mrt-admin-common"
+docker push ${ECR_REGISTRY}/uc3-mrt-admin-common \
+  || die "Image push failure for ${ECR_REGISTRY}/uc3-mrt-admin-common"
 
 COMMITDATE=`date "+local: %Y-%m-%dT%H:%M:%S%z"`
 # the build runs faster if the build tag does not change
@@ -45,7 +53,7 @@ COMMITDATE=devserver
 DOCKTAG="local: ${DEPLOY_ENV}"
 
 # build the admin tool
-docker build \
+docker build --pull \
   --build-arg ECR_REGISTRY=${ECR_REGISTRY} \
   --build-arg COMMITDATE="${COMMITDATE}" \
   --build-arg DOCKTAG="${DOCKTAG}" \
