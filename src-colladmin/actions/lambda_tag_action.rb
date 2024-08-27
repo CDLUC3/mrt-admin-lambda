@@ -5,10 +5,6 @@ require 'aws-sdk-lambda'
 
 # Collection Admin Task class - see config/actions.yml for description
 class LambdaTagAction < AdminAction
-  def initialize(config, action, path, myparams)
-    super
-  end
-
   def get_title
     'Lambda Tag Action'
   end

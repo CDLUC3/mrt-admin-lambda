@@ -166,32 +166,30 @@ class Ec2Info
       end
     end
 
-    if test
-      @service_tag[@subservice] = @buildtag unless @service_tag.key?(@subservice)
-      if @servicestate != 'OK'
-        @status = 'FAIL'
-      elsif @buildtag != @service_tag[@subservice]
-        @status = 'FAIL'
-      elsif @buildtag !~ /^\d+\.\d+\.\d+$/
-        @status = 'WARN'
-      else 
-        @status = 'PASS'
-      end
+    return unless test
+
+    @service_tag[@subservice] = @buildtag unless @service_tag.key?(@subservice)
+    if @servicestate != 'OK' || @buildtag != @service_tag[@subservice]
+      @status = 'FAIL'
+    elsif @buildtag !~ /^\d+\.\d+\.\d+$/
+      @status = 'WARN'
+    else
+      @status = 'PASS'
     end
   end
 
   def evaluate_service_state(data)
     if data.key?(REPSRV)
-      @servicestate = data[REPSRV].fetch(REPSTAT, '').gsub(/running/, 'OK')
+      @servicestate = data[REPSRV].fetch(REPSTAT, '').gsub('running', 'OK')
       @starttime = data[REPSRV].fetch(REPSTART, '')
     elsif data.key?(AUDSRV)
-      @servicestate = data[AUDSRV].fetch(AUDSTAT, '').gsub(/running/, 'OK')
+      @servicestate = data[AUDSRV].fetch(AUDSTAT, '').gsub('running', 'OK')
       @starttime = data[AUDSRV].fetch(AUDSTART, '')
     elsif data.key?(INVSRV)
-      @servicestate = data[INVSRV].fetch(INVSTAT, '').gsub(/running/, 'OK')
+      @servicestate = data[INVSRV].fetch(INVSTAT, '').gsub('running', 'OK')
       @starttime = data[INVSRV].fetch(INVSTART, '')
     elsif data.key?(INGSRV)
-      @servicestate = data[INGSRV].fetch(INGSTAT, '').gsub(/thawed/, 'OK')
+      @servicestate = data[INGSRV].fetch(INGSTAT, '').gsub('thawed', 'OK')
       @starttime = data[INGSRV].fetch(INGSTART, '')
     elsif data.key?(STOSRV)
       fc = data[STOSRV].fetch(STOSTAT, '')
@@ -334,7 +332,7 @@ class TagAction < AdminAction
   def get_alternative_queries
     []
   end
-  
+
   def init_status
     :PASS
   end

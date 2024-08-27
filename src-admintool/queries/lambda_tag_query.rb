@@ -9,12 +9,12 @@ class LambdaTagQuery < AdminQuery
   def get_sql
     ver = ENV.fetch('DOCKTAG', 'na')
     stat = ver =~ /^\d+\.\d+\.\d+$/ ? 'PASS' : 'WARN'
-    %{
+    %(
       select
         '#{ver}' version,
         '#{stat}' status
       ;
-    }
+    )
   end
 
   def get_headers(_results)
