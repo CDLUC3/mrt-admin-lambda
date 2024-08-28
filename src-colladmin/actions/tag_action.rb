@@ -24,6 +24,8 @@ class Ec2Info
   UISTART = 'start_time'
   UITAG = 'version'
 
+  @@service_tag = {}
+
   # See https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/EC2/Client.html#describe_instances-instance_method
   def initialize(config, inst)
     @config = config
@@ -41,7 +43,6 @@ class Ec2Info
     @starttime = ''
     @servicestate = ''
     @status = 'SKIP'
-    @service_tag = {}
   end
 
   attr_reader :name
@@ -131,10 +132,14 @@ class Ec2Info
   def urldata(url)
     return '' if url.empty?
 
-    resp = @httpclient.get(url)
-    return resp.status unless resp.status == 200
+    begin
+      resp = @httpclient.get(url)
+      return resp.status unless resp.status == 200
 
-    resp.body
+      resp.body
+    rescue StandardError => e
+      return e.to_s 
+    end
   end
 
   def urlinfo
@@ -168,8 +173,8 @@ class Ec2Info
 
     return unless test
 
-    @service_tag[@subservice] = @buildtag unless @service_tag.key?(@subservice)
-    if @servicestate != 'OK' || @buildtag != @service_tag[@subservice]
+    @@service_tag[@subservice] = @buildtag unless @@service_tag.key?(@subservice)
+    if @servicestate != 'OK' || @buildtag != @@service_tag[@subservice]
       @status = 'FAIL'
     elsif @buildtag !~ /^\d+\.\d+\.\d+$/
       @status = 'WARN'
