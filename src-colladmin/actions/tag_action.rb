@@ -138,7 +138,7 @@ class Ec2Info
 
       resp.body
     rescue StandardError => e
-      return e.to_s 
+      e.to_s
     end
   end
 
