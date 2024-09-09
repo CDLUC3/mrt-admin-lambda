@@ -146,7 +146,11 @@ class Ec2Info
     test = false
     if urls.key?('build-info')
       test = true
-      @buildtag = urldata(urls['build-info']).gsub('Building tag', '').gsub(/;.*$/, '').strip
+      @buildtag = urldata(urls['build-info'])
+        .to_s.gsub(/build_tag:\s+/, '')
+        .to_s.gsub(/Building tag\s+/, '')
+        .gsub(/;.*$/, '')
+        .strip
     end
 
     if urls.key?('state')
