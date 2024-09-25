@@ -20,7 +20,8 @@ class IngestCollectionLocksAction < ForwardToIngestAction
     ql.jobs.each do |qe|
       if ZookeeperListAction.migration_m1?
         next if qe.profile.empty?
-        next unless MerrittZK::Locks.check_lock_collection(@zk, qe.profile)
+        # next unless MerrittZK::Locks.check_lock_collection(@zk, qe.profile)
+        next if qe.qstatus != 'Held' 
       elsif qe.qstatus != 'Held'
         next
       end
