@@ -372,11 +372,12 @@ class Collection
     @dbdescription = row[8]
     @aggregate_role = row[9].nil? ? '' : row[9]
     @primary_node = ''
+    @sec_count = row[10]
     super()
   end
 
   attr_reader :id, :ark, :pread, :pwrite, :pdownload, :tier, :harvest, :dbdescription, :mnemonic, :aggregate_role,
-    :primary_node
+    :primary_node, :sec_count
 
   def set_primary_node(n)
     @primary_node = n
@@ -406,7 +407,8 @@ class Collections < MerrittQuery
                 c.storage_tier,
                 c.harvest_privilege,
                 ifnull(c.name, concat('** ', o.erc_what)) as name,
-                o.aggregate_role
+                o.aggregate_role,
+                (select count(*) from inv_collections_inv_nodes icin where icin.inv_collection_id=c.id) as sec_count
               from
                 inv_collections c
               left join inv_objects o
@@ -456,7 +458,8 @@ class Collections < MerrittQuery
         harvest: c.harvest,
         aggregate_role: c.aggregate_role,
         primary_node: c.primary_node,
-        node_status: c.primary_node.to_s.empty? ? 'FAIL' : 'PASS'
+        node_status: c.primary_node.to_s.empty? ? 'FAIL' : 'PASS',
+        sec_count: c.sec_count
       })
     end
     arr
