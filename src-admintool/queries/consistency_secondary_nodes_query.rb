@@ -9,19 +9,11 @@ class ConsistencySecondaryNodeQuery < AdminQuery
   def get_sql
     %{
       select
+        c.id as collid,
         c.name as collection,
-        count(icin.inv_node_id) as ncount,
-        group_concat(number order by number) as nodes,
+        ifnull(icin.ncount, 0) ncount,
+        ifnull(icin.nodes, '') nodes,
         case
-          when (
-            select
-              aggregate_role
-            from
-              inv.inv_objects o
-            where
-              o.id = c.inv_object_id
-          ) = 'MRT-service-level-agreement'
-            then 'INFO'
           when c.name like 'Merritt %' then 'INFO'
           when lower(c.name) like '%service level agreement%' then 'INFO'
           when c.name like '%SLA' then 'INFO'
@@ -29,35 +21,50 @@ class ConsistencySecondaryNodeQuery < AdminQuery
           else 'FAIL'
         end as status
       from
-        inv.inv_collections_inv_nodes icin
-      inner join
         inv.inv_collections c
+      left join (
+        select
+          icin.inv_collection_id,
+          count(*) as ncount,
+          ifnull(group_concat(n.number order by number), '') nodes
+        from
+          inv.inv_collections_inv_nodes icin
+        inner join 
+          inv.inv_nodes n
+        on
+          icin.inv_node_id = n.id
+        group by
+          icin.inv_collection_id
+      ) icin
       on
         c.id = icin.inv_collection_id
-      inner join
-        inv.inv_objects o
-      on
-        c.inv_object_id = o.id
-      and
-        o.aggregate_role = 'MRT-collection'
-      inner join
-        inv.inv_nodes n
-      on
-        n.id = icin.inv_node_id
+      where not exists (
+        select 
+          1 
+        from 
+          inv.inv_objects o
+        where
+          c.inv_object_id = o.id
+        and
+          o.aggregate_role = 'MRT-service-level-agreement'          
+      )
       group by
+        collid,
         collection
       having
         nodes not in ('2001,6001', '2001,9501', '2002,6001', '2002,9502')
+      order by
+        ncount desc, c.name
       ;
     }
   end
 
   def get_headers(_results)
-    ['Collection', 'Sec Node Count', 'Sec Node List', 'Status']
+    ['CollId', 'Collection', 'Sec Node Count', 'Sec Node List', 'Status']
   end
 
   def get_types(_results)
-    %w[name dataint name status]
+    %w[coll name dataint name status]
   end
 
   def init_status
