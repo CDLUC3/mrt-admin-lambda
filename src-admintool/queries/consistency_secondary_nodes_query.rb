@@ -18,6 +18,7 @@ class ConsistencySecondaryNodeQuery < AdminQuery
           when lower(c.name) like '%service level agreement%' then 'INFO'
           when c.name like '%SLA' then 'INFO'
           when c.name like 'CDL Wasabi Demo Collection' then 'INFO'
+          when (select 1 where not exists (select 1 from inv.inv_collections_inv_objects icio where icio.inv_collection_id = c.id)) then 'WARN'
           else 'FAIL'
         end as status
       from
@@ -46,7 +47,7 @@ class ConsistencySecondaryNodeQuery < AdminQuery
         where
           c.inv_object_id = o.id
         and
-          o.aggregate_role = 'MRT-service-level-agreement'          
+          o.aggregate_role = 'MRT-service-level-agreement'
       )
       group by
         collid,
