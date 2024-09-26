@@ -244,6 +244,8 @@ class LambdaBase
         isBase64Encoded: true,
         body: Base64.strict_encode64(File.binread(qpath))
       }
+    elsif ctype =~ /txt/
+      ctype = 'text/plain'
     end
 
     body = File.read(qpath)

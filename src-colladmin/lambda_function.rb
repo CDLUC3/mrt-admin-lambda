@@ -324,6 +324,8 @@ module LambdaFunctions
         map['ACTIONS'] = get_actions_list
       when '/web/storeQueues.html'
         map['AUDIT_INFO'] = AuditInfo.new(@config).data
+      when '/web/zkdump.html'
+        map['report_dump'] = ZookeeperDumpAction.new(@config, {}, 'zkdump', myparams).data
       end
       map
     end

@@ -2,6 +2,7 @@
 
 require_relative 'action'
 require_relative '../lib/queue'
+require 'stringio'
 require 'zk'
 require 'merritt_zk'
 
@@ -97,6 +98,51 @@ class ZookeeperAction < AdminAction
     log(e.message)
     log(e.backtrace)
     { error: "#{e.message} for #{@path}: #{@qpath}" }.to_json
+  end
+end
+
+class ZookeeperDumpAction < ZookeeperAction
+  def initialize(config, action, path, myparams)
+    @zkpath = myparams.fetch('zkpath', '/')
+    super
+  end
+
+  def data
+    @buf = StringIO.new
+    @buf << "Node State as of #{Time.now}:\n"
+    dump_node(@zkpath)
+    @buf.rewind
+    @buf.read
+  end
+
+  def report_node(n)
+    @buf << "#{n}:"
+    if n !~ %r[^/(access|batch-uuids|batches|jobs|locks|migration)(/|$)]
+      @buf << " Legacy\n"
+    else
+      @buf << "\n"
+      d = @zk.get(n)[0]
+      return if d.nil?
+      return if d.empty?
+      begin
+        j = JSON.parse(d.encode("UTF-8"), symbolize_names: true)
+        @buf << JSON.pretty_generate(j)
+      rescue StandardError
+        @buf << "  #{d}"
+      end
+      @buf << "\n"
+    end
+  end
+
+  def dump_node(n = '/')
+    return unless @zk.exists?(n)
+    report_node(n)
+    arr = @zk.children(n)
+    return if arr.empty?
+    arr.sort.each do |cp|
+      p = "#{n}/#{cp}".gsub(/\/+/, '/')
+      dump_node(p)
+    end
   end
 end
 
@@ -406,10 +452,16 @@ class IterateQueueAction < ZookeeperAction
     elsif ZookeeperListAction.migration_m1?
       ql = QueueList.new(@zk, { deletable: true })
       ql.batches.each_key do |bid|
+        puts "Eval Deleting Batch #{bid}"
         batch = MerrittZK::Batch.find_batch_by_uuid(@zk, bid)
+        if batch.nil?
+          puts "Batch #{bid} not found while performing delete"
+          next
+        end
         batch.load(@zk)
         next unless batch.status.deletable?
 
+        puts "Deleting Batch #{bid}"
         batch.delete(@zk)
       end
     else
