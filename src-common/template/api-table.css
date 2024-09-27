@@ -355,13 +355,24 @@ div.admin-tool td.collqitems a {
 }
 
 li.action a.disabled,
-td.qdelete a.disabled, 
-td.requeue a.disabled, 
-td.hold a.disabled, 
-td.release a.disabled, 
-td.colllock a.disabled, 
-td.colllockzk a.disabled, 
-td.collqitems a.disabled {
+td.qdelete a.disabled,
+td.requeue a.disabled,
+td.hold a.disabled,
+td.release a.disabled,
+td.colllock a.disabled,
+td.colllockzk a.disabled,
+td.collqitems a.disabled,
+td.qdelete-mrtzk a.disabled,
+td.requeue-mrtzk a.disabled,
+td.hold-mrtzk a.disabled,
+td.release-mrtzk a.disabled,
+td.colllock-mrtzk a.disabled,
+td.collqitems-mrtzk a.disabled,
+td.requeue-legacy a.disabled,
+td.hold-legacy a.disabled,
+td.release-legacy a.disabled,
+td.colllock-legacy a.disabled,
+td.collqitems-legacy a.disabled {
   border: thin solid gray;
   color: gray;
 }

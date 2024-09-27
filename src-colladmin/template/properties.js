@@ -2,6 +2,12 @@ $(document).ready(function(){
   init();
 });
 
+function prop_alert(msg) {
+  $("#alertmsg").text(msg).dialog({
+    show: { effect: "blind", duration: 800 }
+  });
+}
+
 function init() {
 $(".set_mnemonic").on("click", function(){
   do_action({
@@ -56,12 +62,12 @@ $.ajax({
   data: formdata,
   success: function(data) {
     if ('message' in data) {
-      alert(data.message);
+      prop_alert(data.message);
     }
     window.location.reload();
   },
   error: function( xhr, status ) {
-    alert(xhr.responseText);
+    prop_alert(xhr.responseText);
   }
 });
 }

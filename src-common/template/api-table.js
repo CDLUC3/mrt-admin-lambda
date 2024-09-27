@@ -2,6 +2,13 @@ var iterativeParams = [];
 var urlbase = "";
 var pageparams = {};
 
+function api_alert(msg) {
+  $("#alertmsg").text(msg).dialog({
+    show: { effect: "blind", duration: 800 }
+  });
+}
+
+
 $(document).ready(function(){
   $("#bytes").on("change", function(){updateBytesUnits();});
   $("p.buttons")
@@ -131,7 +138,7 @@ function showUrl(url) {
       }
     },
     error: function( xhr, status ) {
-      alert("An error has occurred.  Possibly a timeout.\n"+xhr.responseText)
+      api_alert("An error has occurred.  Possibly a timeout.\n"+xhr.responseText)
       $("#in-progress").dialog("close");
     }
   });
@@ -325,7 +332,7 @@ function query_iterate(show_iterative_total, types, data){
         )
       },
       error: function( xhr, status ) {
-        alert("An error has occurred.  Possibly a timeout.\n"+xhr.responseText)
+        api_alert("An error has occurred.  Possibly a timeout.\n"+xhr.responseText)
         $("#in-progress").dialog("close");
       }
     });
@@ -845,8 +852,8 @@ function format(cell, v, type, merritt_path) {
 }
 
 function cognitoUserAdmin(u,g) {
-  alert(u);
-  alert(g);
+  api_alert(u);
+  api_alert(g);
 }
 
 function ajax_invoke(p) {
@@ -857,7 +864,7 @@ function ajax_invoke(p) {
     url: decodeURIComponent(p),
     success: function(data) {
       if ('message' in data) {
-        alert(data.message);
+        api_alert(data.message);
       }
       if ('redirect_location' in data) {
         window.location = data['redirect_location'];
@@ -866,7 +873,7 @@ function ajax_invoke(p) {
       }
     },
     error: function( xhr, status ) {
-      alert(xhr.responseText);
+      api_alert(xhr.responseText);
     }
   });
 }

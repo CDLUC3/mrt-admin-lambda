@@ -82,3 +82,7 @@ span.bp_title {
 a.submenu {
         margin-left: 20px;
 }
+
+#alertmsg {
+        display: none;
+}

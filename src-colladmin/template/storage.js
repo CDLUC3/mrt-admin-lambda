@@ -10,6 +10,12 @@ function getMaintIdList() {
   return maintidlist.join(',');
 }
 
+function store_alert(msg) {
+  $("#alertmsg").text(msg).dialog({
+    show: { effect: "blind", duration: 800 }
+  });
+}
+
 function init() {
   $("p.buttons").show();
   $("button.storage-del-object-from-node").on("click", function(){
@@ -166,7 +172,7 @@ function init() {
   });
   $("button.storage-delete-obj").on("click", function(){
     var reason = confirm("Please provide a reason for the delete?");
-    alert("This function is not yet implemented.");
+    store_alert("This function is not yet implemented.");
   });
   $("button.storage-review-csv").on("click", function(){
     $("div.page-actions button").attr("disabled", true);
@@ -176,7 +182,7 @@ function init() {
       nodenum: nodenum
     }
     invoke(params, false, false);
-    alert('CSV will be generated on S3 for Node ' + nodenum + ".\nThis may take a moment.\nA maximum of 1M records will be exported.");    
+    store_alert('CSV will be generated on S3 for Node ' + nodenum + ".\nThis may take a moment.\nA maximum of 1M records will be exported.");    
   });
 
   $("button.storage-apply-csv").on("click", function(){
@@ -419,7 +425,7 @@ async function apply_csv_changes(nodenum) {
       await apply_changes(nodenum, changes);
     }
   }
-  alert(total_changes + " changes submitted.\n\nReload page to review changes.");
+  store_alert(total_changes + " changes submitted.\n\nReload page to review changes.");
 }
 
 function showPrompt(message, params) {
@@ -464,12 +470,12 @@ function invoke(params, showRes, reload) {
         } else if (data.message == "Scan Allowed: false") {
           scanEnabled(false);
         } else if (showRes) {
-          alert(data.message);
+          store_alert(data.message);
         }
       } else if ('log' in data) {
         console.log(data.log);
       } else if (showRes) {
-        alert(JSON.stringify(data));
+        store_alert(JSON.stringify(data));
       }
       if ('redirect_location' in data) {
         window.location = data['redirect_location'];
@@ -486,7 +492,7 @@ function invoke(params, showRes, reload) {
       }
     },
     error: function( xhr, status ) {
-      alert(xhr.responseText);
+      store_alert(xhr.responseText);
     }
   });
 }
@@ -502,7 +508,7 @@ function invoke_xml(params, download_name) {
       var xmlDoc = parser.parseFromString(data, "text/xml");
       var root = xmlDoc.documentElement;
       if (root.tagName == "message") {
-        alert(root.textContent);
+        store_alert(root.textContent);
         return;
       }
       var blob = new Blob([data]);
@@ -515,7 +521,7 @@ function invoke_xml(params, download_name) {
       window.URL.revokeObjectURL(a.href);
     },
     error: function( xhr, status ) {
-      alert(xhr.responseText);
+      store_alert(xhr.responseText);
     }
   });
 }
@@ -537,7 +543,7 @@ function invoke_text(params, download_name) {
       window.URL.revokeObjectURL(a.href);
     },
     error: function( xhr, status ) {
-      alert(xhr.responseText);
+      store_alert(xhr.responseText);
     }
   });
 }
