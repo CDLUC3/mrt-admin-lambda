@@ -42,7 +42,7 @@ class QueueEntry < QueueJson
     # insert binary time field
     add_property(
       :date,
-      MerrittJsonProperty.new('Date').lookup_time_value(json, '', :date)
+      MerrittJsonProperty.new('Date').lookup_time_value(json, '', :submissionDate)
     )
     add_property(
       :user,

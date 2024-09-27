@@ -5,6 +5,7 @@ $(document).ready(function(){
 function init() {
     $(this).attr("disabled", true);
     $("input.submit-admin").on("click", function(){
+        $(this).attr("disabled", true);
         data = {
             path: "submit-profile",
             title: $(this).attr("data-title"),

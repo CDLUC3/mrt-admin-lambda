@@ -120,15 +120,18 @@ class ZookeeperDumpAction < ZookeeperAction
     if n !~ %r[^/(access|batch-uuids|batches|jobs|locks|migration)(/|$)]
       @buf << " Legacy\n"
     else
-      @buf << "\n"
       d = @zk.get(n)[0]
-      return if d.nil?
-      return if d.empty?
-      begin
-        j = JSON.parse(d.encode("UTF-8"), symbolize_names: true)
-        @buf << JSON.pretty_generate(j)
-      rescue StandardError
-        @buf << "  #{d}"
+      if d.nil?
+        # no action
+      elsif d.empty?
+        # no action
+      else
+        begin
+          j = JSON.parse(d.encode("UTF-8"), symbolize_names: true)
+          @buf << JSON.pretty_generate(j)
+        rescue StandardError
+          @buf << " #{d}"
+        end
       end
       @buf << "\n"
     end
@@ -175,15 +178,17 @@ class ZkRequeueM1Action < ZkM1Action
       js = job.json_property(@zk, MerrittZK::ZkKeys::STATUS)
       laststat = js.fetch(:last_successful_status, '')
       case laststat
-      when 'Estimating', '', nil
+      when 'Pending', '', nil
         job.set_status(@zk, MerrittZK::JobState::Estimating)
-      when 'Downloading'
+      when 'Estimating'
+        job.set_status(@zk, MerrittZK::JobState::Provisioning)
+      when 'Provisioning'
         job.set_status(@zk, MerrittZK::JobState::Downloading)
-      when 'Processing'
+      when 'Downloading'
         job.set_status(@zk, MerrittZK::JobState::Processing)
-      when 'Recording'
+      when 'Processing'
         job.set_status(@zk, MerrittZK::JobState::Recording)
-      when 'Notify'
+      when 'Recording'
         job.set_status(@zk, MerrittZK::JobState::Notify)
       end
       { message: "Job #{job.id} requeued to status #{job.status_name}" }.to_json
