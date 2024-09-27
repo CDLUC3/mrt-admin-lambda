@@ -554,6 +554,10 @@ con_secondary:
   description: |
     Report on collections with non-standard secondary node configurations.
     Current standard configurations for secondary nodes include Glacier and Wasabi, or SDSC and Wasabi.
+    - PASS: has standard secondary nodes
+    - INFO: known exception (Wasabi test collection, SLA collections)
+    - WARN: collection is empty
+    - FAIL: collection has content and is not being replicated to a standard set of nodes
 con_files:
   link-title: Files By Replication Copy Count
   breadcrumb: bp_replic
