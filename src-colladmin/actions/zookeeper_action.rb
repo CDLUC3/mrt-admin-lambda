@@ -104,6 +104,7 @@ end
 class ZookeeperDumpAction < ZookeeperAction
   def initialize(config, action, path, myparams)
     @zkpath = myparams.fetch('zkpath', '/')
+    @mode = myparams.fetch('mode', 'data')
     super
   end
 
@@ -115,30 +116,70 @@ class ZookeeperDumpAction < ZookeeperAction
     @buf.read
   end
 
+  def standard_node(n)
+    n =~ %r[^/(access|batch-uuids|batches|jobs|locks|migration)(/|$)]
+  end
+
+  def system_node(n)
+    n =~ %r[^/zookeeper(/|$)]
+  end
+
+  def show_data(n)
+    d = get_data(n)
+    df = d.is_a?(Hash) ? "\n#{JSON.pretty_generate(d)}" : " #{d}"
+    @buf << df
+  end
+
+  def get_data(n)
+    d = @zk.get(n)[0]
+    return '' if d.nil?
+    begin
+      return JSON.parse(d.encode("UTF-8"), symbolize_names: true)
+    rescue StandardError
+      return d
+    end
+  end
+
+  def test_node(n)
+    if !@zk.exists?(n)
+      @buf << "\n  #{n} should exist"
+    end  
+  end
+
+  def show_test(n)
+    rx1 = %r[^/batches/bid[0-9]+/states/batch-.*/(jid[0-9]+)$]
+    rx2 = %r[^/jobs/(jid[0-9]+)$]
+    rx3 = %r[^/jobs/(jid[0-9]+)/bid$]
+
+    if n =~ %r[^/batch-uuids/(.*)]
+      d = get_data(n)
+      test_node("/batches/#{d}")
+    elsif n =~ %r[^/batches/bid[0-9]+/submission]
+      d = get_data(n).fetch(:batchID, 'na')
+      test_node("/batch-uuids/#{d}")
+    elsif n =~ rx1
+      d = rx1.match(n)[1]
+      test_node("/jobs/#{d}")
+    elsif n =~ rx2
+      d = rx2.match(n)[1]
+      test_node("/jobs/states/.*/[0-9][0-9]-#{d}")
+    end
+  end
+
   def report_node(n)
     @buf << "#{n}:"
-    if n !~ %r[^/(access|batch-uuids|batches|jobs|locks|migration)(/|$)]
-      @buf << " Legacy\n"
+    if standard_node(n)
+      show_data(n) if @mode == 'data'
+      show_test(n) if @mode == 'test'
     else
-      d = @zk.get(n)[0]
-      if d.nil?
-        # no action
-      elsif d.empty?
-        # no action
-      else
-        begin
-          j = JSON.parse(d.encode("UTF-8"), symbolize_names: true)
-          @buf << JSON.pretty_generate(j)
-        rescue StandardError
-          @buf << " #{d}"
-        end
-      end
-      @buf << "\n"
+      @buf << " Legacy\n"
     end
+    @buf << "\n"
   end
 
   def dump_node(n = '/')
     return unless @zk.exists?(n)
+    return if system_node(n)
     report_node(n)
     arr = @zk.children(n)
     return if arr.empty?
