@@ -141,15 +141,15 @@ class ZookeeperDumpAction < ZookeeperAction
   end
 
   def test_node(n)
-    if !@zk.exists?(n)
-      @buf << "\n  #{n} should exist"
-    end  
+    @buf << "\n  Test: #{n} should exist: "
+    @buf << (@zk.exists?(n) ? 'PASS' : 'FAIL')
   end
 
   def show_test(n)
     rx1 = %r[^/batches/bid[0-9]+/states/batch-.*/(jid[0-9]+)$]
-    rx2 = %r[^/jobs/(jid[0-9]+)$]
-    rx3 = %r[^/jobs/(jid[0-9]+)/bid$]
+    rx2 = %r[^/jobs/(jid[0-9]+)/bid$]
+    rx3 = %r[^/jobs/(jid[0-9]+)$]
+    rx4 = %r[^/jobs/states/[^/]*/[0-9][0-9]-(jid[0-9]+)$]
 
     if n =~ %r[^/batch-uuids/(.*)]
       d = get_data(n)
@@ -158,11 +158,33 @@ class ZookeeperDumpAction < ZookeeperAction
       d = get_data(n).fetch(:batchID, 'na')
       test_node("/batch-uuids/#{d}")
     elsif n =~ rx1
-      d = rx1.match(n)[1]
-      test_node("/jobs/#{d}")
+      jid = rx1.match(n)[1]
+      test_node("/jobs/#{jid}")
     elsif n =~ rx2
-      d = rx2.match(n)[1]
-      test_node("/jobs/states/.*/[0-9][0-9]-#{d}")
+      jid = rx2.match(n)[1]
+      bid = get_data(n)
+      test_node("/batches/#{bid}")
+      d = get_data("/jobs/#{jid}/status")
+      status = d.fetch(:status, 'na').downcase
+      if status == 'deleted'
+        bstatus = 'batch-deleted'
+      elsif status == 'completed'
+        bstatus = 'batch-completed'
+      elsif status == 'failed'
+        bstatus = 'batch-failed'
+      else
+        bstatus = 'batch-processing'
+      end
+      test_node("/batches/#{bid}/states/#{bstatus}/#{jid}")
+    elsif n =~ rx3
+      jid = rx3.match(n)[1]
+      d = get_data("#{n}/status")
+      status = d.fetch(:status, 'na').downcase
+      priority = get_data("#{n}/priority")
+      test_node("/jobs/states/#{status}/#{sprintf("%02d", priority)}-#{jid}")
+    elsif n =~ rx4
+      jid = rx4.match(n)[1]
+      test_node("/jobs/#{jid}")
     end
   end
 
