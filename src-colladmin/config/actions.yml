@@ -1288,3 +1288,18 @@ coll_lambda_tag:
     Check that the deployment tag conforms to semantic naming standards.
     While the lambda can temporarily be pushed to ECR from a DEV box, a proper deployment should
     be created on the build system and deployed with a semantic tag.
+system_state:
+  link-title: System State
+  class: SystemStateAction
+  category: reports
+  sensitivity: readonly
+  testing: automated
+  breadcrumb: bp_internals
+  description: |
+    Check the expiration date for LDAP server certs.  
+
+    This routine reads system state files that have been saved to S3.  Other state files can be added over time.
+
+    - More than 30 days: PASS
+    - 15-30 days: WARN
+    - Less than 15 days: FAIL
