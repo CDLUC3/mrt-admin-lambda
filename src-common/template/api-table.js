@@ -834,12 +834,19 @@ function format(cell, v, type, merritt_path) {
     makeLink(cell, 'Manage Coll Nodes', colladmin_root + "/web/storeCollNode.html?coll="+v);
   } else if (type == 'fprofile') {
     makeLink(cell, v, colladmin_home + "?path=queues&profile="+v);
+  } else if (type == 'fbatch') {
+    makeLink(cell, v, colladmin_home + "?path=queues&batch="+v);
   } else if (type == 'fstatus') {
     makeLink(cell, v, colladmin_home + "?path=queues&qstatus="+v);
   } else if (type == 'fprofilestatus') {
     arr = v.split(";");
     if (arr.length == 3) {
       makeLink(cell, arr[2], colladmin_home + "?path=queues&profile="+arr[0]+"&qstatus="+arr[1]);
+    }
+  } else if (type == 'fbatchstatus') {
+    arr = v.split(";");
+    if (arr.length == 3) {
+      makeLink(cell, arr[2], colladmin_home + "?path=queues&batch="+arr[0]+"&qstatus="+arr[1]);
     }
   } else if (type == 'link') {
     arr = v.split(";");
