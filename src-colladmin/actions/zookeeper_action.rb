@@ -425,6 +425,17 @@ class IngestQueueZookeeperAction < ZookeeperListAction
   end
 end
 
+class IngestBatchQueueZookeeperAction < ZookeeperListAction
+  def perform_action
+    batches = MerrittZK::Batch.list_batches_as_json(@zk)
+    batches.each do |po|
+      register_item(BatchQueueEntry.new(po))
+    end
+    convert_json_to_table('')
+  end
+end
+
+
 ## Lock collection action
 class CollLockZkAction < ZkM1Action
   def initialize(config, action, path, myparams)

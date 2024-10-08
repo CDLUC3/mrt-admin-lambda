@@ -10,7 +10,7 @@ ARG ECR_REGISTRY=ecr_registry_not_set
 
 FROM ${ECR_REGISTRY}/mysql-ruby-lambda 
 
-RUN yum -y update
+RUN yum -y update && yum clean all
 
 # Add Admin Tool Code to the image
 COPY . /var/task/

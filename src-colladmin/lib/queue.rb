@@ -140,6 +140,7 @@ class QueueEntry < QueueJson
         type = 'release-legacy' if sym == :release
       end
       type = 'container' if sym == :queue
+      type = 'zkjob' if sym == :queueId
       arr.append(type)
     end
     arr
@@ -200,6 +201,148 @@ class QueueEntry < QueueJson
   end
 end
 
+class BatchQueueEntry < QueueJson
+  @@placeholder = nil
+  def self.placeholder
+    @@placeholder = BatchQueueEntry.new({}) if @@placeholder.nil?
+    @@placeholder
+  end
+
+  def initialize(json)
+
+    super()
+
+    # until July 2023, Merritt had 3 separate queues identified as a queue node
+    add_property(
+      :bid,
+      MerrittJsonProperty.new('Batch').lookup_value(json, '', :batchID)
+    )
+    add_property(
+      :job,
+      MerrittJsonProperty.new('Job Count').lookup_value(json, '', :jobCount, 0)
+    )
+    add_property(
+      :profile,
+      MerrittJsonProperty.new('Profile').lookup_value(json, '', :profile, '')
+    )
+    # insert binary time field
+    add_property(
+      :date,
+      MerrittJsonProperty.new('Date').lookup_time_value(json, '', :submissionDate, MerrittJsonProperty.new('Date').lookup_value(json, '', :date).value)
+    )
+    add_property(
+      :user,
+      MerrittJsonProperty.new('User').lookup_value(json, '', :submitter)
+    )
+    add_property(
+      :title,
+      MerrittJsonProperty.new('Title').lookup_value(json, '', :title)
+    )
+    add_property(
+      :file_type,
+      MerrittJsonProperty.new('File Type').lookup_value(json, '', :type)
+    )
+    # insert status from binary field
+    add_property(
+      :qstatus,
+      MerrittJsonProperty.new('QStatus').lookup_value(json, '', :status)
+    )
+    add_property(
+      :queue,
+      MerrittJsonProperty.new('Name').lookup_value(json, '', :filename)
+    )
+    add_property(
+      :queueId,
+      MerrittJsonProperty.new('Queue ID').lookup_value(json, '', :id)
+    )
+
+    qs = get_value(:qstatus, '')
+    st = 'INFO'
+    st = 'FAIL' if qs == 'Failed'
+    st = 'PASS' if qs == 'Completed'
+    add_property(
+      :status,
+      MerrittJsonProperty.new('Status', st)
+    )
+
+    add_property(
+      :qdelete,
+      MerrittJsonProperty.new('Queue Del', 'TBD Delete Button')
+    )
+    add_property(
+      :requeue,
+      MerrittJsonProperty.new('Requeue', 'TBD Update Reporting Button')
+    )
+  end
+
+  def self.table_headers
+    BatchQueueEntry.placeholder.get_property_list.map do |sym|
+      BatchQueueEntry.placeholder.get_label(sym)
+    end
+  end
+
+  def self.table_types
+    arr = []
+    BatchQueueEntry.placeholder.get_property_list.each do |sym|
+      type = ''
+      type = 'fbatch' if sym == :bid
+      type = 'status' if sym == :status
+      type = 'datetime' if sym == :date
+      type = 'qdelete-batch-mrtzk' if sym == :qdelete
+      type = 'requeue-batch-mrtzk' if sym == :requeue
+      type = 'container' if sym == :queue
+      type = 'zkbatch' if sym == :queueId
+      arr.append(type)
+    end
+    arr
+  end
+
+  def to_table_row
+    arr = []
+    BatchQueueEntry.placeholder.get_property_list.each do |sym|
+      v = get_value(sym)
+      arr.append(v)
+    end
+    arr
+  end
+
+  def queue_id
+    get_value(:queueId)
+  end
+
+  def bid
+    get_value(:bid)
+  end
+
+  def profile
+    get_value(:profile)
+  end
+
+  def status
+    get_value(:status)
+  end
+
+  def qstatus
+    get_value(:qstatus)
+  end
+
+  def user
+    get_value(:user)
+  end
+
+  def title
+    get_value(:title)
+  end
+
+  def file_type
+    get_value(:file_type)
+  end
+
+  def date
+    get_value(:date)
+  end
+
+end
 # representation of a merritt ingest batch (a batch contains multiple jobs)
 class QueueBatch < MerrittJson
   def initialize(bid, submitter)

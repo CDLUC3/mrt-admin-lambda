@@ -12,10 +12,9 @@ FROM ${ECR_REGISTRY}/uc3-mrt-admin-common
 ARG COMMITDATE=''
 ARG DOCKTAG=''
 
-RUN yum -y update
-
-# Build rest-client gem from source
-RUN yum -y install gcc-c++ && yum -y groupinstall "Development Tools"
+RUN yum -y update && \
+    yum -y install gcc-c++ && yum -y groupinstall "Development Tools" && \
+    yum clean all
 
 # Add Admin Tool Code to the image
 COPY . /var/task/

@@ -103,3 +103,45 @@ class IngestQueueAction < IngestQueueZookeeperAction
     100
   end
 end
+
+class BatchIngestQueueAction < IngestBatchQueueZookeeperAction
+  def initialize(config, action, path, myparams)
+    super
+    @batches = {}
+  end
+
+  def get_title
+    'List Ingest Batches'
+  end
+
+  def table_headers
+    BatchQueueEntry.table_headers
+  end
+
+  def table_types
+    BatchQueueEntry.table_types
+  end
+
+  def has_table
+    true
+  end
+
+  def init_status
+    :PASS 
+  end
+
+  def get_alternative_queries
+    arr = [
+      {
+        label: 'Ingest Queue Counts by Profile and Batch',
+        url: "#{LambdaBase.colladmin_url}?path=ingest-queue-by-profile-batch",
+        class: 'graph'
+      },
+    ]
+    arr
+  end
+
+  def page_size
+    100
+  end
+end

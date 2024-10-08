@@ -100,6 +100,7 @@ class AccQueueEntry < QueueJson
         type = 'qdelete-legacy' if sym == :qdelete
         type = 'requeue-legacy' if sym == :requeue
       end
+      type = 'zkacc' if sym == :queueId
       arr.append(type)
     end
     arr

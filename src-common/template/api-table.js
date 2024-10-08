@@ -853,6 +853,14 @@ function format(cell, v, type, merritt_path) {
     if (arr.length == 2) {
       makeLink(cell, arr[0], arr[1]);
     }
+  } else if (type == 'zkbatch') {
+    makeLink(cell, v, colladmin_root + "/web/zkdump.html?zkpath=/batches/" + v);
+  } else if (type == 'zkjob') {
+    makeLink(cell, v, colladmin_root + "/web/zkdump.html?zkpath=/jobs/" + v);
+  } else if (type == 'zkacc') {
+    makeLink(cell, v, colladmin_root + "/web/zkdump.html?zkpath=/access/small/" + v);
+  } else if (type == 'zkacclg') {
+    makeLink(cell, v, colladmin_root + "/web/zkdump.html?zkpath=/access/large/" + v);
   } else {
     cell.text(v);
   }
