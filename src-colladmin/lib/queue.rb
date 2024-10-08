@@ -267,11 +267,11 @@ class BatchQueueEntry < QueueJson
 
     add_property(
       :qdelete,
-      MerrittJsonProperty.new('Queue Del', 'TBD Delete Button')
+      MerrittJsonProperty.new('Queue Del', get_del_batch_path)
     )
     add_property(
       :requeue,
-      MerrittJsonProperty.new('Requeue', 'TBD Update Reporting Button')
+      MerrittJsonProperty.new('Update Reporting', get_update_batch_path)
     )
   end
 
@@ -289,7 +289,7 @@ class BatchQueueEntry < QueueJson
       type = 'status' if sym == :status
       type = 'datetime' if sym == :date
       type = 'qdelete-batch-mrtzk' if sym == :qdelete
-      type = 'requeue-batch-mrtzk' if sym == :requeue
+      type = 'update-batch-mrtzk' if sym == :requeue
       type = 'container' if sym == :queue
       type = 'zkbatch' if sym == :queueId
       arr.append(type)

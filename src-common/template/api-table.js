@@ -782,6 +782,12 @@ function format(cell, v, type, merritt_path) {
   } else if (type == 'qdelete-mrtzk'  && v != '') {
     p = colladmin_root + "/lambda?path=queue-delete-mrtzk&queue-path="+v;
     makeLink(cell, 'Delete', "javascript:ajax_invoke('"+encodeURIComponent(p)+"')").addClass("ajax");
+  } else if (type == 'qdelete-batch-mrtzk'  && v != '') {
+    p = colladmin_root + "/lambda?path=queue-delete-batch-mrtzk&queue-path="+v;
+    makeLink(cell, 'Batch Delete', "javascript:ajax_invoke('"+encodeURIComponent(p)+"')").addClass("ajax");
+  } else if (type == 'update-batch-mrtzk'  && v != '') {
+    p = colladmin_root + "/lambda?path=queue-update-batch-mrtzk&queue-path="+v;
+    makeLink(cell, 'Update Reporting', "javascript:ajax_invoke('"+encodeURIComponent(p)+"')").addClass("ajax");
   } else if (type == 'qdelete-legacy'  && v != '') {
     p = colladmin_root + "/lambda?path=queue-delete-legacy&queue-path="+v;
     makeLink(cell, 'Delete', "javascript:ajax_invoke('"+encodeURIComponent(p)+"')").addClass("ajax");

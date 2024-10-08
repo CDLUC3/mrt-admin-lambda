@@ -1029,6 +1029,32 @@ queue-delete-mrtzk:
   documentation: |
     Zk: tbd
   migration: m1
+queue-delete-batch-mrtzk:
+  link-title: Remove an item from a Zookeeper queue
+  class: ZkDeleteBatchAction
+  category: Queue Management
+  sensitivity: irreversible change
+  testing: manual
+  description: |
+    Remove an item from a Zookeeper queue.
+  report-datatypes:
+  - qdelete
+  documentation: |
+    Zk: tbd
+  migration: m1
+queue-update-batch-mrtzk:
+  link-title: Update a batch from a Zookeeper queue
+  class: ZkUpdateReportingBatchAction
+  category: Queue Management
+  sensitivity: irreversible change
+  testing: manual
+  description: |
+    Remove an item from a Zookeeper queue.
+  report-datatypes:
+  - qdelete
+  documentation: |
+    Zk: tbd
+  migration: m1
 queue-delete-legacy:
   link-title: Remove an item from a Zookeeper queue
   class: ZkDeleteLegacyAction

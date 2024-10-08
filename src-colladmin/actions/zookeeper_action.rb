@@ -288,6 +288,24 @@ class ZkDeleteM1Action < ZkM1Action
   end
 end
 
+class ZkDeleteBatchAction < ZkM1Action
+  def perform_action
+    b = MerrittZK::Batch.new(get_id)
+    b.load(@zk)
+    b.set_status(@zk, MerrittZK::BatchState::Deleted)
+    { message: "Batch #{b.id} deleted" }.to_json
+  end
+end
+
+class ZkUpdateReportingBatchAction < ZkM1Action
+  def perform_action
+    b = MerrittZK::Batch.new(get_id)
+    b.load(@zk)
+    b.set_status(@zk, MerrittZK::BatchState::UpdateReporting)
+    { message: "Batch #{b.id} set to UpdateReporting" }.to_json
+  end
+end
+
 ## Queue manipulation action using new mrt-zk
 class ZkHoldM1Action < ZkM1Action
   def perform_action

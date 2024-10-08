@@ -23,6 +23,20 @@ class QueueJson < MerrittJson
     path
   end
 
+  def get_del_batch_path
+    st = get_value(:qstatus, '')
+    return '' unless %w[Failed Held].include?(st)
+
+    path
+  end
+
+  def get_update_batch_path
+    st = get_value(:qstatus, '')
+    return '' unless %w[Failed].include?(st)
+
+    path
+  end
+
   def get_acc_del_queue_path
     st = get_value(:qstatus, '').to_s
     return '' unless %w[Failed Completed].include?(st)
