@@ -373,8 +373,6 @@
       <h3>Ingest Activity</h3>
       <ul>
         <li class="report"><a href="{{COLLADMIN_HOME}}?path=state">Ingest Service State Request</a></li>
-        <li class="action"><a href="{{COLLADMIN_HOME}}?path=submissions/pause&reload_path=state">Pause Submissions Legacy</a></li>
-        <li class="action"><a href="{{COLLADMIN_HOME}}?path=submissions/unpause&reload_path=state">Unpause Submissions Legacy</a></li>
         <li class="action"><a href="{{COLLADMIN_HOME}}?path=ing-lock">Pause Submissions ZK</a></li>
         <li class="action"><a href="{{COLLADMIN_HOME}}?path=ing-unlock">Unpause Submissions ZK</a></li>
         <li class="graph"><a href="{{COLLADMIN_HOME}}?path=ingest-queue-by-profile">Ingest Queues - Counts by Profile</a></li>
@@ -456,13 +454,6 @@
       <h2>Inventory Service</h2>
     </div>
 
-    <div class="nav_section nav_inventory nav_inventory_activity nav_manage_queues">
-      <h3>Inventory Activity</h3>
-      <ul>
-        <li class="job"><a href="{{COLLADMIN_HOME}}?path=inv-queues">Inventory Queues</a></li>
-      </ul>
-    </div>
-
     <div class="nav_section nav_storage">
       <h2>Storage Service</h2>
     </div>
@@ -501,14 +492,12 @@
       <ul>
         <li class="graph"><a href="{{COLLADMIN_HOME}}?path=ingest-queue-by-profile">Ingest Queues - Counts by Profile</a></li>
         <li class="job"><a href="{{COLLADMIN_HOME}}?path=queues">Ingest Queues</a></li>
-        <li class="job"><a href="{{COLLADMIN_HOME}}?path=inv-queues">Inventory Queues</a></li>
         <li class="job"><a href="{{COLLADMIN_HOME}}?path=acc-queues">Access Queues</a></li>
       </ul>
 
       <h3>Cleanup Merritt Queues</h3>
       <ul>
         <li class="action"><a href="{{COLLADMIN_HOME}}?path=cleanup-queue&queue=queues&reload_path=queues">Cleanup Ingest Queues</a></li>
-        <li class="action"><a href="{{COLLADMIN_HOME}}?path=cleanup-queue&queue=queues-inv&reload_path=inv-queues">Cleanup Inventory Queues</a></li>
         <li class="action"><a href="{{COLLADMIN_HOME}}?path=cleanup-queue&queue=queues-acc&reload_path=acc-queues">Cleanup Access Queues</a></li>
       </ul>
 
