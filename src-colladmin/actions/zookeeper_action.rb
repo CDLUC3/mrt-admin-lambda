@@ -105,6 +105,7 @@ class ZookeeperDumpAction < ZookeeperAction
   def initialize(config, action, path, myparams)
     @zkpath = myparams.fetch('zkpath', '/')
     @mode = myparams.fetch('mode', 'data')
+    @full = false
     super
   end
 
@@ -199,7 +200,18 @@ class ZookeeperDumpAction < ZookeeperAction
     @buf << "\n"
   end
 
+  def check_full
+    return true if @full
+    # Lambda payload limit. May need to save output to S3.
+    if @buf.size > 250_000
+      @buf << "... (truncated at 256K)"
+      @full = true
+    end
+    return @full
+  end
+
   def dump_node(n = '/')
+    return if check_full
     return unless @zk.exists?(n)
     return if system_node(n)
     report_node(n)
