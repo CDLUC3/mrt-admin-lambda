@@ -73,6 +73,7 @@ class IngestQueueProfileCountAction < IngestQueueZookeeperAction
   end
 end
 
+# Collection Admin Task class - see config/actions.yml for description
 class IngestQueueBatchProfileCountAction < IngestQueueZookeeperAction
   def initialize(config, action, path, myparams)
     super(config, action, path, myparams, {})

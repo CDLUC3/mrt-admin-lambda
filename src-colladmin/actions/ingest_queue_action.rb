@@ -104,6 +104,7 @@ class IngestQueueAction < IngestQueueZookeeperAction
   end
 end
 
+# Collection Admin Task class - see config/actions.yml for description
 class BatchIngestQueueAction < IngestBatchQueueZookeeperAction
   def initialize(config, action, path, myparams)
     super
@@ -127,18 +128,17 @@ class BatchIngestQueueAction < IngestBatchQueueZookeeperAction
   end
 
   def init_status
-    :PASS 
+    :PASS
   end
 
   def get_alternative_queries
-    arr = [
+    [
       {
         label: 'Ingest Queue Counts by Profile and Batch',
         url: "#{LambdaBase.colladmin_url}?path=ingest-queue-by-profile-batch",
         class: 'graph'
-      },
+      }
     ]
-    arr
   end
 
   def page_size

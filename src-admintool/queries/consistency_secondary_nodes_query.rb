@@ -18,7 +18,12 @@ class ConsistencySecondaryNodeQuery < AdminQuery
           when lower(c.name) like '%service level agreement%' then 'INFO'
           when c.name like '%SLA' then 'INFO'
           when c.name like 'CDL Wasabi Demo Collection' then 'INFO'
-          when (select 1 where not exists (select 1 from inv.inv_collections_inv_objects icio where icio.inv_collection_id = c.id)) then 'WARN'
+          when (
+            select 1 where not exists (
+              select 1 from inv.inv_collections_inv_objects icio
+              where icio.inv_collection_id = c.id
+            )
+          ) then 'WARN'
           else 'FAIL'
         end as status
       from
@@ -30,7 +35,7 @@ class ConsistencySecondaryNodeQuery < AdminQuery
           ifnull(group_concat(n.number order by number), '') nodes
         from
           inv.inv_collections_inv_nodes icin
-        inner join 
+        inner join
           inv.inv_nodes n
         on
           icin.inv_node_id = n.id
@@ -40,9 +45,9 @@ class ConsistencySecondaryNodeQuery < AdminQuery
       on
         c.id = icin.inv_collection_id
       where not exists (
-        select 
-          1 
-        from 
+        select
+          1
+        from
           inv.inv_objects o
         where
           c.inv_object_id = o.id

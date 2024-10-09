@@ -42,7 +42,8 @@ class QueueEntry < QueueJson
     # insert binary time field
     add_property(
       :date,
-      MerrittJsonProperty.new('Date').lookup_time_value(json, '', :submissionDate, MerrittJsonProperty.new('Date').lookup_value(json, '', :date).value)
+      MerrittJsonProperty.new('Date').lookup_time_value(json, '', :submissionDate,
+        MerrittJsonProperty.new('Date').lookup_value(json, '', :date).value)
     )
     add_property(
       :user,
@@ -201,6 +202,7 @@ class QueueEntry < QueueJson
   end
 end
 
+## Queue representation of Batch objects
 class BatchQueueEntry < QueueJson
   @@placeholder = nil
   def self.placeholder
@@ -209,7 +211,6 @@ class BatchQueueEntry < QueueJson
   end
 
   def initialize(json)
-
     super()
 
     # until July 2023, Merritt had 3 separate queues identified as a queue node
@@ -228,7 +229,8 @@ class BatchQueueEntry < QueueJson
     # insert binary time field
     add_property(
       :date,
-      MerrittJsonProperty.new('Date').lookup_time_value(json, '', :submissionDate, MerrittJsonProperty.new('Date').lookup_value(json, '', :date).value)
+      MerrittJsonProperty.new('Date').lookup_time_value(json, '', :submissionDate,
+        MerrittJsonProperty.new('Date').lookup_value(json, '', :date).value)
     )
     add_property(
       :user,
@@ -341,8 +343,8 @@ class BatchQueueEntry < QueueJson
   def date
     get_value(:date)
   end
-
 end
+
 # representation of a merritt ingest batch (a batch contains multiple jobs)
 class QueueBatch < MerrittJson
   def initialize(bid, submitter)

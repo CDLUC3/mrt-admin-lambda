@@ -32,7 +32,7 @@ class SystemStateAction < AdminAction
   end
 
   def table_types
-    ['name', 'time', 'data', 'status']
+    %w[name time data status]
   end
 
   def table_rows(_body)

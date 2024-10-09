@@ -101,6 +101,7 @@ class ZookeeperAction < AdminAction
   end
 end
 
+# Collection Admin Task class - see config/actions.yml for description
 class ZookeeperDumpAction < ZookeeperAction
   def initialize(config, action, path, myparams)
     @zkpath = myparams.fetch('zkpath', '/')
@@ -118,11 +119,11 @@ class ZookeeperDumpAction < ZookeeperAction
   end
 
   def standard_node(n)
-    n =~ %r[^/(access|batch-uuids|batches|jobs|locks|migration)(/|$)]
+    n =~ %r{^/(access|batch-uuids|batches|jobs|locks|migration)(/|$)}
   end
 
   def system_node(n)
-    n =~ %r[^/zookeeper(/|$)]
+    n =~ %r{^/zookeeper(/|$)}
   end
 
   def show_data(n)
@@ -134,10 +135,11 @@ class ZookeeperDumpAction < ZookeeperAction
   def get_data(n)
     d = @zk.get(n)[0]
     return '' if d.nil?
+
     begin
-      return JSON.parse(d.encode("UTF-8"), symbolize_names: true)
+      JSON.parse(d.encode('UTF-8'), symbolize_names: true)
     rescue StandardError
-      return d
+      d
     end
   end
 
@@ -147,43 +149,45 @@ class ZookeeperDumpAction < ZookeeperAction
   end
 
   def show_test(n)
-    rx1 = %r[^/batches/bid[0-9]+/states/batch-.*/(jid[0-9]+)$]
-    rx2 = %r[^/jobs/(jid[0-9]+)/bid$]
-    rx3 = %r[^/jobs/(jid[0-9]+)$]
-    rx4 = %r[^/jobs/states/[^/]*/[0-9][0-9]-(jid[0-9]+)$]
+    rx1 = %r{^/batches/bid[0-9]+/states/batch-.*/(jid[0-9]+)$}
+    rx2 = %r{^/jobs/(jid[0-9]+)/bid$}
+    rx3 = %r{^/jobs/(jid[0-9]+)$}
+    rx4 = %r{^/jobs/states/[^/]*/[0-9][0-9]-(jid[0-9]+)$}
 
-    if n =~ %r[^/batch-uuids/(.*)]
+    case n
+    when %r{^/batch-uuids/(.*)}
       d = get_data(n)
       test_node("/batches/#{d}")
-    elsif n =~ %r[^/batches/bid[0-9]+/submission]
+    when %r{^/batches/bid[0-9]+/submission}
       d = get_data(n).fetch(:batchID, 'na')
       test_node("/batch-uuids/#{d}")
-    elsif n =~ rx1
+    when rx1
       jid = rx1.match(n)[1]
       test_node("/jobs/#{jid}")
-    elsif n =~ rx2
+    when rx2
       jid = rx2.match(n)[1]
       bid = get_data(n)
       test_node("/batches/#{bid}")
       d = get_data("/jobs/#{jid}/status")
       status = d.fetch(:status, 'na').downcase
-      if status == 'deleted'
+      case status
+      when 'deleted'
         bstatus = 'batch-deleted'
-      elsif status == 'completed'
+      when 'completed'
         bstatus = 'batch-completed'
-      elsif status == 'failed'
+      when 'failed'
         bstatus = 'batch-failed'
       else
         bstatus = 'batch-processing'
       end
       test_node("/batches/#{bid}/states/#{bstatus}/#{jid}")
-    elsif n =~ rx3
+    when rx3
       jid = rx3.match(n)[1]
       d = get_data("#{n}/status")
       status = d.fetch(:status, 'na').downcase
       priority = get_data("#{n}/priority")
-      test_node("/jobs/states/#{status}/#{sprintf("%02d", priority)}-#{jid}")
-    elsif n =~ rx4
+      test_node("/jobs/states/#{status}/#{format('%02d', priority)}-#{jid}")
+    when rx4
       jid = rx4.match(n)[1]
       test_node("/jobs/#{jid}")
     end
@@ -202,23 +206,26 @@ class ZookeeperDumpAction < ZookeeperAction
 
   def check_full
     return true if @full
+
     # Lambda payload limit. May need to save output to S3.
     if @buf.size > 250_000
-      @buf << "... (truncated at 256K)"
+      @buf << '... (truncated at 256K)'
       @full = true
     end
-    return @full
+    @full
   end
 
   def dump_node(n = '/')
     return if check_full
     return unless @zk.exists?(n)
     return if system_node(n)
+
     report_node(n)
     arr = @zk.children(n)
     return if arr.empty?
+
     arr.sort.each do |cp|
-      p = "#{n}/#{cp}".gsub(/\/+/, '/')
+      p = "#{n}/#{cp}".gsub(%r{/+}, '/')
       dump_node(p)
     end
   end
@@ -288,6 +295,7 @@ class ZkDeleteM1Action < ZkM1Action
   end
 end
 
+## Queue manipulation action using new mrt-zk
 class ZkDeleteBatchAction < ZkM1Action
   def perform_action
     b = MerrittZK::Batch.new(get_id)
@@ -297,6 +305,7 @@ class ZkDeleteBatchAction < ZkM1Action
   end
 end
 
+## Queue manipulation action using new mrt-zk
 class ZkUpdateReportingBatchAction < ZkM1Action
   def perform_action
     b = MerrittZK::Batch.new(get_id)
@@ -443,6 +452,7 @@ class IngestQueueZookeeperAction < ZookeeperListAction
   end
 end
 
+## Class for reading the Merritt Batch Queue
 class IngestBatchQueueZookeeperAction < ZookeeperListAction
   def perform_action
     batches = MerrittZK::Batch.list_batches_as_json(@zk)
@@ -452,7 +462,6 @@ class IngestBatchQueueZookeeperAction < ZookeeperListAction
     convert_json_to_table('')
   end
 end
-
 
 ## Lock collection action
 class CollLockZkAction < ZkM1Action
