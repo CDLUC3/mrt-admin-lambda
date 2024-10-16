@@ -234,6 +234,8 @@ inventory:
       description: "Zookeeper name"
     queueService:
       description: "Zookeper service(s)"
+    queueTimeout:
+      description: "Zookeeper timeout in ms"
     lockName:
       description: "Zookeeper lock node name"
 ldap:
