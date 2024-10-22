@@ -201,8 +201,16 @@ class Ec2Info
       @servicestate = data[INGSRV].fetch(INGSTAT, '').gsub('thawed', 'OK')
       @starttime = data[INGSRV].fetch(INGSTART, '')
     elsif data.key?(STOSRV)
-      fc = data[STOSRV].fetch(STOSTAT, '')
-      @servicestate = fc.zero? ? 'OK' : fc
+      fc = data[STOSRV].fetch(STOSTAT, 0)
+      # retry once
+      temp = urldata(urls['state'])
+      begin
+        jtemp = JSON.parse(temp)
+        fc = jtemp[STOSRV].fetch(STOSTAT, 0)
+      rescue StandardError
+        @stateinfo = data
+      end
+      @servicestate = fc.zero? ? 'OK' : "#{fc} Node Fail"
     elsif data.key?(UISTART)
       @servicestate = 'OK'
       @starttime = data[UISTART]
