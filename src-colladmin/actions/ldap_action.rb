@@ -28,7 +28,7 @@ class LDAPAction < AdminAction
     return body unless has_table
 
     evaluate_status(table_types, get_table_rows)
-    {
+    report = {
       format: 'report',
       title: get_title_with_pagination,
       breadcrumb: get_breadcrumb,
@@ -45,7 +45,9 @@ class LDAPAction < AdminAction
       report_path: report_path,
       chart: nil,
       description: get_description
-    }.to_json
+    }
+    save_report(report_path, report) if is_saveable?
+    report.to_json
   end
 
   def get_table_rows
@@ -212,4 +214,9 @@ class LDAPActionCollmap < LDAPAction
   def init_status
     :PASS
   end
+
+  def report_name
+    'ldap_collmap'
+  end
+
 end
