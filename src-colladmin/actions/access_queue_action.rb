@@ -7,11 +7,7 @@ require_relative '../lib/acc_queue'
 class AccessQueueAction < ZookeeperListAction
   def perform_action
     jobs = []
-    if ZookeeperListAction.migration_m3?
-      jobs = MerrittZK::Access.list_jobs_as_json(@zk)
-    else
-      jobs = MerrittZK::LegacyAccessJob.list_jobs_as_json(@zk)
-    end
+    jobs = MerrittZK::Access.list_jobs_as_json(@zk)
     jobs.each do |po|
       register_item(AccQueueEntry.new(po))
     end

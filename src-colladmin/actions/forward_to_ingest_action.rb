@@ -11,7 +11,6 @@ class ForwardToIngestAction < AdminAction
     @endpoint = endpoint
 
     @zk = ZK.new(get_zookeeper_conn)
-    ZookeeperListAction.migration_level(@zk)
   end
 
   def get_zookeeper_conn

@@ -129,17 +129,10 @@ class QueueEntry < QueueJson
       type = 'qjob' if sym == :job
       type = 'status' if sym == :status
       type = 'datetime' if sym == :date
-      if ZookeeperListAction.migration_m1?
-        type = 'qdelete-mrtzk' if sym == :qdelete
-        type = 'requeue-mrtzk' if sym == :requeue
-        type = 'hold-mrtzk' if sym == :hold
-        type = 'release-mrtzk' if sym == :release
-      else
-        type = 'qdelete-legacy' if sym == :qdelete
-        type = 'requeue-legacy' if sym == :requeue
-        type = 'hold-legacy' if sym == :hold
-        type = 'release-legacy' if sym == :release
-      end
+      type = 'qdelete-mrtzk' if sym == :qdelete
+      type = 'requeue-mrtzk' if sym == :requeue
+      type = 'hold-mrtzk' if sym == :hold
+      type = 'release-mrtzk' if sym == :release
       type = 'container' if sym == :queue
       type = 'zkjob' if sym == :queueId
       arr.append(type)
@@ -198,7 +191,7 @@ class QueueEntry < QueueJson
   end
 
   def get_queue_node
-    ZookeeperListAction.migration_m1? ? '/jobs' : '/ingest'
+    '/jobs'
   end
 end
 
@@ -375,11 +368,7 @@ class QueueList < MerrittJson
     @filter = filter
 
     jobs = []
-    if ZookeeperListAction.migration_m1?
-      jobs = MerrittZK::Job.list_jobs_as_json(zk)
-    else
-      jobs = MerrittZK::LegacyIngestJob.list_jobs_as_json(zk)
-    end
+    jobs = MerrittZK::Job.list_jobs_as_json(zk)
     jobs.each do |j|
       job = QueueEntry.new(j)
       next if @filter.key?(:batch) && job.bid != @filter[:batch]
