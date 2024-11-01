@@ -366,8 +366,6 @@ class QueueList < MerrittJson
     @jobs = []
     @profiles = {}
     @filter = filter
-
-    jobs = []
     jobs = MerrittZK::Job.list_jobs_as_json(zk)
     jobs.each do |j|
       job = QueueEntry.new(j)

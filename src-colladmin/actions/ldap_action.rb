@@ -218,5 +218,4 @@ class LDAPActionCollmap < LDAPAction
   def report_name
     'ldap_collmap'
   end
-
 end

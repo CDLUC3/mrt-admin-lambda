@@ -6,7 +6,6 @@ require_relative '../lib/acc_queue'
 # Collection Admin Task class - see config/actions.yml for description
 class AccessQueueAction < ZookeeperListAction
   def perform_action
-    jobs = []
     jobs = MerrittZK::Access.list_jobs_as_json(@zk)
     jobs.each do |po|
       register_item(AccQueueEntry.new(po))

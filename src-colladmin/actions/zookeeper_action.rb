@@ -318,7 +318,6 @@ end
 ## Class for reading the Merritt Ingest Queue
 class IngestQueueZookeeperAction < ZookeeperListAction
   def perform_action
-    jobs = []
     jobs = MerrittZK::Job.list_jobs_as_json(@zk)
     jobs.each do |po|
       register_item(QueueEntry.new(po))
@@ -424,7 +423,7 @@ class IterateQueueAction < ZookeeperAction
   end
 end
 
-## Control Access Queue Hold/Release 
+## Control Access Queue Hold/Release
 class AccessLockAction < ZookeeperAction
   def initialize(config, action, path, myparams)
     super
@@ -438,7 +437,6 @@ class AccessLockAction < ZookeeperAction
   end
 
   def perform_action
-    lockpath = 'tbd'
     lockpath = largeq? ? MerrittZK::Locks::LOCKS_QUEUE_ACCESS_LARGE : MerrittZK::Locks::LOCKS_QUEUE_ACCESS_SMALL
     case @op
     when 'set'
