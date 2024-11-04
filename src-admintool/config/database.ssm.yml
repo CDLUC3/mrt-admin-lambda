@@ -11,6 +11,7 @@ default:
   merritt_path: "{!SSM: ingest/config/target !DEFAULT: https://merritt.cdlib.org}"
   s3-bucket: "{!SSM: admintool/s3-bucket}"
   s3-consistency-reports: "{!SSM: admintool/s3-consistency-reports}"
+  # This check will be deprecated when moving to the UC3 account.  The ALB/SSO now performs this function.
   cognito-groups-allowed: "{!SSM: admintool/cognito-groups-allowed !DEFAULT: NA}"
   context: "{!SSM: admintool/context !DEFAULT: NA}"
   uc3inv_home: "{!SSM: admintool/uc3inv_home !DEFAULT: ''}"

@@ -85,6 +85,8 @@ class LambdaBase
       "User #{@cognito_username} is not allowed to access this app.  Contact the Merritt Team."
   end
 
+  # Now permissions are enforced by the ALB/SSO
+  # This is a legacy implementation that allowed Merritt to manager specific user access
   def has_permission
     @cognito_groups.each do |group|
       @groups_allowed.split(',').each do |g|

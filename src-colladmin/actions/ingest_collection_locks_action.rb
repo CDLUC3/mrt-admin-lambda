@@ -18,13 +18,9 @@ class IngestCollectionLocksAction < ForwardToIngestAction
     @held_counts = {}
     ql = QueueList.new(@zk)
     ql.jobs.each do |qe|
-      if ZookeeperListAction.migration_m1?
-        next if qe.profile.empty?
-        # next unless MerrittZK::Locks.check_lock_collection(@zk, qe.profile)
-        next if qe.qstatus != 'Held'
-      elsif qe.qstatus != 'Held'
-        next
-      end
+      next if qe.profile.empty?
+      # next unless MerrittZK::Locks.check_lock_collection(@zk, qe.profile)
+      next if qe.qstatus != 'Held'
 
       @held_counts[qe.profile] = @held_counts.fetch(qe.profile, 0) + 1
     end
@@ -39,19 +35,11 @@ class IngestCollectionLocksAction < ForwardToIngestAction
   end
 
   def table_headers
-    if ZookeeperListAction.migration_m1?
-      ['Profile', 'CollId', 'Name', 'Locked', 'Locks ZK', 'Held Items', 'Release']
-    else
-      ['Profile', 'CollId', 'Name', 'Locked', 'Locks', 'Held Items', 'Release']
-    end
+    ['Profile', 'CollId', 'Name', 'Locked', 'Locks ZK', 'Held Items', 'Release']
   end
 
   def table_types
-    if ZookeeperListAction.migration_m1?
-      ['', 'colllist', '', '', 'colllockzk', 'dataint', 'collqitems-mrtzk']
-    else
-      ['', 'colllist', '', '', 'colllock', 'dataint', 'collqitems-legacy']
-    end
+    ['', 'colllist', '', '', 'colllockzk', 'dataint', 'collqitems-mrtzk']
   end
 
   def table_rows(_body)
@@ -91,13 +79,11 @@ class IngestCollectionLocksAction < ForwardToIngestAction
           locked: false,
           name: p.get_value(:profileDescription)
         }
-        pstat[:locked] = MerrittZK::Locks.check_lock_collection(@zk, profile) if ZookeeperListAction.migration_m1?
+        pstat[:locked] = MerrittZK::Locks.check_lock_collection(@zk, profile)
         names[profile] = pstat
       end
-      unless ZookeeperListAction.migration_m1?
-        IngestStateAction.new(@config, {}, 'state', {}).get_locked_collections.each do |k|
-          names.fetch(k, {})[:locked] = true
-        end
+      IngestStateAction.new(@config, {}, 'state', {}).get_locked_collections.each do |k|
+        names.fetch(k, {})[:locked] = true
       end
     rescue StandardError => e
       log(e.message)

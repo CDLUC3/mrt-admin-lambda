@@ -122,9 +122,6 @@ cloud:
         Wasabi credential. This should be rotated periodically. 
         Rotation is coordinated through the Wasabi admin interface.
         See https://github.com/CDLUC3/mrt-doc-private/blob/main/docs/system-recovery/cloud-credential-rotate.md
-cognito-users:
-  lambda-arn-base: 
-    description: ARN to the Cognito User Management Lambda that runs outside the VPC, used by colladmin
 collad-ldap:
   host: 
     description: Hostname for the ldap server accessed from the Collection Admin Tool

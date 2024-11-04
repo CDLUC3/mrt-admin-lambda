@@ -66,16 +66,6 @@ jobs:
       with:
         ruby-version: '3.0'
         bundler-cache: true
-        working-directory: cognito-lambda-nonvpc
-
-    - name: 'Run Rubocop'
-      run: bundle exec rubocop
-      working-directory: cognito-lambda-nonvpc
-
-    - uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: '3.0'
-        bundler-cache: true
         working-directory: simulate-lambda-alb
 
     - name: 'Run Rubocop'

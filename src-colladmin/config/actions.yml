@@ -49,7 +49,6 @@ profiles:
   documentation: |
     Ingest: GET /admin/profiles-full
     Ingest: GET /admin/profile/{profile}
-  migration: m4
 collection-locks:
   link-title: List Merritt Collections and Collection Level Locks
   breadcrumb: bp_coll
@@ -68,7 +67,6 @@ collection-locks:
   documentation: |
     Ingest: GET /admin/profiles-full 
     Ingest: GET /admin/queues 
-  migration: m2
 adminprofiles:
   link-title: List Merritt Admin Profiles
   breadcrumb: bp_ingest
@@ -85,7 +83,6 @@ adminprofiles:
   documentation: |
     Ingest: GET /admin/profiles/admin
     Ingest: GET /admin/profiles/admin/{type}
-  migration: m4
 state:
   link-title: Ingest Service Status
   breadcrumb: bp_ingest
@@ -97,7 +94,6 @@ state:
     Display the state of the ingest service.
   documentation: |
     Ingest: GET /state
-  migration: m0
 queues:
   link-title: Ingest Queue Jobs
   breadcrumb: bp_ingest
@@ -115,7 +111,6 @@ queues:
   documentation: |
     Ingest: GET /admin/queues
     Ingest: GET /admin/queue/{node}
-  migration: m1
 batch-queues:
   link-title: Ingest Queue Jobs
   breadcrumb: bp_ingest
@@ -144,7 +139,6 @@ ingest-queue-by-profile:
   documentation: |
     Ingest: GET /admin/queues
     Ingest: GET /admin/queue/{node}
-  migration: m1
 ingest-queue-by-profile-batch:
   link-title: Ingest Queue Activity by Profile and Batch
   breadcrumb: bp_ingest
@@ -157,21 +151,6 @@ ingest-queue-by-profile-batch:
   documentation: |
     Ingest: GET /admin/queues
     Ingest: GET /admin/queue/{node}
-  migration: m1
-inv-queues:
-  link-title: Inventory Queue Jobs
-  breadcrumb: bp_inventory
-  class: InventoryQueueAction
-  category: Queue Management
-  sensitivity: readonly
-  testing: contextually automated
-  description: |
-    Display the contents of the *inventory queue*. Items in this queue are slated to be processed by the Ingest service.
-    From this screen, items can be requeued.
-  documentation: |
-    Ingest: GET /admin/queues-inv
-    Ingest: GET /admin/queue-inv/{node}
-  migration: m1
 acc-queues:
   link-title: Access Queue Jobs
   breadcrumb: bp_storage
@@ -188,7 +167,6 @@ acc-queues:
   documentation: |
     Ingest: GET /admin/queues-acc
     Ingest: GET /admin/queue-acc/{node}
-  migration: m1
 batchFolders:
   link-title: Ingest Batch Folders
   breadcrumb: bp_ingest
@@ -209,7 +187,6 @@ batchFolders:
     Ingest: GET /admin/bids/{days}
     Ingest: GET /admin/queues
     Ingest: GET /admin/queue/{node}
-  migration: m0
 batch:
   link-title: Ingest Batch
   breadcrumb: bp_ingest
@@ -225,7 +202,6 @@ batch:
   documentation: |
     Ingest: GET /admin/queues
     Ingest: GET /admin/queue/{node}
-  migration: m1
 job:
   link-title: Ingest Job
   breadcrumb: bp_ingest
@@ -237,7 +213,6 @@ job:
     Display details about a specific *job* within an ingest batch.
   documentation: |
     Ingest: GET /admin/jid-erc/{batch}/{job}
-  migration: m0
 manifest:
   link-title: Ingest Job Manifest Contents
   breadcrumb: bp_ingest
@@ -251,7 +226,6 @@ manifest:
   - manifest
   documentation: |
     Ingest: GET /admin/jid-manifest/{batch}/{job}
-  migration: m0
 files:
   link-title: Ingest Job Folder File List
   breadcrumb: bp_ingest
@@ -266,7 +240,6 @@ files:
     - system files will be retained
   documentation: |
     Ingest: GET /admin/jid-file/{batch}/{job}
-  migration: m0
 ldap/users:
   link-title: List Merritt LDAP Users
   breadcrumb: bp_users
@@ -278,7 +251,6 @@ ldap/users:
     Display the list of Merritt users defined in the Merritt LDAP database.
   documentation: |
     Ldap: Query
-  migration: m0
 ldap/user:
   link-title: List details for an Merritt LDAP User
   breadcrumb: bp_users
@@ -296,7 +268,6 @@ ldap/user:
     Ldap: Query
   test_params:
     uid: merritt_test
-  migration: m0
 ldap/roles:
   link-title: List Merritt LDAP Roles
   breadcrumb: bp_users
@@ -308,7 +279,6 @@ ldap/roles:
     Display the set of permission groups (roles) defined in the Merritt LDAP database.
   documentation: |
     Ldap: Query
-  migration: m0
 ldap/role:
   link-title: List details for an Merritt LDAP Role
   breadcrumb: bp_users
@@ -321,7 +291,6 @@ ldap/role:
     *This report does not seem to be linked in the application**.
   documentation: |
     Ldap: Query
-  migration: m0
 ldap/colls:
   link-title: List Merritt LDAP Collections
   breadcrumb: bp_users
@@ -334,7 +303,6 @@ ldap/colls:
     Oddly, the Merritt UI uses the Collection name defined in LDAP as the definitive display name for the collection.
   documentation: |
     Ldap: Query
-  migration: m0
 ldap/coll:
   link-title: List Details for an LDAP Collection
   breadcrumb: bp_users
@@ -350,7 +318,6 @@ ldap/coll:
   - ldapcoll
   documentation: |
     Ldap: Query
-  migration: m0
 ldap/collmap:
   link-title: Merritt LDAP / Inventory Database Mismatches
   breadcrumb: bp_users
@@ -363,7 +330,6 @@ ldap/collmap:
     For any items that do not match, an error will be reported in the report.  This indicates that maintenance needs to be performed on the LDAP entries for Merritt.
   documentation: |
     Ldap: Query
-  migration: m0
 ldap/collark:
   link-title: List LDAP Users for a specific collection ARK
   breadcrumb: bp_users
@@ -379,7 +345,6 @@ ldap/collark:
     Ldap: Query
   test_params:
     ark: ark:/13030/m5rn35s8
-  migration: m0
 instances:
   link-title: List and Describe Merritt EC2 Servers
   breadcrumb: bp_internals
@@ -402,7 +367,6 @@ instances:
   - instances
   documentation: |
     Aws: Tag Query
-  migration: m0
 uc3-instances:
   link-title: List and Describe UC3 EC2 Servers
   breadcrumb: bp_internals
@@ -416,7 +380,6 @@ uc3-instances:
   - instances
   documentation: |
     Aws: Tag Query
-  migration: m0
 ssm-describe:
   link-title: List and Describe Merritt SSM Variables
   breadcrumb: bp_internals
@@ -429,7 +392,6 @@ ssm-describe:
     These variables are compared against a [registry of expected SSM variables](https://github.com/CDLUC3/mrt-admin-lambda/blob/main/src-colladmin/config/ssm.registry.yml).
   documentation: |
     Aws: SSM Query
-  migration: m0
 opensearch-describe:
   link-title: List and Describe Merritt OpenSearch Fields
   breadcrumb: bp_internals
@@ -442,7 +404,6 @@ opensearch-describe:
     These variables are compared against a [TBD registry of expected OpenSearch fields](https://github.com/CDLUC3/mrt-admin-lambda/blob/main/src-colladmin/import/filebeat/opensearch.registry.yml).
   documentation: |
     Aws: OpenSearch Query
-  migration: m0
 storage-get-manifest:
   link-title: Get Storage Manifest for an Object from Cloud Storage
   class: StorageAction
@@ -457,7 +418,6 @@ storage-get-manifest:
     Download the XML *storage manifest* representation of a object on a specific storage node.  This request will be forwarded to the storage service.
   documentation: |
     Storage: GET /manifest/{nodenum}/{ark}
-  migration: m0
 storage-get-manifest-yaml:
   link-title: Get Storage Manifest for an Object from Cloud Storage as a Yaml file
   class: StorageAction
@@ -473,7 +433,6 @@ storage-get-manifest-yaml:
     Convert the downloaded xml file to a user-friendly yaml format.
   documentation: |
     Storage: GET /manifest/{nodenum}/{ark}
-  migration: m0
 storage-get-ingest-checkm:
   link-title: Generate Ingest Checkm Manifest Using Content from Cloud Storage
   class: StorageAction
@@ -489,23 +448,6 @@ storage-get-ingest-checkm:
     This file could be utilized to re-ingest an object under a new ark.
   documentation: |
     Storage: GET /ingestlink/{nodenum}/{ark}/{ver}?presign=true
-  migration: m0
-cognito-users:
-  link-title: List Merritt Admin Tools Users
-  breadcrumb: bp_users
-  class: CognitoAction
-  category: Cognito
-  sensitivity: readonly
-  testing: automated
-  description: |
-    Display the list of users who have authenticated to the Merritt Admin *Cognito User Pool*.
-    Users are not created explicitly in the admin tool. A user is created by (1)performing an SSO login or (2)registering as a non-SAML user.  
-    This screen contains buttons that could trigger the addition/removal of specific users from a *Cognito User Group*.
-
-    Note: While the tool supports non-SAML users, in practice, we have not authorized any non-SAML users.
-  documentation: |
-    Aws: Lambda Invoke (Lambda interface to Cognito enpoints)
-  migration: m0
 replication-state:
   link-title: Display the Status of the Replciation Microservice
   breadcrumb: bp_replic
@@ -519,7 +461,6 @@ replication-state:
     This function determines whether or not to enable the *Stop Storage Scan* and *Enable Storage Scan* buttons.
   documentation: |
     Replication: GET /state
-  migration: m0
 storage-review-csv:
   link-title: Generate and download a CSV of storage scan exceptions
   class: ReplicationAction
@@ -533,7 +474,6 @@ storage-review-csv:
     SQL: select inv_storage_maints
     Aws: S3 PUT 
     Aws: S3 presign
-  migration: m0
 ingest-locks:
   link-title: Display ingest storage locks on specific object arks
   breadcrumb: bp_internals
@@ -545,7 +485,6 @@ ingest-locks:
     Display the ingest storage locks existing for object arks.
   documentation: |
     Ingest: GET /admin/lock/mrt.lock
-  migration: m1
 
 # Operations that change system state - Reversible
 
@@ -562,7 +501,6 @@ submissions/pause:
     This is typically done before a patching cycle or a software release that impacts ingest or storage.
   documentation: |
     Ingest: POST /admin/submissions/freeze
-  migration: m2
 submissions/unpause:
   link-title: Unpause all ingest processing
   breadcrumb: bp_ingest
@@ -575,7 +513,6 @@ submissions/unpause:
     Unpause ingest processing.  Return the effective state of the ingest queues.
   documentation: |
     Ingest: POST /admin/submissions/thaw
-  migration: m2
 ing-lock:
   link-title: Pause all ingest processing
   breadcrumb: bp_ingest
@@ -588,7 +525,6 @@ ing-lock:
     This is typically done before a patching cycle or a software release that impacts ingest or storage.
   documentation: |
     ZK
-  migration: m2
 ing-unlock:
   link-title: Unpause all ingest processing
   breadcrumb: bp_ingest
@@ -600,7 +536,6 @@ ing-unlock:
     Unpause ingest processing.  Return the effective state of the ingest queues.
   documentation: |
     ZK
-  migration: m2
 unlock-coll:
   link-title: Unlock ingest for a collection
   class: CollQueueAction
@@ -614,7 +549,6 @@ unlock-coll:
   - colllock
   documentation: |
     Ingest: POST /admin/submission/thaw/{coll}
-  migration: m2
 lock-coll:
   link-title: Lock ingest for a collection
   class: CollQueueAction
@@ -628,7 +562,6 @@ lock-coll:
   - colllock
   documentation: |
     Ingest: POST /admin/submission/freeze/{coll}
-  migration: m2
 unlock-collzk:
   link-title: Unlock ingest for a collection
   class: CollUnlockZkAction
@@ -641,7 +574,6 @@ unlock-collzk:
   - colllock
   documentation: |
     ZK
-  migration: m2
 lock-collzk:
   link-title: Lock ingest for a collection
   class: CollLockZkAction
@@ -654,10 +586,9 @@ lock-collzk:
   - colllock
   documentation: |
     ZK
-  migration: m2
-release-coll-queue-items-m1:
+release-coll-queue-items:
   link-title: Release any held items for a collection
-  class: CollIterateQueueM1Action
+  class: CollIterateQueueAction
   category: Queue Management
   sensitivity: reversible change
   testing: automatable
@@ -667,20 +598,6 @@ release-coll-queue-items-m1:
   - collqitems
   documentation: |
     Ingest: POST /admin/release-all/queue/{coll}
-  migration: m1
-release-coll-queue-items-legacy:
-  link-title: Release any held items for a collection (legacy)
-  class: CollIterateQueueLegacyAction
-  category: Queue Management
-  sensitivity: reversible change
-  testing: automatable
-  description: |
-    Release any held items for a collection.
-  report-datatypes:
-  - collqitems
-  documentation: |
-    Ingest: POST /admin/release-all/queue/{coll}
-  migration: m1
 storage-force-audit-for-object:
   link-title: Trigger audit processing for all files in an object on a specific node
   class: StorageAction
@@ -691,7 +608,6 @@ storage-force-audit-for-object:
     Trigger audit processing for all files in an object on a specific node.
   documentation: |
     SQL: update inv_audits set verified
-  migration: m0
 storage-rerun-audit-for-object:
   link-title: Trigger audit processing for all unverified files in an object on a specific node
   class: StorageAction
@@ -703,7 +619,6 @@ storage-rerun-audit-for-object:
     This action is occasionally needed when the audit server is halted or experienced a networking issue on a previous audit.
   documentation: |
     SQL: update inv_audits set verified
-  migration: m0
 storage-force-replic-for-object:
   link-title: Re-trigger replication for an existing object
   class: StorageAction
@@ -715,7 +630,6 @@ storage-force-replic-for-object:
     This action is occasionally needed when the replic server is halted or experienced a networking issue on a previous replication.
   documentation: |
     SQL: update inv_nodes_inv_objects inio set replicated
-  migration: m0
 storage-clear-audit-batch:
   link-title: Release old audit batches
   class: StorageAction
@@ -728,7 +642,6 @@ storage-clear-audit-batch:
     This function clears all audit batches older than a specified amount of time.
   documentation: |
     SQL: UPDATE inv_audits SET status='unknown', verified=null
-  migration: m0
 storage-retry-audit-status:
   link-title: Trigger an audit retry for all audit records with a specific status
   class: StorageAction
@@ -739,7 +652,6 @@ storage-retry-audit-status:
     Trigger an audit retry for all audit records with a specific status.
   documentation: |
     SQL: UPDATE inv_audits SET status='unknown', verified=null
-  migration: m0
 storage-cancel-all-scans:
   link-title: Halt all storage scan processing by the replciation service
   class: ReplicationAction
@@ -750,7 +662,6 @@ storage-cancel-all-scans:
     Halt all storage scan processing by the replciation service.  This will give priority to content replication.
   documentation: |
     Replication: POST /scan/allow/false
-  migration: m0
 storage-allow-all-scans:
   link-title: Re-enable storage scan processing by the replciation service
   class: ReplicationAction
@@ -761,7 +672,6 @@ storage-allow-all-scans:
     Re-enable storage scan processing by the replciation service.  This can be run after halting/canceling all scans.
   documentation: |
     Replication: POST /scan/allow/true
-  migration: m0
 storage-cancel-scan-node:
   link-title:  Cancel storage scan processing on a specific storage node by the replication service
   class: ReplicationAction
@@ -772,7 +682,6 @@ storage-cancel-scan-node:
     Cancel storage scan processing *on a specific storage node* by the replication service.  
   documentation: |
     Replication: POST /scan/cancel/{scanid}
-  migration: m0
 storage-resume-scan-node:
   link-title:  Resume storage scan processing on a specific storage node by the replication service
   class: ReplicationAction
@@ -783,7 +692,6 @@ storage-resume-scan-node:
     Resume storage scan processing *on a specific storage node* by the replication service.  
   documentation: |
     Replication: POST /scan/restart/{scanid}
-  migration: m0
 storage-clear-scan-entries:
   link-title:  Clear storage scan entries for a specific ark
   class: StorageAction
@@ -795,7 +703,6 @@ storage-clear-scan-entries:
     This function is intended to be run after *rebuilding an inventory record* via the admin tool.  
   documentation: |
     SQL: DELETE FROM inv_storage_maints WHERE s3key like
-  migration: m0
 storage-scan-node:
   link-title: Initiate storage scan processing on a specific storage node by the replication service
   class: ReplicationAction
@@ -810,7 +717,6 @@ storage-scan-node:
     Instead, an inventory dump must be manually requested from SDSC and uploaded to S3 for comparison processing.
   documentation: |
     Replication: POST /scan/start/{nodeid}
-  migration: m0
 storage-delete-node-key:
   link-title: Mark a single scan result with a DELETE status
   class: ReplicationAction
@@ -821,7 +727,6 @@ storage-delete-node-key:
     Mark a single scan result with a *DELETE* status.  
   documentation: |
     SQL: UPDATE inv_storage_maints SET maint_status
-  migration: m0
 storage-delete-node-page:
   link-title: Mark a page of scan results with a DELETE status
   class: ReplicationAction
@@ -832,7 +737,6 @@ storage-delete-node-page:
     Mark a page of scan results with a *DELETE* status.  
   documentation: |
     SQL: UPDATE inv_storage_maints SET maint_status
-  migration: m0
 storage-hold-node-key:
   link-title: Mark a single scan result with a HOLD status
   class: ReplicationAction
@@ -843,7 +747,6 @@ storage-hold-node-key:
     Mark a single scan result with a *HOLD* status.  
   documentation: |
     SQL: UPDATE inv_storage_maints SET maint_status
-  migration: m0
 storage-hold-node-page:
   link-title: Mark a page of scan results with a HOLD status
   class: ReplicationAction
@@ -854,7 +757,6 @@ storage-hold-node-page:
     Mark a page of scan results with a *HOLD* status.  
   documentation: |
     SQL: UPDATE inv_storage_maints SET maint_status
-  migration: m0
 storage-review-node-key:
   link-title: Mark a single scan result with a REVIEW status
   class: ReplicationAction
@@ -865,7 +767,6 @@ storage-review-node-key:
     Mark a single scan result with a *REVIEW* status.  
   documentation: |
     SQL: UPDATE inv_storage_maints SET maint_status
-  migration: m0
 storage-review-node-page:
   link-title: Mark a page of scan results with a REVIEW status
   class: ReplicationAction
@@ -876,7 +777,6 @@ storage-review-node-page:
     Mark a page of scan results with a *REVIEW* status.  
   documentation: |
     SQL: UPDATE inv_storage_maints SET maint_status
-  migration: m0
 
 # Operations that change system state - Not reversible
 
@@ -892,7 +792,6 @@ submit-profile:
     This will trigger the creation of an object in the Merritt inventory database.
   documentation: |
     Ingest: POST /poster/update
-  migration: m0
 set_mnemonic:
   link-title:  Set the mnemonic field for a collection to match the value defined in the collection admin profile
   class: AdminProfileAction
@@ -905,7 +804,6 @@ set_mnemonic:
     This option must be manually run due to a legacy limitation of the collection creation process for Merritt.
   documentation: |
     SQL: update inv_collections set mnemonic
-  migration: m0
 set_coll_name:
   link-title:  Set the description field for a collection to match the value defined in the collection admin profile
   class: AdminProfileAction
@@ -917,7 +815,6 @@ set_coll_name:
     To apply future changes to this field, you must update the collection admin profile.
   documentation: |
     SQL: update inv_collections set name
-  migration: m0
 set_sla_name:
   link-title:  Set the description field for an SLA to match the value defined in the SLA admin profile
   class: AdminProfileAction
@@ -929,7 +826,6 @@ set_sla_name:
     To apply future changes to this field, you must update the SLA admin profile.
   documentation: |
     SQL: update inv_collections set name
-  migration: m0
 set_own_name:
   link-title: Set the description field for an Owner to match the value defined in the Owner admin profile
   class: AdminProfileAction
@@ -941,7 +837,6 @@ set_own_name:
     To apply future changes to this field, you must update the Owner admin profile.
   documentation: |
     SQL: update inv_owners set name=
-  migration: m0
 create_owner_record:
   link-title: Generate an owner record in the Merritt inventory database based on the submission of a dummy object using the Owner Admin profile
   class: AdminProfileAction
@@ -952,7 +847,6 @@ create_owner_record:
     Generate an owner record in the Merritt inventory database based on the submission of a dummy object using the Owner Admin profile.
   documentation: |
     SQL: insert into inv_owners(inv_object_id, ark) 
-  migration: m0
 create_coll_record:
   link-title: Generate an SLA record in the Merritt inventory database based on the submission of a dummy object using the SLA Admin profile
   class: AdminProfileAction
@@ -963,7 +857,6 @@ create_coll_record:
     Generate an SLA record in the Merritt inventory database based on the submission of a dummy object using the SLA Admin profile.
   documentation: |
     SQL: insert into inv_collections(inv_object_id, ark)
-  migration: m0
 createProfile/profile:
   link-title: Send a request to the ingest service to generate a new Ingest Profile
   class: PostToIngestMultipartAction
@@ -976,7 +869,6 @@ createProfile/profile:
     A new ARK will be minted as needed.
   documentation: |
     Ingest: POST /admin/profile/profile
-  migration: m5
 createProfile/collection:
   link-title: Send a request to the ingest service to generate a new Collection Admin Profile
   class: PostToIngestMultipartAction
@@ -989,7 +881,6 @@ createProfile/collection:
     A new ARK will be minted as needed.
   documentation: |
     Ingest: POST /admin/profile/collection
-  migration: m5
 createProfile/owner:
   link-title: Send a request to the ingest service to generate a new Owner Admin Profile
   class: PostToIngestMultipartAction
@@ -1002,7 +893,6 @@ createProfile/owner:
     A new ARK will be minted as needed.
   documentation: |
     Ingest: POST /admin/profile/owner
-  migration: m5
 createProfile/sla:
   link-title: Send a request to the ingest service to generate a new SLA Admin Profile
   class: PostToIngestMultipartAction
@@ -1015,10 +905,9 @@ createProfile/sla:
     A new ARK will be minted as needed.
   documentation: |
     Ingest: POST /admin/profile/sla
-  migration: m5
 queue-delete-mrtzk:
   link-title: Remove an item from a Zookeeper queue
-  class: ZkDeleteM1Action
+  class: ZkDeleteAction
   category: Queue Management
   sensitivity: irreversible change
   testing: manual
@@ -1028,7 +917,6 @@ queue-delete-mrtzk:
   - qdelete
   documentation: |
     Zk: tbd
-  migration: m1
 queue-delete-batch-mrtzk:
   link-title: Remove an item from a Zookeeper queue
   class: ZkDeleteBatchAction
@@ -1041,7 +929,6 @@ queue-delete-batch-mrtzk:
   - qdelete
   documentation: |
     Zk: tbd
-  migration: m1
 queue-update-batch-mrtzk:
   link-title: Update a batch from a Zookeeper queue
   class: ZkUpdateReportingBatchAction
@@ -1054,23 +941,9 @@ queue-update-batch-mrtzk:
   - qdelete
   documentation: |
     Zk: tbd
-  migration: m1
-queue-delete-legacy:
-  link-title: Remove an item from a Zookeeper queue
-  class: ZkDeleteLegacyAction
-  category: Queue Management
-  sensitivity: irreversible change
-  testing: manual
-  description: |
-    Remove an item from a Zookeeper queue.
-  report-datatypes:
-  - qdelete
-  documentation: |
-    Zk: tbd
-  migration: m1
 requeue-mrtzk:
   link-title: Re-queue an item from a Zookeeper queue
-  class: ZkRequeueM1Action
+  class: ZkRequeueAction
   category: Queue Management
   sensitivity: irreversible change
   testing: manual
@@ -1080,23 +953,9 @@ requeue-mrtzk:
   - requeue
   documentation: |
     ZK tbd
-  migration: m1
-requeue-legacy:
-  link-title: Re-queue an item from a Zookeeper queue
-  class: ZkRequeueLegacyAction
-  category: Queue Management
-  sensitivity: irreversible change
-  testing: manual
-  description: |
-    Re-queue an item from a Zookeeper queue.
-  report-datatypes:
-  - requeue
-  documentation: |
-    ZK tbd
-  migration: m1
 hold-queue-item-mrtzk:
   link-title: Move a pending item from in Zookeeper queue to a Held status
-  class: ZkHoldM1Action
+  class: ZkHoldAction
   category: Queue Management
   sensitivity: irreversible change
   testing: manual
@@ -1106,23 +965,9 @@ hold-queue-item-mrtzk:
   - hold
   documentation: |
     Zk: tbd
-  migration: m1
-hold-queue-item-legacy:
-  link-title: Move a pending item from in Zookeeper queue to a Held status
-  class: ZkHoldLegacyAction
-  category: Queue Management
-  sensitivity: irreversible change
-  testing: manual
-  description: |
-    Move a pending item from in Zookeeper queue to a Held status.
-  report-datatypes:
-  - hold
-  documentation: |
-    Zk: tbd
-  migration: m1
 release-queue-item-mrtzk:
   link-title: Release a held item from in Zookeeper queue to a Pending status
-  class: ZkReleaseM1Action
+  class: ZkReleaseAction
   category: Queue Management
   sensitivity: irreversible change
   testing: manual
@@ -1132,20 +977,6 @@ release-queue-item-mrtzk:
   - release
   documentation: |
     Zk: tbd
-  migration: m1
-release-queue-item-legacy:
-  link-title: Release a held item from in Zookeeper queue to a Pending status
-  class: ZkReleaseLegacyAction
-  category: Queue Management
-  sensitivity: irreversible change
-  testing: manual
-  description: |
-    Release a held item from in Zookeeper queue to a Pending status.
-  report-datatypes:
-  - release
-  documentation: |
-    Zk: tbd
-  migration: m1
 cleanup-queue:
   link-title: Cleanup Deleted and Completed items from a Zookeeper Queue
   class: IterateQueueAction
@@ -1158,7 +989,6 @@ cleanup-queue:
   - release
   documentation: |
     Ingest: POST /admin/cleanupq/{queue}
-  migration: m1
 apply-review-changes:
   link-title: Apply bulk changes to storage scan results by uploading a CSV containing a set of desired changes
   class: ReplicationAction
@@ -1169,36 +999,9 @@ apply-review-changes:
     Apply bulk changes to storage scan results by uploading a CSV containing a set of desired changes.
   documentation: |
     SQL: update inv_storage_maints set maint_status = ?, note = ?
-  migration: m0
 
 # Sensitive Operations
 
-cognito-remove-user-from-group:
-  link-title: Remove a Cognito User from a specific Cognito User Group
-  class: CognitoAction
-  category: Cognito
-  sensitivity: sensitive
-  testing: automatable
-  description: |
-    Remove a *Cognito User* from a specific *Cognito User Group*.
-  report-datatypes:
-  - cognito
-  documentation: |
-    Aws: invoke lambda
-  migration: m0
-cognito-add-user-to-group:
-  link-title: Add a Cognito User to a specific Cognito User Group
-  class: CognitoAction
-  category: Cognito
-  sensitivity: sensitive
-  testing: automatable
-  description: |
-    Add a *Cognito User* to a specific *Cognito User Group*.
-  report-datatypes:
-  - cognito
-  documentation: |
-    Aws: invoke lambda
-  migration: m0
 storage-rebuild-inventory:
   link-title: Rebuild inventory record from storage manifest
   class: StorageAction
@@ -1212,7 +1015,6 @@ storage-rebuild-inventory:
     Inventory: DELETE /object/{ark}
     Storage: GET /manifest/{nodenum}/{ark}
     Inventory: POST /add
-  migration: m0
 storage-add-node-for-collection:
   link-title: Add a secondary storage node to the configuration for a collection
   class: StorageAction
@@ -1224,7 +1026,6 @@ storage-add-node-for-collection:
   documentation: |
     SQL: INSERT INTO inv_collections_inv_nodes(inv_collection_id, inv_node_id)
     SQL: update inv_nodes_inv_objects inio set replicated = null
-  migration: m0
 storage-del-node-for-collection:
   link-title: Remove a storage node from a collection configuration
   class: StorageAction
@@ -1236,7 +1037,6 @@ storage-del-node-for-collection:
     All objects in the collection will need to be cleared from the storage node.
   documentation: |
     SQL: DELETE FROM inv_collections_inv_nodes WHERE inv_collection_id = ?
-  migration: m0
 access-lock-control:
   link-title: Storage set zookeeper flag
   class: AccessLockAction
@@ -1247,7 +1047,6 @@ access-lock-control:
     Change the state of a zookeeper flag (SET or CLEAR).
   documentation: |
     ZK: set boolean flag
-  migration: m3
 replic-delete-coll-batch-from-node:
   link-title: Delete a batch of objects from the collection from storage node
   class: ReplicationAction
@@ -1259,7 +1058,6 @@ replic-delete-coll-batch-from-node:
   documentation: |
     SQL: SELECT o.ark from inv_objects o
     Replication: DELETE /delete/{nodenum}/{ark}
-  migration: m0
 storage-del-object-from-node:
   link-title: Delete object from storage node
   implemented: false
@@ -1271,7 +1069,6 @@ storage-del-object-from-node:
     [Feature Design](https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-node-obj)
   documentation: |
     Not yet implemented
-  migration: m0
 storage-change-primary-for-collection:
   link-title: Change primary storage node for collection
   implemented: false
@@ -1283,7 +1080,6 @@ storage-change-primary-for-collection:
     [Feature Design](https://cdluc3.github.io/mrt-doc/diagrams/store-admin-change-primary-node)
   documentation: |
     Not yet implemented
-  migration: m0
 storage-perform-delete-node-key:
   link-title: Delete copy of a file from a storage node
   class: ReplicationAction
@@ -1294,7 +1090,6 @@ storage-perform-delete-node-key:
     Process the delete of a single storage scan record.
   documentation: |
     Replication: DELETE /scandelete/{maintid}
-  migration: m0
 storage-perform-delete-node-batch:
   link-title: Process all scan results marked with a DELETE status
   class: ReplicationAction
@@ -1305,7 +1100,6 @@ storage-perform-delete-node-batch:
     Process all scan results marked with a *DELETE* status.
   documentation: |
     Replication: DELETE /scandelete-list/{nodenum}
-  migration: m0
 storage-delete-obj:
   link-title: Trigger the deletion of a Merritt Object
   implemented: false
@@ -1318,7 +1112,6 @@ storage-delete-obj:
     [Feature Design](https://cdluc3.github.io/mrt-doc/diagrams/store-admin-del-obj)
   documentation: |
     Not yet implemented
-  migration: m0
 consistency-report-cleanup:
   link-title: Cleanup Old Consistency Reports
   class: ConsistencyReportCleanupAction
@@ -1331,7 +1124,6 @@ consistency-report-cleanup:
     A maximum of 5000 reports will be deleted in one invocation.
   documentation: |
     S3: DELETE consistency-reports/...
-  migration: m0
 coll_lambda_tag:
   link-title: Lambda Tag Check
   class: LambdaTagAction

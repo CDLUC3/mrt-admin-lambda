@@ -58,6 +58,10 @@ Layout/MultilineHashKeyLineBreaks:
 Layout/MultilineHashBraceLayout:
   EnforcedStyle: new_line
 
+Lint/UselessAssignment:
+  Exclude:
+  # use of endpoint variable
+  - 'actions/replication_action.rb'
 
 AllCops:
   NewCops: enable

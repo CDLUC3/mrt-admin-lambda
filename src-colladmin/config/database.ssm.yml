@@ -27,10 +27,10 @@ default:
   s3-bucket: "{!SSM: admintool/s3-bucket}"
   s3-consistency-reports: "{!SSM: admintool/s3-consistency-reports}"
   user-pool: "{!SSM: colladmin/user-pool !DEFAULT: NA}"
-  # Interface to Cognito API (via Lambda)
-  cognito-users-arn: "{!SSM: cognito-users/lambda-arn-base !DEFAULT: NA}"
+  # This check will be deprecated when moving to the UC3 account.  The ALB/SSO now supercedes this function.
   cognito-groups-to-manage: "{!SSM: colladmin/cognito-groups-to-manage !DEFAULT: NA}"
   # Value to be checked against Cognito token - passively provided by ALB
+  # This check will be deprecated when moving to the UC3 account.  The ALB/SSO now performs this function.
   cognito-groups-allowed: "{!SSM: colladmin/cognito-groups-allowed !DEFAULT: NA}"
   context: "{!SSM: admintool/context !DEFAULT: NA}"
   notes:
@@ -227,7 +227,6 @@ docker:
   s3-bucket: ""
   s3-consistency-reports: "consistency-reports"
   user-pool: "NA"
-  cognito-users-arn: "NA"
   cognito-groups-allowed: "NA"
   cognito-groups-to-manage: "NA"
   context: "NA"

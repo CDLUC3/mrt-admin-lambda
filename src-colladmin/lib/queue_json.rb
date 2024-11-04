@@ -14,11 +14,7 @@ class QueueJson < MerrittJson
 
   def get_del_queue_path_m1
     st = get_value(:qstatus, '')
-    if ZookeeperListAction.migration_m1?
-      return '' unless %w[Failed Held].include?(st)
-    else
-      return '' unless %w[Failed Completed Held].include?(st)
-    end
+    return '' unless %w[Failed Held].include?(st)
 
     path
   end

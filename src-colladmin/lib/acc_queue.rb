@@ -93,13 +93,8 @@ class AccQueueEntry < QueueJson
       type = 'name' if sym == :token
       type = 'bytes' if sym == :bytes
       type = 'datetime' if sym == :date
-      if ZookeeperListAction.migration_m3?
-        type = 'qdelete-mrtzk' if sym == :qdelete
-        type = 'requeue-mrtzk' if sym == :requeue
-      else
-        type = 'qdelete-legacy' if sym == :qdelete
-        type = 'requeue-legacy' if sym == :requeue
-      end
+      type = 'qdelete-mrtzk' if sym == :qdelete
+      type = 'requeue-mrtzk' if sym == :requeue
       type = 'zkacc' if sym == :queueId
       arr.append(type)
     end

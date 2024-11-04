@@ -323,24 +323,7 @@ td.collqitems-mrtzk a {
   border-radius: 5px;
   font-weight: bold;
   border: thin solid black;
-  background-color: pink;
-  text-decoration: none;
-  width: fit-content;
-  padding: 2px 6px;
-}
-
-td.qdelete-legacy a, 
-td.requeue-legacy a, 
-td.hold-legacy a, 
-td.release-legacy a, 
-td.colllock-legacy a, 
-td.collqitems-legacy a {
-  display: block;
-  text-align: center;
-  border-radius: 5px;
-  font-weight: bold;
-  border: thin solid black;
-  background-color: paleturquoise;
+  background-color: #EEEEEE;
   text-decoration: none;
   width: fit-content;
   padding: 2px 6px;
@@ -371,12 +354,7 @@ td.update-batch-mrtzk a.disabled,
 td.hold-mrtzk a.disabled,
 td.release-mrtzk a.disabled,
 td.colllock-mrtzk a.disabled,
-td.collqitems-mrtzk a.disabled,
-td.requeue-legacy a.disabled,
-td.hold-legacy a.disabled,
-td.release-legacy a.disabled,
-td.colllock-legacy a.disabled,
-td.collqitems-legacy a.disabled {
+td.collqitems-mrtzk a.disabled {
   border: thin solid gray;
   color: gray;
 }

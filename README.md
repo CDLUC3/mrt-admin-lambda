@@ -76,8 +76,6 @@ graph TD
   click COLLADMIN href "https://github.com/CDLUC3/mrt-admin-lambda" "source code"
   ADMINWEB[[Admin Tool - Browser]]
   click ADMINWEB href "https://github.com/CDLUC3/mrt-admin-lambda" "source code"
-  COGLAMB([Cognito API Lambda])
-  click COGLAMB href "https://github.com/CDLUC3/mrt-admin-lambda/cognito-lambda-nonvpc" "source code"
   WAF[Web application Firewall]
   COG[AWS Cognito User Auth]
   SAML[SAML Authentication]
@@ -147,8 +145,6 @@ The Lambda code is deployed to the Ruby 2.7 environment.  A build process is req
 - src-colladmin: Collection Admin Lambda source code
 - src-common: Code common to both Admin Tool and CollAdmin Tool
   - web: web resources served from the lambda
-- cognito-lambda-nonvpc: Wrapper around the Cognito API (used by Colladmin)
-  - Cognito API calls cannot be made directly from the VPC 
 
 ## Code Preparation
 
@@ -171,13 +167,11 @@ The following script should be run from a host that is authorized to
 ### Config Scripts
 - Admin Tool: [lambda-config.sh](lambda-config.sh)
 - Collection Admin Tool: [colladmin-lambda-config.sh](colladmin-lambda-config.sh)
-- Cognito User Management: [cognito-lambda-config.sh](colladmin-lambda-config.sh)
 
 
 ### Build and Deploy Scripts
 - Admin Tool: [lambda-deploy.sh](lambda-deploy.sh)
 - Collection Admin Tool: [colladmin-lambda-deploy.sh](colladmin-lambda-deploy.sh)
-- Cognito User Management: [cognito-lambda-deploy.sh](colladmin-lambda-deploy.sh)
 
 This will build a docker image, push it to ECR, and update lambda to use the new image.
 
@@ -189,7 +183,6 @@ This script **requires aws cli V2** in order to deploy a docker image to lambda.
 ### Cross-account ECR Deploy Scripts
 - Admin Tool: [lambda-tagdeploy.sh](lambda-tagdeploy.sh)
 - Collection Admin Tool: [colladmin-lambda-dtagdeployeploy.sh](colladmin-lambda-tagdeploy.sh)
-- Cognito User Management: [cognito-lambda-tagdeploy.sh](colladmin-lambda-tagdeploy.sh)
 
 
 ## Automated Testing
