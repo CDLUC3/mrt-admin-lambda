@@ -196,8 +196,6 @@ ingest:
       description: Priority threshold for processing in the high priority queue
     PollingIntervalHighPriority:
       description: Polling frequency for the high priority queue
-    numThreadsHighPriority:
-      description: Number of high priority threads to run
     mail-contact:
       description: Notification contact information (From:)
     mail-replyto:
