@@ -448,21 +448,6 @@ storage-get-ingest-checkm:
     This file could be utilized to re-ingest an object under a new ark.
   documentation: |
     Storage: GET /ingestlink/{nodenum}/{ark}/{ver}?presign=true
-cognito-users:
-  link-title: List Merritt Admin Tools Users
-  breadcrumb: bp_users
-  class: CognitoAction
-  category: Cognito
-  sensitivity: readonly
-  testing: automated
-  description: |
-    Display the list of users who have authenticated to the Merritt Admin *Cognito User Pool*.
-    Users are not created explicitly in the admin tool. A user is created by (1)performing an SSO login or (2)registering as a non-SAML user.  
-    This screen contains buttons that could trigger the addition/removal of specific users from a *Cognito User Group*.
-
-    Note: While the tool supports non-SAML users, in practice, we have not authorized any non-SAML users.
-  documentation: |
-    Aws: Lambda Invoke (Lambda interface to Cognito enpoints)
 replication-state:
   link-title: Display the Status of the Replciation Microservice
   breadcrumb: bp_replic
@@ -1017,30 +1002,6 @@ apply-review-changes:
 
 # Sensitive Operations
 
-cognito-remove-user-from-group:
-  link-title: Remove a Cognito User from a specific Cognito User Group
-  class: CognitoAction
-  category: Cognito
-  sensitivity: sensitive
-  testing: automatable
-  description: |
-    Remove a *Cognito User* from a specific *Cognito User Group*.
-  report-datatypes:
-  - cognito
-  documentation: |
-    Aws: invoke lambda
-cognito-add-user-to-group:
-  link-title: Add a Cognito User to a specific Cognito User Group
-  class: CognitoAction
-  category: Cognito
-  sensitivity: sensitive
-  testing: automatable
-  description: |
-    Add a *Cognito User* to a specific *Cognito User Group*.
-  report-datatypes:
-  - cognito
-  documentation: |
-    Aws: invoke lambda
 storage-rebuild-inventory:
   link-title: Rebuild inventory record from storage manifest
   class: StorageAction
