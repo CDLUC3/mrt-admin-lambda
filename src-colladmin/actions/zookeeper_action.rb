@@ -165,8 +165,9 @@ class ZookeeperDumpAction < ZookeeperAction
         bstatus = 'batch-processing'
       end
       test_node("/batches/#{bid}/states/#{bstatus}/#{jid}")
-      %w[batch-deleted batch-completed batch-failed batch-processing].each do  |ts|
+      %w[batch-deleted batch-completed batch-failed batch-processing].each do |ts|
         next if ts == bstatus
+
         test_not_node("/batches/#{bid}/states/#{ts}/#{jid}")
       end
     when rx3

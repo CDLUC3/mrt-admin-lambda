@@ -65,6 +65,7 @@ class ProducerFilesQuery < S3AdminQuery
   end
 end
 
+# Query class - see config/reports.yml for description
 class UCSCObjectsQuery < S3AdminQuery
   def initialize(query_factory, path, myparams)
     super
@@ -86,7 +87,11 @@ class UCSCObjectsQuery < S3AdminQuery
         os.file_count,
         os.billable_size,
         concat('http://n2t.net/', o.ark) as permalink,
-        (select group_concat(distinct f.mime_type) from inv.inv_files f where inv_object_id=o.id and source='producer') as mimetypes
+        (
+          select group_concat(distinct f.mime_type)
+          from inv.inv_files f
+          where inv_object_id=o.id and source='producer'
+        ) as mimetypes
       from
         inv.inv_objects o
       inner join billing.object_size os
