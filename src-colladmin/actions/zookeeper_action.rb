@@ -128,6 +128,10 @@ class ZookeeperDumpAction < ZookeeperAction
     @buf << (@zk.exists?(n) ? 'PASS' : 'FAIL')
   end
 
+  def test_not_node(n)
+    @buf << "\n  Test: #{n} should NOT exist: FAIL" if @zk.exists?(n)
+  end
+
   def show_test(n)
     rx1 = %r{^/batches/bid[0-9]+/states/batch-.*/(jid[0-9]+)$}
     rx2 = %r{^/jobs/(jid[0-9]+)/bid$}
@@ -161,6 +165,10 @@ class ZookeeperDumpAction < ZookeeperAction
         bstatus = 'batch-processing'
       end
       test_node("/batches/#{bid}/states/#{bstatus}/#{jid}")
+      %w[batch-deleted batch-completed batch-failed batch-processing].each do  |ts|
+        next if ts == bstatus
+        test_not_node("/batches/#{bid}/states/#{ts}/#{jid}")
+      end
     when rx3
       jid = rx3.match(n)[1]
       d = get_data("#{n}/status")

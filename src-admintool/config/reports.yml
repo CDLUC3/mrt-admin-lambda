@@ -120,6 +120,13 @@ producer_files:
   category: files
   description: |
     Producer Files for a Mnemonic.
+objects_ucsc:
+  link-title: Objects for a Mnemonic - UCSC
+  breadcrumb: bp_content_projects
+  class: UCSCObjectsQuery
+  category: files
+  description: |
+    Objects for a Mnemonic with extensions requested by UCSC
 prune_candidates:
   link-title: Prune Candidate Files for a Mnemonic
   breadcrumb: bp_content_projects

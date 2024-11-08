@@ -572,6 +572,20 @@
             <input type="submit" value="Go!"/>
           </form>
       </ul>
+      <h3>Object List UCSC</h3>
+      <ul>
+        <li class="graph">
+          <form action="{{ADMINTOOL_HOME}}">
+            Objects for a Mnemonic:
+            <select name="mnemonic">
+              {{#MCOLLS}}
+              <option value="{{mnemonic}}">{{mnemonic}}: {{name}}</option>
+              {{/MCOLLS}}
+            </select>
+            <input name="path" type="hidden" value="objects_ucsc"/>
+            <input type="submit" value="Go!"/>
+          </form>
+      </ul>
       <h3>Prune Candidate Files</h3>
       <ul>
         <li class="graph">
