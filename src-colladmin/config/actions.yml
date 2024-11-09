@@ -1150,3 +1150,12 @@ system_state:
     - More than 30 days: PASS
     - 15-30 days: WARN
     - Less than 15 days: FAIL
+zk_orphan:
+  link-title: ZK Orphan Report
+  class: ZookeeperDumpTableAction
+  category: queue
+  sensitivity: readonly
+  testing: automated
+  breadcrumb: bp_ingest
+  description: |
+    Test for ZK orphan nodes

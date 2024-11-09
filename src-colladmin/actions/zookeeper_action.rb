@@ -87,6 +87,7 @@ class ZookeeperDumpAction < ZookeeperAction
     @zkpath = myparams.fetch('zkpath', '/')
     @mode = myparams.fetch('mode', 'data')
     @full = false
+    @test_results = []
     super
   end
 
@@ -109,7 +110,7 @@ class ZookeeperDumpAction < ZookeeperAction
   def show_data(n)
     d = get_data(n)
     df = d.is_a?(Hash) ? "\n#{JSON.pretty_generate(d)}" : " #{d}"
-    @buf << df
+    @buf << df unless @buf.nil?
   end
 
   def get_data(n)
@@ -123,13 +124,18 @@ class ZookeeperDumpAction < ZookeeperAction
     end
   end
 
-  def test_node(n)
-    @buf << "\n  Test: #{n} should exist: "
-    @buf << (@zk.exists?(n) ? 'PASS' : 'FAIL')
+  def test_node(path, n)
+    return if @zk.exists?(n)
+    result = {path: path, test: "Test: #{n} should exist", status: 'FAIL'}
+    @test_results.append([result[:path], result[:test], result[:status]])
+    @buf << "\n  #{result[:test]}: #{result[:status]}" unless @buf.nil?
   end
 
-  def test_not_node(n)
-    @buf << "\n  Test: #{n} should NOT exist: FAIL" if @zk.exists?(n)
+  def test_not_node(path, n)
+    return unless @zk.exists?(n)
+    result = {path: path, test: "Test: #{n} should NOT exist", status: 'FAIL'}
+    @test_results.append([result[:path], result[:test], result[:status]])
+    @buf << "\n  #{result[:test]}: #{result[:status]}" unless @buf.nil?
   end
 
   def show_test(n)
@@ -141,17 +147,17 @@ class ZookeeperDumpAction < ZookeeperAction
     case n
     when %r{^/batch-uuids/(.*)}
       d = get_data(n)
-      test_node("/batches/#{d}")
+      test_node(n, "/batches/#{d}")
     when %r{^/batches/bid[0-9]+/submission}
       d = get_data(n).fetch(:batchID, 'na')
-      test_node("/batch-uuids/#{d}")
+      test_node(n, "/batch-uuids/#{d}")
     when rx1
       jid = rx1.match(n)[1]
-      test_node("/jobs/#{jid}")
+      test_node(n, "/jobs/#{jid}")
     when rx2
       jid = rx2.match(n)[1]
       bid = get_data(n)
-      test_node("/batches/#{bid}")
+      test_node(n, "/batches/#{bid}")
       d = get_data("/jobs/#{jid}/status")
       status = d.fetch(:status, 'na').downcase
       case status
@@ -164,36 +170,37 @@ class ZookeeperDumpAction < ZookeeperAction
       else
         bstatus = 'batch-processing'
       end
-      test_node("/batches/#{bid}/states/#{bstatus}/#{jid}")
+      test_node(n, "/batches/#{bid}/states/#{bstatus}/#{jid}")
       %w[batch-deleted batch-completed batch-failed batch-processing].each do |ts|
         next if ts == bstatus
 
-        test_not_node("/batches/#{bid}/states/#{ts}/#{jid}")
+        test_not_node(n, "/batches/#{bid}/states/#{ts}/#{jid}")
       end
     when rx3
       jid = rx3.match(n)[1]
       d = get_data("#{n}/status")
       status = d.fetch(:status, 'na').downcase
       priority = get_data("#{n}/priority")
-      test_node("/jobs/states/#{status}/#{format('%02d', priority)}-#{jid}")
+      test_node(n, "/jobs/states/#{status}/#{format('%02d', priority)}-#{jid}")
     when rx4
       jid = rx4.match(n)[1]
-      test_node("/jobs/#{jid}")
+      test_node(n, "/jobs/#{jid}")
     end
   end
 
   def report_node(n)
-    @buf << "#{n}:"
+    @buf << "#{n}:" unless @buf.nil?
     if standard_node(n)
       show_data(n) if @mode == 'data'
       show_test(n) if @mode == 'test'
     else
-      @buf << " Unsupported\n"
+      @buf << " Unsupported\n" unless @buf.nil?
     end
-    @buf << "\n"
+    @buf << "\n" unless @buf.nil?
   end
 
   def check_full
+    return false if @buf.nil?
     return true if @full
 
     # Lambda payload limit. May need to save output to S3.
@@ -217,6 +224,37 @@ class ZookeeperDumpAction < ZookeeperAction
       p = "#{n}/#{cp}".gsub(%r{/+}, '/')
       dump_node(p)
     end
+  end
+end
+
+class ZookeeperDumpTableAction < ZookeeperDumpAction
+  def initialize(config, action, path, myparams)
+    super
+    @mode = 'test'
+  end
+  def table_headers
+    ['Path', 'Test', 'Status']
+  end
+
+  def table_types
+    ['name', 'name', 'status']
+  end
+
+  def table_rows(_body)
+    dump_node(@zkpath)
+    @test_results
+  end
+
+  def perform_action
+    convert_json_to_table('')
+  end
+
+  def has_table
+    true
+  end
+
+  def init_status
+    :PASS
   end
 end
 
