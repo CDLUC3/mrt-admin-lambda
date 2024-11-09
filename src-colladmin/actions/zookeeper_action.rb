@@ -126,14 +126,16 @@ class ZookeeperDumpAction < ZookeeperAction
 
   def test_node(path, n)
     return if @zk.exists?(n)
-    result = {path: path, test: "Test: #{n} should exist", status: 'FAIL'}
+
+    result = { path: path, test: "Test: #{n} should exist", status: 'FAIL' }
     @test_results.append([result[:path], result[:test], result[:status]])
     @buf << "\n  #{result[:test]}: #{result[:status]}" unless @buf.nil?
   end
 
   def test_not_node(path, n)
     return unless @zk.exists?(n)
-    result = {path: path, test: "Test: #{n} should NOT exist", status: 'FAIL'}
+
+    result = { path: path, test: "Test: #{n} should NOT exist", status: 'FAIL' }
     @test_results.append([result[:path], result[:test], result[:status]])
     @buf << "\n  #{result[:test]}: #{result[:status]}" unless @buf.nil?
   end
@@ -232,12 +234,13 @@ class ZookeeperDumpTableAction < ZookeeperDumpAction
     super
     @mode = 'test'
   end
+
   def table_headers
-    ['Path', 'Test', 'Status']
+    %w[Path Test Status]
   end
 
   def table_types
-    ['name', 'name', 'status']
+    %w[name name status]
   end
 
   def table_rows(_body)
