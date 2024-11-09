@@ -229,6 +229,7 @@ class ZookeeperDumpAction < ZookeeperAction
   end
 end
 
+## table version of the dump/test action
 class ZookeeperDumpTableAction < ZookeeperDumpAction
   def initialize(config, action, path, myparams)
     super
