@@ -88,7 +88,8 @@ class UCSCObjectsQuery < S3AdminQuery
           select count(*)
           from inv.inv_versions v
           inner join inv.inv_files f
-            on f.inv_object_id = o.id and f.inv_version_id = v.id and f.source='producer' and o.version_number = v.number
+            on f.inv_object_id = o.id and f.inv_version_id = v.id
+            and f.source='producer' and o.version_number = v.number
           where v.inv_object_id = o.id
         ) as file_count,
         os.billable_size,
@@ -131,7 +132,10 @@ class UCSCObjectsQuery < S3AdminQuery
   end
 
   def get_headers(_results)
-    ['Ark', 'Local Id', 'erc_what', 'erc_when', 'erc_who', 'producer file count', 'billable_size', 'permalink', 'mimetypes']
+    [
+      'Ark', 'Local Id', 'erc_what', 'erc_when', 'erc_who', 'producer file count', 'billable_size', 'permalink',
+      'mimetypes'
+]
   end
 
   def get_types(_results)
