@@ -81,10 +81,16 @@ class UCSCObjectsQuery < S3AdminQuery
       select
         distinct o.ark,
         loc.local_id,
-        o.erc_what,
-        o.erc_when,
-        o.erc_who,
-        os.file_count,
+        replace(o.erc_what, '"', "'") as erc_what,
+        replace(o.erc_when, '"', "'") as erc_when,
+        replace(o.erc_who, '"', "'") as erc_who,
+        (
+          select count(*)
+          from inv.inv_versions v
+          inner join inv.inv_files f
+            on f.inv_object_id = o.id and f.inv_version_id = v.id and f.source='producer' and o.version_number = v.number
+          where v.inv_object_id = o.id
+        ) as file_count,
         os.billable_size,
         concat('http://n2t.net/', o.ark) as permalink,
         (
@@ -125,7 +131,7 @@ class UCSCObjectsQuery < S3AdminQuery
   end
 
   def get_headers(_results)
-    ['Ark', 'Local Id', 'erc_what', 'erc_when', 'erc_who', 'file_count', 'billable_size', 'permalink', 'mimetypes']
+    ['Ark', 'Local Id', 'erc_what', 'erc_when', 'erc_who', 'producer file count', 'billable_size', 'permalink', 'mimetypes']
   end
 
   def get_types(_results)
