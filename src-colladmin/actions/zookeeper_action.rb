@@ -290,20 +290,26 @@ class ZkRequeueAction < ZkAction
       job.load(@zk)
       js = job.json_property(@zk, MerrittZK::ZkKeys::STATUS)
       laststat = js.fetch(:last_successful_status, '')
+
+      job.lock(@zk)
+
       case laststat
       when 'Pending', '', nil
-        job.set_status(@zk, MerrittZK::JobState::Estimating)
+        job.set_status(@zk, MerrittZK::JobState::Estimating, job_retry: true)
       when 'Estimating'
-        job.set_status(@zk, MerrittZK::JobState::Provisioning)
+        job.set_status(@zk, MerrittZK::JobState::Provisioning, job_retry: true)
       when 'Provisioning'
-        job.set_status(@zk, MerrittZK::JobState::Downloading)
+        job.set_status(@zk, MerrittZK::JobState::Downloading, job_retry: true)
       when 'Downloading'
-        job.set_status(@zk, MerrittZK::JobState::Processing)
+        job.set_status(@zk, MerrittZK::JobState::Processing, job_retry: true)
       when 'Processing'
-        job.set_status(@zk, MerrittZK::JobState::Recording)
+        job.set_status(@zk, MerrittZK::JobState::Recording, job_retry: true)
       when 'Recording'
-        job.set_status(@zk, MerrittZK::JobState::Notify)
+        job.set_status(@zk, MerrittZK::JobState::Notify, job_retry: true)
       end
+
+      job.unlock(@zk)
+
       { message: "Job #{job.id} requeued to status #{job.status_name}" }.to_json
     end
   end
