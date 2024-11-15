@@ -27,7 +27,7 @@ class ProducerFilesQuery < S3AdminQuery
         on f.inv_object_id = o.id and source = 'producer'
       inner join inv.inv_versions v
         on f.inv_version_id = v.id
-      left join 
+      left join
         (
           select inv_object_ark, group_concat(local_id) as loc_id_agg
           from inv.inv_localids
@@ -108,7 +108,7 @@ class UCSCObjectsQuery < S3AdminQuery
         inv.inv_objects o
       inner join billing.object_size os
         on os.inv_object_id = o.id
-      left join 
+      left join
         (
           select inv_object_ark, group_concat(local_id) as loc_id_agg
           from inv.inv_localids
