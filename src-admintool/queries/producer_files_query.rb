@@ -20,15 +20,20 @@ class ProducerFilesQuery < S3AdminQuery
         billable_size,
         digest_value,
         f.created,
-        loc.local_id
+        loc.loc_id_agg
       from
         inv.inv_objects o
       inner join inv.inv_files f
         on f.inv_object_id = o.id and source = 'producer'
       inner join inv.inv_versions v
         on f.inv_version_id = v.id
-      left join inv.inv_localids loc
-        on o.ark = loc.inv_object_ark
+      left join 
+        (
+          select inv_object_ark, group_concat(local_id) as loc_id_agg
+          from inv.inv_localids
+          group by inv_object_ark
+        ) loc
+        on o.ark = inv_object_ark
       where exists (
         select 1
         from
@@ -80,7 +85,7 @@ class UCSCObjectsQuery < S3AdminQuery
     %{
       select
         distinct o.ark,
-        loc.local_id,
+        loc.loc_id_agg,
         replace(o.erc_what, '"', "'") as erc_what,
         replace(o.erc_when, '"', "'") as erc_when,
         replace(o.erc_who, '"', "'") as erc_who,
@@ -103,8 +108,13 @@ class UCSCObjectsQuery < S3AdminQuery
         inv.inv_objects o
       inner join billing.object_size os
         on os.inv_object_id = o.id
-      left join inv.inv_localids loc
-        on o.ark = loc.inv_object_ark
+      left join 
+        (
+          select inv_object_ark, group_concat(local_id) as loc_id_agg
+          from inv.inv_localids
+          group by inv_object_ark
+        ) loc
+        on o.ark = inv_object_ark
       where exists (
         select 1
         from
