@@ -27,7 +27,7 @@ class Ec2Info
   @@service_tag = {}
 
   # See https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/EC2/Client.html#describe_instances-instance_method
-  def initialize(config, inst)
+  def initialize(config, inst, httpclient)
     @config = config
     @state = inst.state.name
     @type = inst.instance_type
@@ -37,10 +37,7 @@ class Ec2Info
       @name = tag.value if tag.key == 'Name'
       @subservice = tag.value if tag.key == 'Subservice'
     end
-    @httpclient = HTTPClient.new
-    @httpclient.receive_timeout = 10
-    @httpclient.connect_timeout = 5
-    @httpclient.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    @httpclient = httpclient
     @buildtag = ''
     @starttime = ''
     @servicestate = ''
@@ -255,11 +252,13 @@ class TagAction < AdminAction
     @instances = {}
     @name = myparams.fetch('name', '')
     @label = myparams.fetch('label', '')
+    @timeout = myparams.fetch('timeout', '20')
     @list_servers = @name.empty?
 
+    # allow longer timeout when retrieving a single host
     @httpclient = HTTPClient.new
-    @httpclient.receive_timeout = 20
-    @httpclient.connect_timeout = 5
+    @httpclient.receive_timeout = @timeout.to_i
+    @httpclient.connect_timeout = 2
     @httpclient.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
     data = @ec2.describe_instances({
@@ -281,7 +280,7 @@ class TagAction < AdminAction
 
     data.reservations.each do |res|
       res.instances.each do |inst|
-        ec2 = Ec2Info.new(config, inst)
+        ec2 = Ec2Info.new(config, inst, @httpclient)
         @instances[ec2.name] = ec2
       end
     end
