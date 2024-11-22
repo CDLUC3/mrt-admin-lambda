@@ -38,7 +38,9 @@ class Ec2Info
       @subservice = tag.value if tag.key == 'Subservice'
     end
     @httpclient = HTTPClient.new
-    @httpclient.receive_timeout = 1000
+    @httpclient.receive_timeout = 10
+    @httpclient.connect_timeout = 5
+    @httpclient.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
     @buildtag = ''
     @starttime = ''
     @servicestate = ''
@@ -138,6 +140,7 @@ class Ec2Info
 
       resp.body
     rescue StandardError => e
+      puts "GET #{url}: #{e}"
       e.to_s
     end
   end
@@ -254,6 +257,11 @@ class TagAction < AdminAction
     @label = myparams.fetch('label', '')
     @list_servers = @name.empty?
 
+    @httpclient = HTTPClient.new
+    @httpclient.receive_timeout = 20
+    @httpclient.connect_timeout = 5
+    @httpclient.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
     data = @ec2.describe_instances({
       filters: [
         {
@@ -304,14 +312,20 @@ class TagAction < AdminAction
     url = ec2.urls.fetch(@label, '')
     return 'No Url found' if url.empty?
 
-    cli = HTTPClient.new
-    cli.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
     if @label == 'stop' || @label == 'start'
-      puts "POST #{url}"
-      resp = cli.post(url)
+      begin
+        resp = @httpclient.post(url)
+      rescue StandardError => e
+        puts "POST #{url}: #{e}"
+        return e.to_s
+      end
     else
-      puts "GET #{url}"
-      resp = cli.get(url, follow_redirect: true)
+      begin
+        resp = @httpclient.get(url, follow_redirect: true)
+      rescue StandardError => e
+        puts "GET #{url}: #{e}"
+        return e.to_s
+      end
     end
     ret = resp.body
     return ret if @label == 'build-info'
