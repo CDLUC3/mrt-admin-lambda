@@ -66,4 +66,43 @@ class ManifestToYaml
     manifest = JSON.parse(manifest.to_json)
     "# See https://github.com/CDLUC3/merritt-tinker/tree/main/yaml-manifest for more info\n#{YAML.dump(manifest)}"
   end
+
+
+  def load_paths(xmlbody)
+    ark = ''
+    keys = {}
+    xml = Nokogiri::XML(xmlbody).remove_namespaces!
+    xml.xpath('/objectInfo/object').each do |doc|
+      ark = doc['id']
+    end
+    xml.xpath('/objectInfo/versions/version').each do |doc|
+      v = doc['id'].to_i
+      doc.xpath('manifest').each do |m|
+        m.xpath('file').each do |f|
+          keys["#{ark}/#{v}/#{f['id']}"] = f.xpath('digest').text
+        end
+      end
+    end
+    keys
+  end
+
+  def load_xml_diff(old, curr)
+    pathsold = load_paths(old)
+    pathscurr = load_paths(curr)
+
+    diff = {}
+    pathsold.each do |k, v|
+      next if pathsold[k] == pathscurr[k]
+
+      diff[v] = diff.fetch(v, {oldpath: [], newpath: []})
+      diff[v].fetch(:oldpath, []).append(k)
+    end
+    pathscurr.each do |k, v|
+      next if pathsold[k] == pathscurr[k]
+
+      diff[v] = diff.fetch(v, {oldpath: [], newpath: []})
+      diff[v].fetch(:newpath, []).append(k)
+    end
+    diff
+  end
 end

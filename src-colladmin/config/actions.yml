@@ -433,6 +433,40 @@ storage-get-manifest-yaml:
     Convert the downloaded xml file to a user-friendly yaml format.
   documentation: |
     Storage: GET /manifest/{nodenum}/{ark}
+storage-get-provenance-yaml:
+  link-title: Get Storage Provenance for an Object from Cloud Storage as a Yaml file
+  class: StorageAction
+  category: Storage Manifest
+  sensitivity: readonly
+  testing: automated
+  format: xml
+  test_params:
+    ark: ark:/99999/fk4dv31c0b
+    nodenum: 9502
+  description: |
+    This will fail if the provenance file does not exist.
+
+    Download the XML *storage manifest* representation of a object on a specific storage node.  This request will be forwarded to the storage service.
+    Convert the downloaded xml file to a user-friendly yaml format.
+  documentation: |
+    Storage: GET /ark/{nodenum}/{ark}/0/system/provenance-metadata.xml
+storage-get-provenance-diff:
+  link-title: Get Storage Provenance for an Object from Cloud Storage as a Yaml file
+  class: StorageAction
+  category: Storage Manifest
+  sensitivity: readonly
+  testing: automated
+  format: xml
+  test_params:
+    ark: ark:/99999/fk4dv31c0b
+    nodenum: 9502
+  description: |
+    This will fail if the provenance file does not exist.
+
+    Download the XML *storage manifest* representation of a object on a specific storage node.  This request will be forwarded to the storage service.
+    Convert the downloaded xml file to a user-friendly yaml format.
+  documentation: |
+    Storage: GET /ark/{nodenum}/{ark}/0/system/provenance-metadata.xml
 storage-get-ingest-checkm:
   link-title: Generate Ingest Checkm Manifest Using Content from Cloud Storage
   class: StorageAction

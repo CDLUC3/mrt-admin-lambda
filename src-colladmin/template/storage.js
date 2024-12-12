@@ -250,6 +250,32 @@ function init() {
     invoke_text(params, fname);
   });
 
+  $("button.storage-get-provenance-yaml").on("click", function(){
+    var ark = $(this).attr("data-ark");
+    var nodenum = $(this).attr("data-node-num");
+    params = {
+      path: 'storage-get-provenance-yaml',
+      ark: ark,
+      nodenum: nodenum
+    }
+    const RE=/[\/:]+/g;
+    fname = "provenance_manifest." + ark.replaceAll(RE, '_') + ".yml";
+    invoke_text(params, fname);
+  });
+
+  $("button.storage-get-provenance-diff").on("click", function(){
+    var ark = $(this).attr("data-ark");
+    var nodenum = $(this).attr("data-node-num");
+    params = {
+      path: 'storage-get-provenance-diff',
+      ark: ark,
+      nodenum: nodenum
+    }
+    const RE=/[\/:]+/g;
+    fname = "provenance_manifest_diff." + ark.replaceAll(RE, '_') + ".txt";
+    invoke_text(params, fname);
+  });
+
   $("button.storage-get-augmented-manifest").on("click", function(){
     var ark = $(this).attr("data-ark");
     var nodenum = $(this).attr("data-node-num");

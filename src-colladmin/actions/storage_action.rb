@@ -228,6 +228,49 @@ class StorageAction < AdminAction
 
     end
 
+    if @path == 'storage-get-provenance-yaml'
+      srvc = get_storage_service
+      endpoint = "/content/#{nodenum}/#{CGI.escape(ark)}/0/#{CGI.escape('system/provenance_manifest.xml')}"
+      return '<message>Storage service undefined</message>' if srvc.empty?
+      return '<message>Empty Ark</message>' if ark.empty?
+
+      begin
+        qxml = HttpGetXml.new(srvc, endpoint)
+        return "<message>Status #{qxml.status} for #{endpoint}</message>" unless qxml.status == 200
+        if qxml.body.length > 5_000_000
+          return { error: "Provenance Manifest is too large to download:  use curl: #{srvc}#{endpoint}" }.to_json
+        end
+
+        return ManifestToYaml.new.load_xml(qxml.body)
+      rescue StandardError => e
+        log(e.message)
+        log(e.backtrace)
+        return { error: "#{e.message} for #{endpoint}" }.to_json
+      end
+
+    end
+
+    if @path == 'storage-get-provenance-diff'
+      srvc = get_storage_service
+      currendpoint = "/manifest/#{nodenum}/#{CGI.escape(ark)}"
+      oldendpoint = "/content/#{nodenum}/#{CGI.escape(ark)}/0/#{CGI.escape('system/provenance_manifest.xml')}"
+      return '<message>Storage service undefined</message>' if srvc.empty?
+      return '<message>Empty Ark</message>' if ark.empty?
+
+      begin
+        curr = HttpGetXml.new(srvc, currendpoint)
+        old = HttpGetXml.new(srvc, oldendpoint)
+
+        diff = ManifestToYaml.new.load_xml_diff(old.body, curr.body)
+        return JSON.pretty_generate(diff)
+      rescue StandardError => e
+        log(e.message)
+        log(e.backtrace)
+        return { error: "#{e.message} for #{endpoint}" }.to_json
+      end
+
+    end
+
     if @path == 'storage-get-ingest-checkm'
       ver = @myparams.fetch('ver', '1').to_i
       srvc = get_storage_service
