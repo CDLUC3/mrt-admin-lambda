@@ -119,8 +119,8 @@ class ZookeeperDumpAction < ZookeeperAction
 
     begin
       JSON.parse(d.encode('UTF-8'), symbolize_names: true)
-    rescue StandardError
-      d
+    rescue StandardError => e
+      "#{e}: #{d}"
     end
   end
 
