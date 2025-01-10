@@ -143,14 +143,14 @@ class SsmDescribeAction < AdminAction
         data.parameters.each do |p|
           # do not dump or display value attributes
           n = p.name
-          next unless parameters.key?(n)
+          next unless @parameters.key?(n)
 
           @parameters[n].keyid = p.key_id
         end
         nexttoken = data.next_token
       end
-    rescue StandardError
-      # skip if permissions are not available
+    rescue StandardError => e
+      puts e
     end
     load_registry
   end
