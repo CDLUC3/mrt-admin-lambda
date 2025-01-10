@@ -12,9 +12,9 @@ FROM ${ECR_REGISTRY}/uc3-mrt-admin-common
 ARG COMMITDATE=''
 ARG DOCKTAG=''
 
-RUN yum -y update && \
-    yum -y install gcc-c++ && yum -y groupinstall "Development Tools" && \
-    yum clean all
+RUN dnf -y update && \
+    dnf -y install gcc-c++ make tar patch && \
+    dnf clean all
 
 # Add Admin Tool Code to the image
 COPY . /var/task/

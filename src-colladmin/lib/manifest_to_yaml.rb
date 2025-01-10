@@ -67,7 +67,6 @@ class ManifestToYaml
     "# See https://github.com/CDLUC3/merritt-tinker/tree/main/yaml-manifest for more info\n#{YAML.dump(manifest)}"
   end
 
-
   def load_paths(xmlbody)
     ark = ''
     keys = {}
@@ -94,13 +93,13 @@ class ManifestToYaml
     pathsold.each do |k, v|
       next if pathsold[k] == pathscurr[k]
 
-      diff[v] = diff.fetch(v, {oldpath: [], newpath: []})
+      diff[v] = diff.fetch(v, { oldpath: [], newpath: [] })
       diff[v].fetch(:oldpath, []).append(k)
     end
     pathscurr.each do |k, v|
       next if pathsold[k] == pathscurr[k]
 
-      diff[v] = diff.fetch(v, {oldpath: [], newpath: []})
+      diff[v] = diff.fetch(v, { oldpath: [], newpath: [] })
       diff[v].fetch(:newpath, []).append(k)
     end
     diff

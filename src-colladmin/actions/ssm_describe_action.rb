@@ -21,6 +21,7 @@ class SsmInfo
       @encrypted = 'TBD'
     end
     @encrypted = '' if @value.empty?
+    @keyid = ''
     @deprecated = ''
     @modified = inst.nil? ? '' : inst.last_modified_date.to_s
     @skip = false
@@ -48,6 +49,7 @@ class SsmInfo
   end
 
   attr_reader :name, :deprecated, :skip
+  attr_accessor :keyid
 
   def value
     return '' if @value.nil? || @value.empty?
@@ -63,6 +65,7 @@ class SsmInfo
       Subservice
       Description
       Encrypted
+      Key
       Value
       Deprecated
       Modified
@@ -76,6 +79,7 @@ class SsmInfo
       'narrow',
       'narrow',
       'name',
+      'narrow',
       'narrow',
       'name',
       '',
@@ -91,6 +95,7 @@ class SsmInfo
       @subservice,
       @description,
       @encrypted,
+      @keyid,
       value,
       @deprecated,
       @modified,
@@ -123,6 +128,23 @@ class SsmDescribeAction < AdminAction
         next if n.empty?
 
         @parameters[n] = SsmInfo.new(n, p)
+      end
+      nexttoken = data.next_token
+    end
+    first = true
+    nexttoken = nil
+    while first || nexttoken
+      first = false
+      params = { filters: [{ key: 'Type', values: ['SecureString'] }] }
+      params[:next_token] = nexttoken unless nexttoken.nil?
+      # do not dump or display value attributes
+      data = @ssm.describe_parameters(params)
+      data.parameters.each do |p|
+        # do not dump or display value attributes
+        n = p.name
+        next unless parameters.key?(n)
+
+        @parameters[n].keyid = p.key_id
       end
       nexttoken = data.next_token
     end

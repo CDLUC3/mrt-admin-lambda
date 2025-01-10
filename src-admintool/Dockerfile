@@ -12,7 +12,7 @@ FROM ${ECR_REGISTRY}/uc3-mrt-admin-common
 ARG COMMITDATE=''
 ARG DOCKTAG=''
 
-RUN yum -y update && yum clean all
+RUN dnf -y update && dnf clean all
 
 # Add Admin Tool Code to the image
 COPY . /var/task/
