@@ -143,7 +143,7 @@ class AdminProfile < MerrittJson
   end
 
   def artifact_collection_or_sla
-    artifact == 'collection' || artifact == 'sla'
+    %w[collection sla].include?(artifact)
   end
 
   def artifact_owner

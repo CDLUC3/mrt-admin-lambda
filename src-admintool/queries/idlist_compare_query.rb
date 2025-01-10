@@ -116,9 +116,10 @@ left join inv.inv_files f
         status = 'WARN'
       elsif rec[:arks][0].nil?
         cmpstatus = 'Right Only'
-        if rec[:fpath] == 'producer/mrt-provenance.xml' ||
-          rec[:fpath] == 'system/mrt-submission-manifest.txt' ||
-          rec[:fpath] == 'system/mrt-delete.txt'
+        if [
+          'producer/mrt-provenance.xml', 'system/mrt-submission-manifest.txt',
+          'system/mrt-delete.txt'
+].include?(rec[:fpath])
           status = 'WARN'
         else
           status = 'FAIL'
@@ -134,14 +135,10 @@ left join inv.inv_files f
         cmpstatus = 'Match'
       else
         cmpstatus = 'Mismatch'
-        if rec[:fpath] == 'system/mrt-erc.txt' ||
-          rec[:fpath] == 'system/mrt-ingest.txt' ||
-          rec[:fpath] == 'system/mrt-membership.txt' ||
-          rec[:fpath] == 'system/mrt-mom.txt' ||
-          rec[:fpath] == 'system/mrt-object-map.ttl' ||
-          rec[:fpath] == 'system/mrt-dc.xml' ||
-          rec[:fpath] == 'system/mrt-owner.txt' ||
-          rec[:fpath] == 'system/mrt-delete.txt'
+        if [
+          'system/mrt-erc.txt', 'system/mrt-ingest.txt', 'system/mrt-membership.txt', 'system/mrt-mom.txt',
+          'system/mrt-object-map.ttl', 'system/mrt-dc.xml', 'system/mrt-owner.txt', 'system/mrt-delete.txt'
+].include?(rec[:fpath])
           status = 'WARN'
         else
           status = 'FAIL'

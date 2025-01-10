@@ -477,7 +477,7 @@ class Scans < MerrittQuery
         complete: r[6] == 'completed',
         not_complete: r[6] != 'completed',
         not_empty: !r[6].nil?,
-        running: r[6] == 'started' || r[6] == 'pending',
+        running: %w[started pending].include?(r[6]),
         not_running: r[6] != 'started' && r[6] != 'pending',
         latest: r[4] == r[9],
         rclass: r[4] == r[9] ? 'latest' : '',

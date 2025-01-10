@@ -15,7 +15,7 @@ class AuditInfo < MerrittQuery
       @statuses.append({
         status: r[0],
         count: r[1],
-        reset_allowed: r[0] == 'unverified' || r[0] == 'system-unavailable'
+        reset_allowed: %w[unverified system-unavailable].include?(r[0])
       })
     end
 

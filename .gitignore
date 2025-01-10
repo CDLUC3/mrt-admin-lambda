@@ -14,6 +14,5 @@ src/config/database.localcred.yml
 test/config/database.localcred.yml
 mysql-deps/mysql-dependencies.zip
 ~$MerrittAdminTool.pptx
-.bundle/
 vendor/
 consistency-driver/out.txt

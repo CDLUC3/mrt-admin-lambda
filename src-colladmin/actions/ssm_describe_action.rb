@@ -131,22 +131,26 @@ class SsmDescribeAction < AdminAction
       end
       nexttoken = data.next_token
     end
-    first = true
-    nexttoken = nil
-    while first || nexttoken
-      first = false
-      params = { filters: [{ key: 'Type', values: ['SecureString'] }] }
-      params[:next_token] = nexttoken unless nexttoken.nil?
-      # do not dump or display value attributes
-      data = @ssm.describe_parameters(params)
-      data.parameters.each do |p|
+    begin
+      first = true
+      nexttoken = nil
+      while first || nexttoken
+        first = false
+        params = { filters: [{ key: 'Type', values: ['SecureString'] }] }
+        params[:next_token] = nexttoken unless nexttoken.nil?
         # do not dump or display value attributes
-        n = p.name
-        next unless parameters.key?(n)
+        data = @ssm.describe_parameters(params)
+        data.parameters.each do |p|
+          # do not dump or display value attributes
+          n = p.name
+          next unless parameters.key?(n)
 
-        @parameters[n].keyid = p.key_id
+          @parameters[n].keyid = p.key_id
+        end
+        nexttoken = data.next_token
       end
-      nexttoken = data.next_token
+    rescue StandardError
+      # skip if permissions are not available
     end
     load_registry
   end

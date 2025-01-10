@@ -1,5 +1,3 @@
-.bundle/
 vendor/
 README.md
 Dockerfile
-Gemfile.lock
