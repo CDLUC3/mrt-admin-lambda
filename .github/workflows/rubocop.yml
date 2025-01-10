@@ -12,7 +12,7 @@ jobs:
 
     - uses: ruby/setup-ruby@v1
       with:
-        ruby-version: '3.0'
+        ruby-version: '3.2'
         bundler-cache: true
         working-directory: mysql-ruby-lambda
 
@@ -22,7 +22,7 @@ jobs:
 
     - uses: ruby/setup-ruby@v1
       with:
-        ruby-version: '3.0'
+        ruby-version: '3.2'
         bundler-cache: true
         working-directory: src-common
 
@@ -32,7 +32,7 @@ jobs:
 
     - uses: ruby/setup-ruby@v1
       with:
-        ruby-version: '3.0'
+        ruby-version: '3.2'
         bundler-cache: true
         working-directory: src-admintool
 
@@ -43,7 +43,7 @@ jobs:
 
     - uses: ruby/setup-ruby@v1
       with:
-        ruby-version: '3.0'
+        ruby-version: '3.2'
         bundler-cache: true
         working-directory: src-colladmin
 
@@ -54,7 +54,7 @@ jobs:
 
     - uses: ruby/setup-ruby@v1
       with:
-        ruby-version: '3.0'
+        ruby-version: '3.2'
         bundler-cache: true
         working-directory: src-testdriver
 
@@ -64,7 +64,7 @@ jobs:
 
     - uses: ruby/setup-ruby@v1
       with:
-        ruby-version: '3.0'
+        ruby-version: '3.2'
         bundler-cache: true
         working-directory: simulate-lambda-alb
 
