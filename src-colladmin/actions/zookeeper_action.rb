@@ -109,8 +109,10 @@ class ZookeeperDumpAction < ZookeeperAction
 
   def show_data(n)
     d = get_data(n)
-    df = d.is_a?(Hash) ? "\n#{JSON.pretty_generate(d)}" : " #{d}"
+    df = d.is_a?(Hash) ? "\n#{JSON.pretty_generate(d).encode('UTF-8')}" : " #{d.to_s.encode('UTF-8')}"
     @buf << df unless @buf.nil?
+  rescue StandardError => e
+    @buf << e
   end
 
   def get_data(n)
