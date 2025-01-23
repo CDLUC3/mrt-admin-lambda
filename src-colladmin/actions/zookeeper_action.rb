@@ -88,6 +88,7 @@ class ZookeeperDumpAction < ZookeeperAction
     @mode = myparams.fetch('mode', 'data')
     @full = false
     @test_results = []
+    @job_states_count = {}
     super
   end
 
@@ -191,6 +192,8 @@ class ZookeeperDumpAction < ZookeeperAction
     when rx4
       jid = rx4.match(n)[1]
       test_node(n, "/jobs/#{jid}")
+      @job_states_count[jid] = [] unless @job_states_count.key?(jid)
+      @job_states_count[jid].append(n)
     end
   end
 
@@ -230,6 +233,7 @@ class ZookeeperDumpAction < ZookeeperAction
       p = "#{n}/#{cp}".gsub(%r{/+}, '/')
       dump_node(p)
     end
+
   end
 end
 
@@ -250,6 +254,11 @@ class ZookeeperDumpTableAction < ZookeeperDumpAction
 
   def table_rows(_body)
     dump_node(@zkpath)
+    @job_states_count.each do |jid, states|
+      next unless states.length > 1
+
+      @test_results.append([states.to_s, 'Duplicate JID', 'FAIL'])
+    end
     @test_results
   end
 
