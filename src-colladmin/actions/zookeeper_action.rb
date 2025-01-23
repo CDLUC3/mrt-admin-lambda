@@ -254,7 +254,7 @@ class ZookeeperDumpTableAction < ZookeeperDumpAction
 
   def table_rows(_body)
     dump_node(@zkpath)
-    @job_states_count.each do |jid, states|
+    @job_states_count.each do |_jid, states|
       next unless states.length > 1
 
       @test_results.append([states.to_s, 'Duplicate JID', 'FAIL'])
