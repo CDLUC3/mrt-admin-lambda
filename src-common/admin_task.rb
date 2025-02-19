@@ -267,7 +267,7 @@ class AdminTask
       bucket: @s3bucket,
       key: path
     })
-    result = resp.body.read
+    result = resp.body.read.encode('UTF-8', invalid: :replace, undef: :replace, replace: '?')
     JSON.parse(result)
   end
 
