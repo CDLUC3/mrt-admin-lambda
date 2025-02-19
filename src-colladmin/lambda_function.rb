@@ -265,7 +265,7 @@ module LambdaFunctions
         map['scan_limit'] = myparams.fetch('limit', '100').to_i
         map['scan_limit'] = 1000 if map['scan_limit'] > 1000
         map['scan_offset'] = myparams.fetch('offset', '0').to_i
-        map['scan_offset'] = 0 if (map['scan_offset']).negative?
+        map['scan_offset'] = 0 if map['scan_offset'].negative?
         map['nodenum'] = nodenum
         map['scanid'] = scanid
         rev = ScanReview.new(@config, maint_status)

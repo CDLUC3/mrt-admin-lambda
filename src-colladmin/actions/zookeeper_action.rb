@@ -110,7 +110,8 @@ class ZookeeperDumpAction < ZookeeperAction
 
   def show_data(n)
     d = get_data(n)
-    df = d.is_a?(Hash) ? "\n#{JSON.pretty_generate(d).encode('UTF-8')}" : " #{d.to_s.encode('UTF-8')}"
+    df = d.is_a?(Hash) ? "\n#{JSON.pretty_generate(d)}" : " #{d}"
+    df = df.encode('UTF-8', invalid: :replace, undef: :replace, replace: '?')
     @buf << df unless @buf.nil?
   rescue StandardError => e
     @buf << e
@@ -121,7 +122,7 @@ class ZookeeperDumpAction < ZookeeperAction
     return '' if d.nil?
 
     begin
-      JSON.parse(d.encode('UTF-8'), symbolize_names: true)
+      JSON.parse(d.encode('UTF-8', invalid: :replace, undef: :replace, replace: '?'), symbolize_names: true)
     rescue JSON::ParserError
       d
     rescue StandardError => e
@@ -233,7 +234,6 @@ class ZookeeperDumpAction < ZookeeperAction
       p = "#{n}/#{cp}".gsub(%r{/+}, '/')
       dump_node(p)
     end
-
   end
 end
 
@@ -254,7 +254,7 @@ class ZookeeperDumpTableAction < ZookeeperDumpAction
 
   def table_rows(_body)
     dump_node(@zkpath)
-    @job_states_count.each do |_jid, states|
+    @job_states_count.each_value do |states|
       next unless states.length > 1
 
       @test_results.append([states.to_s, 'Duplicate JID', 'FAIL'])

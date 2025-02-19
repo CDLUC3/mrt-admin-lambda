@@ -262,7 +262,7 @@ class CollectionNodes < MerrittQuery
       [collid, collid, primary_id, collid, collid]
     ).each_with_index do |r, i|
       percent = 100
-      percent = ((r[4] * 100.0) / @collnodes[0][:count]).to_i if i.positive? && (@collnodes[0][:count]).positive?
+      percent = ((r[4] * 100.0) / @collnodes[0][:count]).to_i if i.positive? && @collnodes[0][:count].positive?
       @collnodes.push({
         role: r[0],
         number: r[1],
