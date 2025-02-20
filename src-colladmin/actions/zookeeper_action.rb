@@ -328,6 +328,7 @@ class ZkRequeueAction < ZkAction
   end
 end
 
+## Queue manipulation action using new mrt-zk - special handling to skip downloading
 class ZkRequeueSpecialAction < ZkAction
   def perform_action
     if @qpath =~ /access/
@@ -348,9 +349,7 @@ class ZkRequeueSpecialAction < ZkAction
         job.set_status(@zk, MerrittZK::JobState::Estimating, job_retry: true)
       when 'Estimating'
         job.set_status(@zk, MerrittZK::JobState::Provisioning, job_retry: true)
-      when 'Provisioning'
-        job.set_status(@zk, MerrittZK::JobState::Processing, job_retry: true)
-      when 'Downloading'
+      when 'Provisioning' || 'Downloading'
         job.set_status(@zk, MerrittZK::JobState::Processing, job_retry: true)
       when 'Processing'
         job.set_status(@zk, MerrittZK::JobState::Recording, job_retry: true)
