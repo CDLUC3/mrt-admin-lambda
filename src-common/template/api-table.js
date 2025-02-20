@@ -794,6 +794,8 @@ function format(cell, v, type, merritt_path) {
   } else if (type == 'requeue-mrtzk'  && v != '') {
     p = colladmin_root + "/lambda?path=requeue-mrtzk&queue-path="+v;
     makeLink(cell, 'Requeue', "javascript:ajax_invoke('"+encodeURIComponent(p)+"');testRequeue()").addClass("ajax");
+    p = colladmin_root + "/lambda?path=requeue-special-mrtzk&queue-path="+v;
+    makeLink(cell, 'Requeue Special', "javascript:ajax_invoke('"+encodeURIComponent(p)+"');testRequeue()").addClass("ajax");
   } else if (type == 'hold'  && v != '') {
     p = colladmin_root + "/lambda?path=hold-queue-item&queue-path="+v;
     makeLink(cell, 'Hold', "javascript:ajax_invoke('"+encodeURIComponent(p)+"')").addClass("ajax");

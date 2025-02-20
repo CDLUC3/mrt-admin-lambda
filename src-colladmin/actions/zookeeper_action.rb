@@ -328,6 +328,43 @@ class ZkRequeueAction < ZkAction
   end
 end
 
+class ZkRequeueSpecialAction < ZkAction
+  def perform_action
+    if @qpath =~ /access/
+      acc = MerrittZK::Access.new(get_access_queue, get_id)
+      acc.load(@zk)
+      acc.set_status(@zk, MerrittZK::AccessState::Pending)
+      { message: "Acc #{acc.id} requeued " }.to_json
+    else
+      job = MerrittZK::Job.new(get_id)
+      job.load(@zk)
+      js = job.json_property(@zk, MerrittZK::ZkKeys::STATUS)
+      laststat = js.fetch(:last_successful_status, '')
+
+      job.lock(@zk)
+
+      case laststat
+      when 'Pending', '', nil
+        job.set_status(@zk, MerrittZK::JobState::Estimating, job_retry: true)
+      when 'Estimating'
+        job.set_status(@zk, MerrittZK::JobState::Provisioning, job_retry: true)
+      when 'Provisioning'
+        job.set_status(@zk, MerrittZK::JobState::Processing, job_retry: true)
+      when 'Downloading'
+        job.set_status(@zk, MerrittZK::JobState::Processing, job_retry: true)
+      when 'Processing'
+        job.set_status(@zk, MerrittZK::JobState::Recording, job_retry: true)
+      when 'Recording'
+        job.set_status(@zk, MerrittZK::JobState::Notify, job_retry: true)
+      end
+
+      job.unlock(@zk)
+
+      { message: "Job #{job.id} requeued to status #{job.status_name}" }.to_json
+    end
+  end
+end
+
 ## Queue manipulation action using new mrt-zk
 class ZkDeleteAction < ZkAction
   def perform_action
