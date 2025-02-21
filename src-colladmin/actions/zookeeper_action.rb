@@ -294,7 +294,7 @@ end
 class ZkOrphanDeleteAction < ZookeeperAction
   def perform_action
     status = ''
-    if (@qpath.empty? || @qpath == '/')
+    if @qpath.empty? || @qpath == '/'
       status = 'Invalid path'
     else
       begin
