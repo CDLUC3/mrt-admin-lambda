@@ -811,6 +811,10 @@ function format(cell, v, type, merritt_path) {
   } else if (type == 'collqitems-mrtzk'  && v != '') {
     p = colladmin_root + "/lambda?path=release-coll-queue-items&coll="+v;
     makeLink(cell, 'Release Items', "javascript:ajax_invoke('"+encodeURIComponent(p)+"')").addClass("ajax");
+  } else if (type == 'orphan'  && v != '') {
+    cell.text(v);
+    p = colladmin_root + "/lambda?path=orphan-delete&queue-path="+v;
+    makeLink(cell, 'Delete', "javascript:ajax_invoke('"+encodeURIComponent(p)+"')").addClass("ajax");
   } else if (type == 'colllock') {
     var arr = v.split(",");
     if (arr.length == 2) {

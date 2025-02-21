@@ -249,7 +249,7 @@ class ZookeeperDumpTableAction < ZookeeperDumpAction
   end
 
   def table_types
-    %w[name name status]
+    %w[orphan name status]
   end
 
   def table_rows(_body)
@@ -287,6 +287,24 @@ class ZkAction < ZookeeperAction
 
   def perform_action
     { message: "path: #{@path}; qpath: #{@qpath}" }.to_json
+  end
+end
+
+## Orphan Delete
+class ZkOrphanDeleteAction < ZookeeperAction
+  def perform_action
+    status = ''
+    if (@qpath.empty? || @qpath == '/')
+      status = 'Invalid path'
+    else
+      begin
+        @zk.delete(@qpath)
+        status = 'Deleted'
+      rescue StandardError => e
+        status = e.message
+      end
+    end
+    { message: "path: #{@path}; qpath: #{@qpath}; status: #{status}" }.to_json
   end
 end
 

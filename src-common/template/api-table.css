@@ -57,6 +57,8 @@ table.results td.cell {
 
 table.results th.mime,
 table.results td.mime,
+table.results th.orphan,
+table.results th.orphan,
 table.results th.name,
 table.results td.name {
   width: 220px !important;
@@ -317,6 +319,7 @@ td.update-batch-mrtzk a,
 td.hold-mrtzk a, 
 td.release-mrtzk a, 
 td.colllock-mrtzk a, 
+td.orphan a, 
 td.collqitems-mrtzk a {
   display: block;
   text-align: center;
@@ -353,6 +356,7 @@ td.qdelete-batch-mrtzk a.disabled,
 td.update-batch-mrtzk a.disabled,
 td.hold-mrtzk a.disabled,
 td.release-mrtzk a.disabled,
+td.orphan a.disabled,
 td.colllock-mrtzk a.disabled,
 td.collqitems-mrtzk a.disabled {
   border: thin solid gray;

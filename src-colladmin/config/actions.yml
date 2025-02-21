@@ -992,6 +992,18 @@ requeue-mrtzk:
   - requeue
   documentation: |
     ZK tbd
+orphan-delete:
+  link-title: Orphan Delete
+  class: ZkOrphanDeleteAction
+  category: Queue Management
+  sensitivity: irreversible change
+  testing: manual
+  description: |
+    Delete an oprhan node
+  report-datatypes:
+  - requeue
+  documentation: |
+    ZK tbd
 requeue-special-mrtzk:
   link-title: Re-queue an item from a Zookeeper queue
   class: ZkRequeueSpecialAction
