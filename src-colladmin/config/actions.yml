@@ -104,6 +104,11 @@ queues:
   description: |
     Display the contents of the *ingest queue*. Items in this queue are slated to be processed by the Ingest service.
     From this screen, items can be requeued.
+
+    - *Requeue* will return a job to the state AFTER last successful state for a job.
+    - *Requeue Special* will set a job to a specific state if available.
+      - If the last successful state is 'Provisioning', the job will be reset to 'Processing'.
+      - Otherwise, this button will perform the same action as the *Requeue* button.
   report-datatypes:
   - fprofile
   - fstatus
@@ -978,6 +983,18 @@ queue-update-batch-mrtzk:
 requeue-mrtzk:
   link-title: Re-queue an item from a Zookeeper queue
   class: ZkRequeueAction
+  category: Queue Management
+  sensitivity: irreversible change
+  testing: manual
+  description: |
+    Re-queue an item from a Zookeeper queue.
+  report-datatypes:
+  - requeue
+  documentation: |
+    ZK tbd
+requeue-special-mrtzk:
+  link-title: Re-queue an item from a Zookeeper queue
+  class: ZkRequeueSpecialAction
   category: Queue Management
   sensitivity: irreversible change
   testing: manual
