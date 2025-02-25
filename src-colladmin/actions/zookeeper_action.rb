@@ -130,19 +130,19 @@ class ZookeeperDumpAction < ZookeeperAction
     end
   end
 
-  def test_node(path, n)
+  def test_node(path, deleteable, n)
     return if @zk.exists?(n)
 
     result = { path: path, test: "Test: #{n} should exist", status: 'FAIL' }
-    @test_results.append([result[:path], result[:test], result[:status]])
+    @test_results.append([result[:path], deleteable ? result[:path] : '', result[:test], result[:status]])
     @buf << "\n  #{result[:test]}: #{result[:status]}" unless @buf.nil?
   end
 
-  def test_not_node(path, n)
+  def test_not_node(path, deleteable, n)
     return unless @zk.exists?(n)
 
     result = { path: path, test: "Test: #{n} should NOT exist", status: 'FAIL' }
-    @test_results.append([result[:path], result[:test], result[:status]])
+    @test_results.append([result[:path], deleteable ? result[:path] : '', result[:test], result[:status]])
     @buf << "\n  #{result[:test]}: #{result[:status]}" unless @buf.nil?
   end
 
@@ -155,17 +155,17 @@ class ZookeeperDumpAction < ZookeeperAction
     case n
     when %r{^/batch-uuids/(.*)}
       d = get_data(n)
-      test_node(n, "/batches/#{d}")
+      test_node(n, true, "/batches/#{d}")
     when %r{^/batches/bid[0-9]+/submission}
       d = get_data(n).fetch(:batchID, 'na')
-      test_node(n, "/batch-uuids/#{d}")
+      test_node(n, false, "/batch-uuids/#{d}")
     when rx1
       jid = rx1.match(n)[1]
-      test_node(n, "/jobs/#{jid}")
+      test_node(n, true, "/jobs/#{jid}")
     when rx2
       jid = rx2.match(n)[1]
       bid = get_data(n)
-      test_node(n, "/batches/#{bid}")
+      test_node(n, false, "/batches/#{bid}")
       d = get_data("/jobs/#{jid}/status")
       status = d.fetch(:status, 'na').downcase
       case status
@@ -178,21 +178,21 @@ class ZookeeperDumpAction < ZookeeperAction
       else
         bstatus = 'batch-processing'
       end
-      test_node(n, "/batches/#{bid}/states/#{bstatus}/#{jid}")
+      test_node(n, false, "/batches/#{bid}/states/#{bstatus}/#{jid}")
       %w[batch-deleted batch-completed batch-failed batch-processing].each do |ts|
         next if ts == bstatus
 
-        test_not_node(n, "/batches/#{bid}/states/#{ts}/#{jid}")
+        test_not_node(n, false, "/batches/#{bid}/states/#{ts}/#{jid}")
       end
     when rx3
       jid = rx3.match(n)[1]
       d = get_data("#{n}/status")
       status = d.fetch(:status, 'na').downcase
       priority = get_data("#{n}/priority")
-      test_node(n, "/jobs/states/#{status}/#{format('%02d', priority)}-#{jid}")
+      test_node(n, false, "/jobs/states/#{status}/#{format('%02d', priority)}-#{jid}")
     when rx4
       jid = rx4.match(n)[1]
-      test_node(n, "/jobs/#{jid}")
+      test_node(n, true, "/jobs/#{jid}")
       @job_states_count[jid] = [] unless @job_states_count.key?(jid)
       @job_states_count[jid].append(n)
     end
@@ -245,11 +245,11 @@ class ZookeeperDumpTableAction < ZookeeperDumpAction
   end
 
   def table_headers
-    %w[Path Test Status]
+    %w[Path OrphanPath Test Status]
   end
 
   def table_types
-    %w[orphan name status]
+    %w[name orphan name status]
   end
 
   def table_rows(_body)
@@ -257,7 +257,7 @@ class ZookeeperDumpTableAction < ZookeeperDumpAction
     @job_states_count.each_value do |states|
       next unless states.length > 1
 
-      @test_results.append([states.to_s, 'Duplicate JID', 'FAIL'])
+      @test_results.append([states.to_s, '', 'Duplicate JID', 'FAIL'])
     end
     @test_results
   end

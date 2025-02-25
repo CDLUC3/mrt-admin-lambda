@@ -57,8 +57,6 @@ table.results td.cell {
 
 table.results th.mime,
 table.results td.mime,
-table.results th.orphan,
-table.results th.orphan,
 table.results th.name,
 table.results td.name {
   width: 220px !important;
