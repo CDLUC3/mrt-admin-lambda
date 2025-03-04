@@ -19,9 +19,13 @@ class RecentIngestsQuery < AdminQuery
         profile,
         batch_id,
         max(submitted),
-        count(*)
+        count(*) as object_count,
+        ifnull(sum(os.billable_size), 0) as total_size,
+        ifnull(sum(os.file_count), 0) as total_files
       from
-        inv.inv_ingests
+        inv.inv_ingests ing
+      left join billing.object_size os
+        on ing.inv_object_id = os.inv_object_id
       where
         date(submitted) = ?
       group by
@@ -53,10 +57,10 @@ class RecentIngestsQuery < AdminQuery
   end
 
   def get_headers(_results)
-    ['Ingest Profile', 'Batch Id', 'Submitted', 'Object Count']
+    ['Ingest Profile', 'Batch Id', 'Submitted', 'Object Count', 'Total Size', 'Total Files']
   end
 
   def get_types(_results)
-    ['', 'batch', '', 'dataint']
+    ['', 'batch', '', 'dataint', 'bytes', 'dataint']
   end
 end
