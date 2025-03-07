@@ -1004,18 +1004,6 @@ orphan-delete:
   - requeue
   documentation: |
     ZK tbd
-requeue-special-mrtzk:
-  link-title: Re-queue an item from a Zookeeper queue
-  class: ZkRequeueSpecialAction
-  category: Queue Management
-  sensitivity: irreversible change
-  testing: manual
-  description: |
-    Re-queue an item from a Zookeeper queue.
-  report-datatypes:
-  - requeue
-  documentation: |
-    ZK tbd
 hold-queue-item-mrtzk:
   link-title: Move a pending item from in Zookeeper queue to a Held status
   class: ZkHoldAction
