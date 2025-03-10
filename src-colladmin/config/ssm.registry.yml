@@ -184,6 +184,8 @@ ingest:
       description: Number of worker threads in pool
     numDownloadThreads:
       description: Number of download threads in pool for retrieval
+    metadataDisplaySize:
+      description: Maximum size of metadata to render in UI/Zookeeper/EZID
     PollingInterval:
       description: Zookeeper queue polling Interval in seconds
     QueueHoldFile:
