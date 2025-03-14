@@ -1,5 +1,9 @@
 # Merritt Billing
 
+> [!NOTE]
+> When the mrt-admin-lambda project is archived, the billing schema/views/sps should be maintained in 
+> https://github.com/CDLUC3/merritt-docker/blob/main/mrt-services/mysql/init.sql
+
 ```mermaid
 %%{init: {'theme': 'neutral', 'securityLevel': 'loose', 'themeVariables': {'fontFamily': 'arial'}}}%%
 graph TD

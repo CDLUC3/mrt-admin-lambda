@@ -61,13 +61,3 @@ jobs:
     - name: 'Run Rubocop'
       run: bundle exec rubocop
       working-directory: src-testdriver
-
-    - uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: '3.2'
-        bundler-cache: true
-        working-directory: simulate-lambda-alb
-
-    - name: 'Run Rubocop'
-      run: bundle exec rubocop
-      working-directory: simulate-lambda-alb
