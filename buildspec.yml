@@ -45,6 +45,7 @@ phases:
         -t ${ECR_REGISTRY}/uc3-mrt-admin-lambda:${DOCKTAG} src-admintool
     # use tag or branch for the deployed image
     - |
+      # the following must live in both UC3 and main accounts
       CA_CERT_NAME=UC3-Self-Signed-CA.crt
       aws ssm get-parameter --name /uc3/default/uc3_ca/$CA_CERT_NAME --output text --query 'Parameter.Value' > src-colladmin/$CA_CERT_NAME
       docker build --quiet --push \
