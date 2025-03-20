@@ -52,6 +52,9 @@ COMMITDATE=`date "+local: %Y-%m-%dT%H:%M:%S%z"`
 COMMITDATE=devserver
 DOCKTAG="local: ${DEPLOY_ENV}"
 
+CA_CERT_NAME=UC3-Self-Signed-CA.crt
+aws ssm get-parameter --name /uc3/default/uc3_ca/$CA_CERT_NAME --output text --query 'Parameter.Value' > src-colladmin/$CA_CERT_NAME
+
 # build the admin tool
 docker build \
   --build-arg ECR_REGISTRY=${ECR_REGISTRY} \
@@ -59,6 +62,8 @@ docker build \
   --build-arg DOCKTAG="${DOCKTAG}" \
   -t ${ECR_IMAGE_TAG} src-colladmin \
   || die "Image build failure ${ECR_REGISTRY}/${ECR_IMAGE_TAG}"
+
+rm src-colladmin/$CA_CERT_NAME
 
 # aws ecr create-repository --repository-name ${FUNCTNAME}
 docker push ${ECR_IMAGE_TAG} || die "Image push failure"

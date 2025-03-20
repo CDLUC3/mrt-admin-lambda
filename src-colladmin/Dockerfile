@@ -12,6 +12,9 @@ FROM ${ECR_REGISTRY}/uc3-mrt-admin-common
 ARG COMMITDATE=''
 ARG DOCKTAG=''
 
+COPY UC3-Self-Signed-CA.crt /etc/pki/ca-trust/source/anchors/UC3-Self-Signed-CA.crt
+RUN /usr/bin/update-ca-trust extract
+
 RUN dnf -y update && \
     dnf -y install gcc-c++ make tar patch && \
     dnf clean all
