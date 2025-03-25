@@ -130,19 +130,42 @@ class ZookeeperDumpAction < ZookeeperAction
     end
   end
 
+  def node_datetime(n)
+    return 'na' unless @zk.exists?(n)
+    ctime = @zk.stat(n).ctime
+    ctime.nil? ? 'na' : Time.at(ctime / 1000).strftime('%Y-%m-%d %H:%M:%S')
+  end
+
+  def node_stat(n)
+    return 'FAIL' unless @zk.exists?(n)
+    ctime = @zk.stat(n).ctime
+    return 'FAIL' if ctime.nil?
+    Time.now - Time.at(ctime / 1000) > 3600 ? 'FAIL' : 'WARN'
+  end
+
   def test_node(path, deleteable, n)
     return if @zk.exists?(n)
 
-    result = { path: path, test: "Test: #{n} should exist", status: 'FAIL' }
-    @test_results.append([result[:path], deleteable ? result[:path] : '', result[:test], result[:status]])
+    result = { path: path, test: "Test: #{n} should exist", status: node_stat(path) }
+    @test_results.append([result[:path], node_datetime(path), deleteable ? result[:path] : '', result[:test], result[:status]])
+    @buf << "\n  #{result[:test]}: #{result[:status]}" unless @buf.nil?
+  end
+
+  def test_has_children(path, deleteable, n)
+    if @zk.exists?(n)
+      return unless @zk.children(n).empty?
+    end
+
+    result = { path: path, test: "Test: #{n} should have children", status: node_stat(path) }
+    @test_results.append([result[:path], node_datetime(path), deleteable ? result[:path] : '', result[:test], result[:status]])
     @buf << "\n  #{result[:test]}: #{result[:status]}" unless @buf.nil?
   end
 
   def test_not_node(path, deleteable, n)
     return unless @zk.exists?(n)
 
-    result = { path: path, test: "Test: #{n} should NOT exist", status: 'FAIL' }
-    @test_results.append([result[:path], deleteable ? result[:path] : '', result[:test], result[:status]])
+    result = { path: path, test: "Test: #{n} should NOT exist", status: node_stat(path) }
+    @test_results.append([result[:path], node_datetime(path), deleteable ? result[:path] : '', result[:test], result[:status]])
     @buf << "\n  #{result[:test]}: #{result[:status]}" unless @buf.nil?
   end
 
@@ -151,6 +174,7 @@ class ZookeeperDumpAction < ZookeeperAction
     rx2 = %r{^/jobs/(jid[0-9]+)/bid$}
     rx3 = %r{^/jobs/(jid[0-9]+)$}
     rx4 = %r{^/jobs/states/[^/]*/[0-9][0-9]-(jid[0-9]+)$}
+    rx5 = %r{^/batches/bid[0-9]+/states$}
 
     case n
     when %r{^/batch-uuids/(.*)}
@@ -195,6 +219,8 @@ class ZookeeperDumpAction < ZookeeperAction
       test_node(n, true, "/jobs/#{jid}")
       @job_states_count[jid] = [] unless @job_states_count.key?(jid)
       @job_states_count[jid].append(n)
+    when rx5
+      test_has_children(n, false, n)
     end
   end
 
@@ -245,11 +271,11 @@ class ZookeeperDumpTableAction < ZookeeperDumpAction
   end
 
   def table_headers
-    %w[Path OrphanPath Test Status]
+    %w[Path Created OrphanPath Test Status]
   end
 
   def table_types
-    %w[name orphan name status]
+    %w[name datetime orphan name status]
   end
 
   def table_rows(_body)
@@ -257,7 +283,7 @@ class ZookeeperDumpTableAction < ZookeeperDumpAction
     @job_states_count.each_value do |states|
       next unless states.length > 1
 
-      @test_results.append([states.to_s, '', 'Duplicate JID', 'FAIL'])
+      @test_results.append([states.to_s, '', '', 'Duplicate JID', 'FAIL'])
     end
     @test_results
   end
