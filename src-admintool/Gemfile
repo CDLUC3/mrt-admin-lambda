@@ -9,4 +9,4 @@ gem 'mysql2'
 # https://github.com/CDLUC3/mrt-admin-lambda/blob/main/mysql-ruby-lambda/Dockerfile#L19-L21
 gem 'aws-sdk-s3'
 gem 'rubocop'
-gem 'uc3-ssm', git: 'https://github.com/CDLUC3/uc3-ssm.git', tag: '1.0.4'
+gem 'uc3-ssm', git: 'https://github.com/CDLUC3/uc3-ssm.git', tag: '1.0.5'
