@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/CDLUC3/uc3-ssm.git
-  revision: 9614d8c9756436795ce8c2e6d2ab66cbd9282522
-  tag: 1.0.4
+  revision: a2ace3895ae29179303d01a209abee4410f30065
+  tag: 1.0.5
   specs:
     uc3-ssm (1.0.3)
 
@@ -10,7 +10,7 @@ GEM
   specs:
     ast (2.4.3)
     aws-eventstream (1.3.2)
-    aws-partitions (1.1077.0)
+    aws-partitions (1.1078.0)
     aws-sdk-core (3.222.1)
       aws-eventstream (~> 1, >= 1.3.0)
       aws-partitions (~> 1, >= 1.992.0)
@@ -21,7 +21,7 @@ GEM
     aws-sdk-kms (1.99.0)
       aws-sdk-core (~> 3, >= 3.216.0)
       aws-sigv4 (~> 1.5)
-    aws-sdk-s3 (1.182.0)
+    aws-sdk-s3 (1.183.0)
       aws-sdk-core (~> 3, >= 3.216.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.5)

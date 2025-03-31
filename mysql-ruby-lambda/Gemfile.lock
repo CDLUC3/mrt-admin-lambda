@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/CDLUC3/uc3-ssm.git
-  revision: 9614d8c9756436795ce8c2e6d2ab66cbd9282522
-  tag: 1.0.4
+  revision: a2ace3895ae29179303d01a209abee4410f30065
+  tag: 1.0.5
   specs:
     uc3-ssm (1.0.3)
 

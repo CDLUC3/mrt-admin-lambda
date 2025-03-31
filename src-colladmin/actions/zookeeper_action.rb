@@ -132,14 +132,17 @@ class ZookeeperDumpAction < ZookeeperAction
 
   def node_datetime(n)
     return 'na' unless @zk.exists?(n)
+
     ctime = @zk.stat(n).ctime
     ctime.nil? ? 'na' : Time.at(ctime / 1000).strftime('%Y-%m-%d %H:%M:%S')
   end
 
   def node_stat(n)
     return 'FAIL' unless @zk.exists?(n)
+
     ctime = @zk.stat(n).ctime
     return 'FAIL' if ctime.nil?
+
     Time.now - Time.at(ctime / 1000) > 3600 ? 'FAIL' : 'WARN'
   end
 
@@ -147,17 +150,21 @@ class ZookeeperDumpAction < ZookeeperAction
     return if @zk.exists?(n)
 
     result = { path: path, test: "Test: #{n} should exist", status: node_stat(path) }
-    @test_results.append([result[:path], node_datetime(path), deleteable ? result[:path] : '', result[:test], result[:status]])
+    @test_results.append([
+      result[:path], node_datetime(path), deleteable ? result[:path] : '', result[:test],
+      result[:status]
+])
     @buf << "\n  #{result[:test]}: #{result[:status]}" unless @buf.nil?
   end
 
   def test_has_children(path, deleteable, n)
-    if @zk.exists?(n)
-      return unless @zk.children(n).empty?
-    end
+    return if @zk.exists?(n) && !@zk.children(n).empty?
 
     result = { path: path, test: "Test: #{n} should have children", status: node_stat(path) }
-    @test_results.append([result[:path], node_datetime(path), deleteable ? result[:path] : '', result[:test], result[:status]])
+    @test_results.append([
+      result[:path], node_datetime(path), deleteable ? result[:path] : '', result[:test],
+      result[:status]
+])
     @buf << "\n  #{result[:test]}: #{result[:status]}" unless @buf.nil?
   end
 
@@ -165,7 +172,10 @@ class ZookeeperDumpAction < ZookeeperAction
     return unless @zk.exists?(n)
 
     result = { path: path, test: "Test: #{n} should NOT exist", status: node_stat(path) }
-    @test_results.append([result[:path], node_datetime(path), deleteable ? result[:path] : '', result[:test], result[:status]])
+    @test_results.append([
+      result[:path], node_datetime(path), deleteable ? result[:path] : '', result[:test],
+      result[:status]
+])
     @buf << "\n  #{result[:test]}: #{result[:status]}" unless @buf.nil?
   end
 
