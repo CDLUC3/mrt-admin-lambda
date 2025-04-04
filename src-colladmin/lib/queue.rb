@@ -70,6 +70,14 @@ class QueueEntry < QueueJson
       :queueId,
       MerrittJsonProperty.new('Queue ID').lookup_value(json, '', :id)
     )
+    add_property(
+      :priority,
+      MerrittJsonProperty.new('Priority').lookup_value(json, '', :priority)
+    )
+    add_property(
+      :space_needed,
+      MerrittJsonProperty.new('Space Needed').lookup_value(json, '', :space_needed)
+    )
     # extract the ingest worker node from the queue id string
     qid = get_value(:queueId, '')
     qnode = get_value(:queueNode, '')
