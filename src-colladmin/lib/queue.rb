@@ -143,6 +143,7 @@ class QueueEntry < QueueJson
       type = 'release-mrtzk' if sym == :release
       type = 'container' if sym == :queue
       type = 'zkjob' if sym == :queueId
+      type = 'bytes' if sym == :space_needed
       arr.append(type)
     end
     arr
