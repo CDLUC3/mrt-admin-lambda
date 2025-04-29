@@ -86,7 +86,7 @@ class ConsistencyReplicationReqQuery < AdminQuery
           o.modified
         #{sqlfrag_replic_needed}
       ) as u
-      inner join object_size os
+      right join object_size os
         on os.inv_object_id = u.inv_object_id
       group by
         category
