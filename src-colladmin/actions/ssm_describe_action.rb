@@ -16,7 +16,7 @@ class SsmInfo
     @value = inst.nil? ? '' : inst.value
     @encrypted = @type == 'SecureString'
     if @encrypted == false &&
-      (name !~ (%r{ldap/accounts/guest/password})) &&
+      (name !~ %r{ldap/accounts/guest/password}) &&
       (name =~ /password|credential|privateAccess|accessKey|secretKey|master_key/)
       @encrypted = 'TBD'
     end
