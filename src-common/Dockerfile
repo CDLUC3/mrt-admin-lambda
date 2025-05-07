@@ -13,10 +13,9 @@ FROM ${ECR_REGISTRY}/mysql-ruby-lambda
 RUN dnf -y update && dnf clean all
 
 # Add Admin Tool Code to the image
-WORKDIR /var/task/
-COPY . /var/task/
+COPY . .
 
-RUN find /var/task
+RUN pwd && find .
 
 # Bundle dependencies
 RUN bundle install 
