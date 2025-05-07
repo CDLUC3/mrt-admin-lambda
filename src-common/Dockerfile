@@ -13,7 +13,7 @@ FROM ${ECR_REGISTRY}/mysql-ruby-lambda
 RUN dnf -y update && dnf clean all
 
 # Add Admin Tool Code to the image
-COPY . .
+COPY . ./
 
 RUN pwd && find .
 
