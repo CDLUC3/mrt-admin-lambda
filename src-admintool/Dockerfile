@@ -15,7 +15,7 @@ ARG DOCKTAG=''
 RUN dnf -y update && dnf clean all
 
 # Add Admin Tool Code to the image
-RUN ls -lart /var/task
+RUN mkdir -p /var/task
 ADD . /var/task/
 
 # Bundle dependencies
