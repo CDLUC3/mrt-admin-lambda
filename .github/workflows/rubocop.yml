@@ -10,6 +10,10 @@ jobs:
     # Checkout the repo
     - uses: actions/checkout@v3
 
+    - name: 'remove .bundle/config'
+      run: rm .bundle/config
+      working-directory: mysql-ruby-lambda
+
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: '3.2'
