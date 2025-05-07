@@ -20,8 +20,8 @@ RUN dnf -y update && \
     dnf clean all
 
 # Add Admin Tool Code to the image
-CWORKDIR /var/task
-COPY . .
+WORKDIR /var/task
+ADD . .
 
 # Bundle dependencies
 RUN bundle install 
