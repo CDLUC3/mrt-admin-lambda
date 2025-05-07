@@ -15,7 +15,5 @@ RUN dnf -y update && dnf clean all
 # Add Admin Tool Code to the image
 COPY . ./
 
-RUN pwd && find . > /tmp/log.txt
-
 # Bundle dependencies
 RUN bundle install 
