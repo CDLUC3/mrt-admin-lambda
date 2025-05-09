@@ -52,6 +52,8 @@ class ConsistencyReplicationReqQuery < AdminQuery
                 then 0
               when u.modified < date_add(now(), INTERVAL -1 DAY)
                 then 0
+              when u.modified is null
+                then 0
               else 1
             end
           ),
