@@ -20,6 +20,7 @@ LAMBDA_ARN_BASE=arn:aws:lambda:${AWS_REGION}:${AWS_ACCOUNT_ID}:function:uc3-mrt-
 LAMBDA_ARN=${LAMBDA_ARN_BASE}-${DEPLOY_ENV}
 
 # Get the ECR image to publish
+AWS_REGION=us-west-2
 ECR_REGISTRY=${UC3_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
 ECR_IMAGE_TAG=${ECR_REGISTRY}/${FUNCTNAME}:${DEPLOY_ENV}
 
