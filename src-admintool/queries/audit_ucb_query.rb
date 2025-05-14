@@ -5,6 +5,7 @@ class AuditNewUCBQuery < AdminQuery
   def initialize(query_factory, path, myparams)
     super
     @days = get_param('days', 7).to_i
+    @mindays = 1
   end
 
   def get_title
@@ -22,13 +23,15 @@ class AuditNewUCBQuery < AdminQuery
         a.status as audit_status,
         case
           when a.status in ('size-mismatch','digest-mismatch') then 'Audit Failed'
-          when ifnull(verified, o.modified) < date_add(o.modified, interval 1 day) then 'Reset Needed'
+          when ifnull(verified, o.modified) < date_add(o.modified, interval #{@mindays} day) and o.modified > date_add(now(), interval -#{@mindays} day) then 'Reset Later'
+          when ifnull(verified, o.modified) < date_add(o.modified, interval #{@mindays} day) then 'Reset Needed'
           when a.status = 'verified' then 'Audited'
           else 'In Progress'
         end as category,
         case
           when a.status in ('size-mismatch','digest-mismatch') then 'FAIL'
-          when ifnull(verified, o.modified) < date_add(o.modified, interval 1 day) then 'WARN'
+          when ifnull(verified, o.modified) < date_add(o.modified, interval #{@mindays} day) and o.modified > date_add(now(), interval -#{@mindays} day) then 'INFO'
+          when ifnull(verified, o.modified) < date_add(o.modified, interval #{@mindays} day) then 'WARN'
           when a.status = 'verified' then 'PASS'
           else 'INFO'
         end as status
@@ -55,7 +58,7 @@ class AuditNewUCBQuery < AdminQuery
   end
 
   def get_types(_results)
-    %w[objlist ark datetime dataint datetime '' '' '' status]
+    %w[objlist ark datetime dataint datetime '' '' status]
   end
 
   def get_alternative_queries
