@@ -24,21 +24,25 @@ class AuditNewUCBQuery < AdminQuery
         case
           when a.status in ('size-mismatch','digest-mismatch') then 'Audit Failed'
           when ifnull(verified, o.modified) < date_add(o.modified, interval #{@mindays} day) and o.modified > date_add(now(), interval -#{@mindays} day) then 'Reset Later'
-          when ifnull(verified, o.modified) < date_add(o.modified, interval #{@mindays} day) then 'Reset Needed'
+          when a.status = 'verified' and ifnull(verified, o.modified) < date_add(o.modified, interval #{@mindays} day) then 'Reset Needed'
           when a.status = 'verified' then 'Audited'
           else 'In Progress'
         end as category,
         case
           when a.status in ('size-mismatch','digest-mismatch') then 'FAIL'
           when ifnull(verified, o.modified) < date_add(o.modified, interval #{@mindays} day) and o.modified > date_add(now(), interval -#{@mindays} day) then 'INFO'
-          when ifnull(verified, o.modified) < date_add(o.modified, interval #{@mindays} day) then 'WARN'
+          when a.status = 'verified' and ifnull(verified, o.modified) < date_add(o.modified, interval #{@mindays} day) then 'WARN'
           when a.status = 'verified' then 'PASS'
           else 'INFO'
         end as status
       from 
         inv.inv_objects o
-      left join
-        inv.inv_audits a on a.inv_object_id = o.id and a.inv_node_id = 16 /*sdsc node*/
+      right join
+        inv.inv_audits a 
+      on 
+        a.inv_object_id = o.id 
+      and 
+        a.inv_node_id = 16 /*sdsc node*/
       where 
         o.inv_owner_id=14 /*ucb owner*/
       and 
@@ -46,7 +50,8 @@ class AuditNewUCBQuery < AdminQuery
       group by
         o.id,
         o.ark,
-        o.modified
+        o.modified,
+        a.status
       order by
         o.modified desc
       ;

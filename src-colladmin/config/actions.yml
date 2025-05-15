@@ -681,6 +681,14 @@ storage-clear-audit-batch:
     This function clears all audit batches older than a specified amount of time.
   documentation: |
     SQL: UPDATE inv_audits SET status='unknown', verified=null
+audit_ucb_reset:
+  link-title: Reset Audit Status for new UCB content
+  class: UCBAuditResetAction
+  category: Audit
+  sensitivity: reversible change
+  testing: manual
+  description: |
+    After 1 (1 or 2) days, trigger an immediate re-audit of new UCB content.
 storage-retry-audit-status:
   link-title: Trigger an audit retry for all audit records with a specific status
   class: StorageAction
