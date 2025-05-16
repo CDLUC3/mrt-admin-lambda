@@ -376,6 +376,13 @@ audit_status:
     - For status `system-unavailable` or `unverified`, a retry is generally recommended.
     - A status of `size-mismatch` or `digest-mismatch` indicates that either a copy error occurred or this could show evidence of bit rot.  Immediate investigation is required.
     - Files with a status of `verified` are explicitly excluded from this report for performance reasons.
+audit_ucb:
+  link-title: Audit State - new UCB content
+  breadcrumb: bp_audit
+  class: AuditNewUCBQuery
+  category: audit
+  description: |
+    Look at audit status for new UCB content. 
 audit_status_time:
   link-title: Audit Status - Recent Processing
   breadcrumb: bp_audit

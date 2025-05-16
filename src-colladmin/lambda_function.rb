@@ -30,6 +30,7 @@ require_relative 'actions/replication_action'
 require_relative 'actions/consistency_report_cleanup_action'
 require_relative 'actions/lambda_tag_action'
 require_relative 'actions/system_state_action'
+require_relative 'actions/ucb_audit_reset_action'
 require 'yaml'
 
 # Handle GET or POST event structures pass in via the ALB
