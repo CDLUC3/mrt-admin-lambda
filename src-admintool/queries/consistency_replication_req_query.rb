@@ -22,7 +22,7 @@ class ConsistencyReplicationReqQuery < AdminQuery
             'Default'
         end as category,
         count(u.inv_object_id) as obj,
-        (select sum(ifnull(os.billable_size,0) from object_size os where os.inv_object_id = u.inv_object_id) as fbytes,
+        (select sum(ifnull(os.billable_size,0)) from object_size os where os.inv_object_id = u.inv_object_id) as fbytes,
         ifnull(
           sum(
             case
