@@ -4,8 +4,15 @@ require_relative 'action'
 
 # Collection Admin Task class - see config/actions.yml for description
 class UCBAuditResetAction < AdminAction
+  def initialize(config, action, path, myparams)
+    @days = myparams.fetch('days', '7').to_i
+    @wait_hours = myparams.fetch('wait_hours', '24').to_i
+    @limit = myparams.fetch('limit', '2').to_i
+    super(config, action, path, myparams)
+  end
+
   def get_title
-    "UCB Audit Reset"
+    "UCB Audit Reset: Last #{@days} days. Wait #{@wait_hours} wait_hours. Limit #{@limit}."
   end
 
   def table_headers
@@ -31,15 +38,15 @@ class UCBAuditResetAction < AdminAction
       where 
         o.inv_owner_id=14 /*ucb owner*/
       and 
-        o.modified > date_add(now(), interval -7 day)
+        o.modified > date_add(now(), interval -#{@days} day)
       and
-        ifnull(verified, o.modified) < date_add(o.modified, interval 1 day)
+        ifnull(verified, o.modified) < date_add(o.modified, interval #{@wait_hours} hour)
       and 
-        o.modified < date_add(now(), interval -1 day)
+        o.modified < date_add(now(), interval -#{@wait_hours} hour)
       and 
         a.status = 'verified'
       order by o.modified
-      limit 2
+      limit #{@limit}
       ;
     }
     data = MerrittQuery.new(@config).run_query(sql)

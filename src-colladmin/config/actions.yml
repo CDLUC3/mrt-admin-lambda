@@ -685,6 +685,7 @@ audit_ucb_reset:
   link-title: Reset Audit Status for new UCB content
   class: UCBAuditResetAction
   category: Audit
+  breadcrumb: bp_audit
   sensitivity: reversible change
   testing: manual
   description: |

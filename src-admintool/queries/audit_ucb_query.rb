@@ -5,11 +5,11 @@ class AuditNewUCBQuery < AdminQuery
   def initialize(query_factory, path, myparams)
     super
     @days = get_param('days', 7).to_i
-    @mindays = 1
+    @wait_hours = get_param('wait_hours', 24).to_i
   end
 
   def get_title
-    "Audit Status for UCB Objects Modified in the Last #{@days} Days"
+    "Audit Status for UCB Objects Modified in the Last #{@days} Days; #{@wait_hours} wait_hours"
   end
 
   def get_sql
@@ -22,16 +22,16 @@ class AuditNewUCBQuery < AdminQuery
         max(a.verified) as verified,
         a.status as audit_status,
         case
-          when a.status in ('size-mismatch','digest-mismatch') then 'Audit Failed'
-          when ifnull(verified, o.modified) < date_add(o.modified, interval #{@mindays} day) and o.modified > date_add(now(), interval -#{@mindays} day) then 'Reset Later'
-          when a.status = 'verified' and ifnull(verified, o.modified) < date_add(o.modified, interval #{@mindays} day) then 'Reset Needed'
+          when a.status in ('size-mismatch','digest-mismatch', 'unverified') then 'Audit Failed'
+          when ifnull(verified, o.modified) < date_add(o.modified, interval #{@wait_hours} hour) and o.modified > date_add(now(), interval -#{@wait_hours} hour) then 'Reset Later'
+          when a.status = 'verified' and ifnull(verified, o.modified) < date_add(o.modified, interval #{@wait_hours} hour) then 'Reset Needed'
           when a.status = 'verified' then 'Audited'
           else 'In Progress'
         end as category,
         case
-          when a.status in ('size-mismatch','digest-mismatch') then 'FAIL'
-          when ifnull(verified, o.modified) < date_add(o.modified, interval #{@mindays} day) and o.modified > date_add(now(), interval -#{@mindays} day) then 'INFO'
-          when a.status = 'verified' and ifnull(verified, o.modified) < date_add(o.modified, interval #{@mindays} day) then 'WARN'
+          when a.status in ('size-mismatch','digest-mismatch', 'unverified') then 'FAIL'
+          when ifnull(verified, o.modified) < date_add(o.modified, interval #{@wait_hours} hour) and o.modified > date_add(now(), interval -#{@wait_hours} hour) then 'INFO'
+          when a.status = 'verified' and ifnull(verified, o.modified) < date_add(o.modified, interval #{@wait_hours} hour) then 'WARN'
           when a.status = 'verified' then 'PASS'
           else 'INFO'
         end as status
