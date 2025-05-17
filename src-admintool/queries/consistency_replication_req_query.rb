@@ -22,7 +22,7 @@ class ConsistencyReplicationReqQuery < AdminQuery
             'Default'
         end as category,
         count(u.inv_object_id) as obj,
-        sum(os.billable_size) as fbytes,
+        (select sum(ifnull(os.billable_size,0)) from object_size os where os.inv_object_id = u.inv_object_id) as fbytes,
         ifnull(
           sum(
             case
@@ -88,8 +88,6 @@ class ConsistencyReplicationReqQuery < AdminQuery
           o.modified
         #{sqlfrag_replic_needed}
       ) as u
-      right join object_size os
-        on os.inv_object_id = u.inv_object_id
       group by
         category
       ;
