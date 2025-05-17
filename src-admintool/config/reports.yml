@@ -860,3 +860,10 @@ lambda_tag:
     Check that the deployment tag conforms to semantic naming standards.
     While the lambda can temporarily be pushed to ECR from a DEV box, a proper deployment should
     be created on the build system and deployed with a semantic tag.
+change_token:
+  link-title: Change Token
+  breadcrumb: bp_internals
+  class: ChangeTokenQuery
+  category: reports
+  description: |
+    Identify objects processed by the change token process.
