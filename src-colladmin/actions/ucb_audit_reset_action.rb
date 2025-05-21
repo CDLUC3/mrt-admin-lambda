@@ -7,7 +7,7 @@ class UCBAuditResetAction < AdminAction
   def initialize(config, action, path, myparams)
     @days = myparams.fetch('days', '7').to_i
     @wait_hours = myparams.fetch('wait_hours', '24').to_i
-    @limit = myparams.fetch('limit', '2').to_i
+    @limit = myparams.fetch('limit', '50').to_i
     super(config, action, path, myparams)
   end
 
