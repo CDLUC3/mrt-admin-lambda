@@ -187,17 +187,15 @@ ingest:
     metadataDisplaySize:
       description: Maximum size of metadata to render in UI/Zookeeper/EZID
     PollingInterval:
-      description: Zookeeper queue polling Interval in seconds
+      description: Polling Interval in seconds for JOB consumer daemons
+    BatchPollingInterval:
+      description: Polling Interval in seconds for BATCH consumer daemons
     QueueHoldFile:
       description: Filename that defines an Ingest pause
     store.1:
       description: URL endpoint for Storage service
     target:
       description: URL endpoint for Merritt UI
-    HighPriorityThreshold:
-      description: Priority threshold for processing in the high priority queue
-    PollingIntervalHighPriority:
-      description: Polling frequency for the high priority queue
     mail-contact:
       description: Notification contact information (From:)
     mail-replyto:
