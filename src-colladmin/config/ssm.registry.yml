@@ -281,6 +281,8 @@ replic:
     description: Microservice port
 store:
   config:
+    backOutOnException:
+      description: effects whether store removes added content if exeption occurs: true=yes, false=no
     baseURI:
       description: "base URI for load this storage loadbalancer - used in state commands"
     log:
