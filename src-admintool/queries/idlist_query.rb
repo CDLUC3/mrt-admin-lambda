@@ -36,6 +36,14 @@ class IdlistQuery < AdminQuery
 select
   trim(substring_index(o.erc_where, ';', -1)) doi,
   o.ark,
+  ( 
+    select substring_index(c.mnemonic,'_', 1) 
+    from inv.inv_collections c
+    inner join inv.inv_collections_inv_objects icio 
+      on icio.inv_collection_id=c.id 
+    where icio.inv_object_id=o.id
+    limit 1 
+  ) as campus,
   date(created),
 }
 
@@ -97,7 +105,7 @@ from
   end
 
   def get_headers(_results)
-    arr = ['Parsed erc_where', 'Ark', 'Created']
+    arr = ['Parsed erc_where', 'Ark', 'campus', 'Created']
     if @fields == 'summary'
       ['Num Ver', 'Num File', 'Producer Files', 'Files', 'File Size', 'Producer Size'].each do |r|
         arr.append(r)
@@ -112,7 +120,7 @@ from
   end
 
   def get_types(_results)
-    arr = %w[localid ark date]
+    arr = %w[localid ark '' date]
     if @fields == 'summary'
       %w[data data data list data data].each do |r|
         arr.append(r)
