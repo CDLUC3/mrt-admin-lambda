@@ -8,7 +8,7 @@ class UCBAuditResetAction < AdminAction
     @days = myparams.fetch('days', '7').to_i
     @wait_hours = myparams.fetch('wait_hours', '24').to_i
     @limit = myparams.fetch('limit', '50').to_i
-    super(config, action, path, myparams)
+    super
   end
 
   def get_title
@@ -27,23 +27,23 @@ class UCBAuditResetAction < AdminAction
     sql = %{
       select distinct
         o.id, o.ark, o.modified, 'PASS' as status
-      from 
+      from
         inv.inv_objects o
       inner join
-        inv.inv_audits a 
-      on 
-        a.inv_object_id = o.id 
-      and 
+        inv.inv_audits a
+      on
+        a.inv_object_id = o.id
+      and
         a.inv_node_id = 16 /*sdsc node*/
-      where 
+      where
         o.inv_owner_id=14 /*ucb owner*/
-      and 
+      and
         o.modified > date_add(now(), interval -#{@days} day)
       and
         ifnull(verified, o.modified) < date_add(o.modified, interval #{@wait_hours} hour)
-      and 
+      and
         o.modified < date_add(now(), interval -#{@wait_hours} hour)
-      and 
+      and
         a.status = 'verified'
       order by o.modified
       limit #{@limit}
@@ -82,5 +82,4 @@ class UCBAuditResetAction < AdminAction
   def init_status
     :PASS
   end
-
 end
