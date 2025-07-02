@@ -29,7 +29,8 @@ class NodesQuery < AdminQuery
         on n.id = nc.inv_node_id
       left join (
         select
-          9501 as node, 650 as tb
+          /* changeToken backup is currently using 66TB */
+          9501 as node, 650 - 66 as tb
       ) lim
         on n.number = lim.node
       where
