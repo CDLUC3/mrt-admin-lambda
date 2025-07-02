@@ -23,29 +23,37 @@ class AuditNewUCBQuery < AdminQuery
         a.status as audit_status,
         case
           when a.status in ('size-mismatch','digest-mismatch', 'unverified') then 'Audit Failed'
-          when ifnull(verified, o.modified) < date_add(o.modified, interval #{@wait_hours} hour) and o.modified > date_add(now(), interval -#{@wait_hours} hour) then 'Reset Later'
-          when a.status = 'verified' and ifnull(verified, o.modified) < date_add(o.modified, interval #{@wait_hours} hour) then 'Reset Needed'
+          when ifnull(verified, o.modified) < date_add(o.modified, interval #{@wait_hours} hour)
+            and o.modified > date_add(now(), interval -#{@wait_hours} hour)
+            then 'Reset Later'
+          when a.status = 'verified'
+            and ifnull(verified, o.modified) < date_add(o.modified, interval #{@wait_hours} hour)
+            then 'Reset Needed'
           when a.status = 'verified' then 'Audited'
           else 'In Progress'
         end as category,
         case
           when a.status in ('size-mismatch','digest-mismatch', 'unverified') then 'FAIL'
-          when ifnull(verified, o.modified) < date_add(o.modified, interval #{@wait_hours} hour) and o.modified > date_add(now(), interval -#{@wait_hours} hour) then 'INFO'
-          when a.status = 'verified' and ifnull(verified, o.modified) < date_add(o.modified, interval #{@wait_hours} hour) then 'WARN'
+          when ifnull(verified, o.modified) < date_add(o.modified, interval #{@wait_hours} hour)
+            and o.modified > date_add(now(), interval -#{@wait_hours} hour)
+            then 'INFO'
+          when a.status = 'verified'
+            and ifnull(verified, o.modified) < date_add(o.modified, interval #{@wait_hours} hour)
+            then 'WARN'
           when a.status = 'verified' then 'PASS'
           else 'INFO'
         end as status
-      from 
+      from
         inv.inv_objects o
       right join
-        inv.inv_audits a 
-      on 
-        a.inv_object_id = o.id 
-      and 
+        inv.inv_audits a
+      on
+        a.inv_object_id = o.id
+      and
         a.inv_node_id = 16 /*sdsc node*/
-      where 
+      where
         o.inv_owner_id=14 /*ucb owner*/
-      and 
+      and
         o.modified > date_add(now(), interval -#{@days.to_i} day)
       group by
         o.id,

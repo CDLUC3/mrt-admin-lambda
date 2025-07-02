@@ -90,11 +90,7 @@ class CollectionsByTimeQuery < AdminQuery
           and
             #{verify_files_col(@col)} > 0
             #{
-              if @source == 'producer'
-                " and source='producer'"
-              else
-                ''
-              end
+              " and source='producer'" if @source == 'producer'
             }
            ) as sumval
       from

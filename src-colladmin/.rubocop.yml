@@ -19,9 +19,10 @@ Naming/AccessorMethodName:
   Enabled: false
 Style/NestedTernaryOperator:
   Enabled: false
-Naming/PredicateName:
+Naming/PredicatePrefix:
   Enabled: false
-
+Naming/PredicateMethod:
+  Enabled: false
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
 Layout/ParameterAlignment:

@@ -36,13 +36,13 @@ class IdlistQuery < AdminQuery
 select
   trim(substring_index(o.erc_where, ';', -1)) doi,
   o.ark,
-  ( 
-    select substring_index(c.mnemonic,'_', 1) 
+  (
+    select substring_index(c.mnemonic,'_', 1)
     from inv.inv_collections c
-    inner join inv.inv_collections_inv_objects icio 
-      on icio.inv_collection_id=c.id 
+    inner join inv.inv_collections_inv_objects icio
+      on icio.inv_collection_id=c.id
     where icio.inv_object_id=o.id
-    limit 1 
+    limit 1
   ) as campus,
   date(created),
 }

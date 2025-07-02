@@ -29,7 +29,7 @@ class ChangeTokenQuery < AdminQuery
       where
         f.pathname = 'system/provenance_manifest.xml'
       group by
-        c.mnemonic   
+        c.mnemonic
       ;
     }
   end
@@ -39,6 +39,6 @@ class ChangeTokenQuery < AdminQuery
   end
 
   def get_types(_results)
-    ['mnemonic', 'datetime', 'datetime', 'datetime', 'datetime', 'dataint', 'bytes']
+    %w[mnemonic datetime datetime datetime datetime dataint bytes]
   end
 end

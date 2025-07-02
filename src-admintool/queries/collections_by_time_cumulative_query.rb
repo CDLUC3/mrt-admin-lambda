@@ -71,11 +71,7 @@ class CollectionsByTimeCumulativeQuery < AdminQuery
           and
             #{verify_files_col(@col)} > 0
           #{
-            if @source == 'producer'
-              " and source='producer'"
-            else
-              ''
-            end
+            " and source='producer'" if @source == 'producer'
           }
         ) + (
           select
@@ -91,11 +87,7 @@ class CollectionsByTimeCumulativeQuery < AdminQuery
           and
             date_added >= date_add(now(), interval - 730 day)
             #{
-              if @source == 'producer'
-                " and source='producer'"
-              else
-                ''
-              end
+              " and source='producer'" if @source == 'producer'
             }
            )
         as sumval
