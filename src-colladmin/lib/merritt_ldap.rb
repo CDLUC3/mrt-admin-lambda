@@ -241,7 +241,7 @@ class LdapUser < LdapLinkedRecord
   end
 
   def displayname
-    "#{@displayname.nil? ? '' : @displayname.gsub(',', '')} (#{uid})"
+    "#{@displayname&.gsub(',', '')} (#{uid})"
   end
 
   def ark

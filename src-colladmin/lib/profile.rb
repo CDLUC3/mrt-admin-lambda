@@ -203,7 +203,7 @@ class IngestProfile < MerrittJson
     ].each do |sym|
       val = get_value(sym)
       templateval = template.get_value(sym)
-      (0..[val.length, templateval.length].max - 1).each do |i|
+      (0..([val.length, templateval.length].max - 1)).each do |i|
         @score += 1 if val[i] != templateval[i]
       end
     end
@@ -252,7 +252,7 @@ class IngestProfile < MerrittJson
     if val.instance_of?(Array)
       diff = []
       has_diff = false
-      (0..[val.length, templateval.length].max - 1).each do |i|
+      (0..([val.length, templateval.length].max - 1)).each do |i|
         if val[i] == templateval[i]
           diff.append('')
         elsif val[i].nil?
