@@ -200,30 +200,40 @@ class ZookeeperDumpAction < ZookeeperAction
       jid = rx2.match(n)[1]
       bid = get_data(n)
       test_node(n, false, "/batches/#{bid}")
-      d = get_data("/jobs/#{jid}/status")
-      status = d.fetch(:status, 'na').downcase
-      case status
-      when 'deleted'
-        bstatus = 'batch-deleted'
-      when 'completed'
-        bstatus = 'batch-completed'
-      when 'failed'
-        bstatus = 'batch-failed'
-      else
-        bstatus = 'batch-processing'
-      end
-      test_node(n, false, "/batches/#{bid}/states/#{bstatus}/#{jid}")
-      %w[batch-deleted batch-completed batch-failed batch-processing].each do |ts|
-        next if ts == bstatus
+      snode = "/jobs/#{jid}/status"
+      test_node(n, true, snode)
+      if @zk.exists?(snode)
+        d = get_data(snode)
+        return if d.nil?
 
-        test_not_node(n, false, "/batches/#{bid}/states/#{ts}/#{jid}")
+        status = d.fetch(:status, 'na').downcase
+        case status
+        when 'deleted'
+          bstatus = 'batch-deleted'
+        when 'completed'
+          bstatus = 'batch-completed'
+        when 'failed'
+          bstatus = 'batch-failed'
+        else
+          bstatus = 'batch-processing'
+        end
+        test_node(n, false, "/batches/#{bid}/states/#{bstatus}/#{jid}")
+        %w[batch-deleted batch-completed batch-failed batch-processing].each do |ts|
+          next if ts == bstatus
+
+          test_not_node(n, false, "/batches/#{bid}/states/#{ts}/#{jid}")
+        end
       end
     when rx3
       jid = rx3.match(n)[1]
-      d = get_data("#{n}/status")
-      status = d.fetch(:status, 'na').downcase
-      priority = get_data("#{n}/priority")
-      test_node(n, false, "/jobs/states/#{status}/#{format('%02d', priority)}-#{jid}")
+      snode = "/jobs/#{jid}/status"
+      test_node(n, true, snode)
+      if @zk.exists?(snode)
+        d = get_data(snode)
+        status = d.fetch(:status, 'na').downcase
+        priority = get_data("#{n}/priority")
+        test_node(n, false, "/jobs/states/#{status}/#{format('%02d', priority)}-#{jid}")
+      end
     when rx4
       jid = rx4.match(n)[1]
       test_node(n, true, "/jobs/#{jid}")
