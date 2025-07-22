@@ -84,25 +84,38 @@ end
 # Collection Admin Task class - see config/actions.yml for description
 class ZookeeperDumpAction < ZookeeperAction
   def initialize(config, action, path, myparams)
+    super
     @node_dump = MerrittZK::NodeDump.new(@zk, myparams)
     @zkpath = myparams.fetch('zkpath', '/')
     @mode = myparams.fetch('mode', 'data')
-    @full = false
-    @test_results = []
-    @job_states_count = {}
     super
   end
 
   def data
-    @node_dump.listing
+    buf = ''
+    @node_dump.listing.each do |rec|
+      if rec.is_a?(Hash)
+        rec.each do |k, v|
+          buf += "#{k}\n"
+          unless v.to_s.empty?
+            buf += JSON.pretty_generate(v)
+            buf += "\n\n"
+          end
+        end
+      else
+        buf += "#{rec}\n"
+      end
+      break if buf.length > 500_000
+    end
+    buf
   end
 end
 
 ## table version of the dump/test action
 class ZookeeperDumpTableAction < ZookeeperDumpAction
   def initialize(config, action, path, myparams)
+    myparams['mode'] = 'test'
     super
-    @mode = 'test'
   end
 
   def table_headers
@@ -114,7 +127,7 @@ class ZookeeperDumpTableAction < ZookeeperDumpAction
   end
 
   def table_rows(_body)
-    []
+    @node_dump.test_results
   end
 
   def perform_action
