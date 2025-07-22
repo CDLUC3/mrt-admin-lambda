@@ -84,210 +84,38 @@ end
 # Collection Admin Task class - see config/actions.yml for description
 class ZookeeperDumpAction < ZookeeperAction
   def initialize(config, action, path, myparams)
+    super
+    @node_dump = MerrittZK::NodeDump.new(@zk, myparams)
     @zkpath = myparams.fetch('zkpath', '/')
     @mode = myparams.fetch('mode', 'data')
-    @full = false
-    @test_results = []
-    @job_states_count = {}
     super
   end
 
   def data
-    @buf = StringIO.new
-    @buf << "Node State as of #{Time.now}:\n"
-    dump_node(@zkpath)
-    @buf.rewind
-    @buf.read
-  end
-
-  def standard_node(n)
-    n =~ %r{^/(access|batch-uuids|batches|jobs|locks|migration)(/|$)}
-  end
-
-  def system_node(n)
-    n =~ %r{^/zookeeper(/|$)}
-  end
-
-  def show_data(n)
-    d = get_data(n)
-    df = d.is_a?(Hash) ? "\n#{JSON.pretty_generate(d)}" : " #{d}"
-    df = df.encode('UTF-8', invalid: :replace, undef: :replace, replace: '?')
-    @buf << df unless @buf.nil?
-  rescue StandardError => e
-    @buf << e
-  end
-
-  def get_data(n)
-    d = @zk.get(n)[0]
-    return '' if d.nil?
-
-    begin
-      JSON.parse(d.encode('UTF-8', invalid: :replace, undef: :replace, replace: '?'), symbolize_names: true)
-    rescue JSON::ParserError
-      d
-    rescue StandardError => e
-      "\n  #{e.class}:#{e}:\n    #{d}"
-    end
-  end
-
-  def node_datetime(n)
-    return 'na' unless @zk.exists?(n)
-
-    ctime = @zk.stat(n).ctime
-    ctime.nil? ? 'na' : Time.at(ctime / 1000).strftime('%Y-%m-%d %H:%M:%S')
-  end
-
-  def node_stat(n)
-    return 'FAIL' unless @zk.exists?(n)
-
-    ctime = @zk.stat(n).ctime
-    return 'FAIL' if ctime.nil?
-
-    Time.now - Time.at(ctime / 1000) > 3600 ? 'FAIL' : 'WARN'
-  end
-
-  def test_node(path, deleteable, n)
-    return if @zk.exists?(n)
-
-    result = { path: path, test: "Test: #{n} should exist", status: node_stat(path) }
-    @test_results.append([
-      result[:path], node_datetime(path), deleteable ? result[:path] : '', result[:test],
-      result[:status]
-])
-    @buf << "\n  #{result[:test]}: #{result[:status]}" unless @buf.nil?
-  end
-
-  def test_has_children(path, deleteable, n)
-    return if @zk.exists?(n) && !@zk.children(n).empty?
-
-    result = { path: path, test: "Test: #{n} should have children", status: node_stat(path) }
-    @test_results.append([
-      result[:path], node_datetime(path), deleteable ? result[:path] : '', result[:test],
-      result[:status]
-])
-    @buf << "\n  #{result[:test]}: #{result[:status]}" unless @buf.nil?
-  end
-
-  def test_not_node(path, deleteable, n)
-    return unless @zk.exists?(n)
-
-    result = { path: path, test: "Test: #{n} should NOT exist", status: node_stat(path) }
-    @test_results.append([
-      result[:path], node_datetime(path), deleteable ? result[:path] : '', result[:test],
-      result[:status]
-])
-    @buf << "\n  #{result[:test]}: #{result[:status]}" unless @buf.nil?
-  end
-
-  def show_test(n)
-    rx1 = %r{^/batches/bid[0-9]+/states/batch-.*/(jid[0-9]+)$}
-    rx2 = %r{^/jobs/(jid[0-9]+)/bid$}
-    rx3 = %r{^/jobs/(jid[0-9]+)$}
-    rx4 = %r{^/jobs/states/[^/]*/[0-9][0-9]-(jid[0-9]+)$}
-    rx5 = %r{^/batches/bid[0-9]+/states$}
-
-    case n
-    when %r{^/batch-uuids/(.*)}
-      d = get_data(n)
-      test_node(n, true, "/batches/#{d}")
-    when %r{^/batches/bid[0-9]+/submission}
-      d = get_data(n).fetch(:batchID, 'na')
-      test_node(n, false, "/batch-uuids/#{d}")
-    when rx1
-      jid = rx1.match(n)[1]
-      test_node(n, true, "/jobs/#{jid}")
-    when rx2
-      jid = rx2.match(n)[1]
-      bid = get_data(n)
-      test_node(n, false, "/batches/#{bid}")
-      snode = "/jobs/#{jid}/status"
-      test_node(n, true, snode)
-      if @zk.exists?(snode)
-        d = get_data(snode)
-        return if d.nil?
-
-        status = d.fetch(:status, 'na').downcase
-        case status
-        when 'deleted'
-          bstatus = 'batch-deleted'
-        when 'completed'
-          bstatus = 'batch-completed'
-        when 'failed'
-          bstatus = 'batch-failed'
-        else
-          bstatus = 'batch-processing'
+    buf = ''
+    @node_dump.listing.each do |rec|
+      if rec.is_a?(Hash)
+        rec.each do |k, v|
+          buf += "#{k}\n"
+          unless v.to_s.empty?
+            buf += JSON.pretty_generate(v)
+            buf += "\n\n"
+          end
         end
-        test_node(n, false, "/batches/#{bid}/states/#{bstatus}/#{jid}")
-        %w[batch-deleted batch-completed batch-failed batch-processing].each do |ts|
-          next if ts == bstatus
-
-          test_not_node(n, false, "/batches/#{bid}/states/#{ts}/#{jid}")
-        end
+      else
+        buf += "#{rec}\n"
       end
-    when rx3
-      jid = rx3.match(n)[1]
-      snode = "/jobs/#{jid}/status"
-      test_node(n, true, snode)
-      if @zk.exists?(snode)
-        d = get_data(snode)
-        status = d.fetch(:status, 'na').downcase
-        priority = get_data("#{n}/priority")
-        test_node(n, false, "/jobs/states/#{status}/#{format('%02d', priority)}-#{jid}")
-      end
-    when rx4
-      jid = rx4.match(n)[1]
-      test_node(n, true, "/jobs/#{jid}")
-      @job_states_count[jid] = [] unless @job_states_count.key?(jid)
-      @job_states_count[jid].append(n)
-    when rx5
-      test_has_children(n, false, n)
+      break if buf.length > 500_000
     end
-  end
-
-  def report_node(n)
-    @buf << "#{n}:" unless @buf.nil?
-    if standard_node(n)
-      show_data(n) if @mode == 'data'
-      show_test(n) if @mode == 'test'
-    else
-      @buf << " Unsupported\n" unless @buf.nil?
-    end
-    @buf << "\n" unless @buf.nil?
-  end
-
-  def check_full
-    return false if @buf.nil?
-    return true if @full
-
-    # Lambda payload limit. May need to save output to S3.
-    if @buf.size > 250_000
-      @buf << '... (truncated at 256K)'
-      @full = true
-    end
-    @full
-  end
-
-  def dump_node(n = '/')
-    return if check_full
-    return unless @zk.exists?(n)
-    return if system_node(n)
-
-    report_node(n)
-    arr = @zk.children(n)
-    return if arr.empty?
-
-    arr.sort.each do |cp|
-      p = "#{n}/#{cp}".gsub(%r{/+}, '/')
-      dump_node(p)
-    end
+    buf
   end
 end
 
 ## table version of the dump/test action
 class ZookeeperDumpTableAction < ZookeeperDumpAction
   def initialize(config, action, path, myparams)
+    myparams['mode'] = 'test'
     super
-    @mode = 'test'
   end
 
   def table_headers
@@ -299,13 +127,7 @@ class ZookeeperDumpTableAction < ZookeeperDumpAction
   end
 
   def table_rows(_body)
-    dump_node(@zkpath)
-    @job_states_count.each_value do |states|
-      next unless states.length > 1
-
-      @test_results.append([states.to_s, '', '', 'Duplicate JID', 'FAIL'])
-    end
-    @test_results
+    @node_dump.test_results
   end
 
   def perform_action

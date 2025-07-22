@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/CDLUC3/mrt-zk.git
-  revision: 52c79f6a0fceac0d7e257b3a16766a5080f808af
-  tag: 2.4.6
+  revision: e7db85e7623bcb24f9d7dba1f7f14c1e26bc8940
+  tag: 2.4.18
   specs:
     mrt-zk (1.0.1)
       zk (~> 1.10.0)
@@ -19,29 +19,29 @@ GEM
   specs:
     ast (2.4.3)
     aws-eventstream (1.4.0)
-    aws-partitions (1.1124.0)
-    aws-sdk-core (3.226.2)
+    aws-partitions (1.1132.0)
+    aws-sdk-core (3.227.0)
       aws-eventstream (~> 1, >= 1.3.0)
       aws-partitions (~> 1, >= 1.992.0)
       aws-sigv4 (~> 1.9)
       base64
       jmespath (~> 1, >= 1.6.1)
       logger
-    aws-sdk-ec2 (1.534.0)
-      aws-sdk-core (~> 3, >= 3.225.0)
+    aws-sdk-ec2 (1.540.0)
+      aws-sdk-core (~> 3, >= 3.227.0)
       aws-sigv4 (~> 1.5)
-    aws-sdk-kms (1.106.0)
-      aws-sdk-core (~> 3, >= 3.225.0)
+    aws-sdk-kms (1.107.0)
+      aws-sdk-core (~> 3, >= 3.227.0)
       aws-sigv4 (~> 1.5)
-    aws-sdk-lambda (1.153.0)
-      aws-sdk-core (~> 3, >= 3.225.0)
+    aws-sdk-lambda (1.154.0)
+      aws-sdk-core (~> 3, >= 3.227.0)
       aws-sigv4 (~> 1.5)
-    aws-sdk-s3 (1.191.0)
-      aws-sdk-core (~> 3, >= 3.225.0)
+    aws-sdk-s3 (1.194.0)
+      aws-sdk-core (~> 3, >= 3.227.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.5)
-    aws-sdk-ssm (1.197.0)
-      aws-sdk-core (~> 3, >= 3.225.0)
+    aws-sdk-ssm (1.199.0)
+      aws-sdk-core (~> 3, >= 3.227.0)
       aws-sigv4 (~> 1.5)
     aws-sigv4 (1.12.1)
       aws-eventstream (~> 1, >= 1.0.2)
@@ -52,21 +52,21 @@ GEM
     http-cookie (1.0.8)
       domain_name (~> 0.5)
     jmespath (1.6.2)
-    json (2.12.2)
+    json (2.13.0)
     language_server-protocol (3.17.0.5)
     lint_roller (1.1.0)
     logger (1.7.0)
     mime-types (3.7.0)
       logger
       mime-types-data (~> 3.2025, >= 3.2025.0507)
-    mime-types-data (3.2025.0701)
+    mime-types-data (3.2025.0715)
     mini_portile2 (2.8.9)
     mysql2 (0.5.6)
     netrc (0.11.0)
-    nokogiri (1.18.8)
+    nokogiri (1.18.9)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
-    nokogiri (1.18.8-x86_64-linux-gnu)
+    nokogiri (1.18.9-x86_64-linux-gnu)
       racc (~> 1.4)
     parallel (1.27.0)
     parser (3.3.8.0)
@@ -81,7 +81,7 @@ GEM
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
-    rubocop (1.77.0)
+    rubocop (1.78.0)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
       lint_roller (~> 1.1.0)
@@ -92,7 +92,7 @@ GEM
       rubocop-ast (>= 1.45.1, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 4.0)
-    rubocop-ast (1.45.1)
+    rubocop-ast (1.46.0)
       parser (>= 3.3.7.2)
       prism (~> 1.4)
     ruby-progressbar (1.13.0)
@@ -124,4 +124,4 @@ DEPENDENCIES
   zookeeper
 
 BUNDLED WITH
-   2.6.9
+   2.7.1

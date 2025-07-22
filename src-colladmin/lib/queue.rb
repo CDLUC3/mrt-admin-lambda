@@ -206,6 +206,8 @@ end
 
 ## Queue representation of Batch objects
 class BatchQueueEntry < QueueJson
+  AGE_BATCHWARN = 3600 * 24
+
   @@placeholder = nil
   def self.placeholder
     @@placeholder = BatchQueueEntry.new({}) if @@placeholder.nil?
@@ -262,6 +264,11 @@ class BatchQueueEntry < QueueJson
 
     qs = get_value(:qstatus, '')
     st = 'INFO'
+    begin
+      st = 'WARN' if Time.now - get_value(:date, Time.now) > AGE_BATCHWARN
+    rescue StandardError => e
+      puts "Error processing submission date #{e}"
+    end
     st = 'FAIL' if qs == 'Failed'
     st = 'PASS' if qs == 'Completed'
     add_property(
