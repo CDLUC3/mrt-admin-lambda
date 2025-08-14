@@ -27,6 +27,7 @@ fi
 
 ADMIN_ALB_URL=`get_ssm_value_by_name admintool/api-path`
 ADMIN_ALB_URL=${ADMIN_ALB_URL//-dev/${REP}}
+ECS_URL=`get_ssm_value_by_name admintool/ecs`
 
 COLLADMIN_ALB_URL=`get_ssm_value_by_name colladmin/api-path`
 COLLADMIN_ALB_URL=${COLLADMIN_ALB_URL//-dev/${REP}}
@@ -34,6 +35,7 @@ COLLADMIN_ALB_URL=${COLLADMIN_ALB_URL//-dev/${REP}}
 VARS="SSM_ROOT_PATH=${SSM_DEPLOY_PATH}"
 VARS="${VARS},ADMIN_ALB_URL=${ADMIN_ALB_URL}"
 VARS="${VARS},COLLADMIN_ALB_URL=${COLLADMIN_ALB_URL}"
+VARS="${VARS},ECS_URL=${ECS_URL}"
 
 aws lambda update-function-configuration \
   --function-name ${LAMBDA_ARN} \

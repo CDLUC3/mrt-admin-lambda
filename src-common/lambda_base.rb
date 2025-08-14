@@ -159,6 +159,10 @@ class LambdaBase
     ENV.fetch('ADMIN_ALB_URL', '')
   end
 
+  def self.ecs_admintool_url
+    "#{ENV.fetch('ECS_ADMIN_ALB_URL', '')}"
+  end
+
   def self.admintool_url
     "#{ENV.fetch('ADMIN_ALB_URL', '')}/web/index.html"
   end
