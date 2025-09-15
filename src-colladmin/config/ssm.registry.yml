@@ -173,6 +173,10 @@ ingest:
       description: Path location of Ingest working area
     ingestZfsThreshold:
       description: Usage percentage used in Ingest Provisioning State
+    s3-config-bucket:
+      description: S3 bucket containing Profiles
+    s3-config-prefix:
+      description: S3 prefix for Profiles
     localID:
       description: URL endpoint for Local ID service
     mail-host:

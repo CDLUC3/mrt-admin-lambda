@@ -27,7 +27,7 @@ fi
 
 ADMIN_ALB_URL=`get_ssm_value_by_name admintool/api-path`
 ADMIN_ALB_URL=${ADMIN_ALB_URL//-dev/${REP}}
-ECS_URL=`get_ssm_value_by_name admintool/ecs`
+ECS_URL=`get_ssm_value_by_name admintool/ecs-${DEPLOY_ENV}`
 
 COLLADMIN_ALB_URL=`get_ssm_value_by_name colladmin/api-path`
 COLLADMIN_ALB_URL=${COLLADMIN_ALB_URL//-dev/${REP}}

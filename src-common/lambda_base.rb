@@ -194,6 +194,7 @@ class LambdaBase
       UC3INV_HOME: @config.fetch('uc3inv_home', ''),
       ADMINTOOL_BASE: LambdaBase.admintool_base,
       ADMINTOOL_HOME: LambdaBase.admintool_url,
+      ECS_URL: LambdaBase.ecs_admintool_url,
       COLLADMIN_HOME: LambdaBase.colladmin_url,
       COLLADMIN_ROOT: LambdaBase.colladmin_root_url,
       COLLADMIN_ADMIN: LambdaBase.colladmin_url_admin,
