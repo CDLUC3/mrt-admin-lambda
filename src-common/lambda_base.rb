@@ -160,7 +160,7 @@ class LambdaBase
   end
 
   def self.ecs_admintool_url
-    "#{ENV.fetch('ECS_ADMIN_ALB_URL', '')}"
+    ENV.fetch('ECS_ADMIN_ALB_URL', '').to_s
   end
 
   def self.admintool_url
