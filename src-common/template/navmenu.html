@@ -18,89 +18,19 @@
         <i class="fa fa-caret-down"></i>
       </button>
       <div class="dropdown-content">
-        <a class="graph" href="{{ADMINTOOL_HOME}}?path=report">Consistency Reports</a>
-        <a class="graph" href="{{COLLADMIN_HOME}}?path=ingest-queue-by-profile">Ingest Jobs by Profile</a>
-        <a class="graph" href="{{COLLADMIN_HOME}}?path=ingest-queue-by-profile-batch">Ingest Jobs by Profile and Batch</a>
-        <a class="job" href="{{COLLADMIN_HOME}}?path=batch-queues">Ingest Batches</a>
         <a class="graph" href="{{ADMINTOOL_HOME}}?path=ingest_bytes_by_hour">Recent Bytes ingested by hour</a>
         <a class="graph" href="{{ADMINTOOL_HOME}}?path=ingest_bytes_by_hour&days=30">Recent Bytes ingested by day - last 30 days</a>
-        <a class="graph" href="{{ADMINTOOL_HOME}}?path=ingest_bytes_by_week">Recent Bytes ingested by week - last year</a>
-        <a class="graph" href="{{ADMINTOOL_HOME}}?path=list_collections">List Collections</a>
-        <a class="graph" href="{{ADMINTOOL_HOME}}?path=daily-build-s3-list">Daily Build Output</a>
-        <a class="graph" href="{{COLLADMIN_ROOT}}/web/zkdump.html?zkpath=/">ZK Node Report</a>
-        <a class="graph" href="{{COLLADMIN_ROOT}}/web/zkdump.html?zkpath=/&mode=keys">ZK Node Report - Keys Only</a>
-        <a class="graph" href="{{COLLADMIN_ROOT}}/web/zkdump.html?zkpath=/locks">ZK Node Report: Locks</a>
-        <a class="graph" href="{{COLLADMIN_HOME}}?path=zk_orphan">ZK Node Orphan Report</a>
-        <a class="graph" href="{{COLLADMIN_HOME}}?path=system_state">System State - LDAP Certs</a>
       </div>
     </div>
-    <div class="dropdown">
-      <button class="dropbtn">Reports
-        <i class="fa fa-caret-down"></i>
-      </button>
-      <div class="dropdown-content">
-        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_campus;.bp_campus">Campus</a>
-        <a class="submenu reveal" href="{{ADMINTOOL_HOME}}#.nav_campus_collections;.bp_campus;Campus Collections">Campus Collections</a>
-        <a class="submenu reveal" href="{{ADMINTOOL_HOME}}#.nav_campus_invoices;.bp_campus;Campus Invoices">Campus Invoices</a>
-        <a class="submenu reveal" href="{{ADMINTOOL_HOME}}#.nav_campus_owners;.bp_campus;Campus Owners">Campus Owners</a>  
-        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_repo;.bp_repo">Repository Content</a>
-        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_collections;.bp_coll">Collections</a>
-        <a class="submenu reveal" href="{{ADMINTOOL_HOME}}#.nav_collections_counts;.bp_coll;Collection Counts">Collection Counts</a>
-        <a class="submenu reveal" href="{{ADMINTOOL_HOME}}#.nav_collections_activity;.bp_coll;Collection Activity">Collection Activity</a>
-        <a class="submenu reveal" href="{{ADMINTOOL_HOME}}#.nav_collections_locks;.bp_coll;Collection Locks">Collections Locks</a>
-        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_objects;.bp_obj">Objects</a>
-        <a class="submenu reveal" href="{{ADMINTOOL_HOME}}#.nav_objects_files;.bp_obj;Object Files">Object Files</a>
-        <a class="submenu reveal" href="{{ADMINTOOL_HOME}}#.nav_objects_localid;.bp_obj;Object Local Ids">Object Local Ids</a>
-        <a class="submenu reveal" href="{{ADMINTOOL_HOME}}#.nav_objects_versions;.bp_obj;Object Versions">Object Versions</a>
-        <a class="submenu reveal" href="{{ADMINTOOL_HOME}}#.nav_objects_special;.bp_obj;Object Special Cases">Object Special Cases</a>
-      </div>
-    </div>
-    <div class="dropdown">
-      <button class="dropbtn">Microservice Reports
-        <i class="fa fa-caret-down"></i>
-      </button>
-      <div class="dropdown-content">
-        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_audit;.bp_audit">Audit</a>
-        <a class="submenu reveal" href="{{ADMINTOOL_HOME}}#.nav_audit_activity;.bp_audit;Audit Activity">Audit Activity</a>
-        <a class="submenu reveal" href="{{ADMINTOOL_HOME}}#.nav_audit_performance;.bp_audit;Audit Performance">Audit Performance</a>
-        <a class="submenu reveal" href="{{ADMINTOOL_HOME}}#.nav_audit_status;.bp_audit;Audit Status">Audit Status</a>
-        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_ingest;.bp_ingest">Ingest</a>
-        <a class="submenu reveal" href="{{ADMINTOOL_HOME}}#.nav_ingest_activity;.bp_ingest;Ingest Activity">Ingest Activity</a>
-        <a class="submenu reveal" href="{{ADMINTOOL_HOME}}#.nav_ingest_profiles;.bp_ingest;Ingest Profiles">Ingest Profiles</a>
-        <a class="submenu reveal" href="{{ADMINTOOL_HOME}}#.nav_ingest_counts;.bp_ingest;Ingest Counts">Ingest Counts</a>
-        <a class="submenu reveal" href="{{ADMINTOOL_HOME}}#.nav_ingest_folders;.bp_ingest;Ingest Folders">Ingest Folders</a>
-        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_inventory;.bp_inventory">Inventory</a>
-        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_replic;.bp_replic">Replic</a>
-        <a class="submenu reveal" href="{{ADMINTOOL_HOME}}#.nav_replic_activity;.bp_replic;Replic Activity">Replic Activity</a>
-        <a class="submenu reveal" href="{{ADMINTOOL_HOME}}#.nav_replic_performance;.bp_replic;Replic Performance">Replic Performance</a>
-        <a class="submenu reveal" href="{{ADMINTOOL_HOME}}#.nav_replic_status;.bp_replic;Replic Status">Replic Status</a>
-        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_storage;.bp_storage">Storage</a>
-        <a class="submenu reveal" href="{{ADMINTOOL_HOME}}#.nav_storage_config;.bp_storage;Storage Configuration">Storage Configuration</a>
-        <a class="submenu reveal" href="{{ADMINTOOL_HOME}}#.nav_storage_queues;.bp_storage;Access Queues">Access Queues</a>
-      </div>
-    </div>
+
     <div class="dropdown">
       <button class="dropbtn">Administer Merritt
         <i class="fa fa-caret-down"></i>
       </button>
       <div class="dropdown-content">
-        <a class="config" href="{{ADMINTOOL_HOME}}#.nav_manage_queues;.bp_queues">Manage Queues</a>
-        <a class="config" href="{{COLLADMIN_ROOT}}/web/collProfile.html">Collection Creation</a>
-        <a class="config" href="{{ADMINTOOL_HOME}}#.nav_manage_coll;.bp_admin;Manage Admin Objects">Manage Admin Objects</a>
         <a class="config" href="{{COLLADMIN_ROOT}}/web/storeCollNodes.html">Manage Storage Nodes for a Collection</a>
         <a class="config" href="{{COLLADMIN_ROOT}}/web/storeNodes.html">Storage Node Management</a>
         <a class="config" href="{{COLLADMIN_ROOT}}/web/storeQueues.html">Manage Audit Queues and Audit Status</a>
-        <a class="config" href="{{ADMINTOOL_HOME}}?path=update_billing">Update Billing Database</a>
-        <a class="config" href="{{ADMINTOOL_HOME}}?path=update_billing&all-tables=Y">Update Billing Database (recalcuate yesterday's totals)</a>
-        <a class="config" href="{{ADMINTOOL_HOME}}#.nav_manage_reports;.bp_admin;Cleanup Old Consistency Reports">Cleanup Old Consistency Reports</a>
-      </div>
-    </div>
-    <div class="dropdown">
-      <button class="dropbtn">Content Projects
-        <i class="fa fa-caret-down"></i>
-      </button>
-      <div class="dropdown-content">
-        <a class="config" href="{{ADMINTOOL_HOME}}#.nav_content_projects">Content Projects</a>
       </div>
     </div>
     <div class="dropdown">
@@ -108,13 +38,10 @@
         <i class="fa fa-caret-down"></i>
       </button>
       <div class="dropdown-content">
-        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_merritt_internals;.bp_internals">Merritt Admin Objects</a>
-        <a class="reveal" href="{{ADMINTOOL_HOME}}#.nav_merritt_users;.bp_users">Merritt User Accounts</a>
         <a class="config" href="{{COLLADMIN_HOME}}?path=instances&timeout=1">Merritt Servers (quick load)</a>
         <a class="config" href="{{COLLADMIN_HOME}}?path=instances">Merritt Servers</a>
         <a class="config" href="{{COLLADMIN_HOME}}?path=uc3-instances">UC3 Servers</a>
         <a class="config" href="{{COLLADMIN_HOME}}?path=ssm-describe">SSM Parameter Registry</a>
-        <a class="config" href="{{COLLADMIN_HOME}}?path=opensearch-describe">OpenSearch Field Registry</a>
       </div>
     </div>
     <div class="dropdown">
