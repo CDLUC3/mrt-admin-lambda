@@ -2,6 +2,9 @@
 
 This library is part of the [Merritt Preservation System](https://github.com/CDLUC3/mrt-doc).
 
+> [!NOTE]
+> This code has been archived and superceded by https://github.com/CDLUC3/mrt-admin-sinatra/
+
 ## Admin Tool Web Interface  
 Each Admin Lambda application functions as a simple web server displaying the pages for the application.
 
